@@ -39,8 +39,8 @@ namespace Moon {
     void load_core_classes();
     void load_user_scripts();
     
-    void load_game_object();
-    void call_game_loop();
+    //void load_game_object();
+    //void call_game_loop();
   };
 };
 #endif

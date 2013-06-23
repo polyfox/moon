@@ -6,7 +6,9 @@ build/
 *.o
 
 # Compiled Dynamic libraries
+*.dll
 *.so
+*.so.*
 *.dylib
 
 # Compiled Static libraries
@@ -14,12 +16,6 @@ build/
 *.lai
 *.la
 *.a
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
 
 # Executables
 *.exe
