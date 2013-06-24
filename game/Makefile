@@ -1,7 +1,7 @@
 BASEDIR = ..
 BUILD_DIR = ../build
 CC = g++
-OBJECT = $(wildcard $(BASEDIR)/game/*.cxx)
+OBJECT = $(wildcard $(BASEDIR)/game/*.cxx) $(wildcard $(BASEDIR)/game/**/*.cxx)
 INCLUDES = -I$(BASEDIR)/src -I$(BASEDIR)/include -I$(BASEDIR)/vendor/mruby/include -L$(BUILD_DIR)
 LIBS = -lmoon -lglfw -lGL
 CP_R := cp -r

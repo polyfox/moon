@@ -1,4 +1,4 @@
-#include "engine.hxx"
+#include "moon.hxx"
 
 namespace Moon {
   Engine::Engine() {
@@ -59,7 +59,12 @@ namespace Moon {
     glEnable(GL_TEXTURE_2D); // Use 2D textures
     // end setup OpenGL
 
-    //load_game_object();
+    // Get the ruby object containing the state manager
+    mrb_value moon = mrb_obj_value(mrb_class_get(mrb, "Moon"));
+    mrb_value states = mrb_iv_get(mrb, moon, mrb_intern(mrb, "@states"));
+    
+    int ai = mrb_gc_arena_save(mrb);
+
     while (!glfwWindowShouldClose(window))
     {
       float ratio;
@@ -83,7 +88,8 @@ namespace Moon {
       glVertex3f(0.f, 0.6f, 0.f);
       glEnd();
 
-      //mrb_funcall(mrb, game_object, "update", 0);
+      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
+      mrb_gc_arena_restore(mrb, ai);
 
       glfwSwapBuffers(window);
       /* Poll for and process events */
@@ -99,6 +105,8 @@ namespace Moon {
     mrb_context->dump_result = 0;
     mrb_context->no_exec = 0;
     
+    moon_init_mrb_ext(mrb);
+
     load_core_classes();
     load_user_scripts();
   }

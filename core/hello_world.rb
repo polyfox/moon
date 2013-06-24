@@ -1,1 +1,1 @@
-p "Hello from scripts!"
+p Hola.hi

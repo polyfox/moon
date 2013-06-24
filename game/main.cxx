@@ -1,4 +1,10 @@
-#include "engine.hxx"
+#include "moon.hxx"
+
+void init_hola(mrb_state *mrb);
+void moon_init_mrb_ext(mrb_state *mrb)
+{
+  init_hola(mrb);
+}
 
 int main(void)
 {
