@@ -57,39 +57,46 @@ namespace Moon {
     glAlphaFunc(GL_GREATER, 0);
 
     glEnable(GL_TEXTURE_2D); // Use 2D textures
+
+    //Check for error
+    GLenum error = glGetError();
+    if(error != GL_NO_ERROR) {
+      printf( "Error initializing OpenGL! glGetError: %s\n", error);
+      throw;
+    }
     // end setup OpenGL
+
+    //Initialize DevIL
+    ilInit();
+    ilClearColour(255, 255, 255, 000);
+
+    //Check for error
+    ILenum ilError = ilGetError();
+    if(ilError != IL_NO_ERROR) {
+      printf("Error initializing DevIL! %s\n", iluErrorString(ilError));
+      throw;
+    }
+    // end initialize DevIL
 
     // Get the ruby object containing the state manager
     mrb_value moon = mrb_obj_value(mrb_class_get(mrb, "Moon"));
     mrb_value states = mrb_iv_get(mrb, moon, mrb_intern(mrb, "@states"));
+
+    Texture test("obama_sprite.png");
     
     int ai = mrb_gc_arena_save(mrb);
 
     while (!glfwWindowShouldClose(window))
     {
-      float ratio;
-      int width, height;
-      glfwGetFramebufferSize(window, &width, &height);
-      ratio = width / (float) height;
-      glViewport(0, 0, width, height);
+      //glfwSetWindowTitle("FPS: #{"%d.3" % @fps.calc}")
+
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glMatrixMode(GL_PROJECTION);
-      glLoadIdentity();
-      glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
-      glRotatef((float) glfwGetTime() * 50.f, 0.f, 0.f, 1.f);
-      glBegin(GL_TRIANGLES);
-      glColor3f(1.f, 0.f, 0.f);
-      glVertex3f(-0.6f, -0.4f, 0.f);
-      glColor3f(0.f, 1.f, 0.f);
-      glVertex3f(0.6f, -0.4f, 0.f);
-      glColor3f(0.f, 0.f, 1.f);
-      glVertex3f(0.f, 0.6f, 0.f);
-      glEnd();
 
-      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
-      mrb_gc_arena_restore(mrb, ai);
+      //mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
+      //mrb_gc_arena_restore(mrb, ai);
+      test.render(10, 10);
 
       glfwSwapBuffers(window);
       /* Poll for and process events */

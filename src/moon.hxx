@@ -13,6 +13,10 @@
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
+/* DevIL */
+#include <IL/il.h>
+#include <IL/ilu.h>
+
 /* Include the mruby header */
 #include <mruby.h>
 #include <mruby/array.h>
@@ -21,6 +25,8 @@
 #include <mruby/compile.h>
 #include <mruby/variable.h>
 #include <mruby/string.h>
+
+#include "texture.hxx"
 
 void moon_init_mrb_ext(mrb_state *mrb);
 
