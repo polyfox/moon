@@ -27,6 +27,7 @@
 #include <mruby/string.h>
 
 #include "texture.hxx"
+#include "sprite.hxx"
 
 void moon_init_mrb_ext(mrb_state *mrb);
 
