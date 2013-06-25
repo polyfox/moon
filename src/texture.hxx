@@ -4,19 +4,26 @@
 #include "moon.hxx"
 
 namespace Moon {
+
+  struct Rect {
+    GLfloat x;
+    GLfloat y;
+    GLfloat w;
+    GLfloat h;
+  };
+
   class Texture {
   public:
-    Texture(std::string path);
+    Texture(std::string filename);
     ~Texture();
-    void render(GLfloat x, GLfloat y);
-  private:
-    //Texture name
-    GLuint mTextureID;
 
-    //Texture dimensions
+    void render(GLfloat x, GLfloat y, Rect *clip=NULL);
+  private:
+    GLuint mTextureID;
     GLuint mTextureWidth;
     GLuint mTextureHeight;
   };
+
 };
 
 #endif
