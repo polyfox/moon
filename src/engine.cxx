@@ -2,7 +2,10 @@
 
 namespace Moon {
   Engine::Engine() {
-    glfwInit(); // TODO: check if lib was inited properly
+    if (!glfwInit()) {
+      printf( "Error initializing glfw!");
+      throw;
+    }
     load_mrb();
   }
 
@@ -26,13 +29,44 @@ namespace Moon {
 
     std::cout << "OpenGL v" << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR) << "." << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR) << std::endl;
 
-    // Setup OpenGL
+    setup_opengl();
+
+    // Get the ruby object containing the state manager
+    mrb_value moon = mrb_obj_value(mrb_class_get(mrb, "Moon"));
+    mrb_value states = mrb_iv_get(mrb, moon, mrb_intern(mrb, "@states"));
+
+    Sprite test("hyptosis_tile-art-batch-1.png");
+
+    /*Rect clip;
+    clip.x = 64.f; clip.y = 64.f;
+    clip.w = 32.f; clip.h = 32.f;*/
+
+    int ai = mrb_gc_arena_save(mrb);
+
+    while (!glfwWindowShouldClose(window))
+    {
+      //glfwSetWindowTitle("FPS: #{"%d.3" % @fps.calc}")
+
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
+
+      //mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
+      //mrb_gc_arena_restore(mrb, ai);
+      test.render(); //10, 10, &clip
+
+      glfwSwapBuffers(window);
+      glfwPollEvents(); /* Poll for and process events */
+    }
+  }
+
+  void Engine::setup_opengl() {
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    glOrtho(0, viewport[2], viewport[3], 0, -1, 1); // This sets up the OpenGL window so that (0,0) corresponds to the top left corner, and (640,480) corresponds to the bottom right hand corner.
+    glOrtho(0, viewport[2], viewport[3], 0, -1, 1); // Sets up OpenGL so that (0,0) corresponds to the top left corner, and (640,480) corresponds to the bottom right corner.
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(0.375, 0.375, 0.0); // http://www.opengl.org/archives/resources/faq/technical/transformations.htm#tran0030
@@ -48,7 +82,7 @@ namespace Moon {
     // behind won't raster it's polygons over the object that's in front because
     // the depth is tested first. The reason we disable depth testing is when you
     // mix blending and depth testing you get funky results.
-    //glDisable(GL_DEPTH_TEST)
+    // -------------------------------------------------------------------------
     // UPDATE: depth test can be used, but alpha testing needs to be enabled too,
     // or the alpha background will be black.
     glEnable (GL_DEPTH_TEST);
@@ -64,7 +98,6 @@ namespace Moon {
       printf( "Error initializing OpenGL! glGetError: %s\n", error);
       throw;
     }
-    // end setup OpenGL
 
     //Initialize DevIL
     ilInit();
@@ -77,31 +110,6 @@ namespace Moon {
       throw;
     }
     // end initialize DevIL
-
-    // Get the ruby object containing the state manager
-    mrb_value moon = mrb_obj_value(mrb_class_get(mrb, "Moon"));
-    mrb_value states = mrb_iv_get(mrb, moon, mrb_intern(mrb, "@states"));
-
-    Texture test("obama_sprite.png");
-    
-    int ai = mrb_gc_arena_save(mrb);
-
-    while (!glfwWindowShouldClose(window))
-    {
-      //glfwSetWindowTitle("FPS: #{"%d.3" % @fps.calc}")
-
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glMatrixMode(GL_MODELVIEW);
-      glLoadIdentity();
-
-      //mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
-      //mrb_gc_arena_restore(mrb, ai);
-      test.render(10, 10);
-
-      glfwSwapBuffers(window);
-      /* Poll for and process events */
-      glfwPollEvents();
-    }
   }
 
   void Engine::load_mrb() {

@@ -48,6 +48,8 @@ namespace Moon {
     void load_mrb_files_from_dir(const char*);
     void load_core_classes();
     void load_user_scripts();
+
+    void setup_opengl();
   };
 };
 #endif
