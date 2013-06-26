@@ -50,8 +50,8 @@ namespace Moon {
     GLFWwindow* window;
     
     void load_mrb();
-    void load_mrb_file(const char*, const char*);
-    void load_mrb_files_from_dir(const char*);
+    bool load_mrb_file(const char*, const char*);
+    bool load_mrb_files_from_dir(const char*);
     void load_core_classes();
     void load_user_scripts();
 

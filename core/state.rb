@@ -37,4 +37,6 @@ class State_Test < State
   end
 end
 
+raise "hi"
+
 Moon.push_state(State_Test)

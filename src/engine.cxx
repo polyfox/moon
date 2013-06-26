@@ -117,17 +117,14 @@ namespace Moon {
 
   void Engine::load_mrb() {
     mrb = mrb_open();
-    // mrb_context: Debugger context
-    mrb_context = mrbc_context_new(mrb);
-    mrb_context->capture_errors = 0;
-    mrb_context->dump_result = 0;
-    mrb_context->no_exec = 0;
-    
+    mrb_context = mrbc_context_new(mrb); // debugger context
+
     moon_init_mrb_core(mrb);
     moon_init_mrb_ext(mrb);
 
     load_core_classes();
     load_user_scripts();
+    mrbc_filename(mrb, mrb_context, "main");
   }
 
   void Engine::load_user_scripts() {
@@ -138,7 +135,7 @@ namespace Moon {
     load_mrb_files_from_dir("./core/");
   }
   
-  void Engine::load_mrb_files_from_dir(const char *directory) {
+  bool Engine::load_mrb_files_from_dir(const char *directory) {
     DIR *dir;
     struct dirent *ent;
     dir = opendir(directory);
@@ -146,7 +143,8 @@ namespace Moon {
     if (dir != NULL) {
       while ((ent = readdir(dir)) != NULL) {
         if (strstr(ent->d_name, ".rb")) {
-          load_mrb_file(directory, ent->d_name);
+          bool success = load_mrb_file(directory, ent->d_name);
+          if (!success) return false;
         } else if (ent->d_type == DT_DIR) {
           if (strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0) {
             std::string path;
@@ -158,19 +156,34 @@ namespace Moon {
         }
       }
     }
+    return true;
   }
   
-  void Engine::load_mrb_file(const char *file_path, const char *filename) {
+  bool Engine::load_mrb_file(const char *file_path, const char *filename) {
     char path[1024];
-    
+
+    mrb_sym zero_sym = mrb_intern2(mrb, "$0", 2);
+
     strcpy(path, file_path);
     strcat(path, filename);
-    
+
     FILE *file;
     
     file = fopen((const char*)path, "r");
-    mrb_load_file_cxt(mrb, file, mrb_context);
-    std::cout << path << " loaded." << std::endl;
+    mrbc_filename(mrb, mrb_context, filename);
+    mrb_gv_set(mrb, zero_sym, mrb_str_new_cstr(mrb, filename));
+    mrb_value v = mrb_load_file_cxt(mrb, file, mrb_context);
+
     fclose(file);
+    if(mrb->exc) {
+      if (!mrb_undef_p(v)) {
+        mrb_print_error(mrb);
+      }
+      exit(312);
+      return false;
+    } else {
+      std::cout << "script: " << path << std::endl;
+    }
+    return true;
   }
 }
