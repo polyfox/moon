@@ -4,6 +4,8 @@ namespace Moon {
   Sprite::Sprite(std::string filename) 
   : texture(filename)
   {
+    x = 0;
+    y = 0;
     clip = false;
   };
 

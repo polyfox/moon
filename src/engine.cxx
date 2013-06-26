@@ -6,16 +6,7 @@ namespace Moon {
       printf( "Error initializing glfw!");
       throw;
     }
-    load_mrb();
-  }
 
-  Engine::~Engine() {
-    glfwTerminate();
-    mrb_close(mrb);
-    mrbc_context_free(mrb, mrb_context);
-  }
-
-  void Engine::run() {
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     // Use OpenGL Core v2.1
@@ -23,19 +14,32 @@ namespace Moon {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-    GLFWwindow* window;
     window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
     glfwMakeContextCurrent(window);
 
     std::cout << "OpenGL v" << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR) << "." << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR) << std::endl;
-
     setup_opengl();
 
+    load_mrb();
+  }
+
+  Engine::~Engine() {
+    glfwTerminate();
+    std::cout << "Terminating..." << std::endl;
+    mrbc_context_free(mrb, mrb_context);
+    std::cout << "terminated mrb_context" << std::endl;
+    mrb_close(mrb);
+    std::cout << "terminated mrb" << std::endl;
+  }
+
+  void Engine::run() {
     // Get the ruby object containing the state manager
     mrb_value moon = mrb_obj_value(mrb_class_get(mrb, "Moon"));
     mrb_value states = mrb_iv_get(mrb, moon, mrb_intern(mrb, "@states"));
 
-    Sprite test("hyptosis_tile-art-batch-1.png");
+    Sprite *sprite = new Sprite("hyptosis_tile-art-batch-1.png");
+    // sprite->render();
+    delete sprite;
 
     int ai = mrb_gc_arena_save(mrb);
 
@@ -47,13 +51,18 @@ namespace Moon {
       glMatrixMode(GL_MODELVIEW);
       glLoadIdentity();
 
-      //mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
-      //mrb_gc_arena_restore(mrb, ai);
-      test.render(); //10, 10, &clip
+      if (mrb->exc) {
+        mrb_print_error(mrb);
+        break;
+      };
+
+      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
+      mrb_gc_arena_restore(mrb, ai);
 
       glfwSwapBuffers(window);
       glfwPollEvents(); /* Poll for and process events */
     }
+
   }
 
   void Engine::setup_opengl() {
@@ -116,6 +125,7 @@ namespace Moon {
     mrb_context->dump_result = 0;
     mrb_context->no_exec = 0;
     
+    moon_init_mrb_core(mrb);
     moon_init_mrb_ext(mrb);
 
     load_core_classes();

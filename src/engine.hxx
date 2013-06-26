@@ -30,6 +30,7 @@
 #include "texture.hxx"
 #include "sprite.hxx"
 
+void moon_init_mrb_core(mrb_state *mrb); // core side
 void moon_init_mrb_ext(mrb_state *mrb);
 
 namespace Moon {
@@ -44,6 +45,8 @@ namespace Moon {
     mrb_state *mrb;
     mrbc_context *mrb_context;
     //mrb_value game_object;
+
+    GLFWwindow* window;
     
     void load_mrb();
     void load_mrb_file(const char*, const char*);

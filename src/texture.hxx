@@ -35,6 +35,7 @@ namespace Moon {
     ~Texture();
 
     void render(GLfloat x, GLfloat y, Rect *clip=NULL);
+
   private:
     GLuint mTextureID;
     GLuint mTextureWidth;

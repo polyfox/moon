@@ -2,6 +2,7 @@
 
 namespace Moon {
   Texture::Texture(std::string filename) {
+
     //Texture loading success
     bool textureLoaded = false;
 
@@ -63,7 +64,7 @@ namespace Moon {
           glBindBuffer(GL_ARRAY_BUFFER, NULL);
           glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NULL);
         };
-      }
+      };
 
       //Delete file from memory
       ilDeleteImages( 1, &imgID );
@@ -74,7 +75,6 @@ namespace Moon {
       printf("Unable to load %s\n", filename.c_str());
       throw;
     }
-
   };
 
   Texture::~Texture() {
