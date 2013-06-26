@@ -19,14 +19,18 @@ class State
   # Gets called in each game loop iteration
   def update
     p "Updated!"
-    #Moon.push_state(Staty)
   end
 end
 
-class Staty < State
-  def updated
-    p "hipster state!"
+class State_Test < State
+  def initialize(engine)
+    super(engine)
+    @sprite = Sprite.new("obama_sprite.png")
+  end
+
+  def update
+    @sprite.render
   end
 end
 
-Moon.push_state(State)
+Moon.push_state(State_Test)
