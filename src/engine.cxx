@@ -1,4 +1,4 @@
-#include "moon.hxx"
+#include "engine.hxx"
 
 namespace Moon {
   Engine::Engine() {
@@ -36,10 +36,6 @@ namespace Moon {
     mrb_value states = mrb_iv_get(mrb, moon, mrb_intern(mrb, "@states"));
 
     Sprite test("hyptosis_tile-art-batch-1.png");
-
-    /*Rect clip;
-    clip.x = 64.f; clip.y = 64.f;
-    clip.w = 32.f; clip.h = 32.f;*/
 
     int ai = mrb_gc_arena_save(mrb);
 

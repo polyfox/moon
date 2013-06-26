@@ -12,6 +12,23 @@ namespace Moon {
     GLfloat h;
   };
 
+  struct VertexPos {
+    GLfloat x;
+    GLfloat y;
+  };
+
+  struct uvMap {
+    GLfloat u;
+    GLfloat v;
+  };
+
+  struct VertexData2D {
+    GLfloat x;
+    GLfloat y;
+    GLfloat u;
+    GLfloat v;
+  };
+
   class Texture {
   public:
     Texture(std::string filename);
@@ -22,6 +39,9 @@ namespace Moon {
     GLuint mTextureID;
     GLuint mTextureWidth;
     GLuint mTextureHeight;
+
+    GLuint mVBOID;
+    GLuint mIBOID;
   };
 
 };

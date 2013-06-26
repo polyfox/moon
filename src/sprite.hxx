@@ -2,6 +2,7 @@
 #define MOON_SPRITE_H
 
 #include "moon.hxx"
+#include "texture.hxx"
 
 namespace Moon {
   class Sprite {

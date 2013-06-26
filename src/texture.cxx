@@ -34,10 +34,34 @@ namespace Moon {
 
         //Check for error
         GLenum error = glGetError();
-        if( error != GL_NO_ERROR ) {
+        if(error != GL_NO_ERROR) {
           printf("Error loading texture from %p pixels! glGetError: %s\n", pixels, error);
         } else {
           textureLoaded = true;
+
+          //Vertex data
+          VertexData2D vData[4];
+          GLuint iData[4];
+
+          //Set rendering indices
+          iData[0] = 0;
+          iData[1] = 1;
+          iData[2] = 2;
+          iData[3] = 3;
+
+          //Create VBO
+          glGenBuffers(1, &mVBOID);
+          glBindBuffer(GL_ARRAY_BUFFER, mVBOID);
+          glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(VertexData2D), vData, GL_DYNAMIC_DRAW);
+
+          //Create IBO
+          glGenBuffers(1, &mIBOID);
+          glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBOID);
+          glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), iData, GL_DYNAMIC_DRAW);
+
+          //Unbind buffers
+          glBindBuffer(GL_ARRAY_BUFFER, NULL);
+          glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NULL);
         };
       }
 
@@ -59,14 +83,19 @@ namespace Moon {
       glDeleteTextures(1, &mTextureID);
       mTextureID = 0;
     }
+    //Free VBO and IBO
+    if(mVBOID != 0) {
+      glDeleteBuffers(1, &mVBOID);
+      glDeleteBuffers(1, &mIBOID);
+    }
 
     mTextureWidth = 0;
     mTextureHeight = 0;
   };
 
-  void Texture::render(GLfloat x, GLfloat y, Rect *clip=NULL) {
+  void Texture::render(GLfloat x, GLfloat y, Rect *clip /*=NULL*/) {
     // If the texture exists
-    if( mTextureID != 0 ) {
+    if(mTextureID != 0) {
       //Remove any previous transformations
       glLoadIdentity();
 
@@ -81,12 +110,12 @@ namespace Moon {
       GLfloat quadHeight = mTextureHeight;
 
       //Handle clipping
-      if(clip != NULL && clip.w != 0) {
+      if(clip != NULL) {
         //Texture coordinates
         texLeft = clip->x / mTextureWidth;
-        texRight = ( clip->x + clip->w ) / mTextureWidth;
+        texRight = (clip->x + clip->w) / mTextureWidth;
         texTop = clip->y / mTextureHeight;
-        texBottom = ( clip->y + clip->h ) / mTextureHeight;
+        texBottom = (clip->y + clip->h) / mTextureHeight;
 
         //Vertex coordinates
         quadWidth = clip->w;
@@ -96,14 +125,48 @@ namespace Moon {
       //Move to rendering point
       glTranslatef(x, y, 0.f);
 
-      glBindTexture( GL_TEXTURE_2D, mTextureID);
-      //Render textured quad
-      glBegin( GL_QUADS );
-        glTexCoord2f(  texLeft,    texTop ); glVertex2f(       0.f,        0.f );
-        glTexCoord2f( texRight,    texTop ); glVertex2f( quadWidth,        0.f );
-        glTexCoord2f( texRight, texBottom ); glVertex2f( quadWidth, quadHeight );
-        glTexCoord2f(  texLeft, texBottom ); glVertex2f(       0.f, quadHeight );
-      glEnd();
+
+      //Set vertex data
+      VertexData2D vData[4];
+
+      //Texture coordinates
+      vData[0].u =  texLeft; vData[0].v =    texTop;
+      vData[1].u = texRight; vData[1].v =    texTop;
+      vData[2].u = texRight; vData[2].v = texBottom;
+      vData[3].u =  texLeft; vData[3].v = texBottom;
+
+      //Vertex positions
+      vData[0].x =       0.f; vData[0].y =        0.f;
+      vData[1].x = quadWidth; vData[1].y =        0.f;
+      vData[2].x = quadWidth; vData[2].y = quadHeight;
+      vData[3].x =       0.f; vData[3].y = quadHeight;
+
+      //Set texture ID
+      glBindTexture(GL_TEXTURE_2D, mTextureID);
+
+      //Enable vertex and texture coordinate arrays
+      glEnableClientState(GL_VERTEX_ARRAY);
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+        //Bind vertex buffer
+        glBindBuffer(GL_ARRAY_BUFFER, mVBOID);
+
+        //Update vertex buffer data
+        glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(VertexData2D), vData);
+
+        //Set texture coordinate data
+        glTexCoordPointer(2, GL_FLOAT, sizeof(VertexData2D), (GLvoid*)offsetof(VertexData2D, u));
+
+        //Set vertex data
+        glVertexPointer(2, GL_FLOAT, sizeof(VertexData2D), (GLvoid*)offsetof(VertexData2D, x));
+
+        //Draw quad using vertex data and index data
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBOID);
+        glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, NULL);
+
+      //Disable vertex and texture coordinate arrays
+      glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+      glDisableClientState(GL_VERTEX_ARRAY);
     };
   };
 
