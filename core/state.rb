@@ -25,11 +25,15 @@ end
 class State_Test < State
   def initialize(engine)
     super(engine)
-    @sprite = Sprite.new("obama_sprite.png")
+    @sprites = []
+
+    15.times do
+      @sprites << Sprite.new("obama_sprite.png")
+    end
   end
 
   def update
-    @sprite.render
+    @sprites.each {|sprite| sprite.render }
   end
 end
 

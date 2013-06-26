@@ -3,7 +3,7 @@
 
 namespace Moon {
   static void moon_mrb_sprite_deallocate(mrb_state *mrb, void *p) {
-    delete((Sprite*)p); //(Sprite*)
+    delete((Sprite*)p);
   };
 
   static const struct mrb_data_type sprite_data_type = {
@@ -31,7 +31,6 @@ namespace Moon {
     MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
     
     mrb_define_class_method(mrb, sprite_class, "new", moon_mrb_sprite_new, MRB_ARGS_REQ(1));
-    //mrb_define_method(mrb, sprite_class, "initialize", moon_mrb_sprite_initialize, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, sprite_class, "render", moon_mrb_sprite_render, MRB_ARGS_NONE());
   };
 };

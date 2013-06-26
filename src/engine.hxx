@@ -29,6 +29,7 @@
 
 #include "texture.hxx"
 #include "sprite.hxx"
+#include "fps.hxx"
 
 void moon_init_mrb_core(mrb_state *mrb); // core side
 void moon_init_mrb_ext(mrb_state *mrb);
@@ -54,6 +55,7 @@ namespace Moon {
     void load_core_classes();
     void load_user_scripts();
 
+    void setup_glfw();
     void setup_opengl();
   };
 };

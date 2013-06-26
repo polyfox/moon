@@ -2,22 +2,7 @@
 
 namespace Moon {
   Engine::Engine() {
-    if (!glfwInit()) {
-      printf( "Error initializing glfw!");
-      throw;
-    }
-
-    glfwDefaultWindowHints();
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    // Use OpenGL Core v2.1
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    glfwMakeContextCurrent(window);
-
-    std::cout << "OpenGL v" << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR) << "." << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR) << std::endl;
+    setup_glfw();
     setup_opengl();
 
     load_mrb();
@@ -25,11 +10,8 @@ namespace Moon {
 
   Engine::~Engine() {
     glfwTerminate();
-    std::cout << "Terminating..." << std::endl;
     mrbc_context_free(mrb, mrb_context);
-    std::cout << "terminated mrb_context" << std::endl;
     mrb_close(mrb);
-    std::cout << "terminated mrb" << std::endl;
   }
 
   void Engine::run() {
@@ -37,15 +19,14 @@ namespace Moon {
     mrb_value moon = mrb_obj_value(mrb_class_get(mrb, "Moon"));
     mrb_value states = mrb_iv_get(mrb, moon, mrb_intern(mrb, "@states"));
 
-    Sprite *sprite = new Sprite("hyptosis_tile-art-batch-1.png");
-    // sprite->render();
-    delete sprite;
-
     int ai = mrb_gc_arena_save(mrb);
 
     while (!glfwWindowShouldClose(window))
     {
-      //glfwSetWindowTitle("FPS: #{"%d.3" % @fps.calc}")
+      FPS::FPSControl.onLoop();
+      char title[50];
+      sprintf(title, "FPS: %i", FPS::FPSControl.getFPS());
+      glfwSetWindowTitle(window, title);
 
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glMatrixMode(GL_MODELVIEW);
@@ -63,6 +44,23 @@ namespace Moon {
       glfwPollEvents(); /* Poll for and process events */
     }
 
+  }
+  void Engine::setup_glfw() {
+    if (!glfwInit()) {
+      printf( "Error initializing glfw!");
+      throw;
+    }
+
+    glfwDefaultWindowHints();
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+    // Use OpenGL Core v2.1
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    glfwMakeContextCurrent(window);
+    std::cout << "OpenGL v" << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR) << "." << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR) << std::endl;
   }
 
   void Engine::setup_opengl() {
