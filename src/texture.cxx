@@ -31,7 +31,7 @@ namespace Moon {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mTextureWidth, mTextureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glBindTexture(GL_TEXTURE_2D, NULL);
+        glBindTexture(GL_TEXTURE_2D, 0);
 
         //Check for error
         GLenum error = glGetError();
@@ -61,8 +61,8 @@ namespace Moon {
           glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), iData, GL_DYNAMIC_DRAW);
 
           //Unbind buffers
-          glBindBuffer(GL_ARRAY_BUFFER, NULL);
-          glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NULL);
+          glBindBuffer(GL_ARRAY_BUFFER, 0);
+          glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         };
       };
 

@@ -31,6 +31,7 @@ mruby:
 
 .PHONY : clean
 clean :
+	-$(RM_F) $(BUILD_DIR)/libmoon.a
 	-$(RM_F) $(TARGET) $(OBJECT)
 	-$(RM_F) $(OBJECT:.o=.d)
 	$(MAKE) -C game clean
