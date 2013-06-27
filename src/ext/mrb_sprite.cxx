@@ -14,7 +14,7 @@ namespace Moon {
     mrb_value filename;
     mrb_get_args(mrb, "S", &filename);
 
-    Sprite *sprite = new Sprite(mrb_string_value_cstr(mrb, &filename));
+    Sprite *sprite = new Sprite(mrb_string_value_ptr(mrb, filename));
     return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(klass), &sprite_data_type, sprite));
   };
 
