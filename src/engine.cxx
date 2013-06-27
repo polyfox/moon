@@ -1,4 +1,7 @@
 #include "engine.hxx"
+/* DevIL */
+#include <IL/il.h>
+#include <IL/ilu.h>
 
 namespace Moon {
   Engine::Engine() {
@@ -98,7 +101,7 @@ namespace Moon {
     //Check for error
     GLenum error = glGetError();
     if(error != GL_NO_ERROR) {
-      printf( "Error initializing OpenGL! glGetError: %s\n", error);
+      printf( "Error initializing OpenGL! glGetError: %i\n", error);
       throw;
     }
 
@@ -168,7 +171,7 @@ namespace Moon {
     strcat(path, filename);
 
     FILE *file;
-    
+
     file = fopen((const char*)path, "r");
     mrbc_filename(mrb, mrb_context, filename);
     mrb_gv_set(mrb, zero_sym, mrb_str_new_cstr(mrb, filename));

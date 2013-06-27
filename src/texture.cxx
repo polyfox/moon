@@ -1,4 +1,7 @@
 #include "texture.hxx"
+/* DevIL */
+#include <IL/il.h>
+#include <IL/ilu.h>
 
 namespace Moon {
   Texture::Texture(std::string filename) {

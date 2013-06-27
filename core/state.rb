@@ -18,7 +18,7 @@ class State
 
   # Gets called in each game loop iteration
   def update
-    p "Updated!"
+
   end
 end
 

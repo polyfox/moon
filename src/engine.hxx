@@ -10,13 +10,8 @@
 #include <string.h>
 
 /* OpenGL */
-//#define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
-
-/* DevIL */
-#include <IL/il.h>
-#include <IL/ilu.h>
 
 /* Include the mruby header */
 #include <mruby.h>
@@ -42,7 +37,6 @@ namespace Moon {
     void run();
 
   private:
-    //EngineSetup *setup;
     mrb_state *mrb;
     mrbc_context *mrb_context;
     //mrb_value game_object;
