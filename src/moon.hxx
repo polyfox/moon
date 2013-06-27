@@ -14,10 +14,6 @@
 #include <GL/gl.h>
 #include <GLFW/glfw3.h>
 
-/* DevIL */
-#include <IL/il.h>
-#include <IL/ilu.h>
-
 /* Include the mruby header */
 #include <mruby.h>
 #include <mruby/class.h>
@@ -27,7 +23,5 @@
 #include <mruby/compile.h>
 #include <mruby/variable.h>
 #include <mruby/string.h>
-
-#define StringValueCStr(r) std::string(RSTRING_PTR(r), RSTRING_LEN(r))
 
 #endif
