@@ -27,8 +27,11 @@ class State_Test < State
     super(engine)
     @sprites = []
 
-    15.times do
-      @sprites << Sprite.new("obama_sprite.png")
+    150.times do
+      sprite = Sprite.new("obama_sprite.png")
+      sprite.x = rand(640)
+      sprite.y = rand(480)
+      @sprites << sprite
     end
   end
 
