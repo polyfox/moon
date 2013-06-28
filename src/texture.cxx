@@ -4,7 +4,9 @@
 #include <IL/ilu.h>
 
 namespace Moon {
-  Texture::Texture(std::string filename) {
+  Texture::Texture(std::string filename)
+  : CacheObject(filename)
+  {
 
     //Texture loading success
     bool textureLoaded = false;
@@ -172,5 +174,38 @@ namespace Moon {
       glDisableClientState(GL_VERTEX_ARRAY);
     };
   };
+
+  std::shared_ptr<Texture> Texture::load(std::string filename) {
+    auto const it = CacheObject::_cache.find(filename);
+    if (it == CacheObject::_cache.end()) {
+      std::cout << "cache miss!" << std::endl;
+      std::shared_ptr<Texture> ptr = std::shared_ptr<Texture>(new Texture(filename));
+      CacheObject::_cache[filename] = ptr;
+      return ptr;
+    }
+    std::cout << "cache hit!" << std::endl;
+    return std::static_pointer_cast<Texture>(it->second.lock());
+  }
+
+  std::unordered_map<std::string, std::weak_ptr<CacheObject>> CacheObject::_cache;
+
+  CacheObject::CacheObject(std::string const& key) {
+    std::cout << "added " << key << " to cache" << std::endl;
+    this->_key = key;
+    //CacheObject::_cache[key] = this->shared_from_this(); // Note: override previous resource of same key, if any
+    // this doesn't work because the object wasn't constructed yet and at least one shared_ptr must exist
+  };
+
+  CacheObject::~CacheObject() {
+    std::cout << "removed " << _key << " from cache" << std::endl;
+    CacheObject::_cache.erase(_key);
+  };
+
+  /*std::shared_ptr<CacheObject> CacheObject::get(std::string const& key) const {
+    auto const it = _cache.find(key);
+    if (it == _cache.end()) { return std::shared_ptr<CacheObject>(); }
+
+    return it->second.lock();
+  };*/
 
 }

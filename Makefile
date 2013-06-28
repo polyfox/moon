@@ -1,7 +1,7 @@
 BASEDIR = .
 BUILD_DIR = ./build
 CC = g++
-ALL_CFLAGS = -g -Wall
+ALL_CFLAGS = -g -Wall -std=c++11
 OBJECT = $(patsubst %.cxx,%.o,$(wildcard $(BASEDIR)/src/*.cxx)) $(patsubst %.cxx,%.o,$(wildcard $(BASEDIR)/src/**/*.cxx))
 INCLUDES = -I$(BASEDIR)/src -I$(BASEDIR)/include -I$(BASEDIR)/lib -I$(BASEDIR)/vendor/mruby/include
 RM_F := rm -f

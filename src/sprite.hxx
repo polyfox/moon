@@ -17,7 +17,7 @@ namespace Moon {
 
     void render();
   private:
-    Texture texture;
+    std::shared_ptr<Texture> texture;
   };
 };
 
