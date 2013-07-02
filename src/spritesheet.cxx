@@ -111,7 +111,7 @@ namespace Moon {
     return true;
   };
 
-  void Spritesheet::render(int x, int y, int index) {
+  void Spritesheet::render(const int &x, const int &y, const int &index) {
     //Sprite sheet data exists
     if(mVertexDataBuffer != NULL) {
       glLoadIdentity();

@@ -109,7 +109,7 @@ namespace Moon {
   GLuint Texture::id() {
     return mTextureID;
   };
-  void Texture::render(GLfloat x, GLfloat y, Rect *clip /*=NULL*/) {
+  void Texture::render(const GLfloat &x, const GLfloat &y, Rect *clip /*=NULL*/) {
     // If the texture exists
     if(mTextureID != 0) {
       //Remove any previous transformations

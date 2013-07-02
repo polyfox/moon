@@ -72,7 +72,7 @@ namespace Moon {
     ~Texture();
 
     static std::shared_ptr<Texture> load(std::string filename);
-    void render(GLfloat x, GLfloat y, Rect *clip=NULL);
+    void render(const GLfloat &x, const GLfloat &y, Rect *clip=NULL);
 
     GLuint width();
     GLuint height();
