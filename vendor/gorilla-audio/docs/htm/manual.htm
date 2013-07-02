@@ -1,0 +1,847 @@
+<img src="256.png" align="right" />
+<div class="heading1">Table of Contents</div>
+
+<div class="tocSection">
+  <div class="heading3"><a href="#sec1">1 - Introduction</a></div>
+  <ul>
+    <div class="heading4"><a href="#sec1_1">1.1 - About</a></div>
+    <div class="heading4"><a href="#sec1_2">1.2 - Motivation</a></div>
+    <div class="heading4"><a href="#sec1_3">1.3 - Principles</a></div>
+    <div class="heading4"><a href="#sec1_4">1.4 - Features</a></div>
+    <div class="heading4"><a href="#sec1_5">1.5 - Future Development</a></div>
+    <div class="heading4"><a href="#sec1_6">1.6 - Comparison Against Alternative Libraries</a></div>
+    <div class="heading4"><a href="#sec1_7">1.7 - License</a></div>
+    <div class="heading4"><a href="#sec1_8">1.8 - Credits</a></div>
+  </ul>
+</div>
+
+<div class="tocSection">
+  <div class="heading3"><a href="#sec2">2 - Getting Started</a></div>
+  <ul>
+    <div class="heading4"><a href="#sec2_1">2.1 Prerequisites</a></div>
+    <div class="heading4"><a href="#sec2_2">2.2 Setup</a></div>
+    <ul>
+      <div class="heading5"><a href="#sec2_2_1">2.2.1 Downloading</a></div>
+      <div class="heading5"><a href="#sec2_2_2">2.2.2 Building Sources</a></div>
+      <div class="heading5"><a href="#sec2_2_3">2.2.3 Linking</a></div>
+    </ul>
+    <div class="heading4"><a href="#sec2_3">2.3 External Dependencies</a></div>
+    <ul>
+      <div class="heading5"><a href="#sec2_3_1">2.3.1 OpenAL (Windows, Mac, Linux)</a></div>
+      <div class="heading5"><a href="#sec2_3_2">2.3.2 DirectX (Windows)</a></div>
+      <div class="heading5"><a href="#sec2_3_3">2.3.3 Ogg/Vorbis (Windows, Mac, Linux)</a></div>
+    </ul>
+  </ul>
+</div>
+
+<div class="tocSection">
+  <div class="heading3"><a href="#sec3">3 - API Overview</a></div>
+  <ul>
+    <div class="heading4"><a href="#sec3_1">3.1 Modules</a></div>
+    <div class="heading4"><a href="#sec3_2">3.2 Memory Management</a></div>
+    <div class="heading4"><a href="#sec3_3">3.3 Concepts</a></div>
+    <ul>
+      <div class="heading5"><a href="#sec3_3_1">3.3.1 Audio Data (PCM)</a></div>
+      <div class="heading5"><a href="#sec3_3_2">3.3.2 PCM Sample Rate</a></div>
+      <div class="heading5"><a href="#sec3_3_3">3.3.3 Streams</a></div>
+      <div class="heading5"><a href="#sec3_3_4">3.3.4 Data Sources</a></div>
+      <div class="heading5"><a href="#sec3_3_5">3.3.5 Sample Sources</a></div>
+      <div class="heading5"><a href="#sec3_3_6">3.3.6 Buffered Streaming Audio</a></div>
+      <div class="heading5"><a href="#sec3_3_7">3.3.7 Cached Audio Data</a></div>
+      <div class="heading5"><a href="#sec3_3_8">3.3.8 Audio Handles</a></div>
+      <div class="heading5"><a href="#sec3_3_9">3.3.9 Mixing</a></div>
+      <div class="heading5"><a href="#sec3_3_10">3.3.10 Audio Devices</a></div>
+    </ul>
+    <div class="heading4"><a href="#sec3_4">3.4 The Audio Pipeline</a></div>
+  </ul>
+</div>
+
+<div class="tocSection">
+  <div class="heading3"><a href="#sec4">4 - Quick Start Tutorial</a></div>
+  <ul>
+    <div class="heading4"><a href="#sec4_1">4.1 Including the library headers</a></div>
+    <div class="heading4"><a href="#sec4_2">4.2 Setup/Cleanup</a></div>
+    <div class="heading4"><a href="#sec4_3">4.3 Updating the manager</a></div>
+    <div class="heading4"><a href="#sec4_4">4.4 Playing sounds</a></div>
+    <ul>
+      <li><div class="heading5"><a href="#sec4_4_1">4.4.1 Loading/playing static sounds</a></div>
+      <li><div class="heading5"><a href="#sec4_4_2">4.4.2 Playing buffered streams</a></div>
+    </ul>
+    <div class="heading4"><a href="#sec4_5">4.5 Controlling handles</a></div>
+    <div class="heading4"><a href="#sec4_6">4.6 Looping</a></div>
+    <div class="heading4"><a href="#sec4_7">4.7 Callbacks</a></div>
+    <div class="heading4"><a href="#sec4_8">4.8 Further Examples</a></div>
+  </ul>
+</div>
+
+<div class="tocSection">
+  <div class="heading3"><a href="#sec5">5 - History</a></div>
+  <ul>
+    <div class="heading4"><a href="#sec5_1">5.1 Versions</a></div>
+    <div class="heading4"><a href="#sec5_2">5.2 Development Roadmap</a></div>
+  </ul>
+</div>
+
+<hr />
+
+<a name="sec1"></a>
+<div class="heading1">1&nbsp;&nbsp;Introduction</div>
+
+<a name="sec1_1"></a>
+<div class="heading2">1.1&nbsp;&nbsp;About</div>
+<div class="copytext">
+  <p>Gorilla Audio is an attempt to make a free, straightforward, cross-platform, high-level software audio mixer that supports playback of both static and streaming sounds. It is intended for video game development, but should easily support many other real-time audio software applications.</p>
+
+  <p>The library is written in ANSI C, and is licensed under the MIT license.  It was written by Tim Ambrogi, engine programmer at Final Form Games (makers of Jamestown).</p>
+
+  <p>This library is currently under active development, and has been used in two successful commercial game projects: <a href="http://www.spacesofplay.com/spirits/">Spirits</a> and <a href="http://www.jamestowngame.com/">Jamestown</a>. It will be used in the upcoming PC/Mac/Linux release of <a href="http://spikysnail.com/the-splatters/">The Splatters</a>.</p>
+</div>
+
+<a name="sec1_2"></a>
+<div class="heading2">1.2&nbsp;&nbsp;Motivation</div>
+<div class="copytext">
+  <p>In the world of independent game development, there exist many excellent tools to eliminate the need for writing low-level systems.  Engines like Unreal and Unity provide out-of-the box everything, and middleware like FMod and BASS give you tremendous power to implement great game audio.</p>
+
+  <p><b>Q:</b> <i>So, why bother with another audio library?</i></p>
+
+  <p><b>A:</b> The short answer is because every other library comes with strings attached.  Either you're married to a heavyweight framework, or it's a black box, or you need to pay for a license, or the license doesn't allow for commercial use, or you need to write a huge amount of code to perform common/straightforward tasks; generally it's a combination thereof.</p>
+
+  <p>Additionally, I have spoken to many indie developers who created their own game on top of a homebrew engine, and then decided to port the game to other platforms.  When it comes to writing cross-platform audio, the common solutions are to a) write up a thin layer on top of OpenAL that implements sounds and streaming music, or b) buy a middleware license.</p>
+
+  <p>Gorilla Audio is an attempt to provide a third option: a completely free library that is quicker-to-write and more powerful than a thin OpenAL layer, and (infinitely!) cheaper than commercial middleware.</p>
+</div>
+
+<a name="sec1_3"></a>
+<div class="heading2">1.3&nbsp;&nbsp;Principles</div>
+<div class="copytext">
+  <p>Gorilla Audio was designed with the following guiding principles in mind:</p>
+
+  <ul>
+    <li><i>Completely free</i> - You shouldn't need to pay money to play audio in your game
+    <li><i>Beginner-friendly</i> - You shouldn't need to be an expert audio programmer
+    <li><i>Cross-platform</i> - You shouldn't need to learn a new audio library to develop for a new platform
+    <li><i>Hardware-independent</i> - Your choice of hardware should not arbitrarily limit your audio
+    <li><i>Flexible</i> - You shouldn't need to switch libraries because your game has special needs
+    <li><i>Powerful</i> - You should be free to explore creative new audio ideas
+    <li><i>Efficient</i> - You shouldn't have to worry about performance on a regular basis
+  </ul>
+  <p>While the current version of library satisfies each of these goals to a certain extent, there's still plenty of room to improve. As the library develops, it will endeavor to uphold these guiding principles.</p>
+</div>
+
+<a name="sec1_4"></a>
+<div class="heading2">1.4&nbsp;&nbsp;Features</div>
+<div class="copytext">
+  <p>Gorilla Audio offers the following features:</p>
+  <ul>
+    <li>Truly free, open-source library
+    <li>Cross-platform on Windows, Mac, and Linux
+    <li>Choice of powerful low-level interface or convenient high-level interface
+    <li>Cached static sound effects and low-memory streaming music
+    <li>Volume, pitch, pan, and looping control (with configurable loop points)
+    <li>Panning for both mono and stereo audio data
+    <li>WAV and Ogg Vorbis audio format support
+    <li>Out-of-the-box file, archive, or memory-based data sources
+    <li>Configurable threading (single- or multi-threaded)
+    <li>Straightforward portability to new platforms
+    <li>Extensible component-based streaming data pipeline
+  </ul>
+</div>
+
+<a name="sec1_5"></a>
+<div class="heading2">1.5&nbsp;&nbsp;Future Development</div>
+<div class="copytext">
+  <p>The current feature set represents a minimal but powerful subset of what's available in many commercial audio packages.  This feature set is just a starting point, and over the next year several other features will be added to the library.  Such features include:</p>
+
+  <ul>
+    <li>iOS and Android ports
+    <li>Simple push-to-buffer data + sample sources (for dynamic audio playback)
+    <li>Atomic multi-stream synchronization
+    <li>Customizable DSP filters
+    <li>Network streaming
+    <li>Microphone recording
+    <li>(Optional) MP3 support
+    <li>Improved error reporting
+  </ul>
+
+  <p>You can browse the full roadmap <a href="#sec5_2">here</a>.</p>
+</div>
+
+<a name="sec1_6"></a>
+<div class="heading2">1.6&nbsp;&nbsp;Comparison Against Alternative Libraries</div>
+<div class="copytext">
+  <p>Gorilla is still a young library, but here are some reasons why it may already be a better choice than some popular alternatives...</p>
+
+  <p><i>...OpenAL</i></p>
+  <ul>
+    <li><b>Ease of use</b> - With OpenAL, you have to manage low-level buffers, write your own thread code, and load your own file formats, whereas Gorilla takes care of all of that for you
+    <li><b>Permissive license</b> -  OpenAL uses the LGPL license, which is annoying when deploying commercial software, especially on Windows (see: oalinst.exe)
+    <li><b>Higher-level interface</b> - Gorilla offers out-of-the-box support for multi-threaded background streaming, OGG/WAV-loading files, and other common features that OpenAL expects you to write yourself
+    <li><b>Unlimited mixer channels</b> - Regardless of hardware/drivers, Gorilla supports unlimited channels on any platform. OpenAL's channel count is implementation-dependent
+  </ul>
+
+  <p><i>...SDL_mixer</i></p>
+  <ul>
+    <li><b>Multiple background streams</b> - SDL_mixer only allows for a single background stream
+    <li><b>No SDL dependency</b> - lighter-weight and no LGPL license
+  </ul>
+
+  <p><i>...DirectSound/XAudio/WASAPI/XACT</i></p>
+  <ul>
+    <li><b>Cross-platform</b> - These API's are not intended to run on non-Microsoft platforms
+    <li><b>Ready out-of-the-box</b> - Gorilla supports background audio streams and OGG/WAV-loading without any extra code or plugins
+    <li><b>Streamlined interface</b> - Because Gorilla isn't everything to everyone, it eliminates a huge amount of boilerplate code that would be needed to use these more general systems
+  </ul>
+
+  <p><i>...irrKlang</i></p>
+  <ul>
+    <li><b>Free to everyone</b> - irrKlang is not free software
+    <li><b>Open-source</b> - Closed-source libraries such as irrKlang are often more difficult to debug when something goes wrong, and you cannot implement your own features except through plugins
+    <li><b>Better performance</b> - Under many circumstances, Gorilla has a smaller performance cost
+  </ul>
+
+  <p><i>...BASS</i></p>
+  <ul>
+    <li><b>Free to everyone</b> - BASS is not free software
+    <li><b>Open-source</b> - Closed-source libraries such as BASS are often more difficult to debug when something goes wrong, and you cannot implement your own features except through plugins
+  </ul>
+
+  <p><i>...FMod</i></p>
+  <ul>
+    <li><b>Free to everyone</b> - FMod is not free software, though it is fabulous! :)
+  </ul>
+
+  All that said, these are all excellent software packages.  If Gorilla is not the tool for you then I highly recommend you choose one of the above based on your needs!
+</div>
+
+<a name="sec1_7"></a>
+<div class="heading2">1.7&nbsp;&nbsp;License</div>
+<div class="copytext">
+  <p>Gorilla Audio is licensed under the <b>MIT license</b>:</p>
+  <blockquote>
+  Copyright (C) 2012 Tim Ambrogi<br />
+  <br />
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:<br />
+  <br />
+  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.<br />
+  <br />
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  </blockquote>
+
+  <p>The project contains some other libraries that are licensed under terms other than MIT. This includes code under the Xiph and LGPL licenses. Non-MIT code in the repository is denoted by COPYING files.</p>
+</div>
+
+<a name="sec1_8"></a>
+<div class="heading2">1.8&nbsp;&nbsp;Credits</div>
+<div class="copytext">
+  <p><i>Gorilla Audio is written and maintained by</i>: <b>Tim Ambrogi</b>.  He is the engine programmer at <a href="http://www.jamestowngame.com/">Final Form Games</a> (Jamestown), and was responsible for the PC and Linux ports of Spirits.</p>
+
+  <p><i>You can contact him at</i>: <b>tim@finalformgames.com</b>, or follow him on twitter (<b>@westquote</b>)</p>
+
+  <p><i>Logo courtesy of:</i> Mike Ambrogi</p>
+  <p><i>Demo music by:</i> Francisco Cerda, and licensed under creative commons</p>
+  <p><i>Grateful thanks to:</i> Jason Earp, Niv Fisher, Justin Mullens, Jordan Fehr, Jim Crawford, Ichiro Lambe, Ryan Gordon, Nicholas 'Indy' Ray, and Chris Cornell</p>
+</div>
+
+<hr />
+
+<a name="sec2"></a>
+<div class="heading1">2&nbsp;&nbsp;Getting Started</div>
+
+<a name="sec2_1"></a>
+<div class="heading2">2.1&nbsp;&nbsp;Prerequisites</div>
+<div class="copytext">
+  <p>While Gorilla Audio strives to be a beginner-friendly library, it does assume that you have some experience programming in either C or C++, and that you know how to create projects and link libraries on your platform.</p>
+
+  <p>If you are building the library from source, you will need to install CMake 2.8 or later, as well as a C or C++ compiler.</p>
+
+  <p>Please see section '<a href="#sec2_3">2.3 - External Dependencies</a>' for platform-specific details on setting up external libraries.</p>
+</div>
+
+<a name="sec2_2"></a>
+<div class="heading2">2.2&nbsp;&nbsp;Setup</div>
+<div class="copytext">
+
+  <a name="sec2_2_1"></a>
+  <div class="heading3">2.2.1&nbsp;&nbsp;Downloading</div>
+  <div class="copytext">
+    <p>You can download the latest stable binaries + source code from the <a href="http://code.google.com/p/gorilla-audio/">downloads page</a>.</p>
+
+    <p>For the latest development version, you must clone the project using Mercurial from this location: <blockquote><i>hg clone https://code.google.com/p/gorilla-audio/</i></blockquote></p>
+
+    <p>If you need a free Mercurial GUI client, we recommend either <a href="http://tortoisehg.bitbucket.org/">TortoiseHg</a> or <a href=="http://www.sourcetreeapp.com/">SourceTree</a>.<p>
+  </div>
+  
+  <a name="sec2_2_2"></a>
+  <div class="heading3">2.2.2&nbsp;&nbsp;Building Sources</div>
+  <div class="copytext">
+    <p>Before building sources on any platform, make sure to download and expand the latest source code archive, and to install <a href="http://www.cmake.org/cmake/resources/software.html">CMake 2.8</a> or higher.  For the purposes of this section <span class="code">[install_root]</span> refers to the directory where you expanded the source code archive.</p>
+
+    <div class="heading4">Windows</div>
+    <ol>
+      <li>Install Visual Studio 2008 or <a href="http://www.microsoft.com/visualstudio/en-us/products/2008-editions/express">Visual C++ 2008 Express Edition</a> (will likely work with later versions)
+      <li>In a command prompt, navigate to <span class="code">[install_root]/build/cmake</span>
+      <li>Run 'cmake .'
+      <li>In Visual Studio, open <span class="code">[install_root]/build/cmake/Gorilla.sln</span>
+      <li>Select your build configuration type, and Run 'Build->Build Solution' from the menu
+    </ol>
+
+    <div class="heading4">OSX</div>
+    <ol>
+      <li>Install XCode 4.1 or higher (will likely work with earlier versions)
+      <li>In a command prompt, navigate to <span class="code">[install_root]/build/cmake</span>
+      <li>Run 'cmake .' (for Debug builds, run 'cmake . -DCMAKE_BUILD_TYPE=Debug')
+      <li>Run 'make'
+    </ol>
+
+    <div class="heading4">Linux</div>
+    <ol>
+      <li>Install GCC 4.6 or higher (will likely work with earlier versions)
+      <li>Install the OpenAL development libraries (<span class="code">libopenal-dev</span>)
+      <li>In a command prompt, navigate to <span class="code">[install_root]/build/cmake</span>
+      <li>Run 'cmake .' (for Debug builds, run 'cmake . -DCMAKE_BUILD_TYPE=Debug')
+      <li>Run 'make'
+    </ol>
+  </div>
+  
+  <a name="sec2_2_3"></a>
+  <div class="heading3">2.2.3&nbsp;&nbsp;Linking</div>
+  <div class="copytext">
+    <p>To use Gorilla Audio in your own project, you must include the library headers, as well as link against the library binaries.  Please add <span class="code">[install_root]/include</span> to your list of additional include directories.  If you built sources, you will find the compiled library binaries under <span class="code">[install_root]/bin/[platform]</span>.  If you downloaded a binary package, you will find the library binaries within said package.</p>
+
+    <p>You are expected to know how to configure your project based on your choice of platform of development tool.  If you do not, please search the internet for 'linking external library <tool> <platform>'.</p>
+  </div>
+</div>
+
+<a name="sec2_3"></a>
+<div class="heading2">2.3&nbsp;&nbsp;External Dependencies</div>
+<div class="copytext">
+  <p>Gorilla Audio can be configured to use external libraries, which may require additional configuration as described below:</p>
+
+  <a name="sec2_3_1"></a>
+  <div class="heading3">2.3.1&nbsp;&nbsp;OpenAL (Windows, Mac, Linux)</div>
+  <div class="copytext">
+    <p>If the <span class="code">ENABLE_OPENAL</span> flag is set in the CMake configuration, it will compile and dynamically-link against the OpenAL library on your platform.  You may need to do full rebuild after setting the <span class="code">ENABLE_OPENAL</span> flag in CMake.  If you enable this flag, you will also need to link your final project against the OpenAL library.</p>
+
+    <p>The Windows headers and .lib files for OpenAL are included as part of the Gorilla Audio project.  On Windows, you will need to distribute the OpenAL runtime (<span class="code">oalinst.exe</span>) along with your final product. The Windows OpenAL runtime is available <a href="http://connect.creativelabs.com/openal/Downloads/oalinst.zip">here</a>.</p>
+
+    <p>On Linux, you will need to install the <span class="code">libopenal-dev</span> package in order to link against OpenAL.</p>
+
+    <p>OpenAL is licensed under the LGPL license.</p>
+  </div>
+  
+  <a name="sec2_3_2"></a>
+  <div class="heading3">2.3.2&nbsp;&nbsp;DirectX (Windows)</div>
+  <div class="copytext">
+    <p>If the <span class="code">ENABLE_XAUDIO2</span> flag is set in the CMake configuration, it will compile and link against the XAudio2 library (part of DirectX).  You may need to do full rebuild after setting the <span class="code">ENABLE_XAUDIO2</span> flag in CMake.  If you enable this flag, you will also need to link your final project against the XAudio2 DirectX library (<span class="code">xapobase.lib</span>).</p>
+
+    <p>Once you set the <span class="code">ENABLE_XAUDIO2</span> flag, you will need to provide a path to the DirectX SDK directory (the directory containing the Directx 'Include', 'Lib', and 'Redist' directories).  This is done by setting the <span class="code">DIRECTXSDK_PATH</span> in your CMake configuration.  You can download the DirectX SDK <a href="http://www.microsoft.com/en-us/download/details.aspx?id=6812">here</a>.</p>
+  </div>
+  
+  <a name="sec2_3_3"></a>
+  <div class="heading3">2.3.3&nbsp;&nbsp;Ogg/Vorbis (Windows, Mac Linux)</div>
+  <div class="copytext">
+    <p>The Ogg/Vorbis project sources are included as part of the Gorilla Audio project.  They are used by the GAU library.</p>
+
+    <p>Ogg/Vorbis is licensed under the Xiph license.</p>
+  </div>
+</div>
+
+<hr />
+
+<a name="sec3"></a>
+<div class="heading1">3&nbsp;&nbsp;API Overview</div>
+
+<a name="sec3_1"></a>
+<div class="heading2">3.1&nbsp;&nbsp;Modules</div>
+<div class="copytext">
+  <p>The Gorilla Audio library consists of 3 modules:</p>
+  <ul>
+    <li><b>Gorilla Common (GC)</b> - Non-audio-specific classes that are common to most libraries.
+    <li><b>Gorilla Audio (GA)</b> - The core low-level interface for audio streaming and playback.
+    <li><b>Gorilla Audio Utility (GAU)</b> - The high-level interface for initializing, loading and managing audio streaming and playback. GAU is built entirely on top of GA.
+  </ul>
+  <p>To use these modules, you can just include "gorilla/ga.h" and "gorilla/gau.h". The GC library is implicitly included by these other libraries.</p>
+</div>
+
+<a name="sec3_2"></a>
+<div class="heading2">3.2&nbsp;&nbsp;Memory Management</div>
+<div class="copytext">
+  <p>Memory management in Gorilla is handled in two different ways, depending on the type of object.  The API reference specifies which objects use which model.</p>
+  <ul>
+    <li><b>POD Objects</b>: For simple plain-ol'-data objects (POD), you can allocate/free the object any way you please, though you should be sure to call their *_init() function if available.
+    <li><b>Single-Client Objects</b>: For objects that have a single client, a managed create/destroy model is used.  NOTE: This is identical to the reference-counting model should be used identically to Multiple-Client Objects, except that instead of calling *_release(), you must instead call *_destroy().
+    <li><b>Multiple-Client Objects</b>: For objects that are shared between multiple clients, a standard acquire/release reference-counting model is used.  Multiple-Client objects always come with a *_create() function that creates an instance of the object.  To free the object, DO NOT attempt to deallocate it yourself.  Instead, you should call *_release().  When passing the object reference to a new client, you MUST make sure to call *_acquire() to add an additional reference.  Otherwise, you may find the object unexpectedly deallocated when all other clients have released their reference.
+  </ul>
+</div>
+
+<a name="sec3_3"></a>
+<div class="heading2">3.3&nbsp;&nbsp;Concepts</div>
+<div class="copytext">
+
+  <a name="sec3_3_1"></a>
+  <div class="heading3">3.3.1&nbsp;&nbsp;Audio Data (PCM)</div>
+  <div class="copytext">
+    <p>Audio data on computers is usually represented as Pulse Code Modulation (PCM) data.  PCM data stores the position of a speaker drum over time, which lets us approximate the analog waveforms of sounds. PCM data is stored as a series of samples over time.  A 'sample' of audio represents a speaker position at a point in time.</p>
+  </div>
+
+  <a name="sec3_3_2"></a>
+  <div class="heading3">3.3.2&nbsp;&nbsp;PCM Sample Rate</div>
+  <div class="copytext">
+    <p>The rate of PCM samples per second is called the sample rate, and the higher the sample rate, the more the sound can resemble the smooth waveforms we find in nature.  Common PCM sample rates include: 44100 Hz (CD quality), 22050 Hz, and 11025 Hz.</p>
+
+    <p>Resampling is the process of converting PCM data from one sample rate to another sample rate.</p>
+  </div>
+
+  <a name="sec3_3_3"></a>
+  <div class="heading3">3.3.3&nbsp;&nbsp;Streams</div>
+  <div class="copytext">
+    <p>Streams are sequences of data that can be read from over time.  This can be conceived of as a queue, where the first piece of data written to the stream will be the first piece of data read out of the stream.  When you read data from a stream, it is called "streaming out".  When you write data into a stream, it is called "streaming in".</p>
+
+    <p>This abstraction is particularly useful when you think about data as moving through a pipeline of transformations.  In the case of audio, this pipeline is often: load file data from disk -> decompress file data into PCM data -> modify pitch/pan/gain of PCM data.  For this reason, Gorilla uses Streams to organize its data-processing pipeline.</p>
+  </div>
+
+  <a name="sec3_3_4"></a>
+  <div class="heading3">3.3.4&nbsp;&nbsp;Data Sources</div>
+  <div class="copytext">
+    <p>A data source is a stream of bytes of data.  The format of this data generally corresponds to a file format, such as the .wav or .ogg formats.  A data source's data can only be useful if the data format is known.  In Gorilla, data sources are implemented as <span class="code">ga_DataSource*</span>.</p>
+
+    <p>Out of the box, Gorilla allows for file data sources, archive data sources, and in-place memory data sources.  These data sources can be used to stream in data of any format, such as WAV and OGG file formats.  In the future, Gorilla may add a network data source for streaming data from an internet url.  </p>
+  </div>
+
+  <a name="sec3_3_5"></a>
+  <div class="heading3">3.3.5&nbsp;&nbsp;Sample Sources</div>
+  <div class="copytext">
+    <p>A sample source is a stream of samples of PCM data.  The format of this data is specified by a ga_Format object, which defines the sample rate, bits-per-sample, and number of channels (stereo or mono) for a given sample source.</p>
+    
+    <p>In Gorilla, sample sources are the components responsible for decoding the data from a data source (such as WAV or OGG data) into raw PCM data.  Gorilla comes with both WAV- and OGG-decoding sample sources, as well as several others that perform useful data transformations.</p>
+  </div>
+
+  <a name="sec3_3_6"></a>
+  <div class="heading3">3.3.6&nbsp;&nbsp;Buffered Streaming Audio</div>
+  <div class="copytext">
+    <p>The term 'stream' is unfortunately an ambiguous one in the world of audio programming.  When people refer to 'streaming audio', what they usually are referring to is 'buffered streaming audio'.</p>
+
+    <p>Buffered streams are streams of data that are generated in advance, and then used later.  This can be useful when, for instance, streaming audio over a network connection.  If the network is congested, you may not receive your data in time to mix it in real-time.  So, to prevent running out of samples (known as 'underrun'), the audio is streamed into an intermediate buffer, and then streamed back out of that buffer when it is needed by the mixer.</p>
+
+    <p>In Gorilla, these buffered streams are referred to simply as <span class="code">ga_Stream*</span>, in keeping with popular usage.  They are managed by <span class="code">ga_StreamManager*</span> objects, which work in the background to fill the buffers whenever they are not full. <span class="code">ga_Stream*</span> objects are wrapped into <span class="code">ga_SampleSource*</span> objects, allowing them to be component within the audio data pipeline.</p>
+
+    <p>Buffered streaming audio is a very popular technique for playing back large streams of music data from disk without suffering from buffer underrun, slow load times, and other inherent performance issues with large audio streams.</p>
+  </div>
+
+  <a name="sec3_3_7"></a>
+  <div class="heading3">3.3.7&nbsp;&nbsp;Cached Audio Data</div>
+  <div class="copytext">
+    <p>Because disk I/O is often very slow, and because sounds in games are often fairly short, it is a popular technique to load and decompress sounds into cached buffers of PCM data that can be reused and shared by many streams.  In Gorilla, this is done via the <span class="code">ga_Memory*</span> and <span class="code">ga_Sound*</span> data structures.</p>
+  </div>
+
+  <a name="sec3_3_8"></a>
+  <div class="heading3">3.3.8&nbsp;&nbsp;Audio Handles</div>
+  <div class="copytext">
+    <p>An audio handle is a data structure that represents a stream of audio data, as well as controls through which you can transform that data during mixing.  Common controls include volume (gain), pitch, stereo pan, playing, pausing, stopping, and looping.  In Gorilla, audio handles are implemented as <span class="code">ga_Handle*</span>.</p>
+  </div>
+
+  <a name="sec3_3_9"></a>
+  <div class="heading3">3.3.9&nbsp;&nbsp;Mixing</div>
+  <div class="copytext">
+    <p>Mixing is the process of combining ('mixing') multiple streams of audio data into a single stream of audio data.  In its simplest form, mixing is accomplished by summing together the simultaneous PCM samples from each audio handle.  Historically, this data-intensive task of mixing multiple streams together of was the job of dedicated sound cards, but can now be done in real-time on modern CPUs.</p>
+
+    <p>A mixer is a data structure that tracks and manages multiple audio handles, and mixes their data into a buffer of audio data that can be presented to the audio device.  In Gorilla, the mixer is implemented as <span class="code">ga_Mixer*</span>.</p>
+  </div>
+  
+  <a name="sec3_3_10"></a>
+  <div class="heading3">3.3.10  Audio Devices</div>
+  <div class="copytext">
+    <p>While Gorilla does all of its mixing on the CPU, it must nonetheless present the mixed data to the sound card for playback on speaker hardware.  There are many different libraries available to handle this, which vary based on which operating system you are using.  Gorilla abstracts this presentation device into <span class="code">ga_Device*</span>, which can be implemented through different libraries depending on how the library is configured.</p>
+  </div>
+</div>
+
+<a name="sec3_4"></a>
+<div class="heading2">3.4&nbsp;&nbsp;The Audio Pipeline</div>
+<div class="copytext">
+  <p>Gorilla Audio has a highly modular 'stream-based' pipeline for processing audio data. Here's how it works:</p>
+  <ul>
+    <li><b>The Stream Chain</b> - <i>Loads + transforms audio data</i>
+    <ul>
+      <li>There are two main classes of <a href="#sec3_3_3">streams</a>: <a href="#sec3_3_4">Data Sources</a> and <a href="#sec3_3_5">Sample Sources</a>.
+      <li>These streams can have any number of inputs, but must have exactly one output.
+      <li>Some load data, some decode it, some buffer it, some apply DSP filters, etc...
+      <li>By connecting stream outputs and inputs, each stream forms a link in a 'stream chain'.
+      <li>The data is processed as it 'flows' through the chain.
+    </ul>
+    <li><b>The Handle</b> - <i>Controls audio playback</i>
+    <ul>
+      <li>Each stream chain terminates with a single handle object.
+      <li>This handle allows you to control volume, pitch, pan, and playback for a stream of audio data.
+    </ul>
+    <li><b>The Mixer</b> - <i><a href="#sec3_3_9">Mixes</a> many streams into a single buffer</i>
+    <ul>
+      <li>The mixer keeps track of all active handles.
+      <li>When the mixer needs to mix a new buffer, it streams in samples from each handle.
+      <li>Once the mixer has retrieved enough samples from each handle, it <a href="#sec3_3_9">mixes</a> those samples together into a single buffer.
+    </ul>
+    <li><b>The Device</b> - <i>Plays the audio through your speakers</i>
+    <ul>
+      <li>The buffer is then presented to the audio device for playback.
+    </ul>
+  </ul>
+  
+  <p><b>The diagram below demonstrates the audio pipeline for a simple WAV-loading stream chain:</b></p>
+  <img src="pipeline.png" />
+  <p>The above diagram shows only simple example of a stream chain, but they are often more complex.</p>
+  <p>The Gorilla Utility API provides several helper functions for common stream chains <a href="group__create_helper.html">here</a>.</p>
+</div>
+
+<hr />
+
+<a name="sec4"></a>
+<div class="heading1">4&nbsp;&nbsp;Quick Start Tutorial</div>
+
+Welcome to Gorilla Audio! This tutorial will walk you through the basics of writing a project that plays back audio from files on the disk. For more advanced usage, please consult the <a href="modules.html">full API documentation</a>.
+
+<a name="sec4_1"></a>
+<div class="heading2">4.1&nbsp;&nbsp;Including the library headers</div>
+<div class="copytext">
+  <p>You will need to include two headers in any that uses the library directly:</p>
+  
+  <p><blockquote>
+    #include "gorilla/ga.h"<br />
+    #include "gorilla/gau.h"
+  </blockquote></p>
+  
+  <p>The first header (ga.h) is the low-level Gorilla Audio interface, which we barely cover in this tutorial.  The second header (gau.h) is the higher-level Gorilla Utility interface, which simplifies most tasks required for game audio.</p>
+</div>
+
+<a name="sec4_2"></a>
+<div class="heading2">4.2&nbsp;&nbsp;Setup/Cleanup</div>
+<div class="copytext">
+  <p>The first step when using Gorilla is always to call gc_initialize().  This must be done before calling any other functions in the library.  If you have custom allocators, you can configure them using this function.  (For now we'll just pass in 0, which tells the library to use the default allocators.)</p>
+  
+  <p><blockquote>
+    gc_initialize(0);
+  </blockquote></p>
+  
+  <p>The next step is to create a gau_Manager, an all-in-one audio manager object. (<i>NOTE:</i> While it is possible for advanced users to use Gorilla without a gau_Manager, this is not recommended for beginners - nor is it usually necessary!).</p>
+  
+  <p><blockquote>
+    gau_Manager* mgr;<br />
+    mgr = gau_manager_create();
+  </blockquote></p>
+  
+  <p>When you are finished using the library (usually when the program terminates) you must destroy the manager and then shutdown the library:</p>
+  
+  <p><blockquote>
+    gau_manager_destroy(mgr);<br />
+    gc_shutdown();
+  </blockquote></p>
+  
+</div>
+
+<a name="sec4_3"></a>
+<div class="heading2">4.3&nbsp;&nbsp;Updating the manager</div>
+<div class="copytext">
+  
+  <p>The manager takes care of everything for you, from managing background threads, to mixing the audio, to pushing that mixed audio to the default audio device.</p>
+  
+  <p>In order to keep things running smoothly, you need to make sure the update function gets called periodically. In games, this is usually done by calling this function once per frame:</p>
+  
+  <p><blockquote>
+  gau_manager_update(mgr);
+  </blockquote></p>
+  
+  <p>With that, Gorilla Audio is ready to play your sounds.</p>
+  
+</div>
+
+<a name="sec4_4"></a>
+<div class="heading2">4.4&nbsp;&nbsp;Playing sounds</div>
+<div class="copytext">
+  <p>In the hands of an experienced user, Gorilla can be configured to load sound data in many different ways.  For the purposes of this tutorial, we'll focus on the most common case: files on disk.</p>
+
+  <p>When playing a sound, you need to provide a mixer. For buffered streams, you also need to provide a stream manager. Use gau_Manager to get both of these:</p>
+
+  <p><blockquote>
+    ga_Mixer* mixer = gau_manager_mixer(mgr);<br />
+    ga_StreamManager* streamMgr = gau_manager_streamManager(mgr);<br />
+  </blockquote></p>
+  
+  <a name="sec4_4_1"></a>
+  <div class="heading3">4.4.1&nbsp;&nbsp;Loading/playing static sounds</div>
+  <div class="copytext">
+    <p>For short sound effects, it is a common practice to load the sound data into memory, and then play it back many times.<p>
+    
+    <p>The first step is to load the sound into memory:</p>
+  
+    <p><blockquote>
+      ga_Sound* sound;<br />
+      sound = gau_helper_sound_file("test.wav", "wav");<br />
+    </blockquote></p>
+    
+    <p>The next step is to create handles that can play back the sound's data:</p>
+    
+    <p><blockquote>
+      ga_Handle* handle;<br />
+      handle = gau_create_handle_sound(mixer, sound, &amp;gau_on_finish_destroy, 0, 0);<br />
+    </blockquote></p>
+    
+    <p>The last step is to play the handle:</p>
+    
+    <p><blockquote>
+      ga_handle_play(handle);<br />
+    </blockquote></p>
+    
+    <p><i>NOTE:</i> In this example, we pass &amp;gau_on_finish_destroy as a parameter to gau_create_handle_sound(). This tells the handle to destroy itself when the sound finishes playing. You can pass in 0 for this parameter to control destruction manually.</p>
+  </div>
+
+  <a name="sec4_4_2"></a>
+  <div class="heading3">4.4.2&nbsp;&nbsp;Playing buffered streams</div>
+  <div class="copytext">
+  
+    <p>Creating a buffered stream handle requires just one function call:</p>
+  
+    <p><blockquote>
+      ga_Handle* handle;<br />
+      handle = gau_create_handle_buffered_file(mixer, streamMgr, "test.ogg", "ogg", &amp;gau_on_finish_destroy, 0, 0);<br />
+    </blockquote></p>
+    
+    <p>Then, as with any handle, we tell it to play:</p>
+    
+    <p><blockquote>
+      ga_handle_play(handle);<br />
+    </blockquote></p>
+    
+    <p>That's it! The stream will read and decode the file on a background thread continuously throughout playback.</p>
+  </div>
+</div>
+
+<a name="sec4_5"></a>
+<div class="heading2">4.5&nbsp;&nbsp;Controlling handles</div>
+<div class="copytext">
+
+  <p>Once a handle has been created, you have access to the following playback controls:</p>
+  
+  <ul>
+    <li><b>Play</b>
+    <p><blockquote>
+      ga_handle_play(handle);
+    </blockquote></p>
+    <li><b>Stop</b>
+    <p><blockquote>
+      ga_handle_stop(handle);
+    </blockquote></p>
+    <li><b>Gain (Volume)</b> [0.0 -> 1.0]
+    <p><blockquote>
+      ga_handle_setParamf(handle, GA_HANDLE_PARAM_GAIN, gain);
+    </blockquote></p>
+    <li><b>Pitch</b> (0.0 -> 16.0]
+    <p><blockquote>
+      ga_handle_setParamf(handle, GA_HANDLE_PARAM_PITCH, pitch);
+    </blockquote></p>
+    <li><b>Pan</b> [-1.0 -> 0.0 -> 1.0]
+    <p><blockquote>
+      ga_handle_setParamf(handle, GA_HANDLE_PARAM_PAN, pan);
+    </blockquote></p>
+  </ul>
+</div>
+
+<a name="sec4_6"></a>
+<div class="heading2">4.6&nbsp;&nbsp;Looping</div>
+<div class="copytext">
+  <p>Looping in Gorilla Audio is implemented by way of a special sample source. As such, the interface for looping can seem counterintuitive.</p>
+  
+  <p>To loop a playing handle, pass a gau_SampleSourceLoop** as the last parameter your handle-creation function:</p>
+  <p><blockquote>
+    ga_Handle* handle;<br />
+    gau_SampleSourceLoop* loopSrc;
+    handle = gau_create_handle_sound(mixer, sound, 0, 0, &loopSrc);<br />
+  </blockquote></p>
+  
+  <p>By passing in a non-zero value, you are requesting the handle to be loopable.</p>
+  
+  <p>To set loop points, call:
+  <p><blockquote>
+    gau_sample_source_loop_set(loopSrc, trigger, target);<br />
+  </blockquote></p>
+  
+  <p>The 'trigger' is the sample number that triggers a loop. The 'target' is the sample that should be looped back to. To loop the whole stream, set trigger to -1 and target to 0.</p>
+  
+  <p>To stop looping, call:</p>
+  <p><blockquote>
+    gau_sample_source_loop_clear(loopSrc);<br />
+  </blockquote></p>
+  
+</div>
+
+<a name="sec4_7"></a>
+<div class="heading2">4.7&nbsp;&nbsp;Callbacks</div>
+<div class="copytext">
+  <p>When a handle finishes playing, you may need to perform some program-specific operation. If so, you can optionally provide a callback and context pointer:</p>
+  <p><blockquote>
+    void* context = &someData;
+    handle = gau_create_handle_sound(mixer, sound, &callback, context, 0);<br />
+  </blockquote></p>
+  
+  <p>This callback will be called after the handle finishes playing, when you next call gau_manager_update(). The context will be passed along to the callback.</p>
+</div>
+
+<a name="sec4_8"></a>
+<div class="heading2">4.8&nbsp;&nbsp;Further Examples</div>
+<div class="copytext">
+  <p>Looking for more example code? Check out the /examples directory in the source code archive that contains several full-program examples.</p>
+</div>
+
+<hr />
+
+<a name="sec5"></a>
+<div class="heading1">5&nbsp;&nbsp;History</div>
+
+<a name="sec5_1"></a>
+<div class="heading2">5.1&nbsp;&nbsp;Versions</div>
+<div class="copytext">
+
+  <div class="heading5">0.2.9</div>
+  <div class="copytext">
+    - Added minimal Doxygen comments to the Gorilla Common API (GAU is still forthcoming).<br />
+    - Updated Linux and OSX ports to work correctly with latest changes.<br />
+  </div>
+  
+  <div class="heading5">0.2.8</div>
+  <div class="copytext">
+    - Created logo.<br />
+    - Added copious Doxygen comments to the Gorilla Audio API (GAU/GC are still forthcoming).<br />
+    - Moved device headers into <span class="code">gorilla/devices</span>.<br />
+    - Moved various internal functions, definitions, and data structures into <span class="code">ga_internal.h</span> header.<br />
+  </div>
+  
+  <div class="heading5">0.2.7</div>
+  <div class="copytext">
+    - Implemented XAudio2 device support for Windows.<br />
+  </div>
+
+  <div class="heading5">0.2.6</div>
+  <div class="copytext">
+    - Implemented <span class="code">ga_Memory</span> data structure for refcounting shared memory.<br />
+    - Stubbed in XAudio2 support.<br />
+    - Added <span class="code">gau_sample_source_loop_count()</span> function to count how many times something has looped. This is a stop-gap feature, to be deprecated after planned looping improvements.<br />
+  </div>
+
+  <div class="heading5">0.2.5</div>
+  <div class="copytext">
+    - You can now query the <span class="code">gau_Manager</span> for its device.<br />
+  </div>
+
+  <div class="heading5">0.2.4</div>
+  <div class="copytext">
+    - Moved device initialization into <span class="code">gau_Manager</span>.<br />
+    - Removed loopStart and loopEnd parameters from <span class="code">gau_helper_*</span>.<br />
+    - Stubbed in DirectSound support in CMake project files.<br />
+    - Removed vestigial streamLink handle property.<br />
+    - Cleaned up the examples.<br />
+  </div>
+
+  <div class="heading5">0.2.3</div>
+  <div class="copytext">
+    - WAV loader rewrite: WAV loader is cleaner, clearer, and far more robust at handling WAV files with extension chunks.<br />
+  </div>
+
+  <div class="heading5">0.2.2</div>
+  <div class="copytext">
+    - First properly-versioned release.<br />
+    - Fixed deadlock in archive data source.<br />
+    - Replaced an accidental naked malloc with internal allocFunc.<br />
+    - Fixed a bug in looping logic.<br />
+    - Wrote a new helper function, <span class="code">gau_helper_stream_data()</span>.<br />
+  </div>
+
+  <div class="heading5">&lt; 0.2.2</div>
+  <div class="copytext">
+    - Prior versioning information is 'pre-historic'.<br />
+    - Please browse the source code repository for a full changelog.<br />
+  </div>
+</div>
+
+<a name="sec5_2"></a>
+<div class="heading2">5.2&nbsp;&nbsp;Development Roadmap</div>
+<div class="copytext">
+  <p>The following features are tentatively planned for development over the next year. Relative priority of these features will be based on which are in highest demand by the library's users.</p>
+
+  <div class="heading5">COMPATIBILITY</div>
+  <div class="copytext">
+    <ul>
+      <li>Implement more platforms/devices:
+      <ul>
+        <li>Linux (using OpenAL)
+        <li>DirectSound device (Windows)
+        <li>WinMM device (Windows)
+        <li>ALSA (Linux)
+        <li>CoreAudio (OSX/iOS)
+        <li>OpenSL (Android 2.3+)
+        <li>OpenMAX AL device (Multi)
+      </ul>
+    </ul>
+  </div>
+  
+  <div class="heading5">IMPROVEMENTS</div>
+  <div class="copytext">
+    <ul>
+      <li>Improve looping system
+      <ul>
+        <li>Make it queryable and/or specify a number of future loops to perform
+        <li>Expose loop interface to generic SampleSource data structure
+      </ul>
+      <li>Specifiable/queryable device format (partly done)
+      <li>Handle-group support (synchronized start/seek/pause/stop)
+      <li>Mono mixer
+      <li>8-bit mixer
+      <li>Arbitrary mixer rate
+      <li>Opaque handles (ints)
+      <li>Push handles writeable from main thread into an internal buffer
+      <li>Support for enumerating devices
+    </ul>
+  </div>
+
+  <div class="heading5">USABILITY</div>
+  <div class="copytext">
+    <ul>
+      <li>Doxygen comments for the API
+      <li>Glossary of terms
+      <li>Tutorial on how to get started (akin to the example code)
+      <li>Documentation on how to extend the systems
+      <li>Better error codes and reporting
+    </ul>
+  </div>
+  
+  <div class="heading5">DSP FILTERS</div>
+  <div class="copytext">
+    <ul>
+      <li>Create framework for apply DSP filters
+      <li>Implement support for common filters:
+      <ul>
+        <li>Reverb, compressor, distortion, echo, equalizer, flanger, gargle, chorus, high-pass, low-pass, wah-wah
+      </ul>
+    </ul>
+  </div>
+  
+  <div class="heading5">LUXURY FEATURES</div>
+  <div class="copytext">
+    <ul>
+      <li>Input audio recording (recording devices + wrapping samplesource)
+      <li>Optimize mixer (less branches, SIMD)
+      <li>Tracker support (MOD/S3M/XM/IT)
+      <li>Surround sound (multi-channel) input and output formats
+      <li>Support for multiple ga_StreamManager threads
+      <li>Floating-point format support
+      <li>MP3 support (optional)
+      <li>AIFF support
+      <li>OGG Opus support
+      <li>Network-streaming audio (OGG, MP3, ShoutCast, IceCast)
+      <li>Handle-locking for atomic groups of control commands
+    </ul>
+  </div>
+  
+  <div class="heading5">KNOWN BUGS</div>
+  <div class="copytext">
+    <ul>
+      <li>Seeking can currently cause a handle to have fewer samples than expected mid-mix (rare race condition, can cause stutter/desync)
+    </ul>
+  </div>
+</div>

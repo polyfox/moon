@@ -1,0 +1,27 @@
+.contents{max-width: 740px}
+
+.base,
+.heading1,
+.heading2,
+.heading3,
+.heading4,
+.heading5,
+.copytext{margin-top: 10px; margin-bottom: 8px; font-family: "Arial"; line-height: 1; text-align: left; color: #000000;}
+
+.heading1{font-size:24pt; margin-top: 16px; margin-bottom: 16px;}
+.heading2{font-size:18pt; margin-bottom: -2px;}
+.heading3{font-size:14pt; margin-top: 12px; margin-bottom: 12px;}
+.heading4{font-size:12pt; margin-top: 7px; margin-bottom: 8px; }
+.heading5{font-size:11pt;}
+
+.copytext{line-height: 1.5; font-size: 10pt; margin-top: 12px; margin-bottom: 22px; margin-left: 8px; }
+
+ul{margin-top: 10px; margin-bottom: 10px; padding-left:30px;}
+.tocSection{margin-bottom: 20px;}
+
+a:link{ font-weight: bold; color: dd2222; }
+a:visited{ font-weight: bold; color: 880000; }
+a:hover{ font-weight: bold; color: ff0000; }
+a:active{ font-weight: bold; color: ff0000; }
+
+.code{font-family: "Courier"}
