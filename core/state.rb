@@ -27,16 +27,18 @@ class State_Test < State
     super(engine)
     @sprites = []
 
-    150.times do
+    # 6 FPS at 15000 items
+    # 55 FPS at 1500 items
+    #1500.times do
       sprite = Sprite.new("obama_sprite.png")
       sprite.x = rand(640)
       sprite.y = rand(480)
       @sprites << sprite
-    end
+    #end
   end
 
   def update
-    @sprites.each {|sprite| sprite.render }
+    #@sprites.each {|sprite| sprite.render }
   end
 end
 

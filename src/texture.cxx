@@ -98,6 +98,17 @@ namespace Moon {
     mTextureHeight = 0;
   };
 
+  GLuint Texture::width() {
+    return mTextureWidth;
+  };
+
+  GLuint Texture::height() {
+    return mTextureHeight;
+  };
+
+  GLuint Texture::id() {
+    return mTextureID;
+  };
   void Texture::render(GLfloat x, GLfloat y, Rect *clip /*=NULL*/) {
     // If the texture exists
     if(mTextureID != 0) {
@@ -180,6 +191,8 @@ namespace Moon {
     if (it == CacheObject::_cache.end()) {
       std::cout << "cache miss!" << std::endl;
       std::shared_ptr<Texture> ptr = std::shared_ptr<Texture>(new Texture(filename));
+      // std::shared_ptr<Texture> ptr = std::make_shared<Texture>(filename);
+      // is supposedly faster, we just need to get around the private constructor issue
       CacheObject::_cache[filename] = ptr;
       return ptr;
     }

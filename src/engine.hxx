@@ -24,6 +24,7 @@
 
 #include "texture.hxx"
 #include "sprite.hxx"
+#include "spritesheet.hxx"
 #include "fps.hxx"
 
 void moon_init_mrb_core(mrb_state *mrb); // core side
