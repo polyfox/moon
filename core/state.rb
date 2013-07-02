@@ -27,17 +27,21 @@ class State_Test < State
     super(engine)
     @sprites = []
 
+    @s = Spritesheet.new("hyptosis_tile-art-batch-1.png", 32, 32)
     # 6 FPS at 15000 items
     # 55 FPS at 1500 items
     #1500.times do
-      sprite = Sprite.new("obama_sprite.png")
-      sprite.x = rand(640)
-      sprite.y = rand(480)
-      @sprites << sprite
+      #sprite = Sprite.new("obama_sprite.png")
+      #sprite.x = rand(640)
+      #sprite.y = rand(480)
+      #@sprites << sprite
     #end
   end
 
   def update
+    for i in 0..1800 # runs efficiently at 60FPS, 18000 runs at 20FPS
+      @s.render(i, i, i)
+    end
     #@sprites.each {|sprite| sprite.render }
   end
 end
