@@ -3,7 +3,7 @@ BUILD_DIR = ./build
 CC = g++
 ALL_CFLAGS = -g -Wall -std=c++11
 OBJECT = $(patsubst %.cxx,%.o,$(wildcard $(BASEDIR)/src/*.cxx)) $(patsubst %.cxx,%.o,$(wildcard $(BASEDIR)/src/**/*.cxx))
-INCLUDES = -I$(BASEDIR)/src -I$(BASEDIR)/include -I$(BASEDIR)/lib -I$(BASEDIR)/vendor/mruby/include
+INCLUDES = -I$(BASEDIR)/src -I$(BASEDIR)/include -I$(BASEDIR)/lib -I$(BASEDIR)/vendor/mruby/include -I$(BASEDIR)/vendor/gorilla-audio/include
 RM_F := rm -f
 ECHO := echo
 MSG_BEGIN = @for line in
@@ -19,8 +19,8 @@ engine: $(BUILD_DIR)/libmoon.a
 game: engine
 	$(MAKE) -C game
 
-$(BUILD_DIR)/libmoon.a : mruby $(OBJECT)
-	$(AR) r $@ $(OBJECT) $(shell find $(BASEDIR)/vendor/mruby/build/host -type f -name '*.o' -not -path '*tools*')
+$(BUILD_DIR)/libmoon.a : mruby gorilla-audio $(OBJECT)
+	$(AR) r $@ $(OBJECT)
 
 $(OBJECT) : %.o : %.cxx
 	$(CC) $(ALL_CFLAGS) $(INCLUDES) -c $< -o $@
@@ -28,6 +28,10 @@ $(OBJECT) : %.o : %.cxx
 .PHONY : mruby
 mruby:
 	$(MAKE) -C vendor/mruby
+
+.PHONY : gorilla-audio
+gorilla-audio:
+	cd vendor/gorilla-audio/build; cmake .;	make
 
 .PHONY : clean
 clean :

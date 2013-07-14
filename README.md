@@ -11,3 +11,5 @@ NOTE: To define mruby C extensions, you need to include a `void moon_init_mrb_ex
 function, that does the same form of initialization as an "Init_<name>" function would do. This
 function needs to be declared (and just left empty) even if you don't use any mruby C code, or
 the compiler will crash.
+
+NOTE: Makefiles are messed up, to link to Gorilla, we need to link to OpenAL
