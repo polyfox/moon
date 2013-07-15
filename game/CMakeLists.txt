@@ -11,4 +11,10 @@ add_executable(game
   ext/hola.cxx
 )
 
+add_custom_command(TARGET game
+  POST_BUILD
+  COMMAND cp -r ../game/scripts/ ../build
+  COMMAND cp -r ../core/ ../build
+)
+
 target_link_libraries(game moon)
