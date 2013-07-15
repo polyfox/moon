@@ -1,6 +1,10 @@
 # This module locates the developer's image library.
 # http://openil.sourceforge.net/
 #
+# To help locate the library and include file, you could define an environment variable called
+# DEVIL_ROOT which points to the root of the DevIL library installation. This is pretty useful
+# on a Windows platform.
+#
 # This module sets:
 # IL_LIBRARY the name of the IL library.
 # ILU_LIBRARY the name of the ILU library.
@@ -11,6 +15,7 @@
 
 
 FIND_PATH(IL_INCLUDE_DIR il.h 
+  $ENV{DEVIL_ROOT}
   PATH_SUFFIXES include
   PATHS
   ~/Library/Frameworks
@@ -34,6 +39,7 @@ FIND_PATH(IL_INCLUDE_DIR il.h
 
 FIND_LIBRARY(IL_LIBRARY
   NAMES IL
+  $ENV{DEVIL_ROOT}
   PATH_SUFFIXES lib64 lib lib32
   PATHS
   /usr/local
@@ -49,6 +55,7 @@ FIND_LIBRARY(IL_LIBRARY
 
 FIND_LIBRARY(ILU_LIBRARY
   NAMES ILU
+  $ENV{DEVIL_ROOT}
   PATH_SUFFIXES lib64 lib lib32
   PATHS
   /usr/local

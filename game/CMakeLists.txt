@@ -13,8 +13,8 @@ add_executable(game
 
 add_custom_command(TARGET game
   POST_BUILD
-  COMMAND cp -r ../game/scripts/ ../build
-  COMMAND cp -r ../core/ ../build
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ../game/scripts/ ../build
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ../core/ ../build
 )
 
 target_link_libraries(game moon)
