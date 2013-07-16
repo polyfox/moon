@@ -23,7 +23,7 @@ include_directories(${IL_INCLUDE_DIR})
 # mruby
 add_custom_command(
   OUTPUT libmruby.a
-  COMMAND ./minirake
+  COMMAND ./minirake MRUBY_CONFIG=../../mrb_config.rb
   WORKING_DIRECTORY vendor/mruby
 )
 add_custom_target(mruby DEPENDS libmruby.a)
