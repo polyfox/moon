@@ -26,6 +26,9 @@
 #include "sprite.hxx"
 #include "spritesheet.hxx"
 #include "fps.hxx"
+#include "audio.hxx"
+#include "music.hxx"
+#include "sound.hxx"
 
 void moon_init_mrb_core(mrb_state *mrb); // core side
 void moon_init_mrb_ext(mrb_state *mrb);
@@ -42,8 +45,8 @@ namespace Moon {
     mrbc_context *mrb_context;
     //mrb_value game_object;
 
-    GLFWwindow* window;
-    
+    GLFWwindow*  window; // GLFW window
+
     void load_mrb();
     bool load_mrb_file(const char*, const char*);
     bool load_mrb_files_from_dir(const char*);

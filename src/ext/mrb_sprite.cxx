@@ -11,10 +11,10 @@ namespace Moon {
   };
 
   static mrb_value moon_mrb_sprite_new(mrb_state *mrb, mrb_value klass) {
-    mrb_value filename;
-    mrb_get_args(mrb, "S", &filename);
+    char* filename;
+    mrb_get_args(mrb, "z", &filename);
 
-    Sprite *sprite = new Sprite(mrb_string_value_ptr(mrb, filename));
+    Sprite *sprite = new Sprite(filename);
     return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(klass), &sprite_data_type, sprite));
   };
 

@@ -8,13 +8,19 @@ namespace Moon {
     setup_glfw();
     setup_opengl();
 
+    // setup Gorilla Audio
+    Audio::initialize();
+
     load_mrb();
   }
 
-  Engine::~Engine() {
-    glfwTerminate();
+  Engine::~Engine() { /* Terminate in the reverse order */
     mrbc_context_free(mrb, mrb_context);
     mrb_close(mrb);
+
+    Audio::terminate();
+
+    glfwTerminate();
   }
 
   void Engine::run() {
@@ -31,6 +37,8 @@ namespace Moon {
       char title[50];
       sprintf(title, "FPS: %i", FPS::FPSControl.getFPS());
       glfwSetWindowTitle(window, title);
+
+      Audio::update();
 
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glMatrixMode(GL_MODELVIEW);

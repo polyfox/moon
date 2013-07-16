@@ -23,3 +23,6 @@ git submodule update --init
 Compilation is done via the CMake build system. Use cmake in the root folder to generate your
 Makefiles or (VS/CodeBlocks) projects of choice for your platform, then simply compile it.
 
+mrb_config.rb should be edited, to use the correct toolchain for building mruby.
+
+TODO: use a custom gembox, outside the mrbgems directory

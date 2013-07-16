@@ -52,7 +52,9 @@ class State_Test < State
     super(engine)
     @sprites = []
 
-    @s = Spritesheet.new("rsrc/hyptosis_tile-art-batch-1.png", 32, 32)
+    @sound = Sound.new("startup.wav", "wav")
+    @sound.play
+    @s = Spritesheet.new("hyptosis_tile-art-batch-1.png", 32, 32)
     # 6 FPS at 15000 items
     # 55 FPS at 1500 items
     #1500.times do
