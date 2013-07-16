@@ -19,9 +19,10 @@ namespace Moon {
 
   void Engine::run() {
     // Get the ruby object containing the state manager
-    mrb_value moon = mrb_obj_value(mrb_class_get(mrb, "Moon"));
-    mrb_value states = mrb_iv_get(mrb, moon, mrb_intern(mrb, "@states"));
-
+    mrb_value states = mrb_iv_get(mrb, 
+                                  mrb_obj_value(mrb_class_get(mrb, "State")), 
+                                  mrb_intern(mrb, "@states"));
+    
     int ai = mrb_gc_arena_save(mrb);
 
     while (!glfwWindowShouldClose(window))

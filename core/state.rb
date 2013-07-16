@@ -1,4 +1,7 @@
 class State
+
+  @states = []
+
   def initialize(engine)
     @engine = engine
   end
@@ -20,14 +23,36 @@ class State
   def update
 
   end
+
+  def self.change state
+    if !@states.empty?
+      @states.last.terminate
+      @states.pop
+    end
+    @states.push state.new(self)
+  end
+
+  def self.pop
+    @states.last.terminate
+    @states.pop
+
+    @states.last.resume if !@states.empty?
+  end
+
+  def self.push state
+    @states.last.pause if !@states.empty?
+    @states << state.new(self)
+  end
+
 end
 
 class State_Test < State
+
   def initialize(engine)
     super(engine)
     @sprites = []
 
-    @s = Spritesheet.new("hyptosis_tile-art-batch-1.png", 32, 32)
+    @s = Spritesheet.new("rsrc/hyptosis_tile-art-batch-1.png", 32, 32)
     # 6 FPS at 15000 items
     # 55 FPS at 1500 items
     #1500.times do
@@ -44,6 +69,7 @@ class State_Test < State
     end
     #@sprites.each {|sprite| sprite.render }
   end
+
 end
 
-Moon.push_state(State_Test)
+State.push(State_Test)
