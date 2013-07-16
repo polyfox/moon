@@ -35,7 +35,7 @@ add_subdirectory(vendor/gorilla-audio/build)
 include_directories(vendor/gorilla-audio/include)
 #link_directories(vendor/gorilla-audio/build)
 
-include_directories(include/src)
+include_directories(src/include)
 
 add_subdirectory(src)
 add_subdirectory(game)

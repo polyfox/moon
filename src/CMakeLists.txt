@@ -21,10 +21,10 @@ add_library(moon STATIC
   ext/mrb_sprite.cxx
   ext/mrb_spritesheet.cxx
 
+  include/moon.hxx
   include/audio.hxx
   include/engine.hxx
   include/fps.hxx
-  include/moon.hxx
   include/music.hxx
   include/sound.hxx
   include/sprite.hxx
