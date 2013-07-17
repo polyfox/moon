@@ -20,10 +20,12 @@ namespace Moon {
 
 
   void moon_mrb_music_init(mrb_state *mrb) {
-    struct RClass *music_class;
-    music_class = mrb_define_class(mrb, "Music", mrb->object_class);
+    struct RObject *music_class;
+    music_class = (struct RObject*) mrb_obj_alloc(mrb, MRB_TT_OBJECT, mrb->object_class);
 
-    mrb_define_class_method(mrb, music_class, "play", moon_mrb_music_play, MRB_ARGS_REQ(1));
-    mrb_define_class_method(mrb, music_class, "stop", moon_mrb_music_stop, MRB_ARGS_NONE());
+    mrb_define_singleton_method(mrb, music_class, "play", moon_mrb_music_play, MRB_ARGS_REQ(1));
+    mrb_define_singleton_method(mrb, music_class, "stop", moon_mrb_music_stop, MRB_ARGS_NONE());
+
+    mrb_define_global_const(mrb, "Music", mrb_obj_value(music_class));
   };
 };
