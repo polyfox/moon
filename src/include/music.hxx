@@ -6,10 +6,10 @@
 namespace Moon {
   class Music : public Audio {
   public:
-    Music(std::string filename);
-    ~Music();
+    static void play(std::string filename, std::string format);
+    static void stop();
   private:
-
+    static ga_Handle* handle;
   };
 };
 

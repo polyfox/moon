@@ -17,6 +17,7 @@ set(moonLibraries ${moonLibraries} gorilla)
 
 add_library(moon STATIC
   ext/mrb.cxx
+  ext/mrb_music.cxx
   ext/mrb_sound.cxx
   ext/mrb_sprite.cxx
   ext/mrb_spritesheet.cxx
