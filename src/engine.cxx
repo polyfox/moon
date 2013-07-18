@@ -39,6 +39,7 @@ namespace Moon {
       glfwSetWindowTitle(window, title);
 
       Audio::update();
+      Input::update(window);
 
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glMatrixMode(GL_MODELVIEW);
