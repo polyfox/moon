@@ -2,6 +2,7 @@
 #define MOON_INPUT_H
 
 #include "moon.hxx"
+#include <cmath>
 
 namespace Moon {
 
@@ -25,7 +26,14 @@ namespace Moon {
     static bool key_pressed(int key_index);
     static bool key_released(int key_index);
     // TODO: handle GLFW_REPEAT which triggers after a second or so
-  protected:  
+
+    class Mouse {
+    public:
+      static int x();
+      static int y();
+    };
+  protected:
+    static GLFWwindow* window; // the main engine window
     static KeyMap keyboard_keys;
 
   friend void Moon::moon_mrb_input_init(mrb_state*); // give access to map key enums

@@ -140,7 +140,10 @@ namespace Moon {
     { GLFW_KEY_MENU, { GLFW_KEY_MENU, "MENU" } }
   };
 
-  void Input::initialize(GLFWwindow* window) {
+  GLFWwindow* Input::window = NULL;
+
+  void Input::initialize(GLFWwindow* glfw_window) {
+    window = glfw_window;
     glfwSetKeyCallback(window, Input::update_key);
   }
 
@@ -162,4 +165,17 @@ namespace Moon {
     keyboard_keys[key].mods = mods;
   }
 
+  /* Mouse functions */
+
+  int Input::Mouse::x() {
+    double x;
+    glfwGetCursorPos(window, &x, NULL);
+    return floor(x);
+  }
+
+  int Input::Mouse::y() {
+    double y;
+    glfwGetCursorPos(window, NULL, &y);
+    return floor(y);
+  }
 }
