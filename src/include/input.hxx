@@ -19,13 +19,16 @@ namespace Moon {
 
   class Input {
   public: 
-    static void initialize();
-    static void update_key(GLFWwindow *, int key, int scancode, int action, int mods);
-    static KeyboardKey* get_key(int);
-    static bool key_pressed(int);
-    static bool key_released(int);
+    static void initialize(GLFWwindow* window);
+    static void update_key(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static KeyboardKey* get_key(int key_id);
+    static bool key_pressed(int key_index);
+    static bool key_released(int key_index);
+    // TODO: handle GLFW_REPEAT which triggers after a second or so
   protected:  
     static KeyMap keyboard_keys;
+
+  friend void Moon::moon_mrb_input_init(mrb_state*); // give access to map key enums
   };
 }
 

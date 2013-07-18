@@ -67,6 +67,7 @@ class State_Test < State
   end
 
   def update
+    p "SPACE is PRESSED!" if Input.pressed?(Input::Keys::SPACE)
     for i in 0..1800 # runs efficiently at 60FPS, 18000 runs at 20FPS
       @s.render(i, i, i)
     end

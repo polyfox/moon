@@ -4,12 +4,16 @@
 namespace Moon 
 { 
 
-  static mrb_value moon_mrb_input_is_pressed(mrb_state *mrb, mrb_value rb_key_id) {
-    return mrb_bool_value(Input::key_pressed(mrb_fixnum(rb_key_id)));
+  static mrb_value moon_mrb_input_is_pressed(mrb_state *mrb, mrb_value self) {
+    mrb_int key_id;
+    mrb_get_args(mrb, "i", &key_id);
+    return mrb_bool_value(Input::key_pressed(key_id));
   }
 
-  static mrb_value moon_mrb_input_is_released(mrb_state *mrb, mrb_value rb_key_id) {
-    return mrb_bool_value(Input::key_released(mrb_fixnum(rb_key_id)));
+  static mrb_value moon_mrb_input_is_released(mrb_state *mrb, mrb_value self) {
+    mrb_int key_id;
+    mrb_get_args(mrb, "i", &key_id);
+    return mrb_bool_value(Input::key_released(key_id));
   }
 
   void moon_mrb_input_init(mrb_state *mrb) {
@@ -19,12 +23,14 @@ namespace Moon
     mrb_define_class_method(mrb, input_class, "pressed?", moon_mrb_input_is_pressed, MRB_ARGS_REQ(1));
     mrb_define_class_method(mrb, input_class, "released?", moon_mrb_input_is_released, MRB_ARGS_REQ(1));
 
-    mrb_define_global_const(mrb, "Input", mrb_obj_value(input_class));
-     
-    //for(int i = 0; i < 120; i++) {
-    //  KeyboardKey* key = Input::get_key(i);
-    //  mrb_define_const(mrb, input_class, key->name, mrb_fixnum_value((mrb_int)key->key));
-    //} 
+    struct RClass *key_module;
+    key_module = mrb_define_module_under(mrb, input_class, "Keys");
+  
+    // C++11 range based for loop (friend function of Input to gain access to keyboard_keys)
+    for (auto& i : Input::keyboard_keys) {
+      auto& key = i.second;
+      mrb_define_const(mrb, key_module, key.name, mrb_fixnum_value(key.key));
+    };
   };
 
 }

@@ -9,8 +9,7 @@ namespace Moon {
     setup_opengl();
 
     // setup Input engine
-    Input::initialize();
-    glfwSetKeyCallback(window, Input::update_key);
+    Input::initialize(window);
 
     // setup Gorilla Audio
     Audio::initialize();
