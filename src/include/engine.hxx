@@ -22,6 +22,7 @@
 #include <mruby/variable.h>
 #include <mruby/string.h>
 
+#include "input.hxx"
 #include "texture.hxx"
 #include "sprite.hxx"
 #include "spritesheet.hxx"

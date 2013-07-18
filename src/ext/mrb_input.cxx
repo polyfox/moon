@@ -20,10 +20,11 @@ namespace Moon
     mrb_define_class_method(mrb, input_class, "released?", moon_mrb_input_is_released, MRB_ARGS_REQ(1));
 
     mrb_define_global_const(mrb, "Input", mrb_obj_value(input_class));
-    for(int i = 0; i < 120; i++) {
-      KeyboardKey* key = Input::get_key(i);
-      mrb_define_const(mrb, input_class, key->name, mrb_fixnum_value((mrb_int)key->key));
-    } 
+     
+    //for(int i = 0; i < 120; i++) {
+    //  KeyboardKey* key = Input::get_key(i);
+    //  mrb_define_const(mrb, input_class, key->name, mrb_fixnum_value((mrb_int)key->key));
+    //} 
   };
 
 }

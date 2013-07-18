@@ -4,22 +4,28 @@
 #include "moon.hxx"
 
 namespace Moon {
-  typedef struct moon_keyboard_key {
+
+  struct KeyboardKey {
+  public:
+    KeyboardKey();
+    KeyboardKey(int, char*);
     int key;
-    int state;
     char* name;
-  } KeyboardKey;
+    int state;
+    int mods;
+  };
+ 
+  typedef std::unordered_map<int, KeyboardKey> KeyMap;
 
   class Input {
   public: 
-    static void init();
-    static void update(GLFWwindow*);
-    static void add_key(int, int, char*);
+    static void initialize();
+    static void update_key(GLFWwindow *, int key, int scancode, int action, int mods);
     static KeyboardKey* get_key(int);
     static bool key_pressed(int);
     static bool key_released(int);
   protected:  
-    static KeyboardKey keyboard_keys[120];
+    static KeyMap keyboard_keys;
   };
 }
 
