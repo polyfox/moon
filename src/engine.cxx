@@ -143,37 +143,13 @@ namespace Moon {
   }
 
   void Engine::load_user_scripts() {
-    load_mrb_files_from_dir("./script/");
+    load_mrb_file("./script/", "load.rb");
   }
   
   void Engine::load_core_classes() {
-    load_mrb_files_from_dir("./core/");
+    load_mrb_file("./core/", "load.rb");
   }
-  
-  bool Engine::load_mrb_files_from_dir(const char *directory) {
-    DIR *dir;
-    struct dirent *ent;
-    dir = opendir(directory);
-    
-    if (dir != NULL) {
-      while ((ent = readdir(dir)) != NULL) {
-        if (strstr(ent->d_name, ".rb")) {
-          bool success = load_mrb_file(directory, ent->d_name);
-          if (!success) return false;
-        } else if (ent->d_type == DT_DIR) {
-          if (strcmp(ent->d_name, ".") != 0 && strcmp(ent->d_name, "..") != 0) {
-            std::string path;
-            path += directory;
-            path += ent->d_name;
-            path += "/";
-            load_mrb_files_from_dir(path.c_str());
-          }
-        }
-      }
-    }
-    return true;
-  }
-  
+ 
   bool Engine::load_mrb_file(const char *file_path, const char *filename) {
     char path[1024];
 

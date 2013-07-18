@@ -4,5 +4,8 @@ MRuby::Build.new do |conf|
   # include the default GEMs
   conf.gembox 'default'
 
-  # conf.gem :github => 'mattn/mruby-require'
+  # Temporary custom solution. If we end up
+  # creating a custom gem, make a gem folder
+  # in moon root and put it there.
+  conf.gem :github => 'archSeer/mruby-require'
 end
