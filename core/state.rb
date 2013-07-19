@@ -4,6 +4,11 @@ class State
 
   def initialize(engine)
     @engine = engine
+    init
+  end
+
+  # use this instead to initialize a State
+  def init
   end
 
   # Gets called when we close the state
