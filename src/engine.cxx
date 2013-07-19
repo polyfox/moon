@@ -58,8 +58,8 @@ namespace Moon {
       glfwSwapBuffers(window);
       glfwPollEvents(); /* Poll for and process events */
     }
-
   }
+
   void Engine::setup_glfw() {
     if (!glfwInit()) {
       printf( "Error initializing glfw!");
@@ -133,12 +133,13 @@ namespace Moon {
   void Engine::load_mrb() {
     mrb = mrb_open();
     mrb_context = mrbc_context_new(mrb); // debugger context
-
+  
     moon_init_mrb_core(mrb);
     moon_init_mrb_ext(mrb);
-
+    
     load_core_classes();
     load_user_scripts();
+
     mrbc_filename(mrb, mrb_context, "main");
   }
 
@@ -152,28 +153,32 @@ namespace Moon {
  
   bool Engine::load_mrb_file(const char *file_path, const char *filename) {
     char path[1024];
+    FILE *file;
 
     mrb_sym zero_sym = mrb_intern2(mrb, "$0", 2);
 
     strcpy(path, file_path);
     strcat(path, filename);
 
-    FILE *file;
-
     file = fopen((const char*)path, "r");
-    mrbc_filename(mrb, mrb_context, filename);
-    mrb_gv_set(mrb, zero_sym, mrb_str_new_cstr(mrb, filename));
-    mrb_value v = mrb_load_file_cxt(mrb, file, mrb_context);
+    if(file) {
+      mrbc_filename(mrb, mrb_context, filename);
+      mrb_gv_set(mrb, zero_sym, mrb_str_new_cstr(mrb, filename));
+      mrb_value v = mrb_load_file_cxt(mrb, file, mrb_context);
 
-    fclose(file);
-    if(mrb->exc) {
-      if (!mrb_undef_p(v)) {
-        mrb_print_error(mrb);
+      fclose(file);
+
+      if(mrb->exc) {
+        if (!mrb_undef_p(v)) {
+          mrb_print_error(mrb);
+        }
+        exit(312);
+        return false;
+      } else {
+        std::cout << "script: " << path << std::endl;
       }
-      exit(312);
-      return false;
     } else {
-      std::cout << "script: " << path << std::endl;
+      std::cout << "failed to open: " << path << std::endl;
     }
     return true;
   }
