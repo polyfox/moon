@@ -1,4 +1,3 @@
-# require is broken, it will fail after closing the file
 require './core/state.rb'
 require './core/mouse.rb'
 require './core/state_test.rb'
