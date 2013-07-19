@@ -2,21 +2,20 @@
 
 namespace Moon {
 
-  KeyboardKey::KeyboardKey() {
-    key = 0;
+  Button::Button() {
+    button_id = 0;
     state = GLFW_RELEASE;
     name = NULL;
     mods = 0;
   }
 
-  KeyboardKey::KeyboardKey(int glfw_key, char* kname) {
-    key = glfw_key;
+  Button::Button(int glfw_key, char* kname) {
+    button_id = glfw_key;
     state = GLFW_RELEASE;
     name = kname;
     mods = 0;
   }
 
-  /* appended K to all key names, for easy ruby constantizing */
   KeyMap Input::keyboard_keys = {
     { GLFW_KEY_SPACE, { GLFW_KEY_SPACE, "SPACE" } },
     { GLFW_KEY_APOSTROPHE, { GLFW_KEY_APOSTROPHE, "APOSTROPHE" } },
@@ -140,32 +139,62 @@ namespace Moon {
     { GLFW_KEY_MENU, { GLFW_KEY_MENU, "MENU" } }
   };
 
+  ButtonMap Input::mouse_buttons = {
+    { GLFW_MOUSE_BUTTON_1, { GLFW_MOUSE_BUTTON_1, "B1" } }, // LEFT
+    { GLFW_MOUSE_BUTTON_2, { GLFW_MOUSE_BUTTON_2, "B2" } }, // RIGHT
+    { GLFW_MOUSE_BUTTON_3, { GLFW_MOUSE_BUTTON_3, "B3" } }, // MIDDLE
+    { GLFW_MOUSE_BUTTON_4, { GLFW_MOUSE_BUTTON_4, "B4" } },
+    { GLFW_MOUSE_BUTTON_5, { GLFW_MOUSE_BUTTON_5, "B5" } },
+    { GLFW_MOUSE_BUTTON_6, { GLFW_MOUSE_BUTTON_6, "B6" } }, 
+    { GLFW_MOUSE_BUTTON_7, { GLFW_MOUSE_BUTTON_7, "B7" } },
+    { GLFW_MOUSE_BUTTON_8, { GLFW_MOUSE_BUTTON_8, "B8" } }
+  };
+
   GLFWwindow* Input::window = NULL;
 
   void Input::initialize(GLFWwindow* glfw_window) {
     window = glfw_window;
     glfwSetKeyCallback(window, Input::update_key);
+    glfwSetMouseButtonCallback(window, Input::Mouse::update_button);
+  }
+
+  void Input::update_key(GLFWwindow* window, 
+                         int key_id, int scancode, int action, int mods) {
+    keyboard_keys[key_id].state = action;
+    keyboard_keys[key_id].mods = mods;
   }
 
   KeyboardKey* Input::get_key(int key_id) {
     return &keyboard_keys[key_id];
   }
 
-  bool Input::key_pressed(int key_index) {
-    return keyboard_keys[key_index].state == GLFW_PRESS;
+  bool Input::key_pressed(int key_id) {
+    return keyboard_keys[key_id].state == GLFW_PRESS;
   }
 
-  bool Input::key_released(int key_index) {
-    return keyboard_keys[key_index].state == GLFW_RELEASE;
+  bool Input::key_released(int key_id) {
+    return keyboard_keys[key_id].state == GLFW_RELEASE;
   }
 
-  void Input::update_key(GLFWwindow* window, 
-                         int key, int scancode, int action, int mods) {
-    keyboard_keys[key].state = action;
-    keyboard_keys[key].mods = mods;
+  bool Input::key_repeated(int key_id) {
+    return keyboard_keys[key_id].state == GLFW_REPEAT;
   }
 
   /* Mouse functions */
+
+  void Input::Mouse::update_button(GLFWwindow* window, 
+                                   int button_id, int action, int mods) {
+    mouse_buttons[button_id].state = action;
+    mouse_buttons[button_id].mods = mods;
+  }
+
+  bool Input::Mouse::button_pressed(int button_id) {
+    return mouse_buttons[button_id].state == GLFW_PRESS;
+  }
+
+  bool Input::Mouse::button_released(int button_id) {
+    return mouse_buttons[button_id].state == GLFW_RELEASE;
+  }
 
   int Input::Mouse::x() {
     double x;
@@ -178,4 +207,5 @@ namespace Moon {
     glfwGetCursorPos(window, NULL, &y);
     return floor(y);
   }
+
 }
