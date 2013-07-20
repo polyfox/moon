@@ -1,26 +1,7 @@
 #ifndef MOON_ENGINE_H
 #define MOON_ENGINE_H
 
-#include <stdlib.h>
-#include <stdio.h>
-
-#include <iostream>
-#include "unistd.h"
-#include "dirent.h"
-#include <string.h>
-
-/* OpenGL */
-#include <GL/gl.h>
-#include <GLFW/glfw3.h>
-
-/* Include the mruby header */
-#include <mruby.h>
-#include <mruby/array.h>
-#include <mruby/proc.h>
-#include <mruby/data.h>
-#include <mruby/compile.h>
-#include <mruby/variable.h>
-#include <mruby/string.h>
+#include "moon.hxx"
 
 #include "input.hxx"
 #include "texture.hxx"
