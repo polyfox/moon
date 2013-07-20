@@ -77,9 +77,9 @@ namespace Moon
       mrb_define_const(mrb, button_module, button.name, mrb_fixnum_value(button.button_id));
     };
     // alias constants
-    mrb_define_const(mrb, key_module, "LEFT", mrb_fixnum_value(Input::mouse_buttons[GLFW_MOUSE_BUTTON_LEFT].button_id));
-    mrb_define_const(mrb, key_module, "RIGHT", mrb_fixnum_value(Input::mouse_buttons[GLFW_MOUSE_BUTTON_RIGHT].button_id));
-    mrb_define_const(mrb, key_module, "MIDDLE", mrb_fixnum_value(Input::mouse_buttons[GLFW_MOUSE_BUTTON_MIDDLE].button_id));
+    mrb_define_const(mrb, button_module, "LEFT", mrb_fixnum_value(Input::mouse_buttons[GLFW_MOUSE_BUTTON_LEFT].button_id));
+    mrb_define_const(mrb, button_module, "RIGHT", mrb_fixnum_value(Input::mouse_buttons[GLFW_MOUSE_BUTTON_RIGHT].button_id));
+    mrb_define_const(mrb, button_module, "MIDDLE", mrb_fixnum_value(Input::mouse_buttons[GLFW_MOUSE_BUTTON_MIDDLE].button_id));
   };
 
 }
