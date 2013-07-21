@@ -9,8 +9,11 @@ void moon_init_mrb_ext(mrb_state *mrb)
 
 int main(void)
 {
-  Moon::Engine *engine = new Moon::Engine();
+  Moon::Engine *engine = NULL;
+  engine = new Moon::Engine();
   engine->run();
-  delete(engine);
+  if(engine) {
+    delete(engine); 
+  }
   return 0;
 }
