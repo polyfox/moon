@@ -2,6 +2,7 @@
 #include "sound.hxx"
 
 namespace Moon {
+
   static void moon_mrb_sound_deallocate(mrb_state *mrb, void *p) {
     delete((Sound*)p);
   };
@@ -30,12 +31,10 @@ namespace Moon {
     Data_Get_Struct(mrb, self, &sound_data_type, sound);
 
     if(argc < 0) {
-      sound->play(gain, pitch, pan);
+      return mrb_bool_value(sound->play(gain, pitch, pan));
     } else {
-      sound->play();
+      return mrb_bool_value(sound->play());
     };
-
-    return mrb_nil_value();
   };
 
   void moon_mrb_sound_init(mrb_state *mrb) {
@@ -46,4 +45,5 @@ namespace Moon {
     mrb_define_class_method(mrb, sound_class, "new", moon_mrb_sound_new, MRB_ARGS_REQ(2));
     mrb_define_method(mrb, sound_class, "play", moon_mrb_sound_play, MRB_ARGS_OPT(3));
   };
+  
 };

@@ -10,8 +10,8 @@ namespace Moon {
     Sound(std::string filename, std::string format);
     ~Sound();
 
-    void play();
-    void play(float gain, float pitch, float pan);
+    bool play();
+    bool play(float gain, float pitch, float pan);
   private:
     ga_Sound* sound;
   };
