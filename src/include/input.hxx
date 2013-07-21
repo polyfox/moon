@@ -27,17 +27,18 @@ namespace Moon {
     static void initialize(GLFWwindow* window);
     static void update_key(GLFWwindow* window, int key_id, int scancode, int action, int mods);
     static KeyboardKey* get_key(int key_id);
-    static bool key_pressed(int key_index);
-    static bool key_released(int key_index);
-    static bool key_repeated(int key_index);
+    static bool key_mod(int key_id, int mod);
+    static bool key_state_is_eq(int key_id, int state);
+    static bool key_state_is_eq_with_mod(int key_id, int state, int mod);
 
     class Mouse {
     public:
       static int x();
       static int y();
       static void update_button(GLFWwindow* window, int button_id, int action, int mods);
-      static bool button_pressed(int button_index);
-      static bool button_released(int button_index);
+      static bool button_mod(int button_id, int mod);
+      static bool button_state_is_eq(int button_id, int state);
+      static bool button_state_is_eq_with_mod(int button_id, int state, int mod);
     };
 
   protected:

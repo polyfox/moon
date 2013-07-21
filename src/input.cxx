@@ -168,16 +168,16 @@ namespace Moon {
     return &keyboard_keys[key_id];
   }
 
-  bool Input::key_pressed(int key_id) {
-    return keyboard_keys[key_id].state == GLFW_PRESS;
+  bool Input::key_mod(int key_id, int mod) {
+    return (keyboard_keys[key_id].mods & mod) == mod;
   }
 
-  bool Input::key_released(int key_id) {
-    return keyboard_keys[key_id].state == GLFW_RELEASE;
+  bool Input::key_state_is_eq(int key_id, int state) {
+    return keyboard_keys[key_id].state == state;
   }
 
-  bool Input::key_repeated(int key_id) {
-    return keyboard_keys[key_id].state == GLFW_REPEAT;
+  bool Input::key_state_is_eq_with_mod(int key_id, int state, int mod) {
+    return Input::key_state_is_eq(key_id, state) && Input::key_mod(key_id, mod);
   }
 
   /* Mouse functions */
@@ -188,12 +188,18 @@ namespace Moon {
     mouse_buttons[button_id].mods = mods;
   }
 
-  bool Input::Mouse::button_pressed(int button_id) {
-    return mouse_buttons[button_id].state == GLFW_PRESS;
+  bool Input::Mouse::button_mod(int button_id, int mod) {
+    return (mouse_buttons[button_id].mods & mod) == mod;
   }
 
-  bool Input::Mouse::button_released(int button_id) {
-    return mouse_buttons[button_id].state == GLFW_RELEASE;
+  bool Input::Mouse::button_state_is_eq(int button_id, int state) {
+    return mouse_buttons[button_id].state == state;
+  }
+
+  bool Input::Mouse::button_state_is_eq_with_mod(int button_id, int state, 
+                                                 int mod) {
+    return Input::Mouse::button_state_is_eq(button_id, state) && 
+           Input::Mouse::button_mod(button_id, mod);
   }
 
   int Input::Mouse::x() {
