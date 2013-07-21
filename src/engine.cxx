@@ -19,7 +19,7 @@ namespace Moon {
 
   Engine::~Engine() { /* Terminate in the reverse order */
     mrbc_context_free(mrb, mrb_context);
-    mrb_close(mrb);
+    //mrb_close(mrb);
 
     Audio::terminate();
 
@@ -160,25 +160,29 @@ namespace Moon {
     strcpy(path, file_path);
     strcat(path, filename);
 
-    file = fopen((const char*)path, "r");
-    if(file) {
-      mrbc_filename(mrb, mrb_context, filename);
-      mrb_gv_set(mrb, zero_sym, mrb_str_new_cstr(mrb, filename));
-      mrb_value v = mrb_load_file_cxt(mrb, file, mrb_context);
+    if(exists(path)) {
+      file = fopen((const char*)path, "r");
+      if(file) {
+        mrbc_filename(mrb, mrb_context, filename);
+        mrb_gv_set(mrb, zero_sym, mrb_str_new_cstr(mrb, filename));
+        mrb_value v = mrb_load_file_cxt(mrb, file, mrb_context);
 
-      fclose(file);
+        fclose(file);
 
-      if(mrb->exc) {
-        if (!mrb_undef_p(v)) {
-          mrb_print_error(mrb);
+        if(mrb->exc) {
+          if (!mrb_undef_p(v)) {
+            mrb_print_error(mrb);
+          }
+          exit(312);
+          return false;
+        } else {
+          std::cout << "script: " << path << std::endl;
         }
-        exit(312);
-        return false;
       } else {
-        std::cout << "script: " << path << std::endl;
+        std::cout << "failed to open: " << path << std::endl;
       }
     } else {
-      std::cout << "failed to open: " << path << std::endl;
+      std::cout << "file does not exist: " << path << std::endl;
     }
     return true;
   }
