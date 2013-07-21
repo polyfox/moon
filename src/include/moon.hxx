@@ -10,6 +10,8 @@
 #include "dirent.h"
 #include <string.h>
 
+#include <sys/stat.h>
+
 /* OpenGL */
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
@@ -24,5 +26,15 @@
 #include <mruby/compile.h>
 #include <mruby/variable.h>
 #include <mruby/string.h>
+
+// _WIN32 is set for both 32 and 64 bit
+#ifdef _WIN32
+#  define stat _stat
+#endif
+
+inline bool exists(const std::string& name) {
+  struct stat buffer;   
+  return (stat (name.c_str(), &buffer) == 0); 
+};
 
 #endif
