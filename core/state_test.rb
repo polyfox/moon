@@ -1,3 +1,6 @@
+#
+# core/state_test.rb
+#   Countless random little tests, this file changes often
 class State_Test < State
 
   def init

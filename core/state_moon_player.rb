@@ -10,7 +10,16 @@ class Input
       in_area?(rect.x, rect.y, rect.width, rect.height)
     end
 
+    def self.triggered?(key_id)
+      pressed?(key_id) == 0
+    end
+
   end
+
+  def self.triggered?(key_id)
+    pressed?(key_id) == 0
+  end
+
 end
 
 # Maybe we could prefer: 
@@ -93,6 +102,11 @@ end
 # eventually this will be implemented in C++ 
 class Rectangle
 
+  attr_accessor :x
+  attr_accessor :y
+  attr_accessor :width
+  attr_accessor :height
+
   def initialize(x, y, width, height)
     @x      = x
     @y      = y
@@ -101,39 +115,7 @@ class Rectangle
     on_resize
     on_move
   end
-
-  def x
-    return @x
-  end
-
-  def y
-    return @y
-  end
-
-  def width
-    return @width
-  end
-
-  def height
-    return @height
-  end
-
-  def x=(new_x)
-    @x = new_x
-  end
-
-  def y=(new_y)
-    @y = new_y
-  end
-
-  def width=(new_width)
-    @width = new_width
-  end
-
-  def height=(new_height)
-    @height = new_height
-  end
-
+  
 end
 
 # containers
@@ -212,7 +194,7 @@ class MoonPlayer < Container
         call_event(:mouse_over)
         keys = Input::Keys
         button = Input::Mouse::Buttons::LEFT
-        if Input::Mouse.pressed?(button)
+        if Input::Mouse.triggered?(button)
           if    Input::Mouse.modded?(button, keys::MOD_SHIFT)
             call_event(:mouse_focus_shift) 
           elsif Input::Mouse.modded?(button, keys::MOD_CONTROL)
@@ -327,9 +309,9 @@ class MoonPlayer < Container
       @play.update
       @stop.update
     end
-    if Input.pressed?(Input::Keys::ESCAPE)
+    if Input.triggered?(Input::Keys::ESCAPE)
       stop_music
-    elsif Input.pressed?(Input::Keys::SPACE)
+    elsif Input.triggered?(Input::Keys::SPACE)
       play_music
     end
     update_seek

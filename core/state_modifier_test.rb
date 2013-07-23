@@ -1,3 +1,7 @@
+#
+# core/state_modifier_test.rb
+#   Press the Mouse buttons, and try pressing the modifier keys with it 
+#   SHIFT, CONTROL, ALT, SUPER
 class State_ModifierTest < State
   
   class Table
