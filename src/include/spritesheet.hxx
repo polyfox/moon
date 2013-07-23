@@ -7,6 +7,9 @@
 namespace Moon {
   class Spritesheet {
   public:
+    GLfloat tileWidth;
+    GLfloat tileHeight;
+
     Spritesheet(std::string filename, int tile_width, int tile_height);
     ~Spritesheet();
 
@@ -14,8 +17,6 @@ namespace Moon {
   private:
     bool generate_buffers(); // use only in constructor
 
-    GLfloat tileWidth;
-    GLfloat tileHeight;
     // VBO data
     GLuint mVertexDataBuffer;
     GLuint* mIndexBuffers;

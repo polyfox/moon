@@ -29,6 +29,18 @@ namespace Moon {
     return mrb_nil_value();
   };
 
+  static mrb_value moon_mrb_spritesheet_cell_width(mrb_state *mrb, mrb_value self) {
+    Spritesheet *spritesheet;
+    Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
+    return mrb_fixnum_value((int)spritesheet->tileWidth);
+  }
+
+  static mrb_value moon_mrb_spritesheet_cell_height(mrb_state *mrb, mrb_value self) {
+    Spritesheet *spritesheet;
+    Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
+    return mrb_fixnum_value((int)spritesheet->tileHeight);
+  }
+
   void moon_mrb_spritesheet_init(mrb_state *mrb) {
     struct RClass *spritesheet_class;
     spritesheet_class = mrb_define_class(mrb, "Spritesheet", mrb->object_class);
@@ -36,5 +48,7 @@ namespace Moon {
     
     mrb_define_class_method(mrb, spritesheet_class, "new", moon_mrb_spritesheet_new, MRB_ARGS_REQ(3));
     mrb_define_method(mrb, spritesheet_class, "render", moon_mrb_spritesheet_render, MRB_ARGS_REQ(3));
+    mrb_define_method(mrb, spritesheet_class, "cell_width", moon_mrb_spritesheet_cell_width, MRB_ARGS_NONE());
+    mrb_define_method(mrb, spritesheet_class, "cell_height", moon_mrb_spritesheet_cell_height, MRB_ARGS_NONE());
   };
 };
