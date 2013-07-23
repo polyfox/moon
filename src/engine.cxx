@@ -18,9 +18,14 @@ namespace Moon {
   }
 
   Engine::~Engine() { /* Terminate in the reverse order */
-    mrbc_context_free(mrb, mrb_context);
-    //mrb_close(mrb);
-
+    if (mrb) {
+      if (mrb_context) {
+        mrbc_context_free(mrb, mrb_context);
+        mrb_context = NULL;
+      }
+      mrb_close(mrb);
+      mrb = NULL;
+    }
     Audio::terminate();
 
     glfwTerminate();
