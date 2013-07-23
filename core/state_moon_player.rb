@@ -7,8 +7,7 @@ class Input
   module Mouse
 
     def self.in_rect?(rect)
-      x().between?(rect.x, rect.x + rect.width) && 
-        y().between?(rect.y, rect.y + rect.height)
+      in_area?(rect.x, rect.y, rect.width, rect.height)
     end
 
   end
