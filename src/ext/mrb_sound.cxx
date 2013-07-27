@@ -16,8 +16,12 @@ namespace Moon {
     char* format;
 
     mrb_get_args(mrb, "zz", &filename, &format);
-
-    Sound *sound = new Sound(filename, format);
+    Sound *sound;
+    try {
+      sound = new Sound(filename, format);
+    } catch (std::invalid_argument& e) {
+      mrb_raisef(mrb, E_SCRIPT_ERROR, "cannot load such file -- %S", mrb_str_new_cstr(mrb, filename));
+    };
     return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(klass), &sound_data_type, sound));
   };
 
