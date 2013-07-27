@@ -1,3 +1,6 @@
+#
+# core/load.rb
+#   Entry script for Moon's mrb
 require './core/state.rb'
 require './core/mouse.rb'
 require './core/music_activity_hud.rb'

@@ -1,6 +1,7 @@
 #
 # moon/core/states/moon_player.rb
-#   just a simple draft of a Music player in Moon
+#   just a simple draft of a Music player in Moon.
+#   This State is used to demonstrate various functions in the Moon engine.
 #
 # extension
 class Input
@@ -115,7 +116,7 @@ class Rectangle
     on_resize
     on_move
   end
-  
+
 end
 
 # containers

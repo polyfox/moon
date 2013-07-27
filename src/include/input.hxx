@@ -8,11 +8,14 @@ namespace Moon {
 
   struct Button {
   public:
+    // constructors
     Button();
-    Button(int button_id, char* name);
+    Button(int button_id, char *name);
+    // members
     int button_id;
-    char* name;
+    char *name;
     int state;
+    int hold; // how long has this key kept the same state?
     int mods;  
   };
 
@@ -30,6 +33,7 @@ namespace Moon {
     static bool key_mod(int key_id, int mod);
     static bool key_state_is_eq(int key_id, int state);
     static bool key_state_is_eq_with_mod(int key_id, int state, int mod);
+    static int key_state_hold(int key_id, int state);
 
     class Mouse {
     public:
@@ -39,6 +43,7 @@ namespace Moon {
       static bool button_mod(int button_id, int mod);
       static bool button_state_is_eq(int button_id, int state);
       static bool button_state_is_eq_with_mod(int button_id, int state, int mod);
+      static int button_state_hold(int button_id, int state);
     };
 
   protected:

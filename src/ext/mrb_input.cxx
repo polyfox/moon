@@ -15,7 +15,11 @@ namespace Moon
     } else {
       res = Input::key_state_is_eq(key_id, state);
     }
-    return mrb_bool_value(res);
+    if (res) {
+      return mrb_fixnum_value(Input::key_state_hold(key_id, state));
+    } else {
+      return mrb_bool_value(false);
+    }
   }
 
   static mrb_value moon_mrb_input_is_pressed(mrb_state *mrb, mrb_value self) {
@@ -37,6 +41,13 @@ namespace Moon
     return mrb_bool_value(Input::key_mod(key_id, mod_id));
   }
 
+  static mrb_value moon_mrb_input_hold(mrb_state *mrb, mrb_value self) {
+    mrb_int key_id;
+    mrb_int state;
+    mrb_get_args(mrb, "ii", &key_id, &state);
+    return mrb_fixnum_value(Input::key_state_hold(key_id, state));
+  }
+
   static mrb_value moon_mrb_mouse_x(mrb_state *mrb, mrb_value self) {
     return mrb_fixnum_value(Input::Mouse::x());
   }
@@ -56,7 +67,11 @@ namespace Moon
     } else {
       res = Input::Mouse::button_state_is_eq(button_id, state);
     }
-    return mrb_bool_value(res);   
+    if (res) {
+      return mrb_fixnum_value(Input::Mouse::button_state_hold(button_id, state));
+    } else {
+      return mrb_bool_value(false);
+    }
   }
 
   static mrb_value moon_mrb_mouse_is_pressed(mrb_state *mrb, mrb_value self) {
