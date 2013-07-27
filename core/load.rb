@@ -11,7 +11,7 @@ require './core/state_music_activity.rb'
 require './core/state_test.rb'
 
 #State.push(State_KeyHoldTest)
-#State.push(State_ModifierTest)
-State.push(State_MoonPlayer)
+State.push(State_ModifierTest)
+#State.push(State_MoonPlayer)
 #State.push(State_MusicActivity)
 #State.push(State_Test)

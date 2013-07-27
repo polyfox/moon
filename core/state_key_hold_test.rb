@@ -6,36 +6,63 @@
 #   third is the repeat count
 class State_KeyHoldTest < State
 
+  class Hud_KeyHold
+
+    attr_accessor :x, :y
+
+    def initialize(device, key, cell_width=16, cell_height=16)
+      @device = device
+      @key = key
+      @cell_width = cell_width
+      @cell_height = cell_height
+      @x = 0
+      @y = 0
+      init_spritesheet
+    end
+
+    def init_spritesheet  
+      filename = "resources/media_buttons_#{@cell_width}x#{@cell_height}.png"
+      @spritesheet = Spritesheet.new(filename, @cell_width, @cell_height)
+    end
+
+    def render
+      if @release
+        @release.times do |i|
+          @spritesheet.render(@x + @cell_width * i, @y, 0)
+        end
+      end
+      if @press
+        @press.times do |i|
+          @spritesheet.render(@x + @cell_width * i, @y + @cell_height, 1)
+        end
+      end
+      if @hold 
+        @hold.times do |i|
+          @spritesheet.render(@x + @cell_width * i, @y + @cell_height * 2, 2)
+        end
+      end
+    end
+
+    def update
+      @press   = @device.pressed?(@key)
+      @release = @device.released?(@key)
+      @hold    = @device.repeated?(@key)
+    end
+
+  end
+
   def init
-    @cell_width = 16
-    @spritesheet = Spritesheet.new("resources/media_buttons_16x16.png", 16, 16)
+    @hud = Hud_KeyHold.new(Input, Input::Keys::SPACE, 8, 8)
     super
   end
 
   def render
     super
-    if @release
-      @release.times do |i|
-        @spritesheet.render(@cell_width * i, 0, 0)
-      end
-    end
-    if @press
-      @press.times do |i|
-        @spritesheet.render(@cell_width * i, @cell_width, 0)
-      end
-    end
-    if @hold 
-      @hold.times do |i|
-        @spritesheet.render(@cell_width * i, @cell_width * 2, i % 12)
-      end
-    end
+    @hud.render
   end
 
   def update
-    @press = Input.pressed?(Input::Keys::SPACE)
-    @release = Input.released?(Input::Keys::SPACE)
-    @hold = Input.repeated?(Input::Keys::SPACE)
-    render
+    @hud.update
     super
   end
 

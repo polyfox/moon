@@ -7,7 +7,7 @@
 class Input
 
   def self.triggered?(key_id)
-    pressed?(key_id) == 0
+    return (pressed?(key_id) || repeated?(key_id)) == 0
   end
 
 end
@@ -107,6 +107,7 @@ end
 class Container < Rectangle
 
   def initialize(x, y, width, height)
+    super(x, y, width, height)
     on_resize
     on_move
   end
@@ -157,8 +158,8 @@ class MoonPlayer < Container
     attr_accessor :rx, :ry
 
     def initialize(rx, ry, width, height)
-      self.rx = rx
-      self.ry = ry
+      @rx = rx
+      @ry = ry
       super(0, 0, width, height)
     end
 
@@ -219,7 +220,7 @@ class MoonPlayer < Container
     @seek    = Widget.new( 66,  16,  16,  16)
 
     @play.on_event(:mouse_focus_no_mod) do |widget|
-      play_music(true)
+      Music.playing? ? pause_music : play_music(true)
     end
 
     @play.on_event(:mouse_focus_control) do |widget|
@@ -246,7 +247,41 @@ class MoonPlayer < Container
       stop_music
     end
 
-    super(x, y, 96, 32)
+    @widgets = [@play, @stop, @seekbar, @seek]
+
+    ## compare by lamba function
+    comp_by = ->(ary, res, &func) do
+      r = nil
+      for e in ary
+        r = e if (func.(e) <=> r) == res
+      end
+      return r
+    end
+
+    ## max_by lamba function
+    max_by = ->(ary, &func) do
+      return comp_by.(ary, -1, &func)
+    end
+
+    ## min_by lamba function
+    min_by = ->(ary, &func) do
+      return comp_by.(ary, 1, &func)
+    end
+
+    # premitive way to find the covered area of a set of Rectangles
+    ## x
+    wid = min_by.(@widgets) { |w| w.x }
+    x = wid.x 
+    wid = max_by.(@widgets) { |w| w.x + w.width } 
+    x2 = wid.x + wid.width
+
+    ## y
+    wid = min_by.(@widgets) { |w| w.y }
+    y = wid.y
+    wid = max_by.(@widgets) { |w| w.y + w.height } 
+    y2 = wid.y + wid.height
+
+    super(x, y, (x2 - x).abs, (y2 - y).abs)
     init_spriteset
   end
 
@@ -325,21 +360,25 @@ class State_MoonPlayer < State
   #   Sample at pos (can be used to simulate meters and such)
   def init   
     @music_hud = MusicActivityHud.new(0, 0)
-    @player = MoonPlayer.new(0, 0)
-    @player.x = 96
-    @player.y = 128
+    @player = MoonPlayer.new(96, 128)
+    puts @player.pos
+
+    # evil stuff don't do this
+    @button_hud = State_KeyHoldTest::Hud_KeyHold.new(Input::Mouse, Input::Mouse::Buttons::LEFT, 8, 8)
+    @button_hud.x = 0 
+    @button_hud.y = @player.y + @player.height
     super
   end
 
   def render
     super
+    @button_hud.render
     @music_hud.render
     @player.render
   end
 
   def update
     @player.update
-    @ticks += 1
     #puts Input::Mouse.pos if @ticks % 5 == 0
     super
   end

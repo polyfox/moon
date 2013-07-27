@@ -58,7 +58,7 @@ class State
 
   def self.push state
     @states.last.pause if !@states.empty?
-    @states << state.new(self)
+    @states.push state.new(self)
   end
 
 end

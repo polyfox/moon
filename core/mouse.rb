@@ -14,7 +14,7 @@ class Input
     end
 
     def self.triggered?(key_id)
-      pressed?(key_id) == 0
+      return pressed?(key_id) == 0
     end
 
   end
