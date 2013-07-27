@@ -5,17 +5,6 @@
 #
 # extension
 class Input
-  module Mouse
-
-    def self.in_rect?(rect)
-      in_area?(rect.x, rect.y, rect.width, rect.height)
-    end
-
-    def self.triggered?(key_id)
-      pressed?(key_id) == 0
-    end
-
-  end
 
   def self.triggered?(key_id)
     pressed?(key_id) == 0
@@ -102,26 +91,16 @@ end
 # small data requirement
 # eventually this will be implemented in C++ 
 class Rectangle
-  attr_accessor :x, :y, :width, :height
 
-  attr_accessor :x
-  attr_accessor :y
-  attr_accessor :width
-  attr_accessor :height
+  attr_accessor :x, :y, :width, :height
 
   def initialize(x, y, width, height)
     @x      = x
     @y      = y
     @width  = width
     @height = height
-<<<<<<< HEAD
-    on_resize
-    on_move
   end
 
-=======
-  end
->>>>>>> 45e73da6fd39445820e3e5b4cb9e8a4c892c4192
 end
 
 # containers
@@ -178,9 +157,9 @@ class MoonPlayer < Container
     attr_accessor :rx, :ry
 
     def initialize(rx, ry, width, height)
-      super(0, 0, width, height)
       self.rx = rx
       self.ry = ry
+      super(0, 0, width, height)
     end
 
     def on_event(event, &func)
