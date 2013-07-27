@@ -19,7 +19,7 @@ namespace Moon {
 
   Engine::~Engine() { /* Terminate in the reverse order */
     mrbc_context_free(mrb, mrb_context);
-    //mrb_close(mrb);
+    if(mrb) mrb_close(mrb);
 
     Audio::terminate();
 
