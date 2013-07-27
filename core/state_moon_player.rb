@@ -99,13 +99,16 @@ class Rectangle
     @y      = y
     @width  = width
     @height = height
-    on_resize
-    on_move
   end
 end
 
 # containers
 class Container < Rectangle
+
+  def initialize(x, y, width, height)
+    on_resize
+    on_move
+  end
 
   # callbacks
   def on_move
