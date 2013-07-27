@@ -24,6 +24,9 @@ class State_Test < State
     p "SPACE is PRESSED!" if Input.pressed?(Input::Keys::SPACE)
     p "Mouse is in area!" if Input::Mouse.in_area?(0, 0, 32, 32)
     p Input::Mouse.pos
+  end
+
+  def render
     for i in 0..1800 # runs efficiently at 60FPS, 18000 runs at 20FPS
       @s.render(i, i, i)
     end

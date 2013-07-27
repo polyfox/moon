@@ -102,6 +102,7 @@ end
 # small data requirement
 # eventually this will be implemented in C++ 
 class Rectangle
+  attr_accessor :x, :y, :width, :height
 
   attr_accessor :x
   attr_accessor :y
@@ -113,14 +114,23 @@ class Rectangle
     @y      = y
     @width  = width
     @height = height
+<<<<<<< HEAD
     on_resize
     on_move
   end
 
+=======
+  end
+>>>>>>> 45e73da6fd39445820e3e5b4cb9e8a4c892c4192
 end
 
 # containers
 class Container < Rectangle
+
+  def initialize(x, y, width, height)
+    on_resize
+    on_move
+  end
 
   # callbacks
   def on_move
@@ -342,9 +352,6 @@ class State_MoonPlayer < State
     super
   end
 
-  # suggestion:
-  #   we should add a #render function to States, and keep graphic oriented
-  #   code out of the logical code
   def render
     super
     @music_hud.render
@@ -353,7 +360,6 @@ class State_MoonPlayer < State
 
   def update
     @player.update
-    render # self-explanatory?
     @ticks += 1
     #puts Input::Mouse.pos if @ticks % 5 == 0
     super

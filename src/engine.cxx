@@ -18,6 +18,7 @@ namespace Moon {
   }
 
   Engine::~Engine() { /* Terminate in the reverse order */
+<<<<<<< HEAD
     if (mrb) {
       if (mrb_context) {
         mrbc_context_free(mrb, mrb_context);
@@ -26,6 +27,11 @@ namespace Moon {
       mrb_close(mrb);
       mrb = NULL;
     }
+=======
+    mrbc_context_free(mrb, mrb_context);
+    if(mrb) mrb_close(mrb);
+
+>>>>>>> 45e73da6fd39445820e3e5b4cb9e8a4c892c4192
     Audio::terminate();
 
     glfwTerminate();
@@ -58,6 +64,7 @@ namespace Moon {
       };
 
       mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
+      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "render", 0);
       mrb_gc_arena_restore(mrb, ai);
 
       glfwSwapBuffers(window);
