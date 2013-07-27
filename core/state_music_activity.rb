@@ -13,7 +13,6 @@ class State_MusicActivity < State
   end
 
   def update
-    render
     super
   end
 

@@ -359,9 +359,6 @@ class State_MoonPlayer < State
     super
   end
 
-  # suggestion:
-  #   we should add a #render function to States, and keep graphic oriented
-  #   code out of the logical code
   def render
     super
     @music_hud.render
@@ -370,7 +367,6 @@ class State_MoonPlayer < State
 
   def update
     @player.update
-    render # self-explanatory?
     @ticks += 1
     #puts Input::Mouse.pos if @ticks % 5 == 0
     super

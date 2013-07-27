@@ -53,6 +53,7 @@ namespace Moon {
       };
 
       mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
+      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "render", 0);
       mrb_gc_arena_restore(mrb, ai);
 
       glfwSwapBuffers(window);

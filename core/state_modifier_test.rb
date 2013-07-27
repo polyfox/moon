@@ -108,7 +108,6 @@ class State_ModifierTest < State
     #puts "CTRL  | " + @data_table.row(2).join(", ")
     #puts "ALT   | " + @data_table.row(3).join(", ")
     #puts "SUPER | " + @data_table.row(4).join(", ")
-    render # needs to be added to the C++ side
     super
   end
 
