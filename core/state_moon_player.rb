@@ -256,17 +256,17 @@ class MoonPlayer < Container
 
   def pause_music
     @music.pause
-    puts ">> Paused: " + @music.filename
+    puts ">> Paused: #{@music.filename}"
   end
 
   def play_music(resume=false)
     if resume 
       if @music.resume 
-        puts ">> Now Resuming: " + @music.filename
+        puts ">> Now Resuming: #{@music.filename}"
       end
     else 
       if @music.play
-        puts ">> Now Playing: " + @music.filename
+        puts ">> Now Playing: #{@music.filename}"
       end
     end
   end
