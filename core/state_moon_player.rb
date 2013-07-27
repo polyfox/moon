@@ -92,6 +92,7 @@ end
 # small data requirement
 # eventually this will be implemented in C++ 
 class Rectangle
+  attr_accessor :x, :y, :width, :height
 
   def initialize(x, y, width, height)
     @x      = x
@@ -101,39 +102,6 @@ class Rectangle
     on_resize
     on_move
   end
-
-  def x
-    return @x
-  end
-
-  def y
-    return @y
-  end
-
-  def width
-    return @width
-  end
-
-  def height
-    return @height
-  end
-
-  def x=(new_x)
-    @x = new_x
-  end
-
-  def y=(new_y)
-    @y = new_y
-  end
-
-  def width=(new_width)
-    @width = new_width
-  end
-
-  def height=(new_height)
-    @height = new_height
-  end
-
 end
 
 # containers
