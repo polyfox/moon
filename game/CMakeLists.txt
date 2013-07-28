@@ -13,6 +13,8 @@ add_executable(game
 
 add_custom_command(TARGET game
   POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ../build/scripts
+  COMMAND ${CMAKE_COMMAND} -E remove_directory ../build/core
   COMMAND ${CMAKE_COMMAND} -E copy_directory ../game/scripts/ ../build/scripts
   COMMAND ${CMAKE_COMMAND} -E copy_directory ../core/ ../build/core
 )

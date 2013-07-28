@@ -29,11 +29,7 @@ TODO: use a custom gembox, outside the mrbgems directory
 
 TODO: copy over the script files EVERY time make runs
 
-TODO: before copying the ruby scripts, clear out the old folders (otherwise files deleted in core,game/script stay in build)
-
 TODO: properly cleanup after mruby too (including the downloaded mrbgems)
 
 TODO: mruby-require loads dependent on the working dir. Make a require_relative method or
 something.
-
-TODO: fix require, so we can do "require 'core/state'" instead of "require './core/state.rb'"
