@@ -30,7 +30,7 @@ add_custom_target(mruby DEPENDS libmruby.a)
 include_directories(vendor/mruby/include)
 set(MRUBY_LIBRARIES ${CMAKE_BINARY_DIR}/vendor/mruby/build/host/lib/libmruby.a)
 if(UNIX) # mrb-require needs for loading .so files
-  set(MRUBY_LIBRARY ${MRUBY_LIBRARIES} dl)
+  set(MRUBY_LIBRARIES ${MRUBY_LIBRARIES} dl)
 endif(UNIX)
 
 # Gorilla Audio
