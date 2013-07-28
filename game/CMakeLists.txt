@@ -17,7 +17,4 @@ add_custom_command(TARGET game
   COMMAND ${CMAKE_COMMAND} -E copy_directory ../core/ ../build/core
 )
 
-if(UNIX)
-  target_link_libraries(game dl) # mrb-require needs for loading .so files
-endif(UNIX)
 target_link_libraries(game moon)
