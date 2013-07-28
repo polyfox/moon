@@ -28,12 +28,14 @@ add_custom_command(
 )
 add_custom_target(mruby DEPENDS libmruby.a)
 include_directories(vendor/mruby/include)
-link_directories(vendor/mruby/build/host/lib)
+set(MRUBY_LIBRARIES ${CMAKE_BINARY_DIR}/vendor/mruby/build/host/lib/libmruby.a)
+if(UNIX) # mrb-require needs for loading .so files
+  set(MRUBY_LIBRARY ${MRUBY_LIBRARIES} dl)
+endif(UNIX)
 
 # Gorilla Audio
 add_subdirectory(vendor/gorilla-audio/build)
 include_directories(vendor/gorilla-audio/include)
-#link_directories(vendor/gorilla-audio/build)
 
 include_directories(src/include)
 

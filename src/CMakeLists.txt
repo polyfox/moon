@@ -11,11 +11,7 @@ set(moonLibraries ${moonLibraries} ${GLFW_LIBRARY})
 # DevIL
 set(moonLibraries ${moonLibraries} ${IL_LIBRARY} ${ILU_LIBRARY})
 # mruby
-set(moonLibraries ${moonLibraries} libmruby.a)
-
-if(UNIX) # mrb-require needs for loading .so files
-  set(moonLibraries ${moonLibraries} dl)
-endif(UNIX)
+set(moonLibraries ${moonLibraries} ${MRUBY_LIBRARIES})
 # gorilla audio
 set(moonLibraries ${moonLibraries} gorilla)
 
