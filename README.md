@@ -27,9 +27,5 @@ mrb_config.rb should be edited, to use the correct toolchain for building mruby.
 
 TODO: use a custom gembox, outside the mrbgems directory
 
-TODO: copy over the script files EVERY time make runs
-
 TODO: properly cleanup after mruby too (including the downloaded mrbgems)
 
-TODO: mruby-require loads dependent on the working dir. Make a require_relative method or
-something.

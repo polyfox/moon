@@ -11,8 +11,7 @@ add_executable(game
   ext/hola.cxx
 )
 
-add_custom_command(TARGET game
-  POST_BUILD
+add_custom_target(copy_scripts ALL
   COMMAND ${CMAKE_COMMAND} -E remove_directory ../build/scripts
   COMMAND ${CMAKE_COMMAND} -E remove_directory ../build/core
   COMMAND ${CMAKE_COMMAND} -E copy_directory ../game/scripts/ ../build/scripts
