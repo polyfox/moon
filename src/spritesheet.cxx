@@ -114,35 +114,8 @@ namespace Moon {
   void Spritesheet::render(const int &x, const int &y, const int &index) {
     //Sprite sheet data exists
     if(mVertexDataBuffer != NULL) {
-      glLoadIdentity();
-      glTranslatef(x, y, 0.f);
-
-      // Set texture
-      glBindTexture(GL_TEXTURE_2D, texture->id());
-
-      // Enable vertex and texture coordinate arrays
-      glEnableClientState(GL_VERTEX_ARRAY);
-      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-        // Bind vertex data
-        glBindBuffer(GL_ARRAY_BUFFER, mVertexDataBuffer);
-
-        // Set texture coordinate data
-        glTexCoordPointer(2, GL_FLOAT, sizeof(VertexData2D), (GLvoid*)offsetof(VertexData2D, u));
-
-        // Set vertex data
-        glVertexPointer(2, GL_FLOAT, sizeof(VertexData2D), (GLvoid*)offsetof(VertexData2D, x));
-
-        glColor4f(1.0, 1.0, 1.0, 1.0); // TODO: OPACITY
-
-        // Draw quad using vertex data and index data
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffers[index]);
-        glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, NULL);
-
-      // Disable vertex and texture coordinate arrays
-      glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-      glDisableClientState(GL_VERTEX_ARRAY);
-    }
+      texture->render(x, y, mVertexDataBuffer, mIndexBuffers[index]);
+    };
 
   };
 };

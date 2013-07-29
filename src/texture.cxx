@@ -109,6 +109,7 @@ namespace Moon {
   GLuint Texture::id() {
     return mTextureID;
   };
+
   void Texture::render(const GLfloat &x, const GLfloat &y, Rect *clip /*=NULL*/) {
     // If the texture exists
     if(mTextureID != 0) {
@@ -138,10 +139,6 @@ namespace Moon {
         quadHeight = clip->h;
       }
 
-      //Move to rendering point
-      glTranslatef(x, y, 0.f);
-
-
       //Set vertex data
       VertexData2D vData[4];
 
@@ -157,6 +154,23 @@ namespace Moon {
       vData[2].x = quadWidth; vData[2].y = quadHeight;
       vData[3].x =       0.f; vData[3].y = quadHeight;
 
+      //Update vertex buffer data
+      glBindBuffer(GL_ARRAY_BUFFER, mVBOID);
+      glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(VertexData2D), vData);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+      render(x, y, mVBOID, mIBOID);
+    };
+  };
+
+  void Texture::render(const GLfloat &x, const GLfloat &y, const GLuint &vboID, const GLuint &iboID) {
+    if(mTextureID != 0) {
+      //Remove any previous transformations
+      glLoadIdentity();
+
+      //Move to rendering point
+      glTranslatef(x, y, 0.f);
+
       //Set texture ID
       glBindTexture(GL_TEXTURE_2D, mTextureID);
 
@@ -165,10 +179,7 @@ namespace Moon {
       glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
         //Bind vertex buffer
-        glBindBuffer(GL_ARRAY_BUFFER, mVBOID);
-
-        //Update vertex buffer data
-        glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(VertexData2D), vData);
+        glBindBuffer(GL_ARRAY_BUFFER, vboID);
 
         //Set texture coordinate data
         glTexCoordPointer(2, GL_FLOAT, sizeof(VertexData2D), (GLvoid*)offsetof(VertexData2D, u));
@@ -176,8 +187,10 @@ namespace Moon {
         //Set vertex data
         glVertexPointer(2, GL_FLOAT, sizeof(VertexData2D), (GLvoid*)offsetof(VertexData2D, x));
 
+        glColor4f(1.0, 1.0, 1.0, 1.0); // TODO: OPACITY
+
         //Draw quad using vertex data and index data
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBOID);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
         glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, NULL);
 
       //Disable vertex and texture coordinate arrays
