@@ -11,32 +11,20 @@ namespace Moon {
     shader.add_uniform("model_matrix");
     shader.add_uniform("projection_matrix");
 
-    //Texture loading success
-    bool textureLoaded = false;
-
     unsigned char* pixels;
-    int width, height, channels;
+    int channels;
 
     pixels = SOIL_load_image(filename.c_str(), &width, &height, &channels, SOIL_LOAD_RGBA);
-    mTextureID = SOIL_create_OGL_texture(pixels, width, height, channels, SOIL_CREATE_NEW_ID, SOIL_FLAG_MULTIPLY_ALPHA);
+    texture_id = SOIL_create_OGL_texture(pixels, width, height, channels, SOIL_CREATE_NEW_ID, SOIL_FLAG_MULTIPLY_ALPHA);
 
-    glBindTexture(GL_TEXTURE_2D, mTextureID);
+    glBindTexture(GL_TEXTURE_2D, texture_id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    mTextureWidth = width;
-    mTextureHeight = height;
-
     //Vertex data
     VertexData2D vData[4];
-    GLuint iData[4];
-
-    //Set rendering indices
-    iData[0] = 0;
-    iData[1] = 1;
-    iData[2] = 2;
-    iData[3] = 3;
+    GLuint iData[4] = {0, 1, 2, 3}; // rendering indices
 
     //Create VBO
     glGenBuffers(1, &mVBOID);
@@ -56,9 +44,9 @@ namespace Moon {
 
   Texture::~Texture() {
     //Delete texture
-    if(mTextureID != 0) {
-      glDeleteTextures(1, &mTextureID);
-      mTextureID = 0;
+    if(texture_id != 0) {
+      glDeleteTextures(1, &texture_id);
+      texture_id = 0;
     }
     //Free VBO and IBO
     if(mVBOID != 0) {
@@ -66,25 +54,25 @@ namespace Moon {
       glDeleteBuffers(1, &mIBOID);
     }
 
-    mTextureWidth = 0;
-    mTextureHeight = 0;
+    width = 0;
+    height = 0;
   };
 
   GLuint Texture::width() {
-    return mTextureWidth;
+    return width;
   };
 
   GLuint Texture::height() {
-    return mTextureHeight;
+    return height;
   };
 
   GLuint Texture::id() {
-    return mTextureID;
+    return texture_id;
   };
 
   void Texture::render(const GLfloat &x, const GLfloat &y, Rect *clip /*=NULL*/) {
     // If the texture exists
-    if(mTextureID != 0) {
+    if(texture_id != 0) {
       //Texture coordinates
       GLfloat texTop = 0.f;
       GLfloat texBottom = 1.f;
@@ -92,16 +80,16 @@ namespace Moon {
       GLfloat texRight = 1.f;
 
       //Vertex coordinates
-      GLfloat quadWidth = mTextureWidth;
-      GLfloat quadHeight = mTextureHeight;
+      GLfloat quadWidth = width;
+      GLfloat quadHeight = height;
 
       //Handle clipping
       if(clip != NULL) {
         //Texture coordinates
-        texLeft = clip->x / mTextureWidth;
-        texRight = (clip->x + clip->w) / mTextureWidth;
-        texTop = clip->y / mTextureHeight;
-        texBottom = (clip->y + clip->h) / mTextureHeight;
+        texLeft = clip->x / width;
+        texRight = (clip->x + clip->w) / width;
+        texTop = clip->y / height;
+        texBottom = (clip->y + clip->h) / height;
 
         //Vertex coordinates
         quadWidth = clip->w;
@@ -133,7 +121,7 @@ namespace Moon {
   };
 
   void Texture::render(const GLfloat &x, const GLfloat &y, const GLuint &vboID, const GLuint &iboID) {
-    if(mTextureID != 0) {
+    if(texture_id != 0) {
       glUseProgram(shader.get_program());
 
       //model matrix - move it to the correct position in the world
@@ -145,7 +133,7 @@ namespace Moon {
 
       //Set texture ID
       glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, mTextureID);
+      glBindTexture(GL_TEXTURE_2D, texture_id);
       glUniform1i(shader.get_uniform("texture"), /*GL_TEXTURE*/0);
 
       //Enable vertex and texture coordinate arrays
