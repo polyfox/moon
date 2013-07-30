@@ -33,6 +33,7 @@ add_library(moon STATIC
   sprite.cxx
   spritesheet.cxx
   texture.cxx
+  window.cxx
 )
 
 # mruby

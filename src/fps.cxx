@@ -1,8 +1,6 @@
 #include "fps.hxx"
 
 namespace Moon {
-  FPS FPS::FPSControl;
-
   FPS::FPS() {
     OldTime     = 0.0f;
     LastTime    = 0.0f;
@@ -11,7 +9,7 @@ namespace Moon {
     NumFrames   = 0;
   }
 
-  void FPS::onLoop() {
+  void FPS::update() {
     if(OldTime + 1.0f < glfwGetTime()) {
       OldTime = glfwGetTime();
       NumFrames = Frames;

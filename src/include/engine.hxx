@@ -3,11 +3,11 @@
 
 #include "moon.hxx"
 
+#include "window.hxx"
 #include "input.hxx"
 #include "texture.hxx"
 #include "sprite.hxx"
 #include "spritesheet.hxx"
-#include "fps.hxx"
 #include "audio.hxx"
 #include "music.hxx"
 #include "sound.hxx"
@@ -25,14 +25,13 @@ namespace Moon {
   private:
     mrb_state *mrb;
 
-    GLFWwindow*  window; // GLFW window
+    Window window;
 
     void load_mrb();
     bool load_mrb_file(const char*, const char*);
     void load_core_classes();
     void load_user_scripts();
 
-    void setup_glfw();
     void setup_opengl();
   };
 };

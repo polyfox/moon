@@ -4,12 +4,11 @@
 #include <IL/ilu.h>
 
 namespace Moon {
-  Engine::Engine() {
-    setup_glfw();
+  Engine::Engine() : window(640, 480, "Hello World") {
     setup_opengl();
 
     // setup Input engine
-    Input::initialize(window);
+    Input::initialize(window.glfw());
 
     // setup Gorilla Audio
     Audio::initialize();
@@ -21,8 +20,6 @@ namespace Moon {
     if (mrb) mrb_close(mrb);
 
     Audio::terminate();
-
-    glfwTerminate();
   }
 
   void Engine::run() {
@@ -33,13 +30,8 @@ namespace Moon {
     
     int ai = mrb_gc_arena_save(mrb);
 
-    while (!glfwWindowShouldClose(window))
+    while (!window.should_close())
     {
-      FPS::FPSControl.onLoop();
-      char title[50];
-      sprintf(title, "FPS: %i", FPS::FPSControl.getFPS());
-      glfwSetWindowTitle(window, title);
-
       Audio::update();
 
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -53,27 +45,8 @@ namespace Moon {
       mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "render", 0);
       mrb_gc_arena_restore(mrb, ai);
 
-      glfwSwapBuffers(window);
-      glfwPollEvents(); /* Poll for and process events */
+      window.update();
     }
-  }
-
-  void Engine::setup_glfw() {
-    if (!glfwInit()) {
-      printf( "Error initializing glfw!");
-      throw;
-    }
-
-    glfwDefaultWindowHints();
-    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    // Use OpenGL Core v2.1
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    glfwMakeContextCurrent(window);
-    std::cout << "OpenGL v" << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR) << "." << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR) << std::endl;
   }
 
   void Engine::setup_opengl() {
