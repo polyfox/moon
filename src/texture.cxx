@@ -10,6 +10,7 @@ namespace Moon {
   {
     shader.add_attribute("texcoord");
     shader.add_attribute("vertex_pos");
+    shader.add_uniform("model_matrix");
     shader.add_uniform("projection_matrix");
 
     //Texture loading success
@@ -172,10 +173,11 @@ namespace Moon {
       //Remove any previous transformations
       glLoadIdentity();
 
-      //Move to rendering point
-      glTranslatef(x, y, 0.f);
-
       glUseProgram(shader.get_program());
+
+      //model matrix - move it to the correct position in the world
+      glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
+      glUniformMatrix4fv(shader.get_uniform("model_matrix"), 1, GL_FALSE, glm::value_ptr(model_matrix));
 
       //projection matrix
       glUniformMatrix4fv(shader.get_uniform("projection_matrix"), 1, GL_FALSE, glm::value_ptr(Shader::projection_matrix));
