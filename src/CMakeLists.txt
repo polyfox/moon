@@ -23,26 +23,17 @@ add_library(moon STATIC
   ext/mrb_sprite.cxx
   ext/mrb_spritesheet.cxx
 
-  include/moon.hxx
-  include/audio.hxx
-  include/engine.hxx
-  include/fps.hxx
-  include/input.hxx
-  include/music.hxx
-  include/sound.hxx
-  include/sprite.hxx
-  include/spritesheet.hxx
-  include/texture.hxx
-  
   audio.cxx
   engine.cxx
   fps.cxx
   input.cxx
   music.cxx
+  shader.cxx
   sound.cxx
   sprite.cxx
   spritesheet.cxx
   texture.cxx
+  window.cxx
 )
 
 # mruby

@@ -2,16 +2,16 @@
 #define MOON_FPS_H
 
 #include "moon.hxx"
+#include <GLFW/glfw3.h>
 
 namespace Moon {
   class FPS {
   public:
-    static FPS FPSControl;
     FPS();
 
-    void    onLoop();
-    int     getFPS();
-    float   getSpeedFactor();
+    void  update();
+    int   getFPS();
+    float getSpeedFactor();
   private:
     float OldTime;
     float LastTime;
