@@ -8,8 +8,8 @@ endif(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
 set(moonLibraries ${moonLibraries} ${OPENGL_LIBRARIES})
 # GLFW
 set(moonLibraries ${moonLibraries} ${GLFW_LIBRARY})
-# DevIL
-set(moonLibraries ${moonLibraries} ${IL_LIBRARY} ${ILU_LIBRARY})
+# SOIL
+set(moonLibraries ${moonLibraries} SOIL)
 # mruby
 set(moonLibraries ${moonLibraries} ${MRUBY_LIBRARIES})
 # gorilla audio

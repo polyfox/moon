@@ -16,9 +16,9 @@ include_directories(${OPENGL_INCLUDE_DIR})
 find_package(GLFW REQUIRED)
 include_directories(${GLFW_INCLUDE_DIR})
 
-# DevIL
-find_package(DevIL REQUIRED)
-include_directories(${IL_INCLUDE_DIR})
+# SOIL
+add_subdirectory(vendor/soil)
+include_directories(vendor/soil/src)
 
 # mruby
 add_custom_command(

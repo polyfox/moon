@@ -4,3 +4,7 @@
 [submodule "vendor/glm"]
 	path = vendor/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "vendor/soil"]
+	path = vendor/soil
+	url = https://github.com/greenboxal/SOIL.git
+  ignore = dirty

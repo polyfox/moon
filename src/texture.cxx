@@ -1,7 +1,5 @@
 #include "texture.hxx"
-/* DevIL */
-#include <IL/il.h>
-#include <IL/ilu.h>
+#include <SOIL.h>
 
 namespace Moon {
   Texture::Texture(std::string filename)
@@ -16,75 +14,44 @@ namespace Moon {
     //Texture loading success
     bool textureLoaded = false;
 
-    //Generate and set current image ID
-    ILuint imgID = 0;
-    ilGenImages(1, &imgID);
-    ilBindImage(imgID);
+    unsigned char* pixels;
+    int width, height, channels;
 
-    //Load image
-    ILboolean success = ilLoadImage(filename.c_str());
+    pixels = SOIL_load_image(filename.c_str(), &width, &height, &channels, SOIL_LOAD_RGBA);
+    mTextureID = SOIL_create_OGL_texture(pixels, width, height, channels, SOIL_CREATE_NEW_ID, SOIL_FLAG_MULTIPLY_ALPHA);
 
-    //Image loaded successfully
-    if(success == IL_TRUE) {
-      //Convert image to RGBA
-      success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-      if(success == IL_TRUE) {
-        //Create texture from file pixels
+    glBindTexture(GL_TEXTURE_2D, mTextureID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
-        GLuint* pixels = (GLuint*)ilGetData();
-        mTextureWidth = (GLuint)ilGetInteger(IL_IMAGE_WIDTH);
-        mTextureHeight = (GLuint)ilGetInteger(IL_IMAGE_HEIGHT);
+    mTextureWidth = width;
+    mTextureHeight = height;
 
-        //Generate texture ID
-        glGenTextures(1, &mTextureID);
-        glBindTexture(GL_TEXTURE_2D, mTextureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mTextureWidth, mTextureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glBindTexture(GL_TEXTURE_2D, 0);
+    //Vertex data
+    VertexData2D vData[4];
+    GLuint iData[4];
 
-        //Check for error
-        GLenum error = glGetError();
-        if(error != GL_NO_ERROR) {
-          printf("Error loading texture from %p pixels! glGetError: %s\n", pixels, error);
-        } else {
-          textureLoaded = true;
+    //Set rendering indices
+    iData[0] = 0;
+    iData[1] = 1;
+    iData[2] = 2;
+    iData[3] = 3;
 
-          //Vertex data
-          VertexData2D vData[4];
-          GLuint iData[4];
+    //Create VBO
+    glGenBuffers(1, &mVBOID);
+    glBindBuffer(GL_ARRAY_BUFFER, mVBOID);
+    glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(VertexData2D), vData, GL_DYNAMIC_DRAW);
 
-          //Set rendering indices
-          iData[0] = 0;
-          iData[1] = 1;
-          iData[2] = 2;
-          iData[3] = 3;
+    //Create IBO
+    glGenBuffers(1, &mIBOID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBOID);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), iData, GL_DYNAMIC_DRAW);
 
-          //Create VBO
-          glGenBuffers(1, &mVBOID);
-          glBindBuffer(GL_ARRAY_BUFFER, mVBOID);
-          glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(VertexData2D), vData, GL_DYNAMIC_DRAW);
+    //Unbind buffers
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-          //Create IBO
-          glGenBuffers(1, &mIBOID);
-          glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBOID);
-          glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), iData, GL_DYNAMIC_DRAW);
-
-          //Unbind buffers
-          glBindBuffer(GL_ARRAY_BUFFER, 0);
-          glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        };
-      };
-
-      //Delete file from memory
-      ilDeleteImages( 1, &imgID );
-    }
-
-    //Report error
-    if(!textureLoaded) {
-      printf("Unable to load %s\n", filename.c_str());
-      throw;
-    }
   };
 
   Texture::~Texture() {
@@ -118,9 +85,6 @@ namespace Moon {
   void Texture::render(const GLfloat &x, const GLfloat &y, Rect *clip /*=NULL*/) {
     // If the texture exists
     if(mTextureID != 0) {
-      //Remove any previous transformations
-      glLoadIdentity();
-
       //Texture coordinates
       GLfloat texTop = 0.f;
       GLfloat texBottom = 1.f;
@@ -170,9 +134,6 @@ namespace Moon {
 
   void Texture::render(const GLfloat &x, const GLfloat &y, const GLuint &vboID, const GLuint &iboID) {
     if(mTextureID != 0) {
-      //Remove any previous transformations
-      glLoadIdentity();
-
       glUseProgram(shader.get_program());
 
       //model matrix - move it to the correct position in the world

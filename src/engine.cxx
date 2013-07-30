@@ -1,7 +1,4 @@
 #include "engine.hxx"
-/* DevIL */
-#include <IL/il.h>
-#include <IL/ilu.h>
 
 namespace Moon {
   Engine::Engine() : window(640, 480, "Hello World") {
@@ -82,18 +79,6 @@ namespace Moon {
       printf( "Error initializing OpenGL! glGetError: %i\n", error);
       throw;
     }
-
-    //Initialize DevIL
-    ilInit();
-    ilClearColour(255, 255, 255, 000);
-
-    //Check for error
-    ILenum ilError = ilGetError();
-    if(ilError != IL_NO_ERROR) {
-      printf("Error initializing DevIL! %s\n", iluErrorString(ilError));
-      throw;
-    }
-    // end initialize DevIL
   }
 
   void Engine::load_mrb() {
