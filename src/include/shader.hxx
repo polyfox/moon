@@ -15,6 +15,8 @@ namespace Moon {
     GLuint get_program();
     GLint  get_attribute(const char *name);
     GLint  get_uniform(const char *name);
+
+    static glm::mat4 projection_matrix; // TEMPORARY LOCATION, TODO MOVE TO RENDERER
   private:
     std::string file_read(const char *filePath);
     void   print_log(GLuint object);

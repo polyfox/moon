@@ -30,7 +30,7 @@ class State_Test < State
     #for i in 0..1800 # runs efficiently at 60FPS, 18000 runs at 20FPS
     #  @s.render(i, i, i)
     #end
-    #@sprites.each {|sprite| sprite.render }
+    @sprites.each {|sprite| sprite.render }
   end
 
 end

@@ -2,6 +2,7 @@
 #define MOON_TEXTURE_H
 
 #include "moon.hxx"
+#include "shader.hxx"
 #include <memory>
 #include <unordered_map>
 
@@ -80,6 +81,8 @@ namespace Moon {
     GLuint id();
   private:
     Texture(std::string filename);
+
+    Shader shader;
 
     GLuint mTextureID;
     GLuint mTextureWidth;

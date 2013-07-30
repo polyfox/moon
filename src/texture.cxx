@@ -5,8 +5,12 @@
 
 namespace Moon {
   Texture::Texture(std::string filename)
-  : CacheObject(filename)
+  : CacheObject(filename),
+  shader("resources/shaders/quad.vert", "resources/shaders/quad.frag")
   {
+    shader.add_attribute("texcoord");
+    shader.add_attribute("vertex_pos");
+    shader.add_uniform("projection_matrix");
 
     //Texture loading success
     bool textureLoaded = false;
@@ -171,31 +175,52 @@ namespace Moon {
       //Move to rendering point
       glTranslatef(x, y, 0.f);
 
+      glUseProgram(shader.get_program());
+
+      //projection matrix
+      glUniformMatrix4fv(shader.get_uniform("projection_matrix"), 1, GL_FALSE, glm::value_ptr(Shader::projection_matrix));
+
       //Set texture ID
+      glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, mTextureID);
+      glUniform1i(shader.get_uniform("texture"), /*GL_TEXTURE*/0);
 
       //Enable vertex and texture coordinate arrays
-      glEnableClientState(GL_VERTEX_ARRAY);
-      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      glEnableVertexAttribArray(shader.get_attribute("vertex_pos"));
+      glEnableVertexAttribArray(shader.get_attribute("texcoord"));
 
         //Bind vertex buffer
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
 
-        //Set texture coordinate data
-        glTexCoordPointer(2, GL_FLOAT, sizeof(VertexData2D), (GLvoid*)offsetof(VertexData2D, u));
+        glVertexAttribPointer(
+          shader.get_attribute("texcoord"), // attribute
+          2,                  // number of elements per vertex, here (x,y)
+          GL_FLOAT,           // the type of each element
+          GL_FALSE,           // take our values as-is
+          sizeof(VertexData2D),                  // stride
+          (GLvoid*)offsetof(VertexData2D, u)     // offset of first element
+        );
 
-        //Set vertex data
-        glVertexPointer(2, GL_FLOAT, sizeof(VertexData2D), (GLvoid*)offsetof(VertexData2D, x));
+        glVertexAttribPointer(
+          shader.get_attribute("vertex_pos"), // attribute
+          2,                  // number of elements per vertex, here (x,y)
+          GL_FLOAT,           // the type of each element
+          GL_FALSE,           // take our values as-is
+          sizeof(VertexData2D),                  // stride
+          (GLvoid*)offsetof(VertexData2D, x)     // offset of first element
+        );
 
-        glColor4f(1.0, 1.0, 1.0, 1.0); // TODO: OPACITY
+        //glColor4f(1.0, 1.0, 1.0, 1.0); // TODO: OPACITY
 
         //Draw quad using vertex data and index data
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
         glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, NULL);
 
       //Disable vertex and texture coordinate arrays
-      glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-      glDisableClientState(GL_VERTEX_ARRAY);
+      glDisableVertexAttribArray(shader.get_attribute("vertex_pos"));
+      glDisableVertexAttribArray(shader.get_attribute("texcoord"));
+
+      glUseProgram(0);
     };
   };
 

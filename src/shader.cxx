@@ -3,6 +3,8 @@
 #include <fstream>
 
 namespace Moon {
+  glm::mat4 Shader::projection_matrix = glm::mat4(1.0f);
+
   /**
    * Store all the file's contents in memory, useful to pass shaders
    * source code to OpenGL
@@ -52,7 +54,6 @@ namespace Moon {
   GLuint Shader::create_shader(const char* filename, GLenum type)
   {
     std::string contents = file_read(filename);
-    std::cout << contents << std::endl;
     const GLchar* source = contents.c_str();
 
     if (source == NULL) {

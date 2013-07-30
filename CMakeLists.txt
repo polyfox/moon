@@ -34,7 +34,7 @@ if(UNIX) # mrb-require needs for loading .so files
 endif(UNIX)
 
 # GLM
-include_directories(vendor/glm/glm)
+include_directories(vendor/glm)
 
 # Gorilla Audio
 add_subdirectory(vendor/gorilla-audio/build)

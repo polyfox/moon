@@ -85,12 +85,12 @@ namespace Moon {
   }
 
   void Engine::setup_opengl() {
+    // Sets up the projection matrix so that (0,0) corresponds to the top left corner, and (640,480) corresponds to the bottom right corner.
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    glOrtho(0, viewport[2], viewport[3], 0, -1, 1); // Sets up OpenGL so that (0,0) corresponds to the top left corner, and (640,480) corresponds to the bottom right corner.
+    Shader::projection_matrix = glm::ortho(0.f, static_cast<float>(viewport[2]), static_cast<float>(viewport[3]), 0.f, -1.f, 1.f);
+
+    // TODO: move the modelview matrix to GLM matrices
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(0.375, 0.375, 0.0); // http://www.opengl.org/archives/resources/faq/technical/transformations.htm#tran0030
