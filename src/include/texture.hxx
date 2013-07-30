@@ -85,8 +85,8 @@ namespace Moon {
     Shader shader;
 
     GLuint texture_id;
-    GLuint width;
-    GLuint height;
+    GLint texture_width;
+    GLint texture_height;
 
     GLuint mVBOID;
     GLuint mIBOID;

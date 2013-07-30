@@ -14,8 +14,8 @@ namespace Moon {
     unsigned char* pixels;
     int channels;
 
-    pixels = SOIL_load_image(filename.c_str(), &width, &height, &channels, SOIL_LOAD_RGBA);
-    texture_id = SOIL_create_OGL_texture(pixels, width, height, channels, SOIL_CREATE_NEW_ID, SOIL_FLAG_MULTIPLY_ALPHA);
+    pixels = SOIL_load_image(filename.c_str(), &texture_width, &texture_height, &channels, SOIL_LOAD_RGBA);
+    texture_id = SOIL_create_OGL_texture(pixels, texture_width, texture_height, channels, SOIL_CREATE_NEW_ID, SOIL_FLAG_MULTIPLY_ALPHA);
 
     glBindTexture(GL_TEXTURE_2D, texture_id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -46,24 +46,21 @@ namespace Moon {
     //Delete texture
     if(texture_id != 0) {
       glDeleteTextures(1, &texture_id);
-      texture_id = 0;
     }
+
     //Free VBO and IBO
     if(mVBOID != 0) {
       glDeleteBuffers(1, &mVBOID);
       glDeleteBuffers(1, &mIBOID);
     }
-
-    width = 0;
-    height = 0;
   };
 
   GLuint Texture::width() {
-    return width;
+    return texture_width;
   };
 
   GLuint Texture::height() {
-    return height;
+    return texture_height;
   };
 
   GLuint Texture::id() {
@@ -80,16 +77,16 @@ namespace Moon {
       GLfloat texRight = 1.f;
 
       //Vertex coordinates
-      GLfloat quadWidth = width;
-      GLfloat quadHeight = height;
+      GLfloat quadWidth = texture_width;
+      GLfloat quadHeight = texture_height;
 
       //Handle clipping
       if(clip != NULL) {
         //Texture coordinates
-        texLeft = clip->x / width;
-        texRight = (clip->x + clip->w) / width;
-        texTop = clip->y / height;
-        texBottom = (clip->y + clip->h) / height;
+        texLeft = clip->x / texture_width;
+        texRight = (clip->x + clip->w) / texture_width;
+        texTop = clip->y / texture_height;
+        texBottom = (clip->y + clip->h) / texture_height;
 
         //Vertex coordinates
         quadWidth = clip->w;
