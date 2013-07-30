@@ -86,14 +86,9 @@ namespace Moon {
 
   void Engine::setup_opengl() {
     // Sets up the projection matrix so that (0,0) corresponds to the top left corner, and (640,480) corresponds to the bottom right corner.
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    Shader::projection_matrix = glm::ortho(0.f, static_cast<float>(viewport[2]), static_cast<float>(viewport[3]), 0.f, -1.f, 1.f);
-
-    // TODO: move the modelview matrix to GLM matrices
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(0.375, 0.375, 0.0); // http://www.opengl.org/archives/resources/faq/technical/transformations.htm#tran0030
+    GLfloat viewport[4];
+    glGetFloatv(GL_VIEWPORT, viewport);
+    Shader::projection_matrix = glm::ortho(0.f, viewport[2], viewport[3], 0.f, -1.f, 1.f);
 
     glDisable(GL_LIGHTING);
     glDisable(GL_DITHER);
@@ -107,9 +102,9 @@ namespace Moon {
     // the depth is tested first. The reason we disable depth testing is when you
     // mix blending and depth testing you get funky results.
     // -------------------------------------------------------------------------
-    // UPDATE: depth test can be used, but alpha testing needs to be enabled too,
+    // UPDATE: Depth test can be used, but alpha testing needs to be enabled too,
     // or the alpha background will be black.
-    glEnable (GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0);
