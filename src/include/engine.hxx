@@ -24,8 +24,6 @@ namespace Moon {
 
   private:
     mrb_state *mrb;
-    mrbc_context *mrb_context;
-    //mrb_value game_object;
 
     GLFWwindow*  window; // GLFW window
 

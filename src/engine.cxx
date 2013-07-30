@@ -18,14 +18,8 @@ namespace Moon {
   }
 
   Engine::~Engine() { /* Terminate in the reverse order */
-    if (mrb) {
-      if (mrb_context) {
-        mrbc_context_free(mrb, mrb_context);
-        mrb_context = NULL;
-      }
-      mrb_close(mrb);
-      mrb = NULL;
-    }
+    if (mrb) mrb_close(mrb);
+
     Audio::terminate();
 
     glfwTerminate();
@@ -133,25 +127,22 @@ namespace Moon {
 
   void Engine::load_mrb() {
     mrb = mrb_open();
-    mrb_context = mrbc_context_new(mrb); // debugger context
   
     moon_init_mrb_core(mrb);
     moon_init_mrb_ext(mrb);
     
     load_core_classes();
     load_user_scripts();
-
-    mrbc_filename(mrb, mrb_context, "main");
   }
 
   void Engine::load_user_scripts() {
-    load_mrb_file("./script/", "load.rb");
+    load_mrb_file("./scripts/", "load.rb");
   }
   
   void Engine::load_core_classes() {
     load_mrb_file("./core/", "load.rb");
   }
- 
+
   bool Engine::load_mrb_file(const char *file_path, const char *filename) {
     char path[1024];
     FILE *file;
@@ -163,24 +154,23 @@ namespace Moon {
 
     if(exists(path)) {
       file = fopen((const char*)path, "r");
-      if(file) {
-        mrbc_filename(mrb, mrb_context, filename);
-        mrb_gv_set(mrb, zero_sym, mrb_str_new_cstr(mrb, filename));
-        mrb_value v = mrb_load_file_cxt(mrb, file, mrb_context);
+      mrbc_context *cxt = mrbc_context_new(mrb);
 
-        fclose(file);
+      mrbc_filename(mrb, cxt, filename);
+      mrb_gv_set(mrb, zero_sym, mrb_str_new_cstr(mrb, filename));
+      mrb_value v = mrb_load_file_cxt(mrb, file, cxt);
 
-        if(mrb->exc) {
-          if (!mrb_undef_p(v)) {
-            mrb_print_error(mrb);
-          }
-          exit(312);
-          return false;
-        } else {
-          std::cout << "script: " << path << std::endl;
+      fclose(file);
+      mrbc_context_free(mrb, cxt);
+
+      if(mrb->exc) {
+        if (!mrb_undef_p(v)) {
+          mrb_print_error(mrb);
         }
+        exit(312);
+        return false;
       } else {
-        std::cout << "failed to open: " << path << std::endl;
+        std::cout << "script: " << path << std::endl;
       }
     } else {
       std::cout << "file does not exist: " << path << std::endl;
