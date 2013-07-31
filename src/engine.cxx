@@ -52,7 +52,6 @@ namespace Moon {
     glGetFloatv(GL_VIEWPORT, viewport);
     Shader::projection_matrix = glm::ortho(0.f, viewport[2], viewport[3], 0.f, -1.f, 1.f);
 
-    glDisable(GL_LIGHTING);
     glDisable(GL_DITHER);
     // Enable blending (alpha transparency)
     glEnable(GL_BLEND);
