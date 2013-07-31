@@ -13,7 +13,7 @@ namespace Moon {
     Spritesheet(std::string filename, int tile_width, int tile_height);
     ~Spritesheet();
 
-    void render(const int &x, const int &y, const int &index);
+    void render(const int &x, const int &y, const float &z, const int &index);
   private:
     bool generate_buffers(); // use only in constructor
 

@@ -67,7 +67,7 @@ namespace Moon {
     return texture_id;
   };
 
-  void Texture::render(const GLfloat &x, const GLfloat &y, Rect *clip /*=NULL*/) {
+  void Texture::render(const GLfloat &x, const GLfloat &y, const GLfloat &z, Rect *clip /*=NULL*/) {
     // If the texture exists
     if(texture_id != 0) {
       //Texture coordinates
@@ -113,16 +113,16 @@ namespace Moon {
       glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(VertexData2D), vData);
       glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-      render(x, y, mVBOID, mIBOID);
+      render(x, y, z, mVBOID, mIBOID);
     };
   };
 
-  void Texture::render(const GLfloat &x, const GLfloat &y, const GLuint &vboID, const GLuint &iboID) {
+  void Texture::render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLuint &vboID, const GLuint &iboID) {
     if(texture_id != 0) {
       glUseProgram(shader.get_program());
 
       //model matrix - move it to the correct position in the world
-      glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
+      glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
       glUniformMatrix4fv(shader.get_uniform("model_matrix"), 1, GL_FALSE, glm::value_ptr(model_matrix));
 
       //projection matrix
@@ -175,14 +175,14 @@ namespace Moon {
   std::shared_ptr<Texture> Texture::load(std::string filename) {
     auto const it = CacheObject::_cache.find(filename);
     if (it == CacheObject::_cache.end()) {
-      std::cout << "cache miss!" << std::endl;
+      //std::cout << "cache miss!" << std::endl;
       std::shared_ptr<Texture> ptr = std::shared_ptr<Texture>(new Texture(filename));
       // std::shared_ptr<Texture> ptr = std::make_shared<Texture>(filename);
       // is supposedly faster, we just need to get around the private constructor issue
       CacheObject::_cache[filename] = ptr;
       return ptr;
     }
-    std::cout << "cache hit!" << std::endl;
+    //std::cout << "cache hit!" << std::endl;
     return std::static_pointer_cast<Texture>(it->second.lock());
   }
 

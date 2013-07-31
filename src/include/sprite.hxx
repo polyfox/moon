@@ -12,6 +12,7 @@ namespace Moon {
 
     int x;
     int y;
+    float z;
     Rect clip_rect;
     bool clip;
 

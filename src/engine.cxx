@@ -53,22 +53,12 @@ namespace Moon {
     Shader::projection_matrix = glm::ortho(0.f, viewport[2], viewport[3], 0.f, -1.f, 1.f);
 
     glDisable(GL_DITHER);
-    // Enable blending (alpha transparency)
-    glEnable(GL_BLEND);
+
+    glEnable(GL_BLEND); // Enable blending (alpha transparency)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    // Depth testing is useful in 3D OpenGL applications where if you render
-    // something and then render something that's behind it, the object that's
-    // behind won't raster it's polygons over the object that's in front because
-    // the depth is tested first. The reason we disable depth testing is when you
-    // mix blending and depth testing you get funky results.
-    // -------------------------------------------------------------------------
-    // UPDATE: Depth test can be used, but alpha testing needs to be enabled too,
-    // or the alpha background will be black.
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
-    glEnable(GL_ALPHA_TEST);
-    glAlphaFunc(GL_GREATER, 0);
 
     //Check for error
     GLenum error = glGetError();

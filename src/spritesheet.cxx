@@ -111,10 +111,10 @@ namespace Moon {
     return true;
   };
 
-  void Spritesheet::render(const int &x, const int &y, const int &index) {
+  void Spritesheet::render(const int &x, const int &y, const float &z, const int &index) {
     //Sprite sheet data exists
     if(mVertexDataBuffer != NULL) {
-      texture->render(x, y, mVertexDataBuffer, mIndexBuffers[index]);
+      texture->render(x, y, z, mVertexDataBuffer, mIndexBuffers[index]);
     };
 
   };

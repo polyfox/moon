@@ -55,6 +55,21 @@ namespace Moon {
     return mrb_fixnum_value(i);
   };
 
+  static mrb_value moon_mrb_sprite_z_getter(mrb_state *mrb, mrb_value self) {
+    Sprite *sprite;
+    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+    return mrb_fixnum_value(sprite->z);
+  };
+
+  static mrb_value moon_mrb_sprite_z_setter(mrb_state *mrb, mrb_value self) {
+    Sprite *sprite;
+    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+    mrb_float f;
+    mrb_get_args(mrb, "f", &f);
+    sprite->z = f;
+    return mrb_fixnum_value(f);
+  };
+
   void moon_mrb_sprite_init(mrb_state *mrb) {
     struct RClass *sprite_class;
     sprite_class = mrb_define_class(mrb, "Sprite", mrb->object_class);
@@ -66,5 +81,7 @@ namespace Moon {
     mrb_define_method(mrb, sprite_class, "x=", moon_mrb_sprite_x_setter, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, sprite_class, "y", moon_mrb_sprite_y_getter, MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "y=", moon_mrb_sprite_y_setter, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "z", moon_mrb_sprite_z_getter, MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "z=", moon_mrb_sprite_z_setter, MRB_ARGS_REQ(1));
   };
 };
