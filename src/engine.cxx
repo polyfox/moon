@@ -70,8 +70,6 @@ namespace Moon {
     glEnable(GL_ALPHA_TEST);
     glAlphaFunc(GL_GREATER, 0);
 
-    glEnable(GL_TEXTURE_2D); // Use 2D textures
-
     //Check for error
     GLenum error = glGetError();
     if(error != GL_NO_ERROR) {
