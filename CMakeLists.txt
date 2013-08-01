@@ -24,11 +24,11 @@ include_directories(vendor/soil/src)
 add_custom_command(
   OUTPUT libmruby.a
   COMMAND ./minirake MRUBY_CONFIG=../../mrb_config.rb
-  WORKING_DIRECTORY vendor/mruby
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vendor/mruby
 )
 add_custom_target(mruby DEPENDS libmruby.a)
 include_directories(vendor/mruby/include)
-set(MRUBY_LIBRARIES ${CMAKE_BINARY_DIR}/vendor/mruby/build/host/lib/libmruby.a)
+set(MRUBY_LIBRARIES ${CMAKE_SOURCE_DIR}/vendor/mruby/build/host/lib/libmruby.a)
 if(UNIX) # mrb-require needs for loading .so files
   set(MRUBY_LIBRARIES ${MRUBY_LIBRARIES} dl)
 endif(UNIX)
