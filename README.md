@@ -20,12 +20,26 @@ After cloning, you need to fetch the git submodules (vendor files):
 git submodule update --init
 ```
 
-Compilation is done via the CMake build system. Use cmake in the root folder to generate your
-Makefiles or (VS/CodeBlocks) projects of choice for your platform, then simply compile it.
+GLFW 3 is required to be externally installed at the moment. If you are using Windows, you should
+define an environment variable called GLFW_ROOT which points to the root of the glfw library
+installation. This is pretty useful on a Windows platform.
+
+Compilation is done via the CMake build system. Use cmake in the build folder to generate your
+Makefiles or (VS/CodeBlocks) projects of choice for your platform:
+
+```
+cd build
+cmake ..
+```
+
+Then simply compile it inside the build directory. Compiled binaries and scripts will be placed into
+`bin/` and compiled libraries into `lib/` (not the `build/` folder! that one is just where you run
+the compiler and where cmake will store it's files).
+
+Note that mruby will not be placed into the `lib/` folder as it contains it's own build system,
+and is still built into place.
 
 mrb_config.rb should be edited, to use the correct toolchain for building mruby.
 
 TODO: use a custom gembox, outside the mrbgems directory
-
-TODO: properly cleanup after mruby too (including the downloaded mrbgems)
 

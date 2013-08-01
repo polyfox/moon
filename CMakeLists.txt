@@ -6,7 +6,15 @@ project("Moon")
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") # for gcc >= 4.7, or c++0x for 4.6
 
-set(DebugDefines "_DEBUG")
+if(ANDROID)
+  SET(PLATFORM_NAME "android")
+else()
+  SET(PLATFORM_NAME "host")
+endif()
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib/${PLATFORM_NAME})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib/${PLATFORM_NAME})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin/${PLATFORM_NAME})
 
 # OpenGL
 find_package(OpenGL REQUIRED)
