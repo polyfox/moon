@@ -162,7 +162,7 @@ namespace Moon {
 
         //Draw quad using vertex data and index data
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
-        glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, NULL);
+        glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, NULL);
 
       //Disable vertex and texture coordinate arrays
       glDisableVertexAttribArray(shader.get_attribute("vertex_pos"));
