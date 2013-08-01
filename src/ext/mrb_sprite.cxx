@@ -58,7 +58,7 @@ namespace Moon {
   static mrb_value moon_mrb_sprite_z_getter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
-    return mrb_fixnum_value(sprite->z);
+    return mrb_float_value(mrb, sprite->z);
   };
 
   static mrb_value moon_mrb_sprite_z_setter(mrb_state *mrb, mrb_value self) {
@@ -67,7 +67,22 @@ namespace Moon {
     mrb_float f;
     mrb_get_args(mrb, "f", &f);
     sprite->z = f;
-    return mrb_fixnum_value(f);
+    return mrb_float_value(mrb, f);
+  };
+
+  static mrb_value moon_mrb_sprite_opacity_getter(mrb_state *mrb, mrb_value self) {
+    Sprite *sprite;
+    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+    return mrb_float_value(mrb, sprite->opacity);
+  };
+
+  static mrb_value moon_mrb_sprite_opacity_setter(mrb_state *mrb, mrb_value self) {
+    Sprite *sprite;
+    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+    mrb_float f;
+    mrb_get_args(mrb, "f", &f);
+    sprite->opacity = f;
+    return mrb_float_value(mrb, f);
   };
 
   void moon_mrb_sprite_init(mrb_state *mrb) {
@@ -83,5 +98,7 @@ namespace Moon {
     mrb_define_method(mrb, sprite_class, "y=", moon_mrb_sprite_y_setter, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, sprite_class, "z", moon_mrb_sprite_z_getter, MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "z=", moon_mrb_sprite_z_setter, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "opacity", moon_mrb_sprite_opacity_getter, MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "opacity=", moon_mrb_sprite_opacity_setter, MRB_ARGS_REQ(1));
   };
 };

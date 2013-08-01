@@ -5,6 +5,7 @@ namespace Moon {
     x = 0;
     y = 0;
     z = 0.0;
+    opacity = 1.0;
     clip = false;
 
     texture = Texture::load(filename);
@@ -16,9 +17,9 @@ namespace Moon {
 
   void Sprite::render() {
     if(clip) {
-      texture->render(x, y, z, &clip_rect);
+      texture->render(x, y, z, opacity, &clip_rect);
     } else {
-      texture->render(x, y, z);
+      texture->render(x, y, z, opacity);
     }
   };
 };

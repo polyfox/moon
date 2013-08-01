@@ -13,6 +13,7 @@ namespace Moon {
     int x;
     int y;
     float z;
+    float opacity;
     Rect clip_rect;
     bool clip;
 
