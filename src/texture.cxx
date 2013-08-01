@@ -22,85 +22,12 @@ namespace Moon {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glBindTexture(GL_TEXTURE_2D, 0);
-
-    //Vertex data
-    VertexData2D vData[4];
-    GLuint iData[4] = {0, 1, 3, 2}; // rendering indices
-
-    //Create VBO
-    glGenBuffers(1, &mVBOID);
-    glBindBuffer(GL_ARRAY_BUFFER, mVBOID);
-    glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(VertexData2D), vData, GL_DYNAMIC_DRAW);
-
-    //Create IBO
-    glGenBuffers(1, &mIBOID);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIBOID);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), iData, GL_DYNAMIC_DRAW);
-
-    //Unbind buffers
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-
-
-    // If the texture exists
-    if(texture_id != 0) {
-      //Texture coordinates
-      GLfloat texTop = 0.f;
-      GLfloat texBottom = 1.f;
-      GLfloat texLeft = 0.f;
-      GLfloat texRight = 1.f;
-
-      //Vertex coordinates
-      GLfloat quadWidth = texture_width;
-      GLfloat quadHeight = texture_height;
-
-      //Handle clipping
-      /*if(clip != NULL) {
-        //Texture coordinates
-        texLeft = clip->x / texture_width;
-        texRight = (clip->x + clip->w) / texture_width;
-        texTop = clip->y / texture_height;
-        texBottom = (clip->y + clip->h) / texture_height;
-
-        //Vertex coordinates
-        quadWidth = clip->w;
-        quadHeight = clip->h;
-      }*/
-
-      //Set vertex data
-      VertexData2D vData[4];
-
-      //Texture coordinates
-      vData[0].u =  texLeft; vData[0].v =    texTop;
-      vData[1].u = texRight; vData[1].v =    texTop;
-      vData[2].u = texRight; vData[2].v = texBottom;
-      vData[3].u =  texLeft; vData[3].v = texBottom;
-
-      //Vertex positions
-      vData[0].x =       0.f; vData[0].y =        0.f;
-      vData[1].x = quadWidth; vData[1].y =        0.f;
-      vData[2].x = quadWidth; vData[2].y = quadHeight;
-      vData[3].x =       0.f; vData[3].y = quadHeight;
-
-      //Update vertex buffer data
-      glBindBuffer(GL_ARRAY_BUFFER, mVBOID);
-      glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(VertexData2D), vData);
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    };
   };
 
   Texture::~Texture() {
     //Delete texture
     if(texture_id != 0) {
       glDeleteTextures(1, &texture_id);
-    }
-
-    //Free VBO and IBO
-    if(mVBOID != 0) {
-      glDeleteBuffers(1, &mVBOID);
-      glDeleteBuffers(1, &mIBOID);
     }
   };
 
@@ -114,10 +41,6 @@ namespace Moon {
 
   GLuint Texture::id() {
     return texture_id;
-  };
-
-  void Texture::render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Rect *clip /*=NULL*/) {
-    render(x, y, z, opacity, mVBOID, mIBOID);
   };
 
   void Texture::render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, const GLuint &vboID, const GLuint &iboID) {

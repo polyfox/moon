@@ -20,6 +20,9 @@ namespace Moon {
     void render();
   private:
     std::shared_ptr<Texture> texture;
+
+    GLuint VBO;
+    GLuint IBO;
   };
 };
 
