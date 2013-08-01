@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8.8)
 
-#    Project name
+# Project name
 project("Moon")
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") # for gcc >= 4.7, or c++0x for 4.6
 
 if(ANDROID)
