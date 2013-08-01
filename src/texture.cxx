@@ -24,7 +24,7 @@ namespace Moon {
 
     //Vertex data
     VertexData2D vData[4];
-    GLuint iData[4] = {0, 1, 2, 3}; // rendering indices
+    GLuint iData[4] = {0, 1, 3, 2}; // rendering indices
 
     //Create VBO
     glGenBuffers(1, &mVBOID);

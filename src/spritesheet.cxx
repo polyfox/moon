@@ -77,18 +77,18 @@ namespace Moon {
         vertexData[ spriteIndices[1] ].v =  (oy) / tiles_per_column;
 
         // Bottom right
-        vertexData[ spriteIndices[2] ].x = tileWidth;
-        vertexData[ spriteIndices[2] ].y = tileHeight;
-
-        vertexData[ spriteIndices[2] ].u =  (ox + 1.0) / tiles_per_row;
-        vertexData[ spriteIndices[2] ].v =  (oy + 1.0) / tiles_per_column;
-
-        // Bottom left
-        vertexData[ spriteIndices[3] ].x = 0;
+        vertexData[ spriteIndices[3] ].x = tileWidth;
         vertexData[ spriteIndices[3] ].y = tileHeight;
 
-        vertexData[ spriteIndices[3] ].u =  (ox) / tiles_per_row;
+        vertexData[ spriteIndices[3] ].u =  (ox + 1.0) / tiles_per_row;
         vertexData[ spriteIndices[3] ].v =  (oy + 1.0) / tiles_per_column;
+
+        // Bottom left
+        vertexData[ spriteIndices[2] ].x = 0;
+        vertexData[ spriteIndices[2] ].y = tileHeight;
+
+        vertexData[ spriteIndices[2] ].u =  (ox) / tiles_per_row;
+        vertexData[ spriteIndices[2] ].v =  (oy + 1.0) / tiles_per_column;
 
         //Bind sprite index buffer data
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffers[ i ]);
