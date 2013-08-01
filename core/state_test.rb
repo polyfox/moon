@@ -16,7 +16,7 @@ class State_Test < State
       sprite = Sprite.new("resources/obama_sprite.png")
       sprite.x = rand(640)
       sprite.y = rand(480)
-      sprite.z = -(i-1500) / 1500 # depth testing messing up, remove - to see normally without bug
+      sprite.z = -(i-1500) / 1500
       sprite.opacity = (rand(1000)/1000)
       @sprites << sprite
     end
