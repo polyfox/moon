@@ -7,13 +7,7 @@ void moon_init_mrb_ext(mrb_state *mrb)
   init_hola(mrb);
 }
 
-int main(void)
+int moon_main(Moon::Engine *engine)
 {
-  Moon::Engine *engine = NULL;
-  engine = new Moon::Engine();
-  engine->run();
-  if(engine) {
-    delete(engine); 
-  }
   return 0;
 }

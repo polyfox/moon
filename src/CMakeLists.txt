@@ -27,6 +27,7 @@ add_library(moon STATIC
   engine.cxx
   fps.cxx
   input.cxx
+  main.cxx
   music.cxx
   shader.cxx
   sound.cxx

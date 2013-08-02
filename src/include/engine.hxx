@@ -35,4 +35,7 @@ namespace Moon {
     void setup_opengl();
   };
 };
+
+int moon_main(Moon::Engine *engine); // user entry point
+
 #endif
