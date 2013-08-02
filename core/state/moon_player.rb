@@ -88,67 +88,6 @@ class BGM
 
 end
 
-# small data requirement
-# eventually this will be implemented in C++ 
-class Rectangle
-
-  attr_accessor :x, :y, :width, :height
-
-  def initialize(x, y, width, height)
-    @x      = x
-    @y      = y
-    @width  = width
-    @height = height
-  end
-
-end
-
-# containers
-class Container < Rectangle
-
-  def initialize(x, y, width, height)
-    super(x, y, width, height)
-    on_resize
-    on_move
-  end
-
-  # callbacks
-  def on_move
-  end
-
-  def on_resize
-  end
-
-  def x=(new_x)
-    super(new_x)
-    on_move
-  end
-
-  def y=(new_y)
-    super(new_y)
-    on_move
-  end
-
-  def width=(new_width)
-    super(new_width)
-    on_resize
-  end
-
-  def height=(new_height)
-    super(new_height)
-    on_resize
-  end
-
-  def pos
-    return [x, y]
-  end
-
-  def size
-    return [width, height]
-  end
-
-end
-
 #
 # the actual player container
 class MoonPlayer < Container
