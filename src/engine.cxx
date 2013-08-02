@@ -76,44 +76,35 @@ namespace Moon {
   }
 
   void Engine::load_user_scripts() {
-    load_mrb_file("./scripts/", "load.rb");
+    load_mrb_file("./scripts/load.rb");
   }
   
   void Engine::load_core_classes() {
-    load_mrb_file("./core/", "load.rb");
+    load_mrb_file("./core/load.rb");
   }
 
-  bool Engine::load_mrb_file(const char *file_path, const char *filename) {
-    char path[1024];
+  bool Engine::load_mrb_file(const char *path) {
     FILE *file;
 
-    mrb_sym zero_sym = mrb_intern2(mrb, "$0", 2);
-
-    strcpy(path, file_path);
-    strcat(path, filename);
-
     if(exists(path)) {
-      file = fopen((const char*)path, "r");
+      file = fopen(path, "r");
       mrbc_context *cxt = mrbc_context_new(mrb);
 
-      mrbc_filename(mrb, cxt, filename);
-      mrb_gv_set(mrb, zero_sym, mrb_str_new_cstr(mrb, filename));
+      mrbc_filename(mrb, cxt, path);
+      mrb_gv_set(mrb, mrb_intern2(mrb, "$0", 2), mrb_str_new_cstr(mrb, path));
       mrb_value v = mrb_load_file_cxt(mrb, file, cxt);
 
       fclose(file);
       mrbc_context_free(mrb, cxt);
 
       if(mrb->exc) {
-        if (!mrb_undef_p(v)) {
-          mrb_print_error(mrb);
-        }
-        exit(312);
+        mrb_print_error(mrb);
+        exit(3);
         return false;
-      } else {
-        std::cout << "script: " << path << std::endl;
       }
     } else {
       std::cout << "file does not exist: " << path << std::endl;
+      return false;
     }
     return true;
   }
