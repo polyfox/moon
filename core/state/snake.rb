@@ -36,8 +36,8 @@ class State_Snake < State
 
   def init
     super
-    @width  = (640 / 16).to_i # Window#width / 16
-    @height = (480 / 16).to_i # Window#height / 16
+    @width  = (Window.width / 16).to_i # Window#width / 16
+    @height = (Window.height / 16).to_i # Window#height / 16
     puts "Board Size is: #{@width} x #{@height}"
     init_snake
     init_spriteset
@@ -134,6 +134,7 @@ class State_Snake < State
   def gameover
     puts "Gameover"
     puts "Your Score: #{@points}"
+    State.pop
   end
 
   def solve_collision

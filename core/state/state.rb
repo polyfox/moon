@@ -54,6 +54,7 @@ class State
     @states.pop
 
     @states.last.resume if !@states.empty?
+    #Engine.stop if @states.empty? # TODO
   end
 
   def self.push state
