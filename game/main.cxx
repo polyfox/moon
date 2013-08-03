@@ -9,5 +9,6 @@ void moon_init_mrb_ext(mrb_state *mrb)
 
 int moon_main(Moon::Engine *engine)
 {
+  app_dummy();
   return 0;
 }
