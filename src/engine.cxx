@@ -2,6 +2,9 @@
 
 namespace Moon {
   Engine::Engine() : window(640, 480, "Hello World") {
+    #ifdef __ANDROID__
+      chdir("/sdcard/moon");
+    #endif
     setup_opengl();
     #ifndef __ANDROID__
     // setup Input engine
