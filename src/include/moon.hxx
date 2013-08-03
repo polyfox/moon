@@ -13,9 +13,15 @@
 
 #include <sys/stat.h>
 
-/* OpenGL */
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
+#ifdef __ANDROID__
+  /* OpenGL ES */
+  #include <GLES2/gl2.h>
+  #include <jni.h>
+#else
+  /* OpenGL */
+  #define GL_GLEXT_PROTOTYPES
+  #include <GL/gl.h>
+#endif
 
 /* GLM */
 #include <glm/glm.hpp>

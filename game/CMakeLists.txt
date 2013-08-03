@@ -4,10 +4,17 @@ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR) # Make sure the user is 
   message(FATAL_ERROR "Use the top-level cmake script!")
 endif()
 
-add_executable(game
-  main.cxx
-  ext/hola.cxx
-)
+if(ANDROID)
+  add_library(game SHARED
+    main.cxx
+    ext/hola.cxx
+  )
+else()
+  add_executable(game
+    main.cxx
+    ext/hola.cxx
+  )
+endif()
 
 add_custom_target(copy_scripts ALL
   COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/scripts

@@ -7,22 +7,37 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") # for gcc >= 4.7, or c++0x for 4.6
 
 if(ANDROID)
-  SET(PLATFORM_NAME "android")
+  set(PLATFORM_NAME "android")
+
+  set(ANDROID_TOOLCHAIN_NAME "arm-linux-androideabi-4.8")
+  set(ANDROID_NATIVE_API_LEVEL "android-18")
+
+  set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/cmake/android.toolchain.cmake)
 else()
-  SET(PLATFORM_NAME "host")
+  set(PLATFORM_NAME "host")
 endif()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib/${PLATFORM_NAME})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/lib/${PLATFORM_NAME})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_HOME_DIRECTORY}/bin/${PLATFORM_NAME})
 
-# OpenGL
-find_package(OpenGL REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIR})
+message(STATUS "PLATFORM_NAME: " ${PLATFORM_NAME})
 
-# GLFW
-find_package(GLFW REQUIRED)
-include_directories(${GLFW_INCLUDE_DIR})
+if(ANDROID)
+  # Android auto includes ES 2.0 and EGL
+else()
+  # OpenGL
+  find_package(OpenGL REQUIRED)
+  include_directories(${OPENGL_INCLUDE_DIR})
+
+  # GLFW
+  find_package(GLFW REQUIRED)
+  include_directories(${GLFW_INCLUDE_DIR})
+
+  # Gorilla Audio
+  add_subdirectory(vendor/gorilla-audio/build)
+  include_directories(vendor/gorilla-audio/include)
+endif()
 
 # SOIL
 add_subdirectory(vendor/soil)
@@ -36,7 +51,11 @@ add_custom_command(
 )
 add_custom_target(mruby DEPENDS libmruby.a)
 include_directories(vendor/mruby/include)
-set(MRUBY_LIBRARIES ${CMAKE_SOURCE_DIR}/vendor/mruby/build/host/lib/libmruby.a)
+if(ANDROID)
+  set(MRUBY_LIBRARIES ${CMAKE_SOURCE_DIR}/vendor/mruby/build/androideabi/lib/libmruby.a)
+else()
+  set(MRUBY_LIBRARIES ${CMAKE_SOURCE_DIR}/vendor/mruby/build/host/lib/libmruby.a)
+endif()
 if(UNIX) # mrb-require needs for loading .so files
   set(MRUBY_LIBRARIES ${MRUBY_LIBRARIES} dl)
 endif(UNIX)
@@ -44,11 +63,13 @@ endif(UNIX)
 # GLM
 include_directories(vendor/glm)
 
-# Gorilla Audio
-add_subdirectory(vendor/gorilla-audio/build)
-include_directories(vendor/gorilla-audio/include)
-
 include_directories(src/include)
+
+if(ANDROID)
+  include_directories(src/android/include)
+else()
+  include_directories(src/desktop/include)
+endif()
 
 add_subdirectory(src)
 add_subdirectory(game)

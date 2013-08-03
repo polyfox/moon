@@ -3,20 +3,21 @@
 namespace Moon {
   Engine::Engine() : window(640, 480, "Hello World") {
     setup_opengl();
-
+    #ifndef __ANDROID__
     // setup Input engine
     Input::initialize(window.glfw());
 
     // setup Gorilla Audio
     Audio::initialize();
-
+    #endif
     load_mrb();
   }
 
   Engine::~Engine() { /* Terminate in the reverse order */
     if (mrb) mrb_close(mrb);
-
+    #ifndef __ANDROID__
     Audio::terminate();
+    #endif
   }
 
   void Engine::run() {
@@ -29,7 +30,9 @@ namespace Moon {
 
     while (!window.should_close())
     {
+      #ifndef __ANDROID__
       Audio::update();
+      #endif
 
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
