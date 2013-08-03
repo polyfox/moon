@@ -170,4 +170,8 @@ namespace Moon {
   GLuint Shader::get_program() {
     return _program;
   }
+
+  void Shader::use() {
+    glUseProgram(_program);
+  }
 };

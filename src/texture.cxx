@@ -45,7 +45,7 @@ namespace Moon {
 
   void Texture::render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, const GLuint &vboID, const GLuint &iboID) {
     if(texture_id != 0) {
-      glUseProgram(shader.get_program());
+      shader.use();
 
       //model matrix - move it to the correct position in the world
       glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
@@ -93,8 +93,6 @@ namespace Moon {
       //Disable vertex and texture coordinate arrays
       glDisableVertexAttribArray(shader.get_attribute("vertex_pos"));
       glDisableVertexAttribArray(shader.get_attribute("texcoord"));
-
-      glUseProgram(0);
     };
   };
 
