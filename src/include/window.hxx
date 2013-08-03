@@ -14,9 +14,13 @@ namespace Moon {
     GLFWwindow* glfw(); // TEMPORARY HACK
     void update();
     bool should_close();
+    int width();
+    int height();
   private:
     FPS fps;
     GLFWwindow* window; // GLFW window
+    int window_width;
+    int window_height;
   };
 };
 

@@ -22,6 +22,9 @@ namespace Moon {
     ~Engine();
     void run();
 
+    int window_width();
+    int window_height();
+    
   private:
     mrb_state *mrb;
 
