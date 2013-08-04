@@ -16,4 +16,12 @@ MRuby::CrossBuild.new('androideabi') do |conf|
   ENV['ANDROID_TARGET_ARCH_ABI'] = 'armeabi-v7a'
 
   toolchain :androideabi
+
+  # include the default GEMs
+  conf.gembox "#{File.dirname(__FILE__)}/moon"
+
+  # Temporary custom solution. If we end up
+  # creating a custom gem, make a gem folder
+  # in moon root and put it there.
+  conf.gem :github => 'archSeer/mruby-require'
 end

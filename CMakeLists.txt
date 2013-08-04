@@ -5,7 +5,6 @@ project("Moon")
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") # for gcc >= 4.7, or c++0x for 4.6
-
 if(ANDROID)
   set(PLATFORM_NAME "android")
 
@@ -52,13 +51,16 @@ add_custom_command(
 add_custom_target(mruby DEPENDS libmruby.a)
 include_directories(vendor/mruby/include)
 if(ANDROID)
-  set(MRUBY_LIBRARIES ${CMAKE_SOURCE_DIR}/vendor/mruby/build/androideabi/lib/libmruby.a)
+  set(MRUBY_LIBRARIES -Wl,--whole-archive ${CMAKE_SOURCE_DIR}/vendor/mruby/build/androideabi/lib/libmruby.a -Wl,--no-whole-archive)
 else()
   set(MRUBY_LIBRARIES ${CMAKE_SOURCE_DIR}/vendor/mruby/build/host/lib/libmruby.a)
 endif()
 if(UNIX) # mrb-require needs for loading .so files
   set(MRUBY_LIBRARIES ${MRUBY_LIBRARIES} dl)
 endif(UNIX)
+
+# NOTE: get -Wl,--whole-archive <lib> -Wl,--no-whole-archive
+# working for libmoon too. 
 
 # GLM
 include_directories(vendor/glm)

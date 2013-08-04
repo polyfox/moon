@@ -111,6 +111,7 @@ namespace Moon {
 
       // Check if we are exiting.
       if (should_close()) {
+        LOGI("We're closin'! %i", android->destroyRequested);
         terminate_display();
         return;
       }

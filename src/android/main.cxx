@@ -45,7 +45,6 @@ void handle_cmd(struct android_app* app, int32_t cmd) {
  */
 
 void android_main(struct android_app* state) {
-  LOGI("Hi from android_main");
   app_dummy();
 
   Moon::Engine *engine = NULL;
@@ -55,7 +54,7 @@ void android_main(struct android_app* state) {
   state->onAppCmd = handle_cmd;
   state->onInputEvent = handle_input;
   engine->window.android = state;
-  LOGI("Still alive!");
+
   moon_main(engine);
 
   engine->run();
