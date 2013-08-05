@@ -114,7 +114,8 @@ namespace Moon {
   void Spritesheet::render(const int &x, const int &y, const float &z, const int &index) {
     //Sprite sheet data exists
     if(mVertexDataBuffer != NULL) {
-      texture->render(x, y, z, 1.0, mVertexDataBuffer, mIndexBuffers[index]);
+      Tone tone;
+      texture->render(x, y, z, 1.0, &tone, mVertexDataBuffer, mIndexBuffers[index]);
     };
 
   };
