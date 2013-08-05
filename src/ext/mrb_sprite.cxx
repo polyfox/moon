@@ -122,7 +122,7 @@ namespace Moon {
     struct RClass *sprite_class;
     sprite_class = mrb_define_class(mrb, "Sprite", mrb->object_class);
     MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
-    
+
     mrb_define_class_method(mrb, sprite_class, "new", moon_mrb_sprite_new, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, sprite_class, "render", moon_mrb_sprite_render, MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "x", moon_mrb_sprite_x_getter, MRB_ARGS_NONE());

@@ -12,7 +12,7 @@ class Input
 
 end
 
-# Maybe we could prefer: 
+# Maybe we could prefer:
 #   Music.new(filename, filetype)
 #   to reduce the number of extra classes floating around.
 #   Music::play would still be maintained though
@@ -34,7 +34,7 @@ class BGM
   def play(pos=0)
     unless @filename.empty?
       @pos = pos
-      Music.play(@filename, @filetype) 
+      Music.play(@filename, @filetype)
       Music.seek(@pos)
       @@last = self
       return true
@@ -126,13 +126,13 @@ class MoonPlayer < Container
         button = Input::Mouse::Buttons::LEFT
         if Input::Mouse.triggered?(button)
           if    Input::Mouse.modded?(button, keys::MOD_SHIFT)
-            call_event(:mouse_focus_shift) 
+            call_event(:mouse_focus_shift)
           elsif Input::Mouse.modded?(button, keys::MOD_CONTROL)
-            call_event(:mouse_focus_control) 
+            call_event(:mouse_focus_control)
           elsif Input::Mouse.modded?(button, keys::MOD_ALT)
-            call_event(:mouse_focus_alt) 
+            call_event(:mouse_focus_alt)
           elsif Input::Mouse.modded?(button, keys::MOD_SUPER)
-            call_event(:mouse_focus_super) 
+            call_event(:mouse_focus_super)
           else
             call_event(:mouse_focus_no_mod)
           end
@@ -180,7 +180,7 @@ class MoonPlayer < Container
       puts "With SUPER"
     end
 
-    #@stop.on_event(:mouse_over) {} 
+    #@stop.on_event(:mouse_over) {}
 
     @stop.on_event(:mouse_focus) do |widget|
       stop_music
@@ -210,14 +210,14 @@ class MoonPlayer < Container
     # premitive way to find the covered area of a set of Rectangles
     ## x
     wid = min_by.(@widgets) { |w| w.x }
-    x = wid.x 
-    wid = max_by.(@widgets) { |w| w.x + w.width } 
+    x = wid.x
+    wid = max_by.(@widgets) { |w| w.x + w.width }
     x2 = wid.x + wid.width
 
     ## y
     wid = min_by.(@widgets) { |w| w.y }
     y = wid.y
-    wid = max_by.(@widgets) { |w| w.y + w.height } 
+    wid = max_by.(@widgets) { |w| w.y + w.height }
     y2 = wid.y + wid.height
 
     super(x, y, (x2 - x).abs, (y2 - y).abs)
@@ -235,11 +235,11 @@ class MoonPlayer < Container
   end
 
   def play_music(resume=false)
-    if resume 
-      if @music.resume 
+    if resume
+      if @music.resume
         puts ">> Now Resuming: #{@music.filename}"
       end
-    else 
+    else
       if @music.play
         puts ">> Now Playing: #{@music.filename}"
       end
@@ -254,16 +254,16 @@ class MoonPlayer < Container
 
   def update_seek
     l = Music.length.to_f
-    l = 1.0 if l < 1 
+    l = 1.0 if l < 1
     sx = (@seekbar.width - @seek.width) * (Music.pos / l)
     @seek.refresh_position(x + sx, y)
   end
 
   def render
-    @spritesheet_32x32.render(@play.x, @play.y, Music.playing? ? 5 : 1)
-    @spritesheet_32x32.render(@stop.x, @stop.y, Music.stopped? ? 4 : 0)
-    @spritesheet_128x16.render(@seekbar.x, @seekbar.y, Music.finished? ? 9 : 8)
-    @spritesheet_16x16.render(@seek.x, @seek.y, Music.playing? ? 10 : 11)
+    @spritesheet_32x32.render(@play.x, @play.y, 0, Music.playing? ? 5 : 1)
+    @spritesheet_32x32.render(@stop.x, @stop.y, 0, Music.stopped? ? 4 : 0)
+    @spritesheet_128x16.render(@seekbar.x, @seekbar.y, 0, Music.finished? ? 9 : 8)
+    @spritesheet_16x16.render(@seek.x, @seek.y, 0, Music.playing? ? 10 : 11)
   end
 
   def update
@@ -297,14 +297,14 @@ class State_MoonPlayer < State
   # TODO:
   #  optional:
   #   Sample at pos (can be used to simulate meters and such)
-  def init   
+  def init
     @music_hud = MusicActivityHud.new(0, 0)
     @player = MoonPlayer.new(96, 128)
     puts @player.pos
 
     # evil stuff don't do this
     @button_hud = State_KeyHoldTest::Hud_KeyHold.new(Input::Mouse, Input::Mouse::Buttons::LEFT, 8, 8)
-    @button_hud.x = 0 
+    @button_hud.x = 0
     @button_hud.y = @player.y + @player.height
     super
   end

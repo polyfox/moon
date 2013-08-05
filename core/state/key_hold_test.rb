@@ -20,7 +20,7 @@ class State_KeyHoldTest < State
       init_spritesheet
     end
 
-    def init_spritesheet  
+    def init_spritesheet
       filename = "resources/media_buttons_#{@cell_width}x#{@cell_height}.png"
       @spritesheet = Spritesheet.new(filename, @cell_width, @cell_height)
     end
@@ -28,17 +28,17 @@ class State_KeyHoldTest < State
     def render
       if @release
         @release.times do |i|
-          @spritesheet.render(@x + @cell_width * i, @y, 0)
+          @spritesheet.render(@x + @cell_width * i, @y, 0, 0)
         end
       end
       if @press
         @press.times do |i|
-          @spritesheet.render(@x + @cell_width * i, @y + @cell_height, 1)
+          @spritesheet.render(@x + @cell_width * i, @y + @cell_height, 0, 1)
         end
       end
-      if @hold 
+      if @hold
         @hold.times do |i|
-          @spritesheet.render(@x + @cell_width * i, @y + @cell_height * 2, 2)
+          @spritesheet.render(@x + @cell_width * i, @y + @cell_height * 2, 0, 2)
         end
       end
     end

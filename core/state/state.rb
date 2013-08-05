@@ -1,3 +1,6 @@
+#
+# core/state/state.rb
+#   Base class for all States
 class State
 
   attr_reader :ticks

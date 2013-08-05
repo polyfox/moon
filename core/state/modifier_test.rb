@@ -1,55 +1,8 @@
 #
 # core/state_modifier_test.rb
-#   Press the Mouse buttons, and try pressing the modifier keys with it 
+#   Press the Mouse buttons, and try pressing the modifier keys with it
 #   SHIFT, CONTROL, ALT, SUPER
 class State_ModifierTest < State
-  
-  class Table
-
-    def initialize(xsize, ysize)
-      @xsize = xsize
-      @ysize = ysize
-      @data = Array.new(@ysize) { Array.new(@xsize, 0) }
-    end
-
-    def [](x, y)
-      @data[y][x] || 0
-    end
-
-    def []=(x, y, n)
-      @data[y][x] = n
-    end
-
-    def fill(n)
-      for y in 0...@ysize
-        for x in 0...@xsize
-          @data[y][x] = n
-        end
-      end
-    end
-
-    def clear
-      fill(0)
-    end
-
-    def row(y)
-      @data[y]
-    end
-
-    def row_count
-      @data.size
-    end
-
-    def to_s
-      result = ""
-      for y in 0...@ysize
-        result.concat(@data[y].join(", "))
-        result.concat("\n")
-      end
-      return result
-    end
-
-  end
 
   CNULL  = 0
   CFALSE = 0
@@ -66,7 +19,7 @@ class State_ModifierTest < State
     Input::Mouse::Buttons::BUTTON_8
   ]
 
-  MODS = [CNULL, Input::Keys::MOD_SHIFT, Input::Keys::MOD_CONTROL, 
+  MODS = [CNULL, Input::Keys::MOD_SHIFT, Input::Keys::MOD_CONTROL,
                  Input::Keys::MOD_ALT, Input::Keys::MOD_SUPER]
 
   def init
@@ -87,7 +40,7 @@ class State_ModifierTest < State
     super
     for y in 0...@data_table.row_count
       @data_table.row(y).each_with_index do |state, i|
-        @spritesheet.render(i * 32, y * 32, y % 4) if state == CTRUE
+        @spritesheet.render(i * 32, y * 32, 0, y % 4) if state == CTRUE
       end
     end
   end
