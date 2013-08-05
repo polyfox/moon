@@ -6,11 +6,11 @@
 
 #include <iostream>
 #include <unordered_map>
-#include "unistd.h"
-#include "dirent.h"
-#include <string.h>
 #include <stdexcept>
+#include <cstring>
 
+#include <unistd.h>
+#include <dirent.h>
 #include <sys/stat.h>
 
 /* OpenGL */
