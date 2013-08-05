@@ -87,7 +87,7 @@ namespace Moon {
     //if(clip) {
     //  texture->render(x, y, z, opacity, &clip_rect);
     //} else {
-      texture->render(x, y, z, opacity, VBO, IBO);
+      texture->render(x, y, z, opacity, tone.get(), VBO, IBO);
     //}
   };
 };

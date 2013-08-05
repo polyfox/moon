@@ -11,6 +11,7 @@ namespace Moon {
     shader.add_uniform("model_matrix");
     shader.add_uniform("projection_matrix");
     shader.add_uniform("opacity");
+    shader.add_uniform("tone");
 
     unsigned char* pixels;
     int channels;
@@ -43,7 +44,7 @@ namespace Moon {
     return texture_id;
   };
 
-  void Texture::render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, const GLuint &vboID, const GLuint &iboID) {
+  void Texture::render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, const GLuint &vboID, const GLuint &iboID) {
     if(texture_id != 0) {
       shader.use();
 
@@ -84,7 +85,10 @@ namespace Moon {
           (GLvoid*)offsetof(VertexData2D, x)     // offset of first element
         );
 
-        glUniform1f(shader.get_uniform("opacity"), opacity); // opacity TODO: tone
+        glUniform1f(shader.get_uniform("opacity"), opacity);
+
+        GLfloat hsl[3] = {tone->hue, tone->saturation, tone->lightness};
+        glUniform3fv(shader.get_uniform("tone"), 1, hsl);
 
         //Draw quad using vertex data and index data
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);

@@ -3,6 +3,7 @@
 
 #include "moon.hxx"
 #include "texture.hxx"
+#include "tone.hxx"
 
 namespace Moon {
   class Sprite {
@@ -14,6 +15,7 @@ namespace Moon {
     int y;
     float z;
     float opacity;
+    std::shared_ptr<Tone> tone;
     Rect clip_rect;
     bool clip;
 

@@ -5,6 +5,7 @@
 #include "shader.hxx"
 #include <memory>
 #include <unordered_map>
+#include "tone.hxx"
 
 namespace Moon {
 
@@ -73,7 +74,7 @@ namespace Moon {
     ~Texture();
 
     static std::shared_ptr<Texture> load(std::string filename);
-    void render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, const GLuint &vboID, const GLuint &iboID);
+    void render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, const GLuint &vboID, const GLuint &iboID);
 
     GLuint width();
     GLuint height();
