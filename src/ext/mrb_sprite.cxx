@@ -101,8 +101,6 @@ namespace Moon {
     mrb_value new_tone;
     mrb_get_args(mrb, "o", &new_tone);
 
-    printf("Ohayo");
-
     if (strcmp(mrb_obj_classname(mrb, new_tone), "Tone") != 0)
       mrb_raisef(mrb, E_TYPE_ERROR, "expected Tone but recieved %s", mrb_obj_classname(mrb, new_tone));
 
