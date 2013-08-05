@@ -3,14 +3,7 @@
 
 namespace Moon {
   /* Required by moon_mrb_sprite_new */
-  static void moon_mrb_tone_deallocate(mrb_state *mrb, void *p) {
-    delete((std::shared_ptr<Tone>*)p);
-  };
-
-  static const struct mrb_data_type tone_data_type = {
-    "Tone", moon_mrb_tone_deallocate,
-  };
-
+  extern struct mrb_data_type tone_data_type;
 
   static void moon_mrb_sprite_deallocate(mrb_state *mrb, void *p) {
     delete((Sprite*)p);

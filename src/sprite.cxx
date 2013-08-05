@@ -6,6 +6,7 @@ namespace Moon {
     y = 0;
     z = 0.0;
     opacity = 1.0;
+    tone = std::make_shared<Tone>(1.0, 1.0, 1.0);
     clip = false;
 
     texture = Texture::load(filename);

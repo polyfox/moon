@@ -13,5 +13,5 @@ require 'core/state'
 #State.push(State_MoonPlayer)
 #State.push(State_MusicActivity)
 #State.push(State_PullBlock)
- State.push(State_Snake)
-#State.push(State_Test)
+#State.push(State_Snake)
+State.push(State_Test)
