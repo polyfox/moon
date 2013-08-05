@@ -5,6 +5,9 @@ class Table
 
   include Enumerable
 
+  attr_reader :xsize
+  attr_reader :ysize
+
   def initialize(xsize, ysize)
     @xsize = xsize
     @ysize = ysize
@@ -22,14 +25,14 @@ class Table
   def each
     for y in 0...@ysize
       for x in 0...@xsize
-        yield(@data[y][x], x, y) # may change this to just yield(data)
+        yield @data[y][x], x, y # may change this to just yield(data)
       end
     end
   end
 
   def map!
     each do |n, x, y|
-      @data[y][x] = yield(n, x, y)
+      @data[y][x] = yield n, x, y
     end
   end
 

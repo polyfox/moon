@@ -1,6 +1,6 @@
 #
 # moon/core/state/pull_block
-#
+#   A block chasing its tail, what more could you want
 class State_PullBlock < State
 
   def init
@@ -22,7 +22,7 @@ class State_PullBlock < State
   end
 
   def init_spriteset
-    @spritesheet = Spritesheet.new("resources/media_buttons_16x16.png", 16, 16)
+    @spritesheet = Spritesheet.new("resources/media_buttons_32x32.png", 32, 32)
   end
 
   def render
