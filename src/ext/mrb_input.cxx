@@ -1,4 +1,4 @@
-#include "moon.hxx"
+#include "mrb.hxx"
 #include "input.hxx"
 
 namespace Moon 

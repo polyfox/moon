@@ -12,16 +12,14 @@ namespace Moon {
 
   Spritesheet::~Spritesheet() {
     //Clear vertex buffer
-    if(mVertexDataBuffer != NULL) {
-      glDeleteBuffers(1, &mVertexDataBuffer );
-      mVertexDataBuffer = NULL;
+    if(mVertexDataBuffer != 0) {
+      glDeleteBuffers(1, &mVertexDataBuffer);
     }
 
     //Clear index buffers
-    if( mIndexBuffers != NULL ) {
+    if( mIndexBuffers != 0) {
       glDeleteBuffers(totalSprites, mIndexBuffers);
       delete[] mIndexBuffers;
-      mIndexBuffers = NULL;
     }
   };
 

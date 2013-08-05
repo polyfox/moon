@@ -6,11 +6,11 @@
 
 #include <iostream>
 #include <unordered_map>
-#include "unistd.h"
-#include "dirent.h"
-#include <string.h>
 #include <stdexcept>
+#include <cstring>
 
+#include <unistd.h>
+#include <dirent.h>
 #include <sys/stat.h>
 
 /* OpenGL */
@@ -21,16 +21,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-/* Include the mruby header */
-#include <mruby.h>
-#include <mruby/class.h>
-#include <mruby/array.h>
-#include <mruby/proc.h>
-#include <mruby/data.h>
-#include <mruby/compile.h>
-#include <mruby/variable.h>
-#include <mruby/string.h>
 
 // _WIN32 is set for both 32 and 64 bit
 #ifdef _WIN32

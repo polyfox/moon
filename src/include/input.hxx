@@ -5,6 +5,8 @@
 #include <GLFW/glfw3.h>
 #include <cmath>
 
+#include "mrb.hxx" /* required for friend function */
+
 namespace Moon {
 
   struct Button {

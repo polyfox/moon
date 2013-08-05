@@ -1,15 +1,13 @@
-#include "moon.hxx"
+#include "mrb.hxx"
 #include "sprite.hxx"
 
 namespace Moon {
-  /* Required by moon_mrb_sprite_new */
-  extern struct mrb_data_type tone_data_type;
 
   static void moon_mrb_sprite_deallocate(mrb_state *mrb, void *p) {
     delete((Sprite*)p);
   };
 
-  static const struct mrb_data_type sprite_data_type = {
+  const struct mrb_data_type sprite_data_type = {
     "Sprite", moon_mrb_sprite_deallocate,
   };
 
@@ -102,8 +100,6 @@ namespace Moon {
   static mrb_value moon_mrb_sprite_tone_setter(mrb_state *mrb, mrb_value self) {
     mrb_value new_tone;
     mrb_get_args(mrb, "o", &new_tone);
-
-    printf("Ohayo");
 
     if (strcmp(mrb_obj_classname(mrb, new_tone), "Tone") != 0)
       mrb_raisef(mrb, E_TYPE_ERROR, "expected Tone but recieved %s", mrb_obj_classname(mrb, new_tone));

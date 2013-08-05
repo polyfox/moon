@@ -1,4 +1,4 @@
-#include "moon.hxx"
+#include "mrb.hxx"
 #include "tone.hxx"
 
 namespace Moon {
@@ -7,7 +7,7 @@ namespace Moon {
     delete((std::shared_ptr<Tone>*)p);
   };
 
-  struct mrb_data_type tone_data_type = { /* const was used */
+  const struct mrb_data_type tone_data_type = { /* const was used */
     "Tone", moon_mrb_tone_deallocate,
   };
 
