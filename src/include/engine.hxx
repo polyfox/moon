@@ -28,6 +28,9 @@ namespace Moon {
     ~Engine();
     void run();
 
+    void initialize();
+    bool initialized;
+
     int window_width();
     int window_height();
     

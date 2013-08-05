@@ -6,16 +6,27 @@ namespace Moon {
   Engine::Engine() : window(640, 480, "Hello World") {
     #ifdef __ANDROID__
       chdir("/sdcard/moon");
+      initialized = false;
     #endif
-    setup_opengl();
     #ifndef __ANDROID__
+    setup_opengl();
+
     // setup Input engine
     Input::initialize(window.glfw());
 
     // setup Gorilla Audio
     Audio::initialize();
-    #endif
+
     load_mrb();
+    #endif
+  }
+
+  Engine::initialize() {
+    if(!initialized) {
+      setup_opengl();
+      load_mrb();
+      initialized = true;
+    }
   }
 
   Engine::~Engine() { /* Terminate in the reverse order */
@@ -39,8 +50,6 @@ namespace Moon {
       Audio::update();
       #endif
 
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
       if (mrb->exc) {
         #if __ANDROID__
           android_mrb_print_error(mrb);
@@ -51,7 +60,15 @@ namespace Moon {
       };
 
       mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
+    #ifdef __ANDROID__
+      if(window.can_draw()) {
+    #endif
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "render", 0);
+    #ifdef __ANDROID__
+      }
+    #endif
+
       mrb_gc_arena_restore(mrb, ai);
 
       window.update();

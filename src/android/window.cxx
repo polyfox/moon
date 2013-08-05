@@ -12,6 +12,19 @@ namespace Moon {
     window_width = 0;
     window_height = 0;
   };
+  /*
+
+    I/native-activity(14192): state address: 1913055368
+    I/native-activity(14192): engine->window.android address: 1913055368
+
+    V/threaded_app(13700): APP_CMD_INIT_WINDOW
+    I/native-activity(14192): app address 1913055368
+    I/native-activity(14192): engine->window.android address 1913055452
+    I/native-activity(14192): Initializing EGL!
+
+
+     something changes to where window.android is pointing...
+  */
 
   int Window::init_display() {
     // Setup OpenGL ES 2
@@ -94,7 +107,6 @@ namespace Moon {
     display = EGL_NO_DISPLAY;
     context = EGL_NO_CONTEXT;
     surface = EGL_NO_SURFACE;
-    LOGI("EGL display terminated");
   }
 
   void Window::update() {
@@ -111,20 +123,22 @@ namespace Moon {
 
       // Check if we are exiting.
       if (should_close()) {
-        LOGI("We're closin'! %i", android->destroyRequested);
         terminate_display();
         return;
       }
     }
 
     // Draw the current frame
-    draw_frame();
 
-    eglSwapBuffers(display, surface);
+    if(can_draw()) eglSwapBuffers(display, surface);
   };
 
   bool Window::should_close() {
     return android->destroyRequested;
+  };
+
+  bool Window::can_draw() {
+    return display != NULL;
   };
 
   /**
@@ -132,9 +146,14 @@ namespace Moon {
    */
   void Window::draw_frame() {
     // No display.
-    if (display == NULL) {
+    if (!can_draw()) {
       return;
     }
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // draw
+
+    eglSwapBuffers(display, surface);
   };
 
   int Window::width() {

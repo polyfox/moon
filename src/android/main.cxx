@@ -27,8 +27,24 @@ void handle_cmd(struct android_app* app, int32_t cmd) {
     break;
   case APP_CMD_INIT_WINDOW:
     // The window is being shown, get it ready.
-    if (engine->window.android->window != NULL) { // WTF :D engine->window points to our Window, while android->window to android's representation
+    //LOGI("app address %i", app);
+    //LOGI("engine->window.android address %i", engine->window.android);
+
+    /*HAXX: for some reason in APP_CMD_INIT_WINDOW
+      engine->window.android is not the same anymore.
+      I can't figure out why, but it probably has something
+      to do with the process call inside the update loop:
+        if (source != NULL) {
+          source->process(android, source);
+        }
+
+      so to tempfix, let's just reassign engine->window.android. 
+    */
+    engine->window.android = app;
+
+    if (app->window != NULL) {
       engine->window.init_display();
+      engine->initialize();
     }
     break;
   case APP_CMD_TERM_WINDOW:
@@ -45,8 +61,6 @@ void handle_cmd(struct android_app* app, int32_t cmd) {
  */
 
 void android_main(struct android_app* state) {
-  app_dummy();
-
   Moon::Engine *engine = NULL;
   engine = new Moon::Engine();
 
@@ -55,8 +69,17 @@ void android_main(struct android_app* state) {
   state->onInputEvent = handle_input;
   engine->window.android = state;
 
+  LOGI("state address: %i", state);
+  LOGI("engine->window.android address: %i", engine->window.android);
+
   moon_main(engine);
 
-  engine->run();
+  //engine->run();
+  while(1) 
+  {
+    engine->window.update();
+
+  }
+
   if(engine) delete(engine); 
 }
