@@ -3,21 +3,14 @@
 
 namespace Moon {
   /* Required by moon_mrb_sprite_new */
-  static void moon_mrb_tone_deallocate(mrb_state *mrb, void *p) {
-    delete((std::shared_ptr<Tone>*)p);
-  };
-
-  static const struct mrb_data_type tone_data_type = {
-    "tone", moon_mrb_tone_deallocate,
-  };
-
+  extern struct mrb_data_type tone_data_type;
 
   static void moon_mrb_sprite_deallocate(mrb_state *mrb, void *p) {
     delete((Sprite*)p);
   };
 
   static const struct mrb_data_type sprite_data_type = {
-    "sprite", moon_mrb_sprite_deallocate,
+    "Sprite", moon_mrb_sprite_deallocate,
   };
 
   static mrb_value moon_mrb_sprite_new(mrb_state *mrb, mrb_value klass) {
@@ -110,6 +103,8 @@ namespace Moon {
     mrb_value new_tone;
     mrb_get_args(mrb, "o", &new_tone);
 
+    printf("Ohayo");
+
     if (strcmp(mrb_obj_classname(mrb, new_tone), "Tone") != 0)
       mrb_raisef(mrb, E_TYPE_ERROR, "expected Tone but recieved %s", mrb_obj_classname(mrb, new_tone));
 
@@ -131,7 +126,7 @@ namespace Moon {
     struct RClass *sprite_class;
     sprite_class = mrb_define_class(mrb, "Sprite", mrb->object_class);
     MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
-    
+
     mrb_define_class_method(mrb, sprite_class, "new", moon_mrb_sprite_new, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, sprite_class, "render", moon_mrb_sprite_render, MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "x", moon_mrb_sprite_x_getter, MRB_ARGS_NONE());
