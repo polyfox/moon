@@ -1,4 +1,4 @@
-#include "moon.hxx"
+#include "mrb.hxx"
 #include "sound.hxx"
 
 namespace Moon {
@@ -7,7 +7,7 @@ namespace Moon {
     delete((Sound*)p);
   };
 
-  static const struct mrb_data_type sound_data_type = {
+  const struct mrb_data_type sound_data_type = {
     "sound", moon_mrb_sound_deallocate,
   };
 

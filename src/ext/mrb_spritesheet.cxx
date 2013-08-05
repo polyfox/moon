@@ -1,4 +1,4 @@
-#include "moon.hxx"
+#include "mrb.hxx"
 #include "spritesheet.hxx"
 
 namespace Moon {
@@ -6,7 +6,7 @@ namespace Moon {
     delete((Spritesheet*)p);
   };
 
-  static const struct mrb_data_type spritesheet_data_type = {
+  const struct mrb_data_type spritesheet_data_type = {
     "spritesheet", moon_mrb_spritesheet_deallocate,
   };
 

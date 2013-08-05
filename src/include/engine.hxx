@@ -12,8 +12,7 @@
 #include "music.hxx"
 #include "sound.hxx"
 
-void moon_init_mrb_core(mrb_state *mrb); // core side
-void moon_init_mrb_ext(mrb_state *mrb);
+#include "mrb.hxx"
 
 namespace Moon {
   class Engine {
