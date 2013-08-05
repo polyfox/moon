@@ -19,7 +19,7 @@ module Node
   end
 
 end
-  
+
 ##
 # Stackable
 #   Makes an object stackable in a sense.
@@ -137,11 +137,7 @@ end
 
 ##
 # Block
-#   blocks are programmed to follow their parent block:
-#     When the parent block moves, it notifies the child block.
-#     that child block will take the position of parent block, the parent
-#     block will then move ahead
-class Block 
+class Block
 
   include Node
   include Stackable
@@ -166,21 +162,15 @@ class Block
   def move_straight(dir)
     emit
     case dir
-    when 2 
+    when 2
       @x, @y = @x, @y + 1
-    when 4 
+    when 4
       @x, @y = @x - 1, @y
-    when 6 
+    when 6
       @x, @y = @x + 1, @y
-    when 8 
+    when 8
       @x, @y = @x, @y - 1
     end
-  end
-
-  def react(parent)
-    emit
-    @x = parent.x
-    @y = parent.y
   end
 
   def stack_next
@@ -196,5 +186,21 @@ class Block
   end
 
   alias :[] :stack_at
+
+end
+
+##
+# Block_Link
+#   block_link's are programmed to follow their parent block:
+#     When the parent block moves, it notifies the child block.
+#     that child block will take the position of parent block, the parent
+#     block will then move ahead
+class Block_Link < Block
+
+  def react(parent)
+    emit
+    @x = parent.x
+    @y = parent.y
+  end
 
 end

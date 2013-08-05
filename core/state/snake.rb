@@ -1,7 +1,7 @@
 #
 # moon/core/state/snake
-#   
-class Snake < Block
+#
+class Snake < Block_Link
 
   class Body < Snake
   end
@@ -52,7 +52,7 @@ class State_Snake < State
 
   def init_spriteset
     @spritesheet = Spritesheet.new("resources/media_buttons_16x16.png", 16, 16)
-  end 
+  end
 
   def setup
     @dir = 6
@@ -122,7 +122,7 @@ class State_Snake < State
     end
     if @ticks % @time == 0
       @snake.move_straight(@dir)
-      @snake.x %= @width 
+      @snake.x %= @width
       @snake.y %= @height
       if solve_collision
         check_globs
@@ -154,7 +154,7 @@ class State_Snake < State
         @points += glob.points
         if glob.is_main
           @snake.grow
-          add_main_glob   
+          add_main_glob
         end
         removed_globs.push(glob)
       end
