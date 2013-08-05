@@ -40,7 +40,7 @@ class State_ModifierTest < State
     super
     for y in 0...@data_table.row_count
       @data_table.row(y).each_with_index do |state, i|
-        @spritesheet.render(i * 32, y * 32, y % 4) if state == CTRUE
+        @spritesheet.render(i * 32, y * 32, 0, y % 4) if state == CTRUE
       end
     end
   end
