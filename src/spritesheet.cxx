@@ -12,8 +12,8 @@ namespace Moon {
 
   Spritesheet::~Spritesheet() {
     //Clear vertex buffer
-    if(mVertexDataBuffer != 0) {
-      glDeleteBuffers(1, &mVertexDataBuffer);
+    if(VBO != 0) {
+      glDeleteBuffers(1, &VBO);
     }
 
     //Clear index buffers
@@ -35,7 +35,7 @@ namespace Moon {
       mIndexBuffers = new GLuint[ totalSprites ];
 
       // Allocate vertex data buffer name
-      glGenBuffers(1, &mVertexDataBuffer);
+      glGenBuffers(1, &VBO);
 
       // Allocate index buffers names
       glGenBuffers(totalSprites, mIndexBuffers);
@@ -94,7 +94,7 @@ namespace Moon {
       }
 
       //Bind vertex data
-      glBindBuffer(GL_ARRAY_BUFFER, mVertexDataBuffer);
+      glBindBuffer(GL_ARRAY_BUFFER, VBO);
       glBufferData(GL_ARRAY_BUFFER, totalSprites * 4 * sizeof(VertexData2D), vertexData, GL_STATIC_DRAW);
 
       //Deallocate vertex data
@@ -111,9 +111,9 @@ namespace Moon {
 
   void Spritesheet::render(const int &x, const int &y, const float &z, const int &index) {
     //Sprite sheet data exists
-    if(mVertexDataBuffer != NULL) {
+    if(VBO != 0) {
       Tone tone;
-      texture->render(x, y, z, 1.0, &tone, mVertexDataBuffer, mIndexBuffers[index]);
+      texture->render(x, y, z, 1.0, &tone, VBO, mIndexBuffers[index]);
     };
 
   };

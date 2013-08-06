@@ -18,7 +18,7 @@ namespace Moon {
     bool generate_buffers(); // use only in constructor
 
     // VBO data
-    GLuint mVertexDataBuffer;
+    GLuint  VBO;
     GLuint* mIndexBuffers;
 
     int totalSprites;
