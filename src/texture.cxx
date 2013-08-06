@@ -3,7 +3,7 @@
 
 namespace Moon {
   Texture::Texture(std::string filename)
-  : CacheObject(filename),
+  : Cache(filename),
   shader("resources/shaders/quad.vert", "resources/shaders/quad.frag")
   {
     shader.add_attribute("texcoord");
@@ -30,6 +30,18 @@ namespace Moon {
     if(texture_id != 0) {
       glDeleteTextures(1, &texture_id);
     }
+  };
+
+  std::shared_ptr<Texture> Texture::load(std::string filename) {
+    auto ptr = std::move(get(filename)); // move it into the new pointer, so we don't copy construct
+
+    if (ptr) return ptr; // cache hit
+
+    ptr = std::move(std::shared_ptr<Texture>(new Texture(filename)));
+    // ptr = std::make_shared<Texture>(filename); is supposedly faster,
+    // we just need to get around the private constructor issue
+    Cache::_cache[filename] = ptr;
+    return ptr;
   };
 
   GLuint Texture::width() {
@@ -99,40 +111,5 @@ namespace Moon {
       glDisableVertexAttribArray(shader.get_attribute("texcoord"));
     };
   };
-
-  std::shared_ptr<Texture> Texture::load(std::string filename) {
-    auto const it = CacheObject::_cache.find(filename);
-    if (it == CacheObject::_cache.end()) {
-      //std::cout << "cache miss!" << std::endl;
-      std::shared_ptr<Texture> ptr = std::shared_ptr<Texture>(new Texture(filename));
-      // std::shared_ptr<Texture> ptr = std::make_shared<Texture>(filename);
-      // is supposedly faster, we just need to get around the private constructor issue
-      CacheObject::_cache[filename] = ptr;
-      return ptr;
-    }
-    //std::cout << "cache hit!" << std::endl;
-    return std::static_pointer_cast<Texture>(it->second.lock());
-  }
-
-  std::unordered_map<std::string, std::weak_ptr<CacheObject>> CacheObject::_cache;
-
-  CacheObject::CacheObject(std::string const& key) {
-    std::cout << "added " << key << " to cache" << std::endl;
-    this->_key = key;
-    //CacheObject::_cache[key] = this->shared_from_this(); // Note: override previous resource of same key, if any
-    // this doesn't work because the object wasn't constructed yet and at least one shared_ptr must exist
-  };
-
-  CacheObject::~CacheObject() {
-    std::cout << "removed " << _key << " from cache" << std::endl;
-    CacheObject::_cache.erase(_key);
-  };
-
-  /*std::shared_ptr<CacheObject> CacheObject::get(std::string const& key) const {
-    auto const it = _cache.find(key);
-    if (it == _cache.end()) { return std::shared_ptr<CacheObject>(); }
-
-    return it->second.lock();
-  };*/
 
 }
