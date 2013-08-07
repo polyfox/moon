@@ -14,6 +14,12 @@ class Table
     @data = Array.new(@ysize) { Array.new(@xsize, 0) }
   end
 
+  def change_data(data_p, xsize, ysize)
+    @xsize = xsize
+    @ysize = ysize
+    @data  = data_p
+  end
+
   def [](x, y)
     @data[y][x] || 0
   end
@@ -23,21 +29,23 @@ class Table
   end
 
   def each
-    for y in 0...@ysize
-      for x in 0...@xsize
-        yield @data[y][x], x, y # may change this to just yield(data)
+    @data.each do |row|
+      row.each do |n|
+        yield n
       end
     end
   end
 
-  def map!
-    each do |n, x, y|
-      @data[y][x] = yield n, x, y
+  def map_with_xy!
+    @ysize.times do |y|
+      @xsize.times do |x|
+        @data[y][x] = yield @data[y][x], x, y
+      end
     end
   end
 
   def fill(n)
-    map! { |old_n, x, y| n }
+    map_with_xy! { |old_n, x, y| n }
   end
 
   def clear
