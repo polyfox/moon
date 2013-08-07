@@ -48,6 +48,14 @@ include_directories(vendor/glm)
 add_subdirectory(vendor/gorilla-audio/build)
 include_directories(vendor/gorilla-audio/include)
 
+# freetype2
+#find_package(Freetype REQUIRED)
+#include_directories(${FREETYPE_INCLUDE_DIR})
+
+# freetype-gl
+add_subdirectory(vendor/freetype-gl)
+include_directories(vendor/freetype-gl)
+
 include_directories(src/include)
 
 add_subdirectory(src)

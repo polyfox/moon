@@ -1,4 +1,5 @@
 #include "engine.hxx"
+#include "font.hxx"
 
 namespace Moon {
   Engine::Engine() : window(640, 480, "Hello World") {
@@ -27,6 +28,8 @@ namespace Moon {
     
     int ai = mrb_gc_arena_save(mrb);
 
+    Font font("resources/fonts/Vera.ttf", 16);
+
     while (!window.should_close())
     {
       Audio::update();
@@ -38,8 +41,10 @@ namespace Moon {
         break;
       };
 
-      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
-      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "render", 0);
+      font.draw_text(4, 16, L"A Quick Brown Fox Jumps Over The Lazy Dog 0123456789");
+
+      //mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
+      //mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "render", 0);
       mrb_gc_arena_restore(mrb, ai);
 
       window.update();
