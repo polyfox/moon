@@ -11,10 +11,9 @@ namespace Moon {
 
     texture = Texture::load(filename);
 
-    GLuint indices[4] = {0, 1, 3, 2}; // rendering indices
-
     glGenBuffers(1, &VBO);
 
+    GLuint indices[4] = {0, 1, 3, 2}; // rendering indices
     //Create IBO
     glGenBuffers(1, &IBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
@@ -61,11 +60,8 @@ namespace Moon {
   };
 
   Sprite::~Sprite() {
-    //Free VBO and IBO
-    if(VBO != 0) {
-      glDeleteBuffers(1, &VBO);
-      glDeleteBuffers(1, &IBO);
-    }
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &IBO);
   };
 
   void Sprite::render() {

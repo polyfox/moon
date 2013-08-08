@@ -11,10 +11,7 @@ namespace Moon {
   };
 
   Spritesheet::~Spritesheet() {
-    //Clear vertex buffer
-    if(VBO != 0) {
-      glDeleteBuffers(1, &VBO);
-    }
+    glDeleteBuffers(1, &VBO);
 
     //Clear index buffers
     if( mIndexBuffers != 0) {
@@ -31,8 +28,8 @@ namespace Moon {
       totalSprites = (tW/tileWidth)*(tH/tileHeight);
 
       // Allocate vertex buffer data
-      vertex* vertices = new vertex[ totalSprites * 4 ];
-      mIndexBuffers = new GLuint[ totalSprites ];
+      vertex* vertices = new vertex[totalSprites * 4];
+      mIndexBuffers = new GLuint[totalSprites];
 
       // Allocate vertex data buffer name
       glGenBuffers(1, &VBO);
@@ -41,7 +38,7 @@ namespace Moon {
       glGenBuffers(totalSprites, mIndexBuffers);
 
       // Go through clips
-      GLuint indices[4] = { 0, 0, 0, 0 };
+      GLuint indices[4] = {0, 0, 0, 0};
 
       for(int i = 0; i < totalSprites; ++i) {
         //Initialize indices
@@ -89,7 +86,7 @@ namespace Moon {
         vertices[ indices[2] ].tex_coord.v =  (oy + 1.0) / tiles_per_column;
 
         //Bind sprite index buffer data
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffers[ i ]);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffers[i]);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indices, GL_STATIC_DRAW);
       }
 
