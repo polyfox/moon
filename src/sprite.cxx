@@ -13,13 +13,6 @@ namespace Moon {
 
     texture = Texture::load(filename);
 
-    GLuint indices[4] = {0, 1, 3, 2}; // rendering indices
-    //Create IBO
-    glGenBuffers(1, &IBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
     // If the texture exists
     if(texture->id() != 0) {
       //Texture coordinates
@@ -52,20 +45,22 @@ namespace Moon {
         { {0.f, quadHeight},       {s0, t1} }
       };
 
-      VBO.push_back(vertices, 4);
+      GLuint indices[4] = {0, 1, 3, 2}; // rendering indices
+
+      VBO.push_back(vertices, 4, indices, 4);
       VBO.upload();
     };
   };
 
   Sprite::~Sprite() {
-    glDeleteBuffers(1, &IBO);
+
   };
 
   void Sprite::render() {
     //if(clip) {
     //  texture->render(x, y, z, opacity, &clip_rect);
     //} else {
-      texture->render(x, y, z, opacity, tone.get(), VBO, IBO);
+      texture->render(x, y, z, opacity, tone.get(), VBO);
     //}
   };
 };

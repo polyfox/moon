@@ -25,7 +25,6 @@ namespace Moon {
     std::shared_ptr<Texture> texture;
 
     VertexBuffer VBO;
-    GLuint IBO;
   };
 };
 

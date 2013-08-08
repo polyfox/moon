@@ -114,7 +114,7 @@ namespace Moon {
     };
   };
 
-  void Texture::render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, VertexBuffer &vbo, const GLuint &iboID) {
+  void Texture::render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, VertexBuffer &vbo) {
     if(texture_id != 0) {
       shader.use();
 
@@ -135,7 +135,7 @@ namespace Moon {
       glBindTexture(GL_TEXTURE_2D, texture_id);
       glUniform1i(shader.get_uniform("texture"), /*GL_TEXTURE*/0);
 
-      vbo.render(iboID, shader.get_attribute("vertex_pos"), shader.get_attribute("texcoord"));
+      vbo.render(shader.get_attribute("vertex_pos"), shader.get_attribute("texcoord"));
     };
   };
 
