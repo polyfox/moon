@@ -23,9 +23,12 @@ namespace Moon {
   bool Spritesheet::generate_buffers() {
     // If there is a texture loaded and clips to make vertex data from
     if(texture->id() != 0) {
-      GLfloat tW = texture->width();
-      GLfloat tH = texture->height();
-      totalSprites = (tW/tileWidth)*(tH/tileHeight);
+      GLfloat tiles_per_row, tiles_per_column;
+
+      tiles_per_row = texture->width() / tileWidth;
+      tiles_per_column = texture->height() / tileHeight;
+
+      totalSprites = tiles_per_row * tiles_per_column;
 
       // Allocate vertex buffer data
       vertex* vertices = new vertex[totalSprites * 4];
@@ -47,15 +50,8 @@ namespace Moon {
         indices[2] = i * 4 + 2;
         indices[3] = i * 4 + 3;
 
-        GLfloat ox;
-        GLfloat oy;
-        GLfloat tiles_per_row;
-        GLfloat tiles_per_column;
-
-        tiles_per_row = tW/tileWidth;
-        tiles_per_column = tH/tileHeight;
-        ox = (float)(i % (int)tiles_per_row);
-        oy = (float)(i / (int)tiles_per_row);
+        GLfloat ox = (float)(i % (int)tiles_per_row);
+        GLfloat oy = (float)(i / (int)tiles_per_row);
 
         // Top left
         vertices[ indices[0] ].pos.x = 0;
