@@ -41,14 +41,14 @@ namespace Moon {
       glGenBuffers(totalSprites, mIndexBuffers);
 
       // Go through clips
-      GLuint spriteIndices[4] = { 0, 0, 0, 0 };
+      GLuint indices[4] = { 0, 0, 0, 0 };
 
       for(int i = 0; i < totalSprites; ++i) {
         //Initialize indices
-        spriteIndices[0] = i * 4 + 0;
-        spriteIndices[1] = i * 4 + 1;
-        spriteIndices[2] = i * 4 + 2;
-        spriteIndices[3] = i * 4 + 3;
+        indices[0] = i * 4 + 0;
+        indices[1] = i * 4 + 1;
+        indices[2] = i * 4 + 2;
+        indices[3] = i * 4 + 3;
 
         GLfloat ox;
         GLfloat oy;
@@ -61,36 +61,36 @@ namespace Moon {
         oy = (float)(i / (int)tiles_per_row);
 
         // Top left
-        vertices[ spriteIndices[0] ].pos.x = 0;
-        vertices[ spriteIndices[0] ].pos.y = 0;
+        vertices[ indices[0] ].pos.x = 0;
+        vertices[ indices[0] ].pos.y = 0;
 
-        vertices[ spriteIndices[0] ].tex_coord.u =  (ox) / tiles_per_row;
-        vertices[ spriteIndices[0] ].tex_coord.v =  (oy) / tiles_per_column;
+        vertices[ indices[0] ].tex_coord.u =  (ox) / tiles_per_row;
+        vertices[ indices[0] ].tex_coord.v =  (oy) / tiles_per_column;
 
         // Top right
-        vertices[ spriteIndices[1] ].pos.x = tileWidth;
-        vertices[ spriteIndices[1] ].pos.y = 0;
+        vertices[ indices[1] ].pos.x = tileWidth;
+        vertices[ indices[1] ].pos.y = 0;
 
-        vertices[ spriteIndices[1] ].tex_coord.u =  (ox + 1.0) / tiles_per_row;
-        vertices[ spriteIndices[1] ].tex_coord.v =  (oy) / tiles_per_column;
+        vertices[ indices[1] ].tex_coord.u =  (ox + 1.0) / tiles_per_row;
+        vertices[ indices[1] ].tex_coord.v =  (oy) / tiles_per_column;
 
         // Bottom right
-        vertices[ spriteIndices[3] ].pos.x = tileWidth;
-        vertices[ spriteIndices[3] ].pos.y = tileHeight;
+        vertices[ indices[3] ].pos.x = tileWidth;
+        vertices[ indices[3] ].pos.y = tileHeight;
 
-        vertices[ spriteIndices[3] ].tex_coord.u =  (ox + 1.0) / tiles_per_row;
-        vertices[ spriteIndices[3] ].tex_coord.v =  (oy + 1.0) / tiles_per_column;
+        vertices[ indices[3] ].tex_coord.u =  (ox + 1.0) / tiles_per_row;
+        vertices[ indices[3] ].tex_coord.v =  (oy + 1.0) / tiles_per_column;
 
         // Bottom left
-        vertices[ spriteIndices[2] ].pos.x = 0;
-        vertices[ spriteIndices[2] ].pos.y = tileHeight;
+        vertices[ indices[2] ].pos.x = 0;
+        vertices[ indices[2] ].pos.y = tileHeight;
 
-        vertices[ spriteIndices[2] ].tex_coord.u =  (ox) / tiles_per_row;
-        vertices[ spriteIndices[2] ].tex_coord.v =  (oy + 1.0) / tiles_per_column;
+        vertices[ indices[2] ].tex_coord.u =  (ox) / tiles_per_row;
+        vertices[ indices[2] ].tex_coord.v =  (oy + 1.0) / tiles_per_column;
 
         //Bind sprite index buffer data
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffers[ i ]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), spriteIndices, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indices, GL_STATIC_DRAW);
       }
 
       //Bind vertex data
