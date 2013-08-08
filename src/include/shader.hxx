@@ -9,9 +9,6 @@ namespace Moon {
     Shader(const char *vertexfile, const char *fragmentfile);
     ~Shader();
 
-    void add_attribute(const char *attribute);
-    void add_uniform(const char *uniform);
-
     void   use();
     GLuint get_program();
     GLint  get_attribute(const char *name);

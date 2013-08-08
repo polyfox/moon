@@ -6,13 +6,6 @@ namespace Moon {
   : Cache(filename),
   shader("resources/shaders/quad.vert", "resources/shaders/quad.frag")
   {
-    shader.add_attribute("texcoord");
-    shader.add_attribute("vertex_pos");
-    shader.add_uniform("model_matrix");
-    shader.add_uniform("projection_matrix");
-    shader.add_uniform("opacity");
-    shader.add_uniform("tone");
-
     unsigned char* pixels;
     int channels;
 

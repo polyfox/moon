@@ -13,13 +13,6 @@ namespace Moon {
                                      L"`abcdefghijklmnopqrstuvwxyz{|}~");
 
     buffer = vertex_buffer_new("vertex_pos:2f,tex_coord:2f");
-
-    shader.add_uniform("texture");
-
-    shader.add_uniform("color");
-    shader.add_uniform("model_matrix");
-    shader.add_uniform("projection_matrix");
-    //shader.add_uniform("opacity");
   }
 
   Font::~Font() {
