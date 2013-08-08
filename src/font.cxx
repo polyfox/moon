@@ -8,7 +8,9 @@ namespace Moon {
     atlas = texture_atlas_new(512, 512, 1);
     font = texture_font_new(atlas, filename.c_str(), font_size);
 
-    texture_font_load_glyphs(font, L"A Quick Brown Fox Jumps Over The Lazy Dog 0123456789");
+    texture_font_load_glyphs(font, L" !\"#$%&'()*+,-./0123456789:;<=>?"
+                                     L"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
+                                     L"`abcdefghijklmnopqrstuvwxyz{|}~");
 
     buffer = vertex_buffer_new("vertex_pos:2f,tex_coord:2f");
 
@@ -26,8 +28,13 @@ namespace Moon {
     vertex_buffer_delete(buffer);
   }
 
-  void Font::draw_text(float x, float y, wchar_t *text) { /* text =  */
-    add_text(buffer, font, text);
+  void Font::draw_text(float x, float y, wchar_t *text) {
+    GLfloat color[4] = {1,1,1,1};
+    draw_text(x, y, text, color);
+  }
+
+  void Font::draw_text(float x, float y, wchar_t *text, GLfloat color[4]) {
+    add_text(text);
 
     shader.use();
 
@@ -35,7 +42,6 @@ namespace Moon {
 
     glUniform1i(shader.get_uniform("texture"), /*GL_TEXTURE*/0);
 
-    GLfloat color[4] = {1,1,1,1}; // TEMP PERMA (white)
     glUniform4fv(shader.get_uniform("color"), 1, color);
 
     //model matrix 
@@ -52,7 +58,6 @@ namespace Moon {
     vertex_buffer_render(buffer, GL_TRIANGLES);
 
     vertex_buffer_clear(buffer);
-    //texture_atlas_clear(atlas);
   }
 
   typedef struct {
@@ -60,7 +65,7 @@ namespace Moon {
     float s, t; // texture
   } vertex_t;
 
-  void Font::add_text(vertex_buffer_t *buffer, texture_font_t *font, wchar_t *text) {
+  void Font::add_text(wchar_t *text) {
     float cursor; // position of the write cursor
 
     for(size_t i = 0; i < wcslen(text); ++i) {
@@ -71,10 +76,10 @@ namespace Moon {
           kerning = texture_glyph_get_kerning(glyph, text[i-1]);
         }
         cursor += kerning;
-        float x0  = (int)(cursor + glyph->offset_x);
-        float y0  = (int)(glyph->offset_y);
-        float x1  = (int)(x0 + glyph->width);
-        float y1  = (int)(y0 - glyph->height);
+        float x0  = cursor + glyph->offset_x;
+        float y0  = glyph->offset_y;
+        float x1  = x0 + glyph->width;
+        float y1  = y0 - glyph->height;
 
         float s0 = glyph->s0;
         float t0 = glyph->t0;

@@ -14,13 +14,14 @@ namespace Moon {
     Font(std::string name, int font_size);
     ~Font();
 
-    void draw_text(float x, float y, wchar_t *text);
+    void draw_text(float x, float y, wchar_t *text); /* white text */
+    void draw_text(float x, float y, wchar_t *text, GLfloat color[4]);
   private:
     texture_font_t *font;
     texture_atlas_t *atlas;
 
     vertex_buffer_t *buffer; /* de-wrap this later */
-    void add_text(vertex_buffer_t *buffer, texture_font_t *font, wchar_t *text); /* temp */
+    void add_text(wchar_t *text); /* temp */
 
     Shader shader;
   };

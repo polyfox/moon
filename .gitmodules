@@ -8,6 +8,3 @@
 	path = vendor/soil
 	url = https://github.com/greenboxal/SOIL.git
   ignore = dirty
-[submodule "vendor/freetype2"]
-	path = vendor/freetype2
-	url = git://git.sv.nongnu.org/freetype/freetype2.git
