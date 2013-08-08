@@ -42,6 +42,7 @@ add_library(moon STATIC
   spritesheet.cxx
   texture.cxx
   tone.cxx
+  vertex_buffer.cxx
   window.cxx
 )
 

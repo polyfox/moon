@@ -3,6 +3,7 @@
 
 #include "moon.hxx"
 #include "texture.hxx"
+#include "vertex_buffer.hxx"
 #include "tone.hxx"
 
 namespace Moon {
@@ -23,7 +24,7 @@ namespace Moon {
   private:
     std::shared_ptr<Texture> texture;
 
-    GLuint VBO;
+    VertexBuffer VBO;
     GLuint IBO;
   };
 };

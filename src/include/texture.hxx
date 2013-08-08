@@ -2,42 +2,15 @@
 #define MOON_TEXTURE_H
 
 #include "moon.hxx"
+#include "graphics.hxx"
 #include "cache.hxx"
 #include "shader.hxx"
 #include <memory>
 #include "tone.hxx"
 
+#include "vertex_buffer.hxx"
+
 namespace Moon {
-
-  struct Rect {
-    GLfloat x;
-    GLfloat y;
-    GLfloat w;
-    GLfloat h;
-  };
-
-  struct vec2 {
-    GLfloat x;
-    GLfloat y;
-  };
-
-  struct uvMap {
-    GLfloat u;
-    GLfloat v;
-  };
-
-  struct Color {
-    GLfloat r;
-    GLfloat g;
-    GLfloat b;
-    GLfloat a;
-  };
-
-  struct vertex {
-    vec2  pos;
-    uvMap tex_coord;
-    Color color;
-  };
 
   class Texture: public Cache<Texture> {
   public:
@@ -45,6 +18,8 @@ namespace Moon {
 
     static std::shared_ptr<Texture> load(std::string filename);
     void render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, const GLuint &vboID, const GLuint &iboID);
+
+    void render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, VertexBuffer &vboID, const GLuint &iboID);
 
     GLuint width();
     GLuint height();

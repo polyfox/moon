@@ -1,7 +1,9 @@
 #include "sprite.hxx"
 
 namespace Moon {
-  Sprite::Sprite(std::string filename) {
+  Sprite::Sprite(std::string filename) 
+  : VBO(GL_DYNAMIC_DRAW) 
+  {
     x = 0;
     y = 0;
     z = 0.0;
@@ -10,8 +12,6 @@ namespace Moon {
     clip = false;
 
     texture = Texture::load(filename);
-
-    glGenBuffers(1, &VBO);
 
     GLuint indices[4] = {0, 1, 3, 2}; // rendering indices
     //Create IBO
@@ -52,15 +52,12 @@ namespace Moon {
         { {0.f, quadHeight},       {s0, t1} }
       };
 
-      //Update vertex buffer data
-      glBindBuffer(GL_ARRAY_BUFFER, VBO);
-      glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(vertex), vertices, GL_DYNAMIC_DRAW);
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      VBO.push_back(vertices, 4);
+      VBO.upload();
     };
   };
 
   Sprite::~Sprite() {
-    glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &IBO);
   };
 
