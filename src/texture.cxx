@@ -77,8 +77,8 @@ namespace Moon {
           2,                  // number of elements per vertex, here (x,y)
           GL_FLOAT,           // the type of each element
           GL_FALSE,           // take our values as-is
-          sizeof(VertexData2D),                  // stride
-          (GLvoid*)offsetof(VertexData2D, u)     // offset of first element
+          sizeof(vertex),                  // stride
+          (GLvoid*)offsetof(vertex, tex_coord)     // offset of first element
         );
 
         glVertexAttribPointer(
@@ -86,9 +86,18 @@ namespace Moon {
           2,                  // number of elements per vertex, here (x,y)
           GL_FLOAT,           // the type of each element
           GL_FALSE,           // take our values as-is
-          sizeof(VertexData2D),                  // stride
-          (GLvoid*)offsetof(VertexData2D, x)     // offset of first element
+          sizeof(vertex),                  // stride
+          (GLvoid*)offsetof(vertex, pos)   // offset of first element
         );
+
+        /*glVertexAttribPointer(
+          shader.get_attribute("color"), // attribute
+          2,                  // number of elements per vertex, here (x,y)
+          GL_FLOAT,           // the type of each element
+          GL_FALSE,           // take our values as-is
+          sizeof(vertex),                  // stride
+          (GLvoid*)offsetof(vertex, color)   // offset of first element
+        );*/
 
         glUniform1f(shader.get_uniform("opacity"), opacity);
 

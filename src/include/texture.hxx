@@ -16,7 +16,7 @@ namespace Moon {
     GLfloat h;
   };
 
-  struct VertexPos {
+  struct vec2 {
     GLfloat x;
     GLfloat y;
   };
@@ -26,23 +26,18 @@ namespace Moon {
     GLfloat v;
   };
 
-  struct VertexData2D {
-    GLfloat x;
-    GLfloat y;
-    GLfloat u;
-    GLfloat v;
+  struct Color {
+    GLfloat r;
+    GLfloat g;
+    GLfloat b;
+    GLfloat a;
   };
 
-  /* Thankfully, deleting the copy constructor on superclass deletes them
-    on the default subclass ones too. 
-
-     Adrinael │ geordi: { C c; C d(c); } struct B { B(const B&) = delete; B() {} };  struct C: B { C() {} };  // example one
-       geordi │ error: use of deleted function 'C::C(const C&)'
-     Adrinael │ geordi: { C c; C d(c); } struct B { B(const B&) = delete; B() {} };  struct C: B { C(const C&) : B() {}  C() {} };  // and how to get past that
-     Adrinael │ There!
-     Adrinael │ The default copy ctor will call base class's copy ctor, so in effect it's deleted
-
-    */
+  struct vertex {
+    vec2  pos;
+    uvMap tex_coord;
+    Color color;
+  };
 
   class Texture: public Cache<Texture> {
   public:

@@ -31,7 +31,7 @@ namespace Moon {
       totalSprites = (tW/tileWidth)*(tH/tileHeight);
 
       // Allocate vertex buffer data
-      VertexData2D* vertexData = new VertexData2D[ totalSprites * 4 ];
+      vertex* vertices = new vertex[ totalSprites * 4 ];
       mIndexBuffers = new GLuint[ totalSprites ];
 
       // Allocate vertex data buffer name
@@ -61,32 +61,32 @@ namespace Moon {
         oy = (float)(i / (int)tiles_per_row);
 
         // Top left
-        vertexData[ spriteIndices[0] ].x = 0;
-        vertexData[ spriteIndices[0] ].y = 0;
+        vertices[ spriteIndices[0] ].pos.x = 0;
+        vertices[ spriteIndices[0] ].pos.y = 0;
 
-        vertexData[ spriteIndices[0] ].u =  (ox) / tiles_per_row;
-        vertexData[ spriteIndices[0] ].v =  (oy) / tiles_per_column;
+        vertices[ spriteIndices[0] ].tex_coord.u =  (ox) / tiles_per_row;
+        vertices[ spriteIndices[0] ].tex_coord.v =  (oy) / tiles_per_column;
 
         // Top right
-        vertexData[ spriteIndices[1] ].x = tileWidth;
-        vertexData[ spriteIndices[1] ].y = 0;
+        vertices[ spriteIndices[1] ].pos.x = tileWidth;
+        vertices[ spriteIndices[1] ].pos.y = 0;
 
-        vertexData[ spriteIndices[1] ].u =  (ox + 1.0) / tiles_per_row;
-        vertexData[ spriteIndices[1] ].v =  (oy) / tiles_per_column;
+        vertices[ spriteIndices[1] ].tex_coord.u =  (ox + 1.0) / tiles_per_row;
+        vertices[ spriteIndices[1] ].tex_coord.v =  (oy) / tiles_per_column;
 
         // Bottom right
-        vertexData[ spriteIndices[3] ].x = tileWidth;
-        vertexData[ spriteIndices[3] ].y = tileHeight;
+        vertices[ spriteIndices[3] ].pos.x = tileWidth;
+        vertices[ spriteIndices[3] ].pos.y = tileHeight;
 
-        vertexData[ spriteIndices[3] ].u =  (ox + 1.0) / tiles_per_row;
-        vertexData[ spriteIndices[3] ].v =  (oy + 1.0) / tiles_per_column;
+        vertices[ spriteIndices[3] ].tex_coord.u =  (ox + 1.0) / tiles_per_row;
+        vertices[ spriteIndices[3] ].tex_coord.v =  (oy + 1.0) / tiles_per_column;
 
         // Bottom left
-        vertexData[ spriteIndices[2] ].x = 0;
-        vertexData[ spriteIndices[2] ].y = tileHeight;
+        vertices[ spriteIndices[2] ].pos.x = 0;
+        vertices[ spriteIndices[2] ].pos.y = tileHeight;
 
-        vertexData[ spriteIndices[2] ].u =  (ox) / tiles_per_row;
-        vertexData[ spriteIndices[2] ].v =  (oy + 1.0) / tiles_per_column;
+        vertices[ spriteIndices[2] ].tex_coord.u =  (ox) / tiles_per_row;
+        vertices[ spriteIndices[2] ].tex_coord.v =  (oy + 1.0) / tiles_per_column;
 
         //Bind sprite index buffer data
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIndexBuffers[ i ]);
@@ -95,10 +95,10 @@ namespace Moon {
 
       //Bind vertex data
       glBindBuffer(GL_ARRAY_BUFFER, VBO);
-      glBufferData(GL_ARRAY_BUFFER, totalSprites * 4 * sizeof(VertexData2D), vertexData, GL_STATIC_DRAW);
+      glBufferData(GL_ARRAY_BUFFER, totalSprites * 4 * sizeof(vertex), vertices, GL_STATIC_DRAW);
 
       //Deallocate vertex data
-      delete[] vertexData;
+      delete[] vertices;
     } else {   //Error
       if(texture->id() == 0) {
         printf("No texture to render with!\n");
