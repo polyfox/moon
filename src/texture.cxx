@@ -90,15 +90,6 @@ namespace Moon {
           (GLvoid*)offsetof(vertex, pos)   // offset of first element
         );
 
-        /*glVertexAttribPointer(
-          shader.get_attribute("color"), // attribute
-          2,                  // number of elements per vertex, here (x,y)
-          GL_FLOAT,           // the type of each element
-          GL_FALSE,           // take our values as-is
-          sizeof(vertex),                  // stride
-          (GLvoid*)offsetof(vertex, color)   // offset of first element
-        );*/
-
         glUniform1f(shader.get_uniform("opacity"), opacity);
 
         GLfloat hsl[3] = {tone->hue, tone->saturation, tone->lightness};
@@ -135,7 +126,7 @@ namespace Moon {
       glBindTexture(GL_TEXTURE_2D, texture_id);
       glUniform1i(shader.get_uniform("texture"), /*GL_TEXTURE*/0);
 
-      vbo.render(GL_TRIANGLE_STRIP, shader.get_attribute("vertex_pos"), shader.get_attribute("texcoord"));
+      vbo.render(GL_TRIANGLE_STRIP, shader.get_attribute("vertex_pos"), shader.get_attribute("texcoord"), -1); // -1 for color at the moment
     };
   };
 

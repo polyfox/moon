@@ -20,20 +20,26 @@ namespace Moon {
   }
 
   void Font::draw_text(float x, float y, wchar_t *text) {
-    GLfloat color[4] = {1,1,1,1};
+    Color color = {1.0,1.0,1.0,1.0};
     draw_text(x, y, text, color);
   }
 
-  void Font::draw_text(float x, float y, wchar_t *text, GLfloat color[4]) {
-    add_text(text);
+  void Font::draw_text(float x, float y, wchar_t *text, Color color) {
+
+    // outline
+    font->outline_type = 2;
+    font->outline_thickness = 1;
+    add_text(text, {0.0, 0.0, 0.0, 0.9});
+
+    font->outline_type = 0;
+    font->outline_thickness = 0;
+    add_text(text, color);
 
     shader.use();
 
     glBindTexture(GL_TEXTURE_2D, atlas->id);
 
     glUniform1i(shader.get_uniform("texture"), /*GL_TEXTURE*/0);
-
-    glUniform4fv(shader.get_uniform("color"), 1, color);
 
     //model matrix 
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down
@@ -46,12 +52,12 @@ namespace Moon {
     //projection matrix
     glUniformMatrix4fv(shader.get_uniform("projection_matrix"), 1, GL_FALSE, glm::value_ptr(Shader::projection_matrix));
 
-    buffer.render(GL_TRIANGLES, shader.get_attribute("vertex_pos"), shader.get_attribute("tex_coord"));
+    buffer.render(GL_TRIANGLES, shader.get_attribute("vertex_pos"), shader.get_attribute("tex_coord"), shader.get_attribute("color"));
     buffer.clear();
   }
 
-  void Font::add_text(wchar_t *text) {
-    float cursor; // position of the write cursor
+  void Font::add_text(wchar_t *text, Color c) {
+    float cursor = 0; // position of the write cursor
 
     for(size_t i = 0; i < wcslen(text); ++i) {
       texture_glyph_t *glyph = texture_font_get_glyph(font, text[i]);
@@ -72,10 +78,10 @@ namespace Moon {
         float t1 = glyph->t1;
 
         GLuint indices[6] = {0,1,2, 0,2,3};
-        vertex vertices[4] = { {x0,y0,  s0,t0},
-                               {x0,y1,  s0,t1},
-                               {x1,y1,  s1,t1},
-                               {x1,y0,  s1,t0} };
+        vertex vertices[4] = { {x0,y0,  s0,t0, c},
+                               {x0,y1,  s0,t1, c},
+                               {x1,y1,  s1,t1, c},
+                               {x1,y0,  s1,t0, c} };
         buffer.push_back(vertices, 4, indices, 6);
         cursor += glyph->advance_x;
       }

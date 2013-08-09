@@ -53,13 +53,13 @@ namespace Moon {
     dirty = false;
   }
 
-  void VertexBuffer::render(GLenum mode, GLint vertex_pos, GLint texcoord) {
+  void VertexBuffer::render(GLenum mode, GLint vertex_pos, GLint texcoord, GLint color) {
     if(dirty) upload(); // update the VBO and IBO if dirty
 
     //Enable vertex and texture coordinate arrays
     glEnableVertexAttribArray(vertex_pos);
     glEnableVertexAttribArray(texcoord);
-    //glEnableVertexAttribArray(color);
+    glEnableVertexAttribArray(color);
 
       //Bind vertex buffer
       glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
@@ -82,14 +82,14 @@ namespace Moon {
         (GLvoid*)offsetof(vertex, tex_coord)     // offset of first element
       );
 
-      /*glVertexAttribPointer(
+      glVertexAttribPointer(
         color,              // attribute
-        2,                  // number of elements per vertex, here (x,y)
+        4,                  // number of elements per vertex, here (x,y)
         GL_FLOAT,           // the type of each element
         GL_FALSE,           // take our values as-is
         sizeof(vertex),                  // stride
         (GLvoid*)offsetof(vertex, color)   // offset of first element
-      );*/
+      );
 
       //Draw quad using vertex data and index data
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id);
@@ -98,6 +98,6 @@ namespace Moon {
     //Disable vertex and texture coordinate arrays
     glDisableVertexAttribArray(vertex_pos);
     glDisableVertexAttribArray(texcoord);
-    // glDisableVertexAttribArray(color);
+    glDisableVertexAttribArray(color);
   }
 }
