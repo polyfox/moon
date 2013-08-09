@@ -3,7 +3,8 @@
 
 namespace Moon {
   Font::Font(std::string filename, int font_size) 
-  : shader("resources/shaders/text.vert", "resources/shaders/text.frag")
+  : shader("resources/shaders/text.vert", "resources/shaders/text.frag"),
+    buffer(GL_DYNAMIC_DRAW)
   {
     atlas = texture_atlas_new(512, 512, 1);
     font = texture_font_new(atlas, filename.c_str(), font_size);
@@ -11,14 +12,11 @@ namespace Moon {
     texture_font_load_glyphs(font, L" !\"#$%&'()*+,-./0123456789:;<=>?"
                                      L"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
                                      L"`abcdefghijklmnopqrstuvwxyz{|}~");
-
-    buffer = vertex_buffer_new("vertex_pos:2f,tex_coord:2f");
   }
 
   Font::~Font() {
     texture_font_delete(font);
     texture_atlas_delete(atlas);
-    vertex_buffer_delete(buffer);
   }
 
   void Font::draw_text(float x, float y, wchar_t *text) {
@@ -48,15 +46,9 @@ namespace Moon {
     //projection matrix
     glUniformMatrix4fv(shader.get_uniform("projection_matrix"), 1, GL_FALSE, glm::value_ptr(Shader::projection_matrix));
 
-    vertex_buffer_render(buffer, GL_TRIANGLES);
-
-    vertex_buffer_clear(buffer);
+    buffer.render(GL_TRIANGLES, shader.get_attribute("vertex_pos"), shader.get_attribute("tex_coord"));
+    buffer.clear();
   }
-
-  typedef struct {
-    float x, y; // position
-    float s, t; // texture
-  } vertex_t;
 
   void Font::add_text(wchar_t *text) {
     float cursor; // position of the write cursor
@@ -80,14 +72,15 @@ namespace Moon {
         float t1 = glyph->t1;
 
         GLuint indices[6] = {0,1,2, 0,2,3};
-        vertex_t vertices[4] = { { x0,y0,  s0,t0 },
-                                 { x0,y1,  s0,t1 },
-                                 { x1,y1,  s1,t1 },
-                                 { x1,y0,  s1,t0 } };
-        vertex_buffer_push_back( buffer, vertices, 4, indices, 6 );
+        vertex vertices[4] = { {x0,y0,  s0,t0},
+                               {x0,y1,  s0,t1},
+                               {x1,y1,  s1,t1},
+                               {x1,y0,  s1,t0} };
+        buffer.push_back(vertices, 4, indices, 6);
         cursor += glyph->advance_x;
       }
     }
+    buffer.upload();
   }
 
   /*GlyphMap::GlyphMap() {

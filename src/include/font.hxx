@@ -4,7 +4,7 @@
 #include "moon.hxx"
 #include "shader.hxx"
 #include "freetype-gl.h"
-#include "vertex-buffer.h"
+#include "vertex_buffer.hxx"
 
 // FT_Get_Kerning( face, prev_index, glyph_index, FT_KERNING_UNFITTED, &kerning );
 
@@ -20,7 +20,7 @@ namespace Moon {
     texture_font_t *font;
     texture_atlas_t *atlas;
 
-    vertex_buffer_t *buffer; /* de-wrap this later */
+    VertexBuffer buffer;
     void add_text(wchar_t *text); /* temp */
 
     Shader shader;

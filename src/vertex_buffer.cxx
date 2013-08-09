@@ -32,6 +32,12 @@ namespace Moon {
           std::bind2nd(std::plus<GLuint>(), size));
   }
 
+  void VertexBuffer::clear() {
+    vertices.clear();
+    indices.clear();
+    upload();
+  }
+
   // upload the buffer to the GPU
   void VertexBuffer::upload() {
     glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
@@ -41,7 +47,7 @@ namespace Moon {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices.front(), usage);
   }
 
-  void VertexBuffer::render(GLint vertex_pos, GLint texcoord) {
+  void VertexBuffer::render(GLenum mode, GLint vertex_pos, GLint texcoord) {
     //Enable vertex and texture coordinate arrays
     glEnableVertexAttribArray(vertex_pos);
     glEnableVertexAttribArray(texcoord);
@@ -79,7 +85,7 @@ namespace Moon {
 
       //Draw quad using vertex data and index data
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id);
-      glDrawElements(GL_TRIANGLE_STRIP, indices.size(), GL_UNSIGNED_INT, NULL);
+      glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, NULL);
 
     //Disable vertex and texture coordinate arrays
     glDisableVertexAttribArray(vertex_pos);

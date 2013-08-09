@@ -42,8 +42,6 @@ set(FREETYPE_GL_SRC freetype-gl.h
                      opengl.h
                      texture-atlas.c    texture-atlas.h
                      texture-font.c     texture-font.h
-                     vertex-buffer.c    vertex-buffer.h
-                     vertex-attribute.c vertex-attribute.h
                      vector.c           vector.h
                      platform.c         platform.h)
 
