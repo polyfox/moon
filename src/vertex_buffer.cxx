@@ -5,6 +5,7 @@ namespace Moon {
     this->usage = usage;
     glGenBuffers(1, &vbo_id);
     glGenBuffers(1, &ibo_id);
+    dirty = false;
   }
 
   VertexBuffer::~VertexBuffer() {
@@ -15,6 +16,7 @@ namespace Moon {
   void VertexBuffer::push_back(vertex v) {
     vertices.push_back(v);
     indices.push_back(indices.size());
+    dirty = true;
   }
 
   void VertexBuffer::push_back(vertex *v, int vertex_count, GLuint i[], int index_count) {
@@ -30,6 +32,8 @@ namespace Moon {
     // pushed, and we want them to be set on a global range.
     std::transform(indices.end()-index_count, indices.end(), indices.end()-index_count,
           std::bind2nd(std::plus<GLuint>(), size));
+
+    dirty = true;
   }
 
   void VertexBuffer::clear() {
@@ -45,9 +49,12 @@ namespace Moon {
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices.front(), usage);
+    dirty = false;
   }
 
   void VertexBuffer::render(GLenum mode, GLint vertex_pos, GLint texcoord) {
+    if(dirty) upload(); // update the VBO and IBO if dirty
+
     //Enable vertex and texture coordinate arrays
     glEnableVertexAttribArray(vertex_pos);
     glEnableVertexAttribArray(texcoord);

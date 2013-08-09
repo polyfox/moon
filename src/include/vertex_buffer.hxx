@@ -22,6 +22,7 @@ namespace Moon {
     GLuint ibo_id;
 
     GLenum usage;
+    bool dirty; // do we need to reupload?
 
     std::vector<vertex> vertices;
     std::vector<GLuint> indices;

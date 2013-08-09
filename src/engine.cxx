@@ -41,11 +41,11 @@ namespace Moon {
         break;
       };
 
-      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
-      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "render", 0);
+      //mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
+      //mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "render", 0);
       mrb_gc_arena_restore(mrb, ai);
 
-      //font.draw_text(4, 16, L"A Quick Brown Fox Jumps Over The Lazy Dog 0123456789");
+      font.draw_text(4, 16, L"A Quick Brown Fox Jumps Over The Lazy Dog 0123456789");
 
       window.update();
     }

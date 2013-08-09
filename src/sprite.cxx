@@ -48,7 +48,6 @@ namespace Moon {
       GLuint indices[4] = {0, 1, 3, 2}; // rendering indices
 
       VBO.push_back(vertices, 4, indices, 4);
-      VBO.upload();
     };
   };
 
