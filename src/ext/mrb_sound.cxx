@@ -8,7 +8,7 @@ namespace Moon {
   };
 
   const struct mrb_data_type sound_data_type = {
-    "sound", moon_mrb_sound_deallocate,
+    "Sound", moon_mrb_sound_deallocate,
   };
 
   static mrb_value moon_mrb_sound_new(mrb_state *mrb, mrb_value klass) {

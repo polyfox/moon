@@ -11,11 +11,13 @@
 #include <mruby/string.h>
 
 namespace Moon {
+  extern const struct mrb_data_type font_data_type;
   extern const struct mrb_data_type sound_data_type;
   extern const struct mrb_data_type sprite_data_type;
   extern const struct mrb_data_type spritesheet_data_type;
   extern const struct mrb_data_type tone_data_type;
 
+  void moon_mrb_font_init(mrb_state *mrb);
   void moon_mrb_input_init(mrb_state *mrb);
   void moon_mrb_sprite_init(mrb_state *mrb);
   void moon_mrb_spritesheet_init(mrb_state *mrb);

@@ -7,7 +7,7 @@ namespace Moon {
   };
 
   const struct mrb_data_type spritesheet_data_type = {
-    "spritesheet", moon_mrb_spritesheet_deallocate,
+    "Spritesheet", moon_mrb_spritesheet_deallocate,
   };
 
   static mrb_value moon_mrb_spritesheet_new(mrb_state *mrb, mrb_value klass) {

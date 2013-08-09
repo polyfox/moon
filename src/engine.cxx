@@ -3,6 +3,8 @@
 
 namespace Moon {
   Engine::Engine() : window(640, 480, "Hello World") {
+    std::setlocale(LC_ALL, "en_US.UTF-8"); // set locale to UTF-8
+
     setup_opengl();
 
     // setup Input engine
@@ -28,8 +30,6 @@ namespace Moon {
     
     int ai = mrb_gc_arena_save(mrb);
 
-    Font font("resources/fonts/Vera.ttf", 16);
-
     while (!window.should_close())
     {
       Audio::update();
@@ -44,8 +44,6 @@ namespace Moon {
       mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
       mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "render", 0);
       mrb_gc_arena_restore(mrb, ai);
-
-      font.draw_text(4, 16, L"A Quick Brown Fox Jumps Over The Lazy Dog 0123456789");
 
       window.update();
     }

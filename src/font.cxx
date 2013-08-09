@@ -19,12 +19,12 @@ namespace Moon {
     texture_atlas_delete(atlas);
   }
 
-  void Font::draw_text(float x, float y, wchar_t *text) {
+  void Font::draw_text(float x, float y, const wchar_t *text) {
     Color color = {1.0,1.0,1.0,1.0};
     draw_text(x, y, text, color);
   }
 
-  void Font::draw_text(float x, float y, wchar_t *text, Color color) {
+  void Font::draw_text(float x, float y, const wchar_t *text, Color color) {
 
     // outline
     font->outline_type = 2;
@@ -56,7 +56,7 @@ namespace Moon {
     buffer.clear();
   }
 
-  void Font::add_text(wchar_t *text, Color c) {
+  void Font::add_text(const wchar_t *text, Color c) {
     float cursor = 0; // position of the write cursor
 
     for(size_t i = 0; i < wcslen(text); ++i) {
