@@ -26,9 +26,7 @@ namespace Moon
     mrb_get_args(mrb, "ffz", &x, &y, &str);
 
     // convert to wide char (UTF-8)
-    int length = mbstowcs(0, str, 0);
-    wchar_t * text = new wchar_t[length+1];
-    mbstowcs(text, str, length+1);
+    wchar_t *text = char_to_utf8(str);
 
     Font *font;
     Data_Get_Struct(mrb, self, &font_data_type, font);
