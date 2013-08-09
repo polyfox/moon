@@ -20,10 +20,11 @@ namespace Moon {
   }
 
   void VertexBuffer::push_back(vertex *v, int vertex_count, GLuint i[], int index_count) {
+    int size = vertices.size();
+
     vertices.reserve(vertex_count);
     std::copy(v, v+vertex_count, std::back_inserter(vertices));
 
-    int size = indices.size();
     indices.reserve(index_count);
     std::copy(i, i+index_count, std::back_inserter(indices));
 

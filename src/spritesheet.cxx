@@ -108,6 +108,6 @@ namespace Moon {
       Tone tone;
       texture->render(x, y, z, 1.0, &tone, VBO, mIndexBuffers[index]);
     };
-
   };
+
 };

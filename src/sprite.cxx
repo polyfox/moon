@@ -60,6 +60,6 @@ namespace Moon {
     //  texture->render(x, y, z, opacity, &clip_rect);
     //} else {
       texture->render(x, y, z, opacity, tone.get(), VBO);
-    //}
+     //}
   };
 };
