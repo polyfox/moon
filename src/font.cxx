@@ -62,7 +62,7 @@ namespace Moon {
     for(size_t i = 0; i < wcslen(text); ++i) {
       texture_glyph_t *glyph = texture_font_get_glyph(font, text[i]);
       if(glyph != NULL) {
-        int kerning = 0;
+        float kerning = 0;
         if(i > 0) {
           kerning = texture_glyph_get_kerning(glyph, text[i-1]);
         }
