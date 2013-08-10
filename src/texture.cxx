@@ -55,10 +55,9 @@ namespace Moon {
 
       //model matrix - move it to the correct position in the world
       glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
-      glUniformMatrix4fv(shader.get_uniform("model_matrix"), 1, GL_FALSE, glm::value_ptr(model_matrix));
-
-      //projection matrix
-      glUniformMatrix4fv(shader.get_uniform("projection_matrix"), 1, GL_FALSE, glm::value_ptr(Shader::projection_matrix));
+      // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
+      glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
+      glUniformMatrix4fv(shader.get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
       //Set texture ID
       glActiveTexture(GL_TEXTURE0);
@@ -111,10 +110,9 @@ namespace Moon {
 
       //model matrix - move it to the correct position in the world
       glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
-      glUniformMatrix4fv(shader.get_uniform("model_matrix"), 1, GL_FALSE, glm::value_ptr(model_matrix));
-
-      //projection matrix
-      glUniformMatrix4fv(shader.get_uniform("projection_matrix"), 1, GL_FALSE, glm::value_ptr(Shader::projection_matrix));
+      // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
+      glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
+      glUniformMatrix4fv(shader.get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
       glUniform1f(shader.get_uniform("opacity"), opacity);
 

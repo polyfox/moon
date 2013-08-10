@@ -47,10 +47,9 @@ namespace Moon {
       180.0f, 
       glm::vec3(1.0f, 0.0f, 0.0f)
     );
-    glUniformMatrix4fv(shader.get_uniform("model_matrix"), 1, GL_FALSE, glm::value_ptr(model_matrix));
-
-    //projection matrix
-    glUniformMatrix4fv(shader.get_uniform("projection_matrix"), 1, GL_FALSE, glm::value_ptr(Shader::projection_matrix));
+    // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
+    glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
+    glUniformMatrix4fv(shader.get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
     buffer.render(GL_TRIANGLES, shader.get_attribute("vertex_pos"), shader.get_attribute("tex_coord"), shader.get_attribute("color"));
     buffer.clear();

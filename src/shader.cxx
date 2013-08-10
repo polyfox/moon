@@ -4,6 +4,7 @@
 
 namespace Moon {
   glm::mat4 Shader::projection_matrix = glm::mat4(1.0f);
+  glm::mat4 Shader::view_matrix = glm::mat4(1.0f);
 
   /**
    * Store all the file's contents in memory, useful to pass shaders
