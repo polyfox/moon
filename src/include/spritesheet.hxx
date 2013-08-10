@@ -7,8 +7,8 @@
 namespace Moon {
   class Spritesheet {
   public:
-    GLfloat tileWidth;
-    GLfloat tileHeight;
+    GLfloat tile_width;
+    GLfloat tile_height;
 
     Spritesheet(std::string filename, int tile_width, int tile_height);
     ~Spritesheet();
@@ -19,9 +19,9 @@ namespace Moon {
 
     // VBO data
     GLuint  VBO;
-    GLuint* mIndexBuffers;
+    GLuint* index_buffers;
 
-    int totalSprites;
+    int total_sprites;
 
     std::shared_ptr<Texture> texture;
   };

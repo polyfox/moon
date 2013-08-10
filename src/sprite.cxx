@@ -22,8 +22,8 @@ namespace Moon {
       GLfloat t1 = 1.f;
 
       //Vertex coordinates
-      GLfloat quadWidth = texture->width();
-      GLfloat quadHeight = texture->height();
+      GLfloat width = texture->width();
+      GLfloat height = texture->height();
 
       //Handle clipping
       /*if(clip != NULL) {
@@ -34,15 +34,15 @@ namespace Moon {
         t1 = (clip->y + clip->h) / texture_height;
 
         //Vertex coordinates
-        quadWidth = clip->w;
-        quadHeight = clip->h;
+        width = clip->w;
+        height = clip->h;
       }*/
 
       vertex vertices[4] = {
-        { {0.f, 0.f},              {s0, t0} },
-        { {quadWidth, 0.f},        {s1, t0} },
-        { {quadWidth, quadHeight}, {s1, t1} },
-        { {0.f, quadHeight},       {s0, t1} }
+        { {0.f,   0.f},    {s0, t0} },
+        { {width, 0.f},    {s1, t0} },
+        { {width, height}, {s1, t1} },
+        { {0.f,   height}, {s0, t1} }
       };
 
       GLuint indices[4] = {0, 1, 3, 2}; // rendering indices

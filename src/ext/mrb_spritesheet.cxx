@@ -33,13 +33,13 @@ namespace Moon {
   static mrb_value moon_mrb_spritesheet_cell_width(mrb_state *mrb, mrb_value self) {
     Spritesheet *spritesheet;
     Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
-    return mrb_fixnum_value((int)spritesheet->tileWidth);
+    return mrb_fixnum_value((int)spritesheet->tile_width);
   }
 
   static mrb_value moon_mrb_spritesheet_cell_height(mrb_state *mrb, mrb_value self) {
     Spritesheet *spritesheet;
     Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
-    return mrb_fixnum_value((int)spritesheet->tileHeight);
+    return mrb_fixnum_value((int)spritesheet->tile_height);
   }
 
   void moon_mrb_spritesheet_init(mrb_state *mrb) {

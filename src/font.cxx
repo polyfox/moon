@@ -85,7 +85,6 @@ namespace Moon {
         cursor += glyph->advance_x;
       }
     }
-    buffer.upload();
   }
 
   /*GlyphMap::GlyphMap() {
