@@ -4,15 +4,18 @@
 # This may need to be rewritten in C/++
 class Tilemap
 
-  attr_accessor :tileset # Spritesheet
-  attr_accessor :data    # DataMatrix
+  attr_accessor :tileset    # Spritesheet
+  attr_accessor :data       # DataMatrix
+  attr_accessor :data_zmap  # DataMatrix
+  attr_accessor :repeat_map # Boolean
 
   ##
   # initialize
   def initialize
-    @tileset = nil
-    @data = nil
-    @loop_data = false
+    @tileset    = nil
+    @data       = nil
+    @data_zmap  = nil
+    @repeat_map = false
   end
 
   ##
@@ -31,7 +34,7 @@ class Tilemap
     # we loop by layer
     layers.times do |l|
       dz = l + oz # offset data z index
-      if @loop_data
+      if @repeat_map
         dz %= @data.zsize
       else
         next if dz < 0 || dz >= @data.zsize
@@ -39,7 +42,7 @@ class Tilemap
       # and then by row
       height.times do |i|
         dy = i + oy # offset data y index
-        if @loop_data
+        if @repeat_map
           dy %= @data.ysize
         else
           next if dy < 0 || dy >= @data.ysize
@@ -47,15 +50,15 @@ class Tilemap
         # and then render by cell
         width.times do |j|
           dx = j + ox # offset data x index
-          if @loop_data
+          if @repeat_map
             dx %= @data.xsize
           else
             next if dx < 0 || dx >= @data.xsize
           end
           tile_id = @data[dx, dy, dz]
           next if tile_id < 0 # if -1 or less, then its a negative tile and therefore should not be rendered
-          # TODO add a @data_zmap, to have custom z heights in rendering
-          @tileset.render(x + j * cell_width, y + i * cell_height, z, tile_id)
+          zm = @data_zmap ? @data_zmap[x, y, z] : 0
+          @tileset.render(x + j * cell_width, y + i * cell_height, z + zm, tile_id)
         end
       end
     end
