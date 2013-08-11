@@ -36,11 +36,17 @@ class Table
     end
   end
 
-  def map_with_xy!
+  def each_with_xy
     @ysize.times do |y|
       @xsize.times do |x|
         @data[y][x] = yield @data[y][x], x, y
       end
+    end
+  end
+
+  def map_with_xy!
+    each_with_xy do |n, x, y|
+      @data[y][x] = yield @data[y][x], x, y
     end
   end
 

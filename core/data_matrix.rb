@@ -34,13 +34,19 @@ class DataMatrix
     end
   end
 
-  def map_with_xyz!
+  def each_with_xyz
     @zsize.times do |z|
       @ysize.times do |y|
         @xsize.times do |x|
-          @data[z][y][x] = yield @data[z][y][x], x, y, z
+          yield @data[z][y][x], x, y, z
         end
       end
+    end
+  end
+
+  def map_with_xyz!
+    each_with_xyz do |n, x, y, z|
+      @data[z][y][x] = yield @data[z][y][x], x, y, z
     end
   end
 
