@@ -21,10 +21,10 @@
 
 namespace Moon {
 
-  template <class Object>
+  template <class Object, class Key = std::string>
   class Cache {
   public:
-    Cache(std::string const& key) {
+    Cache(Key const& key) {
       printf("added %s to cache\n", key.c_str());
       this->_key = key;
       //Cache::_cache[key] = this->shared_from_this(); // Note: override previous resource of same key, if any
@@ -39,17 +39,17 @@ namespace Moon {
     Cache(Cache<Object> const&) = delete;
     Cache& operator=(Cache<Object> const&) = delete;
 
-    static std::shared_ptr<Object> get(std::string const& key) {
+    static std::shared_ptr<Object> get(Key const& key) {
       auto const it = _cache.find(key);
       if (it == _cache.end()) { return std::shared_ptr<Object>(); }
 
       return std::static_pointer_cast<Object>(it->second.lock());
     };
   protected:
-    std::string _key;
-    static std::unordered_map<std::string, std::weak_ptr<Cache<Object>>> _cache;
+    Key _key;
+    static std::unordered_map<Key, std::weak_ptr<Cache<Object, Key>>> _cache;
   };
-  template <class Object>
-  std::unordered_map<std::string, std::weak_ptr<Cache<Object>>> Cache<Object>::_cache;
+  template <class Object, class Key>
+  std::unordered_map<Key, std::weak_ptr<Cache<Object, Key>>> Cache<Object, Key>::_cache;
 
 }
