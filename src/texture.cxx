@@ -6,13 +6,6 @@ namespace Moon {
   : Cache(filename),
   shader("resources/shaders/quad.vert", "resources/shaders/quad.frag")
   {
-    shader.add_attribute("texcoord");
-    shader.add_attribute("vertex_pos");
-    shader.add_uniform("model_matrix");
-    shader.add_uniform("projection_matrix");
-    shader.add_uniform("opacity");
-    shader.add_uniform("tone");
-
     unsigned char* pixels;
     int channels;
 
@@ -62,10 +55,9 @@ namespace Moon {
 
       //model matrix - move it to the correct position in the world
       glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
-      glUniformMatrix4fv(shader.get_uniform("model_matrix"), 1, GL_FALSE, glm::value_ptr(model_matrix));
-
-      //projection matrix
-      glUniformMatrix4fv(shader.get_uniform("projection_matrix"), 1, GL_FALSE, glm::value_ptr(Shader::projection_matrix));
+      // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
+      glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
+      glUniformMatrix4fv(shader.get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
       //Set texture ID
       glActiveTexture(GL_TEXTURE0);
@@ -84,8 +76,8 @@ namespace Moon {
           2,                  // number of elements per vertex, here (x,y)
           GL_FLOAT,           // the type of each element
           GL_FALSE,           // take our values as-is
-          sizeof(VertexData2D),                  // stride
-          (GLvoid*)offsetof(VertexData2D, u)     // offset of first element
+          sizeof(vertex),                  // stride
+          (GLvoid*)offsetof(vertex, tex_coord)     // offset of first element
         );
 
         glVertexAttribPointer(
@@ -93,8 +85,8 @@ namespace Moon {
           2,                  // number of elements per vertex, here (x,y)
           GL_FLOAT,           // the type of each element
           GL_FALSE,           // take our values as-is
-          sizeof(VertexData2D),                  // stride
-          (GLvoid*)offsetof(VertexData2D, x)     // offset of first element
+          sizeof(vertex),                  // stride
+          (GLvoid*)offsetof(vertex, pos)   // offset of first element
         );
 
         glUniform1f(shader.get_uniform("opacity"), opacity);
@@ -109,6 +101,30 @@ namespace Moon {
       //Disable vertex and texture coordinate arrays
       glDisableVertexAttribArray(shader.get_attribute("vertex_pos"));
       glDisableVertexAttribArray(shader.get_attribute("texcoord"));
+    };
+  };
+
+  void Texture::render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, VertexBuffer &vbo) {
+    if(texture_id != 0) {
+      shader.use();
+
+      //model matrix - move it to the correct position in the world
+      glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
+      // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
+      glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
+      glUniformMatrix4fv(shader.get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+
+      glUniform1f(shader.get_uniform("opacity"), opacity);
+
+      GLfloat hsl[3] = {tone->hue, tone->saturation, tone->lightness};
+      glUniform3fv(shader.get_uniform("tone"), 1, hsl);
+
+      //Set texture ID
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, texture_id);
+      glUniform1i(shader.get_uniform("texture"), /*GL_TEXTURE*/0);
+
+      vbo.render(GL_TRIANGLE_STRIP, shader.get_attribute("vertex_pos"), shader.get_attribute("texcoord"), -1); // -1 for color at the moment
     };
   };
 

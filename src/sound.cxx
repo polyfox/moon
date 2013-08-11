@@ -1,7 +1,7 @@
 #include "sound.hxx"
 
 namespace Moon {
-  
+
   Sound::Sound(std::string filename, std::string format) {
     if (exists(filename)) {
       sound = gau_load_sound_file(filename.c_str(), format.c_str());

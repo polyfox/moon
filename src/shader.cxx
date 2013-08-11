@@ -4,6 +4,7 @@
 
 namespace Moon {
   glm::mat4 Shader::projection_matrix = glm::mat4(1.0f);
+  glm::mat4 Shader::view_matrix = glm::mat4(1.0f);
 
   /**
    * Store all the file's contents in memory, useful to pass shaders
@@ -145,26 +146,30 @@ namespace Moon {
     glDeleteProgram(_program);
   };
 
-  void Shader::add_attribute(const char *name) {
-    GLint attribute = glGetAttribLocation(_program, name);
-    if(attribute == -1)
-      fprintf(stderr, "Could not bind attribute %s\n", name);
-    _attributeList[name] = attribute;  
-  }
-
   GLint Shader::get_attribute(const char *name) {
-    return _attributeList[name];
-  }
-
-  void Shader::add_uniform(const char *name) {
-    GLint uniform = glGetUniformLocation(_program, name);
-    if(uniform == -1)
-      fprintf(stderr, "Could not bind uniform %s\n", name);
-    _uniformLocationList[name] = uniform;
+    try {
+      return _attributeList.at(name);
+    }
+    catch (const std::out_of_range& oor) { // attribute not found, load it!
+      GLint attribute = glGetAttribLocation(_program, name);
+      if(attribute == -1)
+        fprintf(stderr, "Could not bind attribute %s\n", name);
+      _attributeList[name] = attribute;
+      return attribute;
+    }
   }
 
   GLint Shader::get_uniform(const char *name) {
-    return _uniformLocationList[name];
+    try {
+      return _uniformLocationList.at(name);
+    }
+    catch (const std::out_of_range& oor) { // uniform not found, load it!
+      GLint uniform = glGetUniformLocation(_program, name);
+      if(uniform == -1)
+        fprintf(stderr, "Could not bind uniform %s\n", name);
+      _uniformLocationList[name] = uniform;
+      return uniform;
+    }
   }
 
   GLuint Shader::get_program() {

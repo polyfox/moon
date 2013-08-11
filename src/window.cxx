@@ -12,7 +12,8 @@ namespace Moon {
     // Use OpenGL Core v2.1
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for 3.0
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // for 3.0 and on
 
     window = glfwCreateWindow(width, height, title, NULL, NULL);
     window_width = width;

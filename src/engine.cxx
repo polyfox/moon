@@ -1,7 +1,10 @@
 #include "engine.hxx"
+#include "font.hxx"
 
 namespace Moon {
   Engine::Engine() : window(640, 480, "Hello World") {
+    std::setlocale(LC_ALL, "en_US.UTF-8"); // set locale to UTF-8
+
     setup_opengl();
 
     // setup Input engine
