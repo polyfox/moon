@@ -12,7 +12,7 @@ namespace Moon {
     VertexBuffer(GLenum usage); // STATIC_DRAW, DYNAMIC_DRAW...
     ~VertexBuffer();
 
-    void render(GLenum mode, GLint vertex_pos, GLint texcoord, GLint color);
+    void render(GLenum mode);
     void push_back(vertex v);
     void push_back(vertex *v, int vertex_count, GLuint i[], int index_count);
     void clear();

@@ -53,40 +53,40 @@ namespace Moon {
     dirty = false;
   }
 
-  void VertexBuffer::render(GLenum mode, GLint vertex_pos, GLint texcoord, GLint color) {
+  void VertexBuffer::render(GLenum mode) {
     if(dirty) upload(); // update the VBO and IBO if dirty
 
     //Enable vertex and texture coordinate arrays
-    glEnableVertexAttribArray(vertex_pos);
-    glEnableVertexAttribArray(texcoord);
-    glEnableVertexAttribArray(color);
+    glEnableVertexAttribArray(0); // location=0 --> vertex position
+    glEnableVertexAttribArray(1); // location=1 --> texture coordinates
+    glEnableVertexAttribArray(2); // location=2 --> color
 
       //Bind vertex buffer
       glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
 
       glVertexAttribPointer(
-        vertex_pos,  // attribute
-        2,                  // number of elements per vertex, here (x,y)
-        GL_FLOAT,           // the type of each element
-        GL_FALSE,           // take our values as-is
+        0,             // attribute
+        2,             // number of elements per vertex, here (x,y)
+        GL_FLOAT,      // the type of each element
+        GL_FALSE,      // take our values as-is
         sizeof(vertex),                  // stride
         (GLvoid*)offsetof(vertex, pos)   // offset of first element
       );
 
       glVertexAttribPointer(
-        texcoord,    // attribute
-        2,                  // number of elements per vertex, here (x,y)
-        GL_FLOAT,           // the type of each element
-        GL_FALSE,           // take our values as-is
+        1,             // attribute
+        2,             // number of elements per vertex, here (x,y)
+        GL_FLOAT,      // the type of each element
+        GL_FALSE,      // take our values as-is
         sizeof(vertex),                  // stride
         (GLvoid*)offsetof(vertex, tex_coord)     // offset of first element
       );
 
       glVertexAttribPointer(
-        color,              // attribute
-        4,                  // number of elements per vertex, here (x,y)
-        GL_FLOAT,           // the type of each element
-        GL_FALSE,           // take our values as-is
+        2,             // attribute
+        4,             // number of elements per vertex, here (x,y)
+        GL_FLOAT,      // the type of each element
+        GL_FALSE,      // take our values as-is
         sizeof(vertex),                  // stride
         (GLvoid*)offsetof(vertex, color)   // offset of first element
       );
@@ -96,8 +96,8 @@ namespace Moon {
       glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, NULL);
 
     //Disable vertex and texture coordinate arrays
-    glDisableVertexAttribArray(vertex_pos);
-    glDisableVertexAttribArray(texcoord);
-    glDisableVertexAttribArray(color);
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
   }
 }

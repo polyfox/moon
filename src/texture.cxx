@@ -124,7 +124,7 @@ namespace Moon {
       glBindTexture(GL_TEXTURE_2D, texture_id);
       glUniform1i(shader.get_uniform("texture"), /*GL_TEXTURE*/0);
 
-      vbo.render(GL_TRIANGLE_STRIP, shader.get_attribute("vertex_pos"), shader.get_attribute("texcoord"), -1); // -1 for color at the moment
+      vbo.render(GL_TRIANGLE_STRIP);
     };
   };
 
