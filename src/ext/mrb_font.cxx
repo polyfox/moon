@@ -1,7 +1,7 @@
 #include "mrb.hxx"
 #include "font.hxx"
 
-namespace Moon 
+namespace Moon
 {
   static void moon_mrb_font_deallocate(mrb_state *mrb, void *p) {
     delete((Font*)p);
@@ -37,11 +37,18 @@ namespace Moon
     return mrb_nil_value();
   };
 
+  static mrb_value moon_mrb_font_size(mrb_state *mrb, mrb_value self) {
+    Font *font;
+    Data_Get_Struct(mrb, self, &font_data_type, font);
+    return mrb_fixnum_value(font->size());
+  }
+
   void moon_mrb_font_init(mrb_state *mrb) {
     struct RClass *font_class;
     font_class = mrb_define_class(mrb, "Font", mrb->object_class);
 
     mrb_define_class_method(mrb, font_class, "new", moon_mrb_font_new, MRB_ARGS_REQ(2));
     mrb_define_method(mrb, font_class, "draw_text", moon_mrb_font_draw_text, MRB_ARGS_REQ(3));
+    mrb_define_method(mrb, font_class, "size",      moon_mrb_font_size, MRB_ARGS_NONE());
   }
 }

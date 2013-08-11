@@ -218,7 +218,7 @@ class MoonPlayer < Container
     @spritesheet_128x16.render(@title.x, @title.y, 0, 10)
     @spritesheet_128x16.render(@seekbar.x, @seekbar.y, 0, Music.finished? ? 9 : 8)
     @spritesheet_16x16.render(@seek.x, @seek.y, 0, Music.playing? ? 10 : 11)
-    @text.draw_text(@title.x, @title.y + 12, @music.basename)
+    @text.draw_text(@title.x, @title.y + @text.size, @music.basename)
   end
 
   def update

@@ -121,7 +121,7 @@ class State_Snake < State
       @spritesheet.render(@field.x + x * @cell_width,
                           @field.y + y * @cell_height, 1, sp_i)
     end
-    @text_score.draw_text(0, 24, @points_s)
+    @text_score.draw_text(0, @text_score.size, @points_s)
   end
 
   def update
