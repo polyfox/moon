@@ -1,6 +1,6 @@
 #
 # moon/core/state/snake
-#
+#   A Snake clone, in Moon!
 class Snake < Block_Link
 
   class Body < Snake
@@ -38,9 +38,12 @@ class State_Snake < State
     super
     @width  = (Window.width / 16).to_i # Window#width / 16
     @height = (Window.height / 16).to_i # Window#height / 16
+    @height -= 2 # making space for the text_score
+    @field = Rectangle.new(0, 24, @width * 16, @height * 16)
     puts "Board Size is: #{@width} x #{@height}"
     init_snake
     init_spriteset
+    init_texts
     @cell_width = @spritesheet.cell_width
     @cell_height = @spritesheet.cell_height
     setup
@@ -51,7 +54,11 @@ class State_Snake < State
   end
 
   def init_spriteset
-    @spritesheet = Spritesheet.new("resources/media_buttons_16x16.png", 16, 16)
+    @spritesheet = Cache.spritesheet("media_buttons_16x16")
+  end
+
+  def init_texts
+    @text_score = Cache.font("vera", 24)
   end
 
   def setup
@@ -60,6 +67,7 @@ class State_Snake < State
     @points = 0
     @globs = []
     add_main_glob # add the very first main glob
+    refresh_points_s
   end
 
   def available_pos
@@ -90,11 +98,16 @@ class State_Snake < State
     add_glob.is_main = false
   end
 
+  def refresh_points_s
+    @points_s = "Points: #{@points}"
+  end
+
   def render
     super
     last_i = @snake.length - 1
     for glob in @globs
-      @spritesheet.render(glob.x * @cell_width, glob.y * @cell_height, 0, 4)
+      @spritesheet.render(@field.x + glob.x * @cell_width,
+                          @field.y + glob.y * @cell_height, 0, 4)
     end
     @snake.each_with_index do |body, i|
       x, y = body.x, body.y
@@ -105,8 +118,10 @@ class State_Snake < State
       else
         sp_i = 2
       end
-      @spritesheet.render(x * @cell_width, y * @cell_height, 1, sp_i)
+      @spritesheet.render(@field.x + x * @cell_width,
+                          @field.y + y * @cell_height, 1, sp_i)
     end
+    @text_score.draw_text(0, 24, @points_s)
   end
 
   def update
@@ -127,6 +142,7 @@ class State_Snake < State
       if solve_collision
         check_globs
         @points += 1
+        refresh_points_s
       end
     end
   end
