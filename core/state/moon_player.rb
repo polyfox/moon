@@ -31,6 +31,18 @@ class BGM
     return @filename
   end
 
+  def basename
+    i = @filename.size
+    while i > 0
+      if @filename[i] == "/"
+        i += 1
+        break
+      end
+      i -= 1
+    end
+    return @filename[i, @filename.size - i]
+  end
+
   def play(pos=0)
     unless @filename.empty?
       @pos = pos
@@ -92,62 +104,6 @@ end
 # the actual player container
 class MoonPlayer < Container
 
-  class Widget < Container
-
-    attr_accessor :rx, :ry
-
-    def initialize(rx, ry, width, height)
-      @rx = rx
-      @ry = ry
-      super(0, 0, width, height)
-    end
-
-    def on_event(event, &func)
-      @events ||= {}
-      @events[event] = func
-    end
-
-    def event_list
-      return @events.keys
-    end
-
-    def event?(symbol)
-      return !!@events[symbol]
-    end
-
-    def call_event(symbol)
-      @events[symbol].call(self) if event?(symbol)
-    end
-
-    def update
-      if Input::Mouse.in_rect?(self)
-        call_event(:mouse_over)
-        keys = Input::Keys
-        button = Input::Mouse::Buttons::LEFT
-        if Input::Mouse.triggered?(button)
-          if    Input::Mouse.modded?(button, keys::MOD_SHIFT)
-            call_event(:mouse_focus_shift)
-          elsif Input::Mouse.modded?(button, keys::MOD_CONTROL)
-            call_event(:mouse_focus_control)
-          elsif Input::Mouse.modded?(button, keys::MOD_ALT)
-            call_event(:mouse_focus_alt)
-          elsif Input::Mouse.modded?(button, keys::MOD_SUPER)
-            call_event(:mouse_focus_super)
-          else
-            call_event(:mouse_focus_no_mod)
-          end
-          call_event(:mouse_focus)
-        end
-      end
-    end
-
-    def refresh_position(x, y)
-      self.x = x + rx
-      self.y = y + ry
-    end
-
-  end
-
   def initialize(x, y)
     # just for now, just for now
     @music = BGM.new("resources/CamelsNommingHay.ogg", "ogg")
@@ -155,6 +111,7 @@ class MoonPlayer < Container
 
     @play    = Widget.new(  0,   0,  32,  32)
     @stop    = Widget.new( 34,   0,  32,  32)
+    @title   = Widget.new( 66,   0, 128,  16)
     @seekbar = Widget.new( 66,  16, 128,  16)
     @seek    = Widget.new( 66,  16,  16,  16)
 
@@ -186,42 +143,34 @@ class MoonPlayer < Container
       stop_music
     end
 
-    @widgets = [@play, @stop, @seekbar, @seek]
-
-    ## compare by lamba function
-    comp_by = ->(ary, res, &func) do
-      r = nil
-      for e in ary
-        r = e if (func.(e) <=> r) == res
-      end
-      return r
-    end
+    @widgets = [@play, @stop, @title, @seekbar, @seek]
 
     ## max_by lamba function
     max_by = ->(ary, &func) do
-      return comp_by.(ary, -1, &func)
+      return ary.max { |a, b| func.(a) <=> func.(b) }
     end
 
     ## min_by lamba function
     min_by = ->(ary, &func) do
-      return comp_by.(ary, 1, &func)
+      return ary.min { |a, b| func.(a) <=> func.(b) }
     end
 
     # premitive way to find the covered area of a set of Rectangles
     ## x
-    wid = min_by.(@widgets) { |w| w.x }
-    x = wid.x
-    wid = max_by.(@widgets) { |w| w.x + w.width }
-    x2 = wid.x + wid.width
+    wid = min_by.(@widgets) { |w| w.rx }
+    x1 = wid.rx
+    wid = max_by.(@widgets) { |w| w.rx2 }
+    x2 = wid.rx2
 
     ## y
-    wid = min_by.(@widgets) { |w| w.y }
-    y = wid.y
-    wid = max_by.(@widgets) { |w| w.y + w.height }
-    y2 = wid.y + wid.height
+    wid = min_by.(@widgets) { |w| w.ry }
+    y1 = wid.ry
+    wid = max_by.(@widgets) { |w| w.ry2 }
+    y2 = wid.ry2
 
-    super(x, y, (x2 - x).abs, (y2 - y).abs)
+    super(x, y, (x2 - x1).abs, (y2 - y1).abs)
     init_spriteset
+    init_text
   end
 
   def stop_music
@@ -252,6 +201,10 @@ class MoonPlayer < Container
     @spritesheet_128x16 = Spritesheet.new("resources/media_buttons_128x16.png", 128, 16)
   end
 
+  def init_text
+    @text = Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 12)
+  end
+
   def update_seek
     l = Music.length.to_f
     l = 1.0 if l < 1
@@ -262,8 +215,10 @@ class MoonPlayer < Container
   def render
     @spritesheet_32x32.render(@play.x, @play.y, 0, Music.playing? ? 5 : 1)
     @spritesheet_32x32.render(@stop.x, @stop.y, 0, Music.stopped? ? 4 : 0)
+    @spritesheet_128x16.render(@title.x, @title.y, 0, 10)
     @spritesheet_128x16.render(@seekbar.x, @seekbar.y, 0, Music.finished? ? 9 : 8)
     @spritesheet_16x16.render(@seek.x, @seek.y, 0, Music.playing? ? 10 : 11)
+    @text.draw_text(@title.x, @title.y + 12, @music.basename)
   end
 
   def update
@@ -282,9 +237,7 @@ class MoonPlayer < Container
   end
 
   def on_move
-    @play.refresh_position(x, y)
-    @stop.refresh_position(x, y)
-    @seekbar.refresh_position(x, y)
+    @widgets.each { |wid| wid.refresh_position(x, y) }
     update_seek
   end
 
