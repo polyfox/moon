@@ -1,7 +1,9 @@
 #include "spritesheet.hxx"
 
 namespace Moon {
-  Spritesheet::Spritesheet(std::string filename, int tile_width, int tile_height) {
+  Spritesheet::Spritesheet(std::string filename, int tile_width, int tile_height) 
+  : VBO(GL_STATIC_DRAW)
+  {
     texture = Texture::load(filename);
 
     this->tile_height = tile_height;
@@ -11,13 +13,7 @@ namespace Moon {
   };
 
   Spritesheet::~Spritesheet() {
-    glDeleteBuffers(1, &VBO);
 
-    //Clear index buffers
-    if( index_buffers != 0) {
-      glDeleteBuffers(total_sprites, index_buffers);
-      delete[] index_buffers;
-    }
   };
 
   bool Spritesheet::generate_buffers() {
@@ -30,68 +26,28 @@ namespace Moon {
 
       total_sprites = tiles_per_row * tiles_per_column;
 
-      // Allocate vertex buffer data
-      vertex* vertices = new vertex[total_sprites * 4];
-      index_buffers = new GLuint[total_sprites];
-
-      // Allocate vertex data buffer name
-      glGenBuffers(1, &VBO);
-
-      // Allocate index buffers names
-      glGenBuffers(total_sprites, index_buffers);
-
-      // Go through clips
-      GLuint indices[4] = {0, 0, 0, 0};
-
       for(int i = 0; i < total_sprites; ++i) {
-        //Initialize indices
-        indices[0] = i * 4 + 0;
-        indices[1] = i * 4 + 1;
-        indices[2] = i * 4 + 2;
-        indices[3] = i * 4 + 3;
-
         GLfloat ox = (float)(i % (int)tiles_per_row);
         GLfloat oy = (float)(i / (int)tiles_per_row);
 
-        // Top left
-        vertices[ indices[0] ].pos.x = 0;
-        vertices[ indices[0] ].pos.y = 0;
+        float s0 = (ox) / tiles_per_row;
+        float s1 = (ox + 1.0) / tiles_per_row;
+        float t0 = (oy) / tiles_per_column;
+        float t1 = (oy + 1.0) / tiles_per_column;
 
-        vertices[ indices[0] ].tex_coord.u =  (ox) / tiles_per_row;
-        vertices[ indices[0] ].tex_coord.v =  (oy) / tiles_per_column;
+        vertex vertices[4] = {
+          { {0.f, 0.f},                {s0, t0} },
+          { {tile_width, 0.f},         {s1, t0} },
+          { {tile_width, tile_height}, {s1, t1} },
+          { {0.f, tile_height},        {s0, t1} }
+        };
 
-        // Top right
-        vertices[ indices[1] ].pos.x = tile_width;
-        vertices[ indices[1] ].pos.y = 0;
-
-        vertices[ indices[1] ].tex_coord.u =  (ox + 1.0) / tiles_per_row;
-        vertices[ indices[1] ].tex_coord.v =  (oy) / tiles_per_column;
-
-        // Bottom right
-        vertices[ indices[3] ].pos.x = tile_width;
-        vertices[ indices[3] ].pos.y = tile_height;
-
-        vertices[ indices[3] ].tex_coord.u =  (ox + 1.0) / tiles_per_row;
-        vertices[ indices[3] ].tex_coord.v =  (oy + 1.0) / tiles_per_column;
-
-        // Bottom left
-        vertices[ indices[2] ].pos.x = 0;
-        vertices[ indices[2] ].pos.y = tile_height;
-
-        vertices[ indices[2] ].tex_coord.u =  (ox) / tiles_per_row;
-        vertices[ indices[2] ].tex_coord.v =  (oy + 1.0) / tiles_per_column;
-
-        //Bind sprite index buffer data
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffers[i]);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+        VBO.push_back_vertices(vertices, 4);
       }
 
-      //Bind vertex data
-      glBindBuffer(GL_ARRAY_BUFFER, VBO);
-      glBufferData(GL_ARRAY_BUFFER, total_sprites * 4 * sizeof(vertex), vertices, GL_STATIC_DRAW);
+      GLuint indices[4] = {0, 1, 3, 2};
+      VBO.push_back_indices(indices, 4);
 
-      //Deallocate vertex data
-      delete[] vertices;
     } else {   //Error
       if(texture->id() == 0) {
         printf("No texture to render with!\n");
@@ -103,11 +59,8 @@ namespace Moon {
   };
 
   void Spritesheet::render(const int &x, const int &y, const float &z, const int &index) {
-    //Sprite sheet data exists
-    if(VBO != 0) {
-      Tone tone;
-      texture->render(x, y, z, 1.0, &tone, VBO, index_buffers[index]);
-    };
+    Tone tone;
+    texture->render_with_offset(x, y, z, 1.0, &tone, VBO, index*4);
   };
 
 };

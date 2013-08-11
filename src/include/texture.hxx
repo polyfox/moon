@@ -17,7 +17,7 @@ namespace Moon {
     ~Texture();
 
     static std::shared_ptr<Texture> load(std::string filename);
-    void render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, const GLuint &vboID, const GLuint &iboID);
+    void render_with_offset(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, VertexBuffer &vbo, const int &offset);
 
     void render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, VertexBuffer &vboID);
 

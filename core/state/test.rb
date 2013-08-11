@@ -36,7 +36,7 @@ class State_Test < State
     #for i in 0..1800 # runs efficiently at 60FPS, 18000 runs at 20FPS
     #  @s.render(i, i, i)
     #end
-    #@s.render(10, 10, 0, 0)
+    #@s.render(10, 10, 0, 5)
     @sprites.each {|sprite| sprite.render }
     @font.draw_text(48, 64, "Sphinx of black quartz, judge my vow.")
     @font.draw_text(64,128, "日本国 音読みと中国語")

@@ -49,7 +49,7 @@ namespace Moon {
     return texture_id;
   };
 
-  void Texture::render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, const GLuint &vboID, const GLuint &iboID) {
+  void Texture::render_with_offset(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, VertexBuffer &vbo, const int &offset) {
     if(texture_id != 0) {
       shader.use();
 
@@ -59,48 +59,17 @@ namespace Moon {
       glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
       glUniformMatrix4fv(shader.get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
+      glUniform1f(shader.get_uniform("opacity"), opacity);
+
+      GLfloat hsl[3] = {tone->hue, tone->saturation, tone->lightness};
+      glUniform3fv(shader.get_uniform("tone"), 1, hsl);
+
       //Set texture ID
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, texture_id);
       glUniform1i(shader.get_uniform("texture"), /*GL_TEXTURE*/0);
 
-      //Enable vertex and texture coordinate arrays
-      glEnableVertexAttribArray(shader.get_attribute("vertex_pos"));
-      glEnableVertexAttribArray(shader.get_attribute("texcoord"));
-
-        //Bind vertex buffer
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-
-        glVertexAttribPointer(
-          shader.get_attribute("texcoord"), // attribute
-          2,                  // number of elements per vertex, here (x,y)
-          GL_FLOAT,           // the type of each element
-          GL_FALSE,           // take our values as-is
-          sizeof(vertex),                  // stride
-          (GLvoid*)offsetof(vertex, tex_coord)     // offset of first element
-        );
-
-        glVertexAttribPointer(
-          shader.get_attribute("vertex_pos"), // attribute
-          2,                  // number of elements per vertex, here (x,y)
-          GL_FLOAT,           // the type of each element
-          GL_FALSE,           // take our values as-is
-          sizeof(vertex),                  // stride
-          (GLvoid*)offsetof(vertex, pos)   // offset of first element
-        );
-
-        glUniform1f(shader.get_uniform("opacity"), opacity);
-
-        GLfloat hsl[3] = {tone->hue, tone->saturation, tone->lightness};
-        glUniform3fv(shader.get_uniform("tone"), 1, hsl);
-
-        //Draw quad using vertex data and index data
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboID);
-        glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, NULL);
-
-      //Disable vertex and texture coordinate arrays
-      glDisableVertexAttribArray(shader.get_attribute("vertex_pos"));
-      glDisableVertexAttribArray(shader.get_attribute("texcoord"));
+      vbo.render_with_offset(GL_TRIANGLE_STRIP, offset);
     };
   };
 

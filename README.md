@@ -18,6 +18,7 @@ We support graphics cards with OpenGL 2.1 support and the following extensions:
 
 - GL_ARB_explicit_attrib_location
   - GL_ARB_fragment_coord_conventions
+- GL_ARB_draw_elements_base_vertex
 
 Cards that support OpenGL 3.0+ naturally support these extensions, because they
 are a part of the OpenGL 3.x series. (We basically use a 3.0 context with only
