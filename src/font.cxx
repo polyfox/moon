@@ -51,7 +51,7 @@ namespace Moon {
     glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
     glUniformMatrix4fv(shader.get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
-    buffer.render(GL_TRIANGLES, shader.get_attribute("vertex_pos"), shader.get_attribute("tex_coord"), shader.get_attribute("color"));
+    buffer.render(GL_TRIANGLES);
     buffer.clear();
   }
 

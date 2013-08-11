@@ -87,6 +87,8 @@ namespace Moon {
       "#define lowp   \n"
       "#define mediump\n"
       "#define highp  \n"
+      "#extension GL_ARB_fragment_coord_conventions : require\n" // required in order for layout() to work with attribute/varying
+      "#extension GL_ARB_explicit_attrib_location : require\n"
   #endif
       ,
       source };

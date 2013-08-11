@@ -1,5 +1,5 @@
-attribute vec2 vertex_pos;
-attribute vec2 texcoord;
+layout(location=0) attribute vec2 vertex_pos;
+layout(location=1) attribute vec2 texcoord;
 varying vec2 f_texcoord;
 uniform mat4 mvp_matrix;
 
