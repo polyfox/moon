@@ -10,14 +10,4 @@ require 'core/tilemap'
 require 'core/tone'
 require 'core/mouse'
 require 'core/gui'
-require 'core/music_activity_hud'
 require 'core/state'
-
-#State.push(State_KeyHoldTest)   #
-#State.push(State_ModifierTest)  #
-#State.push(State_MoonPlayer)    #
-#State.push(State_MusicActivity) #
-#State.push(State_PullBlock)     # a small demonstration of the Block_Link
- State.push(State_Snake)         # a small game of Snake
-#State.push(State_TilemapTest)   # demonstrates basic Tilemap usage
-#State.push(State_Test)          # common testing state

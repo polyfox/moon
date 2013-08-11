@@ -1,0 +1,8 @@
+require 'scripts/state/key_hold_test'
+require 'scripts/state/modifier_test'
+require 'scripts/state/moon_player'
+require 'scripts/state/music_activity'
+require 'scripts/state/pull_block'
+require 'scripts/state/snake'
+require 'scripts/state/test'
+require 'scripts/state/tilemap_test'
