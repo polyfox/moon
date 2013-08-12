@@ -16,6 +16,7 @@ namespace Moon {
 
     void draw_text(float x, float y, const wchar_t *text); /* white text */
     void draw_text(float x, float y, const wchar_t *text, Color color);
+    int size();
   private:
     texture_font_t *font;
     texture_atlas_t *atlas;

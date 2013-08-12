@@ -1,0 +1,1 @@
+require 'core/modules/cache.rb'

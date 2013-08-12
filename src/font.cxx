@@ -41,10 +41,10 @@ namespace Moon {
 
     glUniform1i(shader->get_uniform("texture"), /*GL_TEXTURE*/0);
 
-    //model matrix 
+    //model matrix
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down
       glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0)), // move it to the correct position in the world
-      180.0f, 
+      180.0f,
       glm::vec3(1.0f, 0.0f, 0.0f)
     );
     // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
@@ -87,6 +87,9 @@ namespace Moon {
     }
   }
 
+  int Font::size() {
+    return font->size;
+  }
   /*GlyphMap::GlyphMap() {
 
   };*/

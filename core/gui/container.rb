@@ -34,8 +34,20 @@ class Container < Rectangle
     on_resize
   end
 
+  def rx2
+    rx + width
+  end
+
+  def ry2
+    ry + height
+  end
+
   def pos
     return [x, y]
+  end
+
+  def rpos
+    return [rx, ry]
   end
 
   def size
