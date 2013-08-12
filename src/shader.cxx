@@ -140,18 +140,6 @@ namespace Moon {
     return program;
   }
 
-  std::shared_ptr<Shader> Shader::load(const char *vertexfile, const char *fragmentfile) {
-    auto key = std::make_pair(vertexfile, fragmentfile);
-    auto ptr = std::move(get(key)); // move it into the new pointer, so we don't copy construct
-
-    if (ptr) return ptr; // cache hit
-
-    ptr = std::move(std::shared_ptr<Shader>(new Shader(vertexfile, fragmentfile)));
-
-    Cache::_cache[key] = ptr;
-    return ptr;
-  };
-
   Shader::Shader(const char *vertexfile, const char *fragmentfile)
   : Cache(std::make_pair(vertexfile, fragmentfile))
   {

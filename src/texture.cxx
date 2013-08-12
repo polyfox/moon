@@ -26,18 +26,6 @@ namespace Moon {
     }
   };
 
-  std::shared_ptr<Texture> Texture::load(std::string filename) {
-    auto ptr = std::move(get(filename)); // move it into the new pointer, so we don't copy construct
-
-    if (ptr) return ptr; // cache hit
-
-    ptr = std::move(std::shared_ptr<Texture>(new Texture(filename)));
-    // ptr = std::make_shared<Texture>(filename); is supposedly faster,
-    // we just need to get around the private constructor issue
-    Cache::_cache[filename] = ptr;
-    return ptr;
-  };
-
   GLuint Texture::width() {
     return texture_width;
   };

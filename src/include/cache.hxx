@@ -9,11 +9,19 @@
     Cache
     
     A standard cache class template. To make a class use it, publicly
-    inherit from Cache<myclass>. You need to provide a `load` type of
-    static public member function, which will either construct a new
-    instance and add it to the cache or call a (private) constructor.
+    inherit from Cache<myclass>. A load function is provided, which
+    either loads an object from cache, or constructs a new instance.
+    All of the parameters given to the load method will be forwarded
+    to the constructor.
 
-    For an example, see Texture::load.
+    It is recommended, that the constructor of the class is private,
+    that way we can only get instances via the load method, meaning
+    all of the objects will be cached. The cache class will need to
+    be added as a friend, to be allowed to construct it though.
+
+    The template also takes a second argument, specifying the key type
+    (std::string by default). The parameters passed to load are used
+    to construct the key.
 
     Note that each individual class gets it's own cache store, since
     each individual class derives from a specialized Cache class (we
@@ -47,6 +55,19 @@ namespace Moon {
       if (it == _cache.end()) { return std::shared_ptr<Object>(); }
 
       return std::static_pointer_cast<Object>(it->second.lock());
+    };
+
+    template <typename... Args>
+    static std::shared_ptr<Object> load(Args&&... args) {
+      Key key(std::forward<Args>(args)...);
+      auto ptr = std::move(get(key)); // move it into the new pointer, so we don't copy construct
+
+      if (ptr) return ptr; // cache hit
+
+      ptr = std::move(std::shared_ptr<Object>(new Object(std::forward<Args>(args)...))); // make_shared is better than this
+
+      Cache::_cache[key] = ptr;
+      return ptr;
     };
   protected:
     Key _key;

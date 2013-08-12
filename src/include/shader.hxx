@@ -11,8 +11,6 @@ namespace Moon {
   public:
     ~Shader();
 
-    static std::shared_ptr<Shader> load(const char *vertexfile, const char *fragmentfile);
-
     void   use();
     GLuint get_program();
     GLint  get_attribute(const char *name);
@@ -31,6 +29,8 @@ namespace Moon {
     GLuint  _program;
     std::unordered_map<const char *,GLuint> _attributeList;
     std::unordered_map<const char *,GLuint> _uniformLocationList;
+
+  friend class Cache<Shader, std::pair<const char*, const char*>>;
   };
 };
 
