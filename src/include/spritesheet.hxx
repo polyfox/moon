@@ -22,6 +22,7 @@ namespace Moon {
     int total_sprites;
 
     std::shared_ptr<Texture> texture;
+    std::shared_ptr<Shader>  shader;
   };
 };
 

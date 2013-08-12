@@ -4,6 +4,7 @@ namespace Moon {
   Spritesheet::Spritesheet(std::string filename, int tile_width, int tile_height) 
   : VBO(GL_STATIC_DRAW)
   {
+    shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
     texture = Texture::load(filename);
 
     this->tile_height = tile_height;
@@ -60,7 +61,28 @@ namespace Moon {
 
   void Spritesheet::render(const int &x, const int &y, const float &z, const int &index) {
     Tone tone;
-    texture->render_with_offset(x, y, z, 1.0, &tone, VBO, index*4);
+    float opacity = 1.0;
+    int offset = index*4;
+
+    shader->use();
+
+    //model matrix - move it to the correct position in the world
+    glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
+    // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
+    glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
+    glUniformMatrix4fv(shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+
+    glUniform1f(shader->get_uniform("opacity"), opacity);
+
+    GLfloat hsl[3] = {tone.hue, tone.saturation, tone.lightness};
+    glUniform3fv(shader->get_uniform("tone"), 1, hsl);
+
+    //Set texture ID
+    glActiveTexture(GL_TEXTURE0);
+    texture->bind();
+    glUniform1i(shader->get_uniform("texture"), /*GL_TEXTURE*/0);
+
+    VBO.render_with_offset(GL_TRIANGLE_STRIP, offset);
   };
 
 };
