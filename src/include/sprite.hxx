@@ -23,6 +23,7 @@ namespace Moon {
     void render();
   private:
     std::shared_ptr<Texture> texture;
+    std::shared_ptr<Shader>  shader;
 
     VertexBuffer VBO;
   };

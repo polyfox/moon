@@ -11,6 +11,7 @@ namespace Moon {
     tone = std::make_shared<Tone>(1.0, 1.0, 1.0);
     clip = false;
 
+    shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
     texture = Texture::load(filename);
 
     // If the texture exists
@@ -55,11 +56,27 @@ namespace Moon {
 
   };
 
+  // TODO: clipping
   void Sprite::render() {
-    //if(clip) {
-    //  texture->render(x, y, z, opacity, &clip_rect);
-    //} else {
-      texture->render(x, y, z, opacity, tone.get(), VBO);
-     //}
+    shader->use();
+
+    //model matrix - move it to the correct position in the world
+    glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
+    // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
+    glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
+    glUniformMatrix4fv(shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+
+    glUniform1f(shader->get_uniform("opacity"), opacity);
+
+    GLfloat hsl[3] = {tone->hue, tone->saturation, tone->lightness};
+    glUniform3fv(shader->get_uniform("tone"), 1, hsl);
+
+    //Set texture ID
+    glActiveTexture(GL_TEXTURE0);
+    texture->bind();
+    glUniform1i(shader->get_uniform("texture"), /*GL_TEXTURE*/0);
+
+    VBO.render(GL_TRIANGLE_STRIP);
   };
+
 };

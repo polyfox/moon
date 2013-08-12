@@ -18,7 +18,7 @@ namespace Moon {
 
     void render_with_offset(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, VertexBuffer &vbo, const int &offset);
 
-    void render(const GLfloat &x, const GLfloat &y, const GLfloat &z, const GLfloat &opacity, Tone *tone, VertexBuffer &vboID);
+    void bind();
 
     GLuint width();
     GLuint height();
