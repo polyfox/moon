@@ -27,7 +27,7 @@ namespace Moon {
   private:
     Texture(std::string filename);
 
-    Shader shader;
+    std::shared_ptr<Shader> shader;
 
     GLuint texture_id;
     GLint texture_width;

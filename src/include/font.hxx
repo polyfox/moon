@@ -23,7 +23,7 @@ namespace Moon {
     VertexBuffer buffer;
     void add_text(const wchar_t *text, Color c); /* temp */
 
-    Shader shader;
+    std::shared_ptr<Shader> shader;
   };
 };
 

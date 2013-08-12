@@ -6,7 +6,6 @@ class State_Test < State
   def init
     @sprites = []
     @font = Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 16);
-
     #@sound = Sound.new("resources/startup.wav", "wav")
     #@sound.play
     #Music.play("resources/CamelsNommingHay.ogg", "ogg")

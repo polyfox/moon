@@ -1,3 +1,6 @@
+#ifndef MOON_CACHE_H
+#define MOON_CACHE_H
+
 #include <memory>
 #include <unordered_map>
 #include <algorithm> // std::move
@@ -25,14 +28,14 @@ namespace Moon {
   class Cache {
   public:
     Cache(Key const& key) {
-      printf("added %s to cache\n", key.c_str());
+      //printf("added %s to cache\n", key.c_str());
       this->_key = key;
       //Cache::_cache[key] = this->shared_from_this(); // Note: override previous resource of same key, if any
       // this doesn't work because the object wasn't constructed yet and at least one shared_ptr must exist
     };
 
     virtual ~Cache() {
-      printf("removed %s from cache\n", _key.c_str());
+      //printf("removed %s from cache\n", _key.c_str());
       Cache::_cache.erase(_key);
     };
 
@@ -53,3 +56,25 @@ namespace Moon {
   std::unordered_map<Key, std::weak_ptr<Cache<Object, Key>>> Cache<Object, Key>::_cache;
 
 }
+
+
+/* boost::hash_combine */
+template <class T>
+inline void hash_combine(std::size_t & seed, const T & v) {
+  std::hash<T> hasher;
+  seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
+/* hash specialization for std::pair (needed for (unordered_)map with std::pair keys) */
+namespace std {
+  template<typename S, typename T>
+  struct hash<pair<S, T>> {
+    inline size_t operator()(const pair<S, T> & v) const {
+      size_t seed = 0;
+      ::hash_combine(seed, v.first);
+      ::hash_combine(seed, v.second);
+      return seed;
+    }
+  };
+}
+#endif

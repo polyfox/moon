@@ -2,12 +2,16 @@
 #define MOON_SHADER_H
 
 #include "moon.hxx"
+//#include <utility> // std::pair
+#include "cache.hxx"
 
 namespace Moon {
-  class Shader {
+
+  class Shader: public Cache<Shader, std::pair<const char*, const char*>> {
   public:
-    Shader(const char *vertexfile, const char *fragmentfile);
     ~Shader();
+
+    static std::shared_ptr<Shader> load(const char *vertexfile, const char *fragmentfile);
 
     void   use();
     GLuint get_program();
@@ -17,6 +21,8 @@ namespace Moon {
     static glm::mat4 projection_matrix; // TEMPORARY LOCATION, TODO MOVE TO RENDERER
     static glm::mat4 view_matrix; // camera. TEMPORARY LOCATION, TODO MOVE TO RENDERER
   private:
+    Shader(const char *vertexfile, const char *fragmentfile);
+
     std::string file_read(const char *filePath);
     void   print_log(GLuint object);
     GLuint create_shader(const char* filename, GLenum type);

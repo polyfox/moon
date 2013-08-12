@@ -3,9 +3,9 @@
 
 namespace Moon {
   Font::Font(std::string filename, int font_size) 
-  : shader("resources/shaders/text.vert", "resources/shaders/text.frag"),
-    buffer(GL_DYNAMIC_DRAW)
+  : buffer(GL_DYNAMIC_DRAW)
   {
+    shader = Shader::load("resources/shaders/text.vert", "resources/shaders/text.frag");
     atlas = texture_atlas_new(512, 512, 1);
     font = texture_font_new(atlas, filename.c_str(), font_size);
 
@@ -35,11 +35,11 @@ namespace Moon {
     font->outline_thickness = 0;
     add_text(text, color);
 
-    shader.use();
+    shader->use();
 
     glBindTexture(GL_TEXTURE_2D, atlas->id);
 
-    glUniform1i(shader.get_uniform("texture"), /*GL_TEXTURE*/0);
+    glUniform1i(shader->get_uniform("texture"), /*GL_TEXTURE*/0);
 
     //model matrix 
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down
@@ -49,7 +49,7 @@ namespace Moon {
     );
     // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
     glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
-    glUniformMatrix4fv(shader.get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+    glUniformMatrix4fv(shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
     buffer.render(GL_TRIANGLES);
     buffer.clear();
