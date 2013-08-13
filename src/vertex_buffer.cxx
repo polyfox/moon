@@ -3,15 +3,61 @@
 namespace Moon {
   VertexBuffer::VertexBuffer(GLenum usage) {
     this->usage = usage;
+    glGenVertexArrays(1, &vao_id);
     glGenBuffers(1, &vbo_id);
     glGenBuffers(1, &ibo_id);
     dirty = false;
+
+    setup();
   }
 
   VertexBuffer::~VertexBuffer() {
+    glDeleteVertexArrays(1, &vao_id);
     glDeleteBuffers(1, &vbo_id);
     glDeleteBuffers(1, &ibo_id);
   }
+
+  void VertexBuffer::setup() {
+    glBindVertexArray(vao_id);
+
+    //Enable vertex and texture coordinate arrays
+    glEnableVertexAttribArray(0); // location=0 --> vertex position
+    glEnableVertexAttribArray(1); // location=1 --> texture coordinates
+    glEnableVertexAttribArray(2); // location=2 --> color
+
+    // Bind vertex buffer and index buffer
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id);
+
+    glVertexAttribPointer(
+      0,             // attribute
+      2,             // number of elements per vertex, here (x,y)
+      GL_FLOAT,      // the type of each element
+      GL_FALSE,      // take our values as-is
+      sizeof(vertex),                  // stride
+      (GLvoid*)offsetof(vertex, pos)   // offset of first element
+    );
+
+    glVertexAttribPointer(
+      1,             // attribute
+      2,             // number of elements per vertex, here (x,y)
+      GL_FLOAT,      // the type of each element
+      GL_FALSE,      // take our values as-is
+      sizeof(vertex),                  // stride
+      (GLvoid*)offsetof(vertex, tex_coord)     // offset of first element
+    );
+
+    glVertexAttribPointer(
+      2,             // attribute
+      4,             // number of elements per vertex, here (x,y)
+      GL_FLOAT,      // the type of each element
+      GL_FALSE,      // take our values as-is
+      sizeof(vertex),                  // stride
+      (GLvoid*)offsetof(vertex, color)   // offset of first element
+    );
+
+    glBindVertexArray(0);
+  };
 
   void VertexBuffer::push_back(vertex v) {
     vertices.push_back(v);
@@ -65,96 +111,16 @@ namespace Moon {
   void VertexBuffer::render(GLenum mode) {
     if(dirty) upload(); // update the VBO and IBO if dirty
 
-    //Enable vertex and texture coordinate arrays
-    glEnableVertexAttribArray(0); // location=0 --> vertex position
-    glEnableVertexAttribArray(1); // location=1 --> texture coordinates
-    glEnableVertexAttribArray(2); // location=2 --> color
-
-      //Bind vertex buffer
-      glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-
-      glVertexAttribPointer(
-        0,             // attribute
-        2,             // number of elements per vertex, here (x,y)
-        GL_FLOAT,      // the type of each element
-        GL_FALSE,      // take our values as-is
-        sizeof(vertex),                  // stride
-        (GLvoid*)offsetof(vertex, pos)   // offset of first element
-      );
-
-      glVertexAttribPointer(
-        1,             // attribute
-        2,             // number of elements per vertex, here (x,y)
-        GL_FLOAT,      // the type of each element
-        GL_FALSE,      // take our values as-is
-        sizeof(vertex),                  // stride
-        (GLvoid*)offsetof(vertex, tex_coord)     // offset of first element
-      );
-
-      glVertexAttribPointer(
-        2,             // attribute
-        4,             // number of elements per vertex, here (x,y)
-        GL_FLOAT,      // the type of each element
-        GL_FALSE,      // take our values as-is
-        sizeof(vertex),                  // stride
-        (GLvoid*)offsetof(vertex, color)   // offset of first element
-      );
-
-      //Draw quad using vertex data and index data
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id);
-      glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, NULL);
-
-    //Disable vertex and texture coordinate arrays
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
+    glBindVertexArray(vao_id);
+    glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, NULL);
+    glBindVertexArray(0);
   }
 
   void VertexBuffer::render_with_offset(GLenum mode, const int &offset) {
     if(dirty) upload(); // update the VBO and IBO if dirty
 
-    //Enable vertex and texture coordinate arrays
-    glEnableVertexAttribArray(0); // location=0 --> vertex position
-    glEnableVertexAttribArray(1); // location=1 --> texture coordinates
-    glEnableVertexAttribArray(2); // location=2 --> color
-
-      //Bind vertex buffer
-      glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-
-      glVertexAttribPointer(
-        0,             // attribute
-        2,             // number of elements per vertex, here (x,y)
-        GL_FLOAT,      // the type of each element
-        GL_FALSE,      // take our values as-is
-        sizeof(vertex),                  // stride
-        (GLvoid*)offsetof(vertex, pos)   // offset of first element
-      );
-
-      glVertexAttribPointer(
-        1,             // attribute
-        2,             // number of elements per vertex, here (x,y)
-        GL_FLOAT,      // the type of each element
-        GL_FALSE,      // take our values as-is
-        sizeof(vertex),                  // stride
-        (GLvoid*)offsetof(vertex, tex_coord)     // offset of first element
-      );
-
-      glVertexAttribPointer(
-        2,             // attribute
-        4,             // number of elements per vertex, here (x,y)
-        GL_FLOAT,      // the type of each element
-        GL_FALSE,      // take our values as-is
-        sizeof(vertex),                  // stride
-        (GLvoid*)offsetof(vertex, color)   // offset of first element
-      );
-
-      //Draw quad using vertex data and index data
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id);
-      glDrawElementsBaseVertex(mode, indices.size(), GL_UNSIGNED_INT, NULL, offset);
-
-    //Disable vertex and texture coordinate arrays
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
-    glDisableVertexAttribArray(2);
+    glBindVertexArray(vao_id);
+    glDrawElementsBaseVertex(mode, indices.size(), GL_UNSIGNED_INT, NULL, offset);
+    glBindVertexArray(0);
   }
 }

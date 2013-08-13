@@ -21,6 +21,8 @@ namespace Moon {
     void clear();
     void upload();
   private:
+    void setup(); // set up the VAO
+    GLuint vao_id;
     GLuint vbo_id;
     GLuint ibo_id;
 
