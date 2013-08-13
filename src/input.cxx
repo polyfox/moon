@@ -189,8 +189,8 @@ namespace Moon {
   }
 
   double Input::key_state_hold(int key_id, int state) {
-    if (mouse_buttons[button_id].held_at != 0) {
-      return glfwGetTime() - mouse_buttons[button_id].held_at;
+    if (mouse_buttons[key_id].held_at != 0) {
+      return glfwGetTime() - mouse_buttons[key_id].held_at;
     } else {
       return 0;
     }
