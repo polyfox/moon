@@ -6,7 +6,7 @@ namespace Moon {
     button_id = 0;
     state     = GLFW_RELEASE;
     name      = NULL;
-    hold      = 0;
+    held_at   = 0;
     mods      = 0;
   }
 
@@ -14,7 +14,7 @@ namespace Moon {
     button_id = glfw_key;
     state     = GLFW_RELEASE;
     name      = kname;
-    hold      = 0;
+    held_at   = 0;
     mods      = 0;
   }
 
@@ -162,11 +162,12 @@ namespace Moon {
 
   void Input::update_key(GLFWwindow* window, 
                          int key_id, int scancode, int action, int mods) {
-    if (keyboard_keys[key_id].state == action) {
-      keyboard_keys[key_id].hold += 1;
-    } else {
-      keyboard_keys[key_id].hold = 0;
+    if (action == GLFW_PRESS) {
+      keyboard_keys[key_id].held_at = glfwGetTime();
+    } else if (action == GLFW_RELEASE) {
+      keyboard_keys[key_id].held_at = 0;
     }
+
     keyboard_keys[key_id].state = action;
     keyboard_keys[key_id].mods = mods;
   }
@@ -187,11 +188,11 @@ namespace Moon {
     return Input::key_state_is_eq(key_id, state) && Input::key_mod(key_id, mod);
   }
 
-  int Input::key_state_hold(int key_id, int state) {
-    if (keyboard_keys[key_id].state == state) {
-      return keyboard_keys[key_id].hold;
+  double Input::key_state_hold(int key_id, int state) {
+    if (mouse_buttons[button_id].held_at != 0) {
+      return glfwGetTime() - mouse_buttons[button_id].held_at;
     } else {
-      return -1;
+      return 0;
     }
   }
 
@@ -199,11 +200,12 @@ namespace Moon {
 
   void Input::Mouse::update_button(GLFWwindow* window, 
                                    int button_id, int action, int mods) {
-    if (mouse_buttons[button_id].state == action) {
-      mouse_buttons[button_id].hold += 1;
-    } else {
-      mouse_buttons[button_id].hold = 0;
+    if (action == GLFW_PRESS) {
+      mouse_buttons[button_id].held_at = glfwGetTime();
+    } else if (action == GLFW_RELEASE) {
+      mouse_buttons[button_id].held_at = 0;
     }
+
     mouse_buttons[button_id].state = action;
     mouse_buttons[button_id].mods = mods;
   }
@@ -222,11 +224,11 @@ namespace Moon {
            Input::Mouse::button_mod(button_id, mod);
   }
 
-  int Input::Mouse::button_state_hold(int button_id, int state) {
-    if (mouse_buttons[button_id].state == state) {
-      return mouse_buttons[button_id].hold;
+  double Input::Mouse::button_state_hold(int button_id, int state) {
+    if (mouse_buttons[button_id].held_at != 0) {
+      return glfwGetTime() - mouse_buttons[button_id].held_at;
     } else {
-      return -1;
+      return 0;
     }
   }
 
