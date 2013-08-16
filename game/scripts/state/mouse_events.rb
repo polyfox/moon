@@ -73,6 +73,7 @@ module Eventable
   end
 
   def trigger event
+    event = Event.new(event) if !event.is_a?(Event) # TEMP
     @event_listeners[:any].each {|block| block.call(event) }
     return unless @event_listeners[event.type]
     @event_listeners[event.type].each do |block|
@@ -88,6 +89,7 @@ class EventDispatcher
   def initialize
     super
     @last_state = nil
+    @last_pos = [nil, nil]
     @clicks = 1
   end
 
@@ -113,6 +115,13 @@ class EventDispatcher
         @last_state = :released
       end
     end
+
+    # mousemove
+    current_pos = Input::Mouse.pos
+    if @last_pos != current_pos
+      trigger :mousemove
+      @last_pos = current_pos
+    end
   end
 end
 
@@ -123,6 +132,7 @@ class GUI_Window < Container
   def initialize(x, y, width, height)
     super(x, y, width, height)
 
+    @draggable = true
     @widgets = []
 
     on :any do |event|
@@ -133,7 +143,7 @@ class GUI_Window < Container
   end
 
   def update
-    #¸@widgets.each(&:update.to_proc)
+    @widgets.each(&:update.to_proc)
   end
 
   def render
@@ -187,16 +197,21 @@ class Container < Rectangle
     @draggable = false
 
     on :mousedown do |event|
-      # initiate dragging if @draggable = true
-
-      # store the relative offset of where the mouse
-      # was clicked on the object, so we can accurately
-      # set the new position
-
       # bonus: be able to specify a drag rectangle: 
       # the area where the user can click to drag
       # the window (useful if we only want it to
       # drag by the titlebar)
+      
+      # initiate dragging if @draggable = true
+      if @draggable
+        @dragging = true
+
+        # store the relative offset of where the mouse
+        # was clicked on the object, so we can accurately
+        # set the new position
+        @offset_x = Input::Mouse.x - self.x
+        @offset_y = Input::Mouse.y - self.y
+      end
     end
 
     # TODO: implement mousemove
@@ -209,10 +224,19 @@ class Container < Rectangle
 
       # don't forget to update the widget positions
       # too (refresh_position)
+      # NOTE: at the moment the widget position is
+      # updated in the update loop each cycle. Might
+      # not be the most efficient thing to do.
+
+      if @draggable && @dragging
+        self.x = Input::Mouse.x - @offset_x
+        self.y = Input::Mouse.y - @offset_y
+      end
     end
 
     on :mouseup do |event|
       # disable dragging
+      @dragging = false if @draggable
     end
 
     trigger :resize
