@@ -251,7 +251,7 @@ class State_MoonPlayer < State
   #  optional:
   #   Sample at pos (can be used to simulate meters and such)
   def init
-    @music_hud = MusicActivityHud.new(0, 0)
+    @music_hud = MusicActivityHud.new(0, 0, 0)
     @player = MoonPlayer.new(96, 128)
     puts @player.pos
 
