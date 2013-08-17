@@ -65,11 +65,13 @@ module Eventable
   end
 
   # Adds a new event listener.
-  # @param [Symbol] type The type to listen for..
+  # @param [Symbol] types The types to listen for..
   # @param [Proc] block The block we want to execute when we catch the type.
-  def on type, &block
-    @event_listeners[type] ||= []
-    @event_listeners[type].push block
+  def on *types, &block
+    types.each do |type|
+      @event_listeners[type] ||= []
+      @event_listeners[type].push block
+    end
   end
 
   def trigger event
@@ -135,8 +137,14 @@ class GUI_Window < Container
     @draggable = true
     @widgets = []
 
-    on :any do |event|
-      @widgets.each {|widget| widget.trigger event }
+    # in a perfect scenario, the events would bubble up, not
+    # down... here we just need to forward the events that
+    # the dispatcher generates, and not those that are later
+    # generated/detected (click)
+    on :mouseup, :mousedown, :mousemove do |event|
+      @widgets.each {|widget| 
+        widget.trigger event if Input::Mouse.in_rect?(widget)
+      }
     end
 
     @windowskin = Spritesheet.new("resources/window.png", 16, 16)
@@ -191,6 +199,13 @@ class Container < Rectangle
 
     on :mouseup do |event|
       trigger :click if @last_mousedown_id == event.id
+    end
+
+    # double clicks (click distance was max 500ms)
+    on :click do |event|
+      now = Time.now
+      trigger :dblclick if now - @last_click_at < 0.500
+      @last_click_at = now
     end
 
     # dragging support
@@ -284,11 +299,13 @@ class Container < Rectangle
   end
 
   # Adds a new event listener.
-  # @param [Symbol] type The type to listen for..
+  # @param [Symbol] types The types to listen for..
   # @param [Proc] block The block we want to execute when we catch the type.
-  def on type, &block
-    @event_listeners[type] ||= []
-    @event_listeners[type].push block
+  def on *types, &block
+    types.each do |type|
+      @event_listeners[type] ||= []
+      @event_listeners[type].push block
+    end
   end
 
   def trigger event
@@ -316,16 +333,6 @@ class Widget < Container
   def update
     self.x = @parent.x + rx
     self.y = @parent.y + ry
-=begin
-    if Input::Mouse.in_rect?(self)
-      call_event(:mouse_over)
-      keys = Input::Keys
-      button = Input::Mouse::Buttons::LEFT
-      if Input::Mouse.triggered?(button)
-        call_event(:mouse_focus)
-      end
-    end
-=end
   end
 
 end
@@ -338,11 +345,15 @@ class State_Mouse_Events < State
     area = Widget.new(@window, 0,0,64,64)
 
     area.on :click do |event|
-      puts "area clicked!" if Input::Mouse.in_rect? area
+      puts "area clicked!"
     end
 
     @window.on :click do |event|
       puts "window clicked with ALT!" if event.altKey
+    end
+
+    @window.on :dblclick do |event|
+      puts "double clicked!"
     end
 
     @window.widgets << area
