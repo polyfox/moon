@@ -191,6 +191,7 @@ class Container < Rectangle
     @event_listeners = {:any => []}
 
     @last_mousedown_id = 0 # dirty, dirty!
+    @last_click_at = 0.0
 
     # click event generation
     on :mousedown do |event|
@@ -203,9 +204,15 @@ class Container < Rectangle
 
     # double clicks (click distance was max 500ms)
     on :click do |event|
-      now = Time.now
-      trigger :dblclick if now - @last_click_at < 0.500
-      @last_click_at = now
+      now = Window.uptime
+      if now - @last_click_at < 0.500
+        trigger :dblclick
+        # reset the distance, so we can't trigger
+        #consecutive double clicks with a single click
+        @last_click_at = 0.0
+      else
+        @last_click_at = now
+      end
     end
 
     # dragging support
