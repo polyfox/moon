@@ -151,9 +151,6 @@ class GUI_Window < Container
   end
 
   def render
-
-    #@widgets.each(&:render.to_proc)
-
     # render the windowskin (background)
     (width/16).to_i.times do |w|
       (height/16).to_i.times do |h|
@@ -175,20 +172,43 @@ class GUI_Window < Container
     @windowskin.render(x+width-16, y, 1.0, 2)
     @windowskin.render(x, y+height-16, 1.0, 6)
     @windowskin.render(x+width-16, y+height-16, 1.0, 8)
+
+    # render widgets
+    @widgets.each(&:render.to_proc)
   end
 end
 
+class Button < Widget
+  @@font = Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 16)
+
+  def initialize(parent, x, y, text, &block)
+    super(parent, x, y, 80, 32)
+    @text = text
+    @callback = block
+
+    on :click do
+      @callback.call
+    end
+  end
+
+  def update
+    super
+  end
+
+  def render
+    super
+    @@font.draw_text(@x, @y+@@font.size, @text)
+  end
+
+end
 
 class State_Mouse_Events < State
 
   def init
     @handler = EventDispatcher.new
     @window = GUI_Window.new(32,32,128,128)
-    area = Widget.new(@window, 0,0,64,64)
-
-    area.on :click do |event|
-      puts "area clicked!"
-    end
+    
+    button = Button.new(@window, 0, 0, "Test") { puts "button click'd!" }
 
     @window.on :click do |event|
       puts "window clicked with ALT!" if event.altKey
@@ -197,8 +217,6 @@ class State_Mouse_Events < State
     @window.on :dblclick do |event|
       puts "double clicked!"
     end
-
-    @window.widgets << area
 
     @handler.on :any do |event|
       if Input::Mouse.in_rect? @window

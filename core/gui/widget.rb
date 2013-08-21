@@ -18,4 +18,7 @@ class Widget < Container
     self.y = @parent.y + ry
   end
 
+  def render
+  end
+
 end
