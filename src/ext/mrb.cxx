@@ -1,5 +1,14 @@
 #include "mrb.hxx"
 
+namespace Moon {
+  const struct mrb_data_type engine_data_type = {
+    "Engine", NULL,
+  };
+  const struct mrb_data_type window_data_type = {
+    "Window", NULL,
+  };
+}
+
 void moon_init_mrb_core(mrb_state *mrb) {
   struct RClass *moon_module;
   moon_module = mrb_define_module(mrb, "Moon");
