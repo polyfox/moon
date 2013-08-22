@@ -28,7 +28,7 @@ add_library(moon STATIC
   ext/mrb_sprite.cxx
   ext/mrb_spritesheet.cxx
   ext/mrb_tone.cxx
-  ext/mrb_window.cxx
+  ext/mrb_screen.cxx
 
   audio.cxx
   engine.cxx

@@ -8,5 +8,5 @@ void moon_init_mrb_core(mrb_state *mrb) {
   Moon::moon_mrb_sound_init(mrb);
   Moon::moon_mrb_music_init(mrb);
   Moon::moon_mrb_tone_init(mrb);
-  Moon::moon_mrb_window_init(mrb);
+  Moon::moon_mrb_screen_init(mrb);
 };

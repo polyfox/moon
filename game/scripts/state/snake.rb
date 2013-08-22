@@ -36,8 +36,8 @@ class State_Snake < State
 
   def init
     super
-    @width  = (Window.width / 16).to_i # Window#width / 16
-    @height = (Window.height / 16).to_i # Window#height / 16
+    @width  = (Screen.width / 16).to_i # Screen#width / 16
+    @height = (Screen.height / 16).to_i # Screen#height / 16
     @height -= 2 # making space for the text_score
     @field = Rectangle.new(0, 24, @width * 16, @height * 16)
     puts "Board Size is: #{@width} x #{@height}"

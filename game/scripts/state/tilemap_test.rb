@@ -55,7 +55,7 @@ class State_TilemapTest < State
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
     layers = [layer1, layer2, layer3]
     @tilemap  = Tilemap.new
-    @map_data = DataMatrix.new(20, 15, layers.size) #((Window.width / 32).to_i, (Window.height / 32).to_i, 3)
+    @map_data = DataMatrix.new(20, 15, layers.size) #((Screen.width / 32).to_i, (Screen.height / 32).to_i, 3)
     @tileset  = Spritesheet.new("resources/hyptosis_tile-art-batch-1.png", 32, 32)
     @map_data.map_with_xyz! do |n, x, y, z|
       layer = layers[z]

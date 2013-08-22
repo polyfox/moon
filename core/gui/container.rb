@@ -20,7 +20,7 @@ class Container < Rectangle
 
     # double clicks (click distance was max 500ms)
     on :click do |event|
-      now = Window.uptime
+      now = Screen.uptime
       if now - @last_click_at < 0.500
         trigger :dblclick
         # reset the distance, so we can't trigger
