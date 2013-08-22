@@ -4,7 +4,7 @@
 #   This State is used to demonstrate various functions in the Moon engine.
 #
 # extension
-class Input
+module Input
 
   def self.triggered?(key_id)
     return (pressed?(key_id) || repeated?(key_id)) == 0
@@ -109,11 +109,11 @@ class MoonPlayer < Container
     @music = BGM.new("resources/CamelsNommingHay.ogg", "ogg")
     #@state = :stop
 
-    @play    = Widget.new(  0,   0,  32,  32)
-    @stop    = Widget.new( 34,   0,  32,  32)
-    @title   = Widget.new( 66,   0, 128,  16)
-    @seekbar = Widget.new( 66,  16, 128,  16)
-    @seek    = Widget.new( 66,  16,  16,  16)
+    @play    = Widget.new(self,  0,   0,  32,  32)
+    @stop    = Widget.new(self, 34,   0,  32,  32)
+    @title   = Widget.new(self, 66,   0, 128,  16)
+    @seekbar = Widget.new(self, 66,  16, 128,  16)
+    @seek    = Widget.new(self, 66,  16,  16,  16)
 
     @play.on_event(:mouse_focus_no_mod) do |widget|
       Music.playing? ? pause_music : play_music(true)
@@ -228,9 +228,9 @@ class MoonPlayer < Container
       @play.update
       @stop.update
     end
-    if Input.triggered?(Input::Keys::ESCAPE)
+    if Input::Keyboard.triggered?(Input::Keyboard::Keys::ESCAPE)
       stop_music
-    elsif Input.triggered?(Input::Keys::SPACE)
+    elsif Input::Keyboard.triggered?(Input::Keyboard::Keys::SPACE)
       play_music
     end
     update_seek

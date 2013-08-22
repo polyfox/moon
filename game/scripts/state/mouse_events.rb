@@ -3,22 +3,22 @@
 #------------------------------------------------------------
 # When a button or a key gets pressed, a "press(ed)" event triggers exactly once (one frame). On release, a "release(d)" event gets triggered for one frame.
 # (same as mousedown, mouseup).
-# 
+#
 # When we detect a mousedown, followed by a mouseup, we've detected a "click", which triggers exactly once. A "dblclick"/"double click" is when one click
 # event follows another, in a gap of less than 500ms.
-# 
+#
 # mouseover - mouse is in the area of the object.
 # mouseout - mouse is no longer in the area of the object
 # mousemove - the mouse has moved
 # mousewheel - the wheel has moved
-# 
+#
 # if the mouse is pressed down (mousedown) and we get a mousemove event, that means we have a "drag" event.
 # upon releasing the mouse (mouseup), we have a "drop" event.
-# 
+#
 # "current click count" - consecutive clicks in a certain time frame
-# 
+#
 # http://www.w3.org/TR/DOM-Level-3-Events/#event-type-click
-# 
+#
 # For click detection, we need to match the mouseup and mousedown events, because for example if we mousedown on
 # an object, then move the mouse away from the object and release the mouse, then click down and pull the mouse
 # over the object, and release it, a click should not be triggered, because essentially, we just made 2 different
@@ -26,9 +26,9 @@
 # To solve this, let's assign an ID to each mouse press/release pair, and store the last mousedown ID. When we
 # get a mouseup, we check if the ID matches the mousedown ID. if it does, it's the same click, and we trigger
 # a click event, else we just trash it.
-# 
+#
 #----[ HTML5 ]----------------------------------------------
-# 
+#
 # drag: fired frequently on a dragged element (which must define the *draggable* attribute.)
 # dragstart: fired when the mouse is held down on an element and the movement starts.
 # dragend: fired when the element is released.
@@ -46,7 +46,7 @@ class Event
     @type = type
 
     # modifier keys
-    keys = Input::Keys
+    keys = Input::Keyboard::Keys
     button = Input::Mouse::Buttons::LEFT
     @altKey   = Input::Mouse.modded?(button, keys::MOD_ALT)
     @shiftKey = Input::Mouse.modded?(button, keys::MOD_SHIFT)
@@ -138,7 +138,7 @@ class GUI_Window < Container
     # the dispatcher generates, and not those that are later
     # generated/detected (click)
     on :mouseup, :mousedown, :mousemove do |event|
-      @widgets.each {|widget| 
+      @widgets.each {|widget|
         widget.trigger event if Input::Mouse.in_rect?(widget)
       }
     end
@@ -158,12 +158,12 @@ class GUI_Window < Container
       end
     end
     # edges (top/bottom)
-    (width/16).to_i.times do |w| 
+    (width/16).to_i.times do |w|
       @windowskin.render(x+w*16, y, 1.0, 1)
       @windowskin.render(x+w*16, y+height-16, 1.0, 7)
     end
     # edges (left/right)
-    (height/16).to_i.times do |h| 
+    (height/16).to_i.times do |h|
       @windowskin.render(x, y+h*16, 1.0, 3)
       @windowskin.render(x+width-16, y+h*16, 1.0, 5)
     end
@@ -207,7 +207,7 @@ class State_Mouse_Events < State
   def init
     @handler = EventDispatcher.new
     @window = GUI_Window.new(32,32,128,128)
-    
+
     button = Button.new(@window, 0, 0, "Test") { puts "button click'd!" }
 
     @window.on :click do |event|
