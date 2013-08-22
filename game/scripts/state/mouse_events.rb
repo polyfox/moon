@@ -36,10 +36,6 @@
 # dragleave: fired when an element exits the displayed area, as the inverse of dragenter.
 # dragover: fired frequently when an element is over another.
 # drop: fired when an element is released over another.
-#-----------------------------------------------------------
-# 
-# 
-# After GLFW_REPEAT triggers in, we 
 #=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
 class Event
@@ -65,11 +61,13 @@ module Eventable
   end
 
   # Adds a new event listener.
-  # @param [Symbol] type The type to listen for..
+  # @param [Symbol] types The types to listen for..
   # @param [Proc] block The block we want to execute when we catch the type.
-  def on type, &block
-    @event_listeners[type] ||= []
-    @event_listeners[type].push block
+  def on *types, &block
+    types.each do |type|
+      @event_listeners[type] ||= []
+      @event_listeners[type].push block
+    end
   end
 
   def trigger event
@@ -135,8 +133,14 @@ class GUI_Window < Container
     @draggable = true
     @widgets = []
 
-    on :any do |event|
-      @widgets.each {|widget| widget.trigger event }
+    # in a perfect scenario, the events would bubble up, not
+    # down... here we just need to forward the events that
+    # the dispatcher generates, and not those that are later
+    # generated/detected (click)
+    on :mouseup, :mousedown, :mousemove do |event|
+      @widgets.each {|widget| 
+        widget.trigger event if Input::Mouse.in_rect?(widget)
+      }
     end
 
     @windowskin = Spritesheet.new("resources/window.png", 16, 16)
@@ -147,9 +151,6 @@ class GUI_Window < Container
   end
 
   def render
-
-    #@widgets.each(&:render.to_proc)
-
     # render the windowskin (background)
     (width/16).to_i.times do |w|
       (height/16).to_i.times do |h|
@@ -171,161 +172,32 @@ class GUI_Window < Container
     @windowskin.render(x+width-16, y, 1.0, 2)
     @windowskin.render(x, y+height-16, 1.0, 6)
     @windowskin.render(x+width-16, y+height-16, 1.0, 8)
+
+    # render widgets
+    @widgets.each(&:render.to_proc)
   end
 end
 
+class Button < Widget
+  @@font = Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 16)
 
-class Container < Rectangle
-  attr_accessor :draggable
+  def initialize(parent, x, y, text, &block)
+    super(parent, x, y, 80, 32)
+    @text = text
+    @callback = block
 
-  def initialize(x, y, width, height)
-    super(x, y, width, height)
-    @event_listeners = {:any => []}
-
-    @last_mousedown_id = 0 # dirty, dirty!
-
-    # click event generation
-    on :mousedown do |event|
-      @last_mousedown_id = event.id
+    on :click do
+      @callback.call
     end
-
-    on :mouseup do |event|
-      trigger :click if @last_mousedown_id == event.id
-    end
-
-    # dragging support
-    @draggable = false
-
-    on :mousedown do |event|
-      # bonus: be able to specify a drag rectangle: 
-      # the area where the user can click to drag
-      # the window (useful if we only want it to
-      # drag by the titlebar)
-      
-      # initiate dragging if @draggable = true
-      if @draggable
-        @dragging = true
-
-        # store the relative offset of where the mouse
-        # was clicked on the object, so we can accurately
-        # set the new position
-        @offset_x = Input::Mouse.x - self.x
-        @offset_y = Input::Mouse.y - self.y
-      end
-    end
-
-    # TODO: implement mousemove
-    on :mousemove do |event|
-      # if draggable, and we are dragging (the mouse is pressed down)
-
-      # update the position, calculated off of
-      # the mouse position and the relative offset
-      # set on mousedown
-
-      # don't forget to update the widget positions
-      # too (refresh_position)
-      # NOTE: at the moment the widget position is
-      # updated in the update loop each cycle. Might
-      # not be the most efficient thing to do.
-
-      if @draggable && @dragging
-        self.x = Input::Mouse.x - @offset_x
-        self.y = Input::Mouse.y - @offset_y
-      end
-    end
-
-    on :mouseup do |event|
-      # disable dragging
-      @dragging = false if @draggable
-    end
-
-    trigger :resize
-    trigger :move
-  end
-
-  def x=(new_x)
-    super(new_x)
-    trigger :move
-  end
-
-  def y=(new_y)
-    super(new_y)
-    trigger :move
-  end
-
-  def width=(new_width)
-    super(new_width)
-    trigger :resize
-  end
-
-  def height=(new_height)
-    super(new_height)
-    trigger :resize
-  end
-
-  def rx2
-    rx + width
-  end
-
-  def ry2
-    ry + height
-  end
-
-  def pos
-    return [x, y]
-  end
-
-  def rpos
-    return [rx, ry]
-  end
-
-  def size
-    return [width, height]
-  end
-
-  # Adds a new event listener.
-  # @param [Symbol] type The type to listen for..
-  # @param [Proc] block The block we want to execute when we catch the type.
-  def on type, &block
-    @event_listeners[type] ||= []
-    @event_listeners[type].push block
-  end
-
-  def trigger event
-    event = Event.new(event) if !event.is_a?(Event) # TEMP
-    @event_listeners[:any].each {|block| block.call(event) }
-    return unless @event_listeners[event.type]
-    @event_listeners[event.type].each do |block|
-      block.call(event)
-    end
-  end
-
-end
-
-class Widget < Container
-
-  attr_accessor :rx, :ry
-
-  def initialize(parent, rx, ry, width, height)
-    @parent = parent
-    @rx = rx
-    @ry = ry
-    super(0, 0, width, height)
   end
 
   def update
-    self.x = @parent.x + rx
-    self.y = @parent.y + ry
-=begin
-    if Input::Mouse.in_rect?(self)
-      call_event(:mouse_over)
-      keys = Input::Keys
-      button = Input::Mouse::Buttons::LEFT
-      if Input::Mouse.triggered?(button)
-        call_event(:mouse_focus)
-      end
-    end
-=end
+    super
+  end
+
+  def render
+    super
+    @@font.draw_text(@x, @y+@@font.size, @text)
   end
 
 end
@@ -335,17 +207,16 @@ class State_Mouse_Events < State
   def init
     @handler = EventDispatcher.new
     @window = GUI_Window.new(32,32,128,128)
-    area = Widget.new(@window, 0,0,64,64)
-
-    area.on :click do |event|
-      puts "area clicked!" if Input::Mouse.in_rect? area
-    end
+    
+    button = Button.new(@window, 0, 0, "Test") { puts "button click'd!" }
 
     @window.on :click do |event|
       puts "window clicked with ALT!" if event.altKey
     end
 
-    @window.widgets << area
+    @window.on :dblclick do |event|
+      puts "double clicked!"
+    end
 
     @handler.on :any do |event|
       if Input::Mouse.in_rect? @window
