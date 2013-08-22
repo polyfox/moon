@@ -8,20 +8,6 @@ class State_ModifierTest < State
   CFALSE = 0
   CTRUE  = 1
 
-  BUTTONS = [
-    Input::Mouse::Buttons::BUTTON_1,
-    Input::Mouse::Buttons::BUTTON_2,
-    Input::Mouse::Buttons::BUTTON_3,
-    Input::Mouse::Buttons::BUTTON_4,
-    Input::Mouse::Buttons::BUTTON_5,
-    Input::Mouse::Buttons::BUTTON_6,
-    Input::Mouse::Buttons::BUTTON_7,
-    Input::Mouse::Buttons::BUTTON_8
-  ]
-
-  MODS = [CNULL, Input::Keys::MOD_SHIFT, Input::Keys::MOD_CONTROL,
-                 Input::Keys::MOD_ALT, Input::Keys::MOD_SUPER]
-
   def init
     init_data_table
     init_spriteset
@@ -29,7 +15,7 @@ class State_ModifierTest < State
   end
 
   def init_data_table
-    @data_table = Table.new(BUTTONS.size, MODS.size)
+    @data_table = Table.new(Input::Mouse::BUTTONS.size, Input::Mouse::MODS.size)
   end
 
   def init_spriteset

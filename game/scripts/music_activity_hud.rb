@@ -3,18 +3,24 @@
 #   Shows the active state of the Music class
 class MusicActivityHud
 
-  def initialize(x, y)
-    @music = Music # later we can have different music objects with different huds
+  attr_accessor :x
+  attr_accessor :y
+  attr_accessor :z
+
+  def initialize(x, y, z)
+    # later we can have different music objects with different huds
     @x = x
     @y = y
-    @spritesheet_8x8 = Spritesheet.new("resources/media_buttons_8x8.png", 8, 8)
-    @cell_width = @spritesheet_8x8.cell_width
+    @z = z
+    @music = Music
+    @spritesheet = Cache.spritesheet("media_buttons_8x8")
+    @cell_width = @spritesheet.cell_width
   end
 
   def render
-    @spritesheet_8x8.render(0, 0, 0, 1) if @music.playing?
-    @spritesheet_8x8.render(@cell_width, 0, 0, 0) if @music.stopped?
-    @spritesheet_8x8.render(@cell_width * 2, 0, 0, 2) if @music.finished?
+    @spritesheet.render(@x, @y, @z, 1) if @music.playing?
+    @spritesheet.render(@x + @cell_width, @y, @z, 0) if @music.stopped?
+    @spritesheet.render(@x + @cell_width * 2, @y, @z, 2) if @music.finished?
   end
 
 end

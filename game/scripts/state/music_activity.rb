@@ -6,7 +6,7 @@
 class State_MusicActivity < State
 
   def init
-    @music_hud = MusicActivityHud.new(0, 0)
+    @music_hud = MusicActivityHud.new(0, 0, 0)
     #@music = Music.new
     Music.play("resources/CamelsNommingHay.ogg", "ogg")
     super
