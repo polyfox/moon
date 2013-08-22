@@ -20,7 +20,7 @@ class Container < Rectangle
 
     # double clicks (click distance was max 500ms)
     on :click do |event|
-      now = Screen.uptime
+      now = Moon::Screen.uptime
       if now - @last_click_at < 0.500
         trigger :dblclick
         # reset the distance, so we can't trigger
@@ -47,8 +47,8 @@ class Container < Rectangle
         # store the relative offset of where the mouse
         # was clicked on the object, so we can accurately
         # set the new position
-        @offset_x = Input::Mouse.x - self.x
-        @offset_y = Input::Mouse.y - self.y
+        @offset_x = Moon::Input::Mouse.x - self.x
+        @offset_y = Moon::Input::Mouse.y - self.y
       end
     end
 
@@ -67,8 +67,8 @@ class Container < Rectangle
       # not be the most efficient thing to do.
 
       if @draggable && @dragging
-        self.x = Input::Mouse.x - @offset_x
-        self.y = Input::Mouse.y - @offset_y
+        self.x = Moon::Input::Mouse.x - @offset_x
+        self.y = Moon::Input::Mouse.y - @offset_y
       end
     end
 

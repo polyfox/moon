@@ -1,7 +1,7 @@
 require 'core/gui/widget'
 
 class Button < Widget
-  @@font = Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 16)
+  @@font = Moon::Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 16)
 
   def initialize(parent, x, y, text, &block)
     super(parent, x, y, 80, 32)

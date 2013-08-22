@@ -46,12 +46,12 @@ class Event
     @type = type
 
     # modifier keys
-    keys = Input::Keyboard::Keys
-    button = Input::Mouse::Buttons::LEFT
-    @altKey   = Input::Mouse.modded?(button, keys::MOD_ALT)
-    @shiftKey = Input::Mouse.modded?(button, keys::MOD_SHIFT)
-    @ctrlKey  = Input::Mouse.modded?(button, keys::MOD_CONTROL)
-    @metaKey  = Input::Mouse.modded?(button, keys::MOD_SUPER)
+    keys = Moon::Input::Keyboard::Keys
+    button = Moon::Input::Mouse::Buttons::LEFT
+    @altKey   = Moon::Input::Mouse.modded?(button, keys::MOD_ALT)
+    @shiftKey = Moon::Input::Mouse.modded?(button, keys::MOD_SHIFT)
+    @ctrlKey  = Moon::Input::Mouse.modded?(button, keys::MOD_CONTROL)
+    @metaKey  = Moon::Input::Mouse.modded?(button, keys::MOD_SUPER)
   end
 end
 
@@ -93,9 +93,9 @@ class EventDispatcher
 
   # LEFT CLICK HANDLING
   def update
-    button = Input::Mouse::Buttons::LEFT
+    button = Moon::Input::Mouse::Buttons::LEFT
 
-    if Input::Mouse.pressed?(button)
+    if Moon::Input::Mouse.pressed?(button)
       if @last_state != :pressed # trigger only once
         # mousedown
         mousedown = Event.new(:mousedown)
@@ -115,7 +115,7 @@ class EventDispatcher
     end
 
     # mousemove
-    current_pos = Input::Mouse.pos
+    current_pos = Moon::Input::Mouse.pos
     if @last_pos != current_pos
       trigger :mousemove
       @last_pos = current_pos
@@ -138,11 +138,11 @@ class Window < Container
     # generated/detected (click)
     on :mouseup, :mousedown, :mousemove do |event|
       @widgets.each {|widget|
-        widget.trigger event if Input::Mouse.in_rect?(widget)
+        widget.trigger event if Moon::Input::Mouse.in_rect?(widget)
       }
     end
 
-    @windowskin = Spritesheet.new("resources/window.png", 16, 16)
+    @windowskin = Moon::Spritesheet.new("resources/window.png", 16, 16)
   end
 
   def update
@@ -194,7 +194,7 @@ class State_Mouse_Events < State
     end
 
     @handler.on :any do |event|
-      if Input::Mouse.in_rect? @window
+      if Moon::Input::Mouse.in_rect? @window
         @window.trigger event
       end
     end

@@ -82,7 +82,7 @@ namespace Moon {
 
   void moon_mrb_tone_init(mrb_state *mrb) {
     struct RClass *tone_class;
-    tone_class = mrb_define_class(mrb, "Tone", mrb->object_class);
+    tone_class = mrb_define_class_under(mrb, mrb_class_get(mrb, "Moon"), "Tone", mrb->object_class);
     MRB_SET_INSTANCE_TT(tone_class, MRB_TT_DATA);
 
     mrb_define_class_method(mrb, tone_class, "new", moon_mrb_tone_new, MRB_ARGS_REQ(3));

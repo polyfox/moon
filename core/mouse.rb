@@ -1,4 +1,4 @@
-module Input
+module Moon::Input
   module Mouse
 
     BUTTONS = [

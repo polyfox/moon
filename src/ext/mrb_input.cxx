@@ -101,7 +101,7 @@ namespace Moon
     struct RClass *mouse_module;
     struct RClass *button_module;
 
-    input_module    = mrb_define_module(mrb, "Input");
+    input_module    = mrb_define_module_under(mrb, mrb_class_get(mrb, "Moon"), "Input");
     keyboard_module = mrb_define_module_under(mrb, input_module,    "Keyboard");
     mouse_module    = mrb_define_module_under(mrb, input_module,    "Mouse");
     key_module      = mrb_define_module_under(mrb, keyboard_module, "Keys");
