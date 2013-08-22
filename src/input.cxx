@@ -5,15 +5,15 @@ namespace Moon {
   Button::Button() {
     button_id = 0;
     state     = GLFW_RELEASE;
-    strcpy(name, "");
+    name      = NULL;
     held_at   = 0;
     mods      = 0;
   }
 
-  Button::Button(int glfw_key, const char* kname) {
+  Button::Button(int glfw_key, char* kname) {
     button_id = glfw_key;
     state     = GLFW_RELEASE;
-    strcpy(name, kname);
+    name      = kname;
     held_at   = 0;
     mods      = 0;
   }
