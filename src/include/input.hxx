@@ -13,10 +13,10 @@ namespace Moon {
   public:
     // constructors
     Button();
-    Button(int button_id, char *name);
+    Button(int button_id, const char *name);
     // members
     int button_id;
-    char *name;
+    const char *name;
     int state;
     double held_at; // at what time was the key held down?
     int mods;

@@ -10,7 +10,7 @@ namespace Moon {
     mods      = 0;
   }
 
-  Button::Button(int glfw_key, char* kname) {
+  Button::Button(int glfw_key, const char* kname) {
     button_id = glfw_key;
     state     = GLFW_RELEASE;
     name      = kname;
