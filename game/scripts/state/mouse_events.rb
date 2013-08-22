@@ -123,8 +123,7 @@ class EventDispatcher
   end
 end
 
-# Rename to "Window" or something later
-class GUI_Window < Container
+class Window < Container
   attr_accessor :widgets
 
   def initialize(x, y, width, height)
@@ -182,7 +181,7 @@ class State_Mouse_Events < State
 
   def init
     @handler = EventDispatcher.new
-    @window = GUI_Window.new(32,32,128,128)
+    @window = Window.new(32,32,128,128)
 
     button = Button.new(@window, 0, 0, "Test") { puts "button click'd!" }
 
