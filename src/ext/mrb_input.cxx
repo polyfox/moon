@@ -1,51 +1,50 @@
 #include "mrb.hxx"
 #include "input.hxx"
 
-namespace Moon 
-{ 
+namespace Moon
+{
   /* hidden function */
-  static mrb_value moon_mrb_input_state_eq_(mrb_state *mrb, mrb_value self, 
+  static mrb_value moon_mrb_keyboard_state_eq_(mrb_state *mrb, mrb_value self,
                                             int state) {
     mrb_int key_id;
     mrb_int mod_id;
     bool res;
     int argc = mrb_get_args(mrb, "i|i", &key_id, &mod_id);
     if (argc == 2) {
-      res = Input::key_state_is_eq_with_mod(key_id, state, mod_id);
+      res = Input::Keyboard::key_state_is_eq_with_mod(key_id, state, mod_id);
     } else {
-      res = Input::key_state_is_eq(key_id, state);
+      res = Input::Keyboard::key_state_is_eq(key_id, state);
     }
     if (res) {
-      return mrb_fixnum_value(Input::key_state_hold(key_id, state));
+      return mrb_fixnum_value(Input::Keyboard::key_state_hold(key_id, state));
     } else {
       return mrb_bool_value(false);
     }
   }
 
-  static mrb_value moon_mrb_input_is_pressed(mrb_state *mrb, mrb_value self) {
-    return moon_mrb_input_state_eq_(mrb, self, GLFW_PRESS);
+  static mrb_value moon_mrb_keyboard_mods(mrb_state *mrb, mrb_value self) {
+    mrb_int key_id;
+    mrb_get_args(mrb, "i", &key_id);
+    return mrb_fixnum_value(Input::Keyboard::key_mods(key_id));
   }
 
-  static mrb_value moon_mrb_input_is_released(mrb_state *mrb, mrb_value self) {
-    return moon_mrb_input_state_eq_(mrb, self, GLFW_RELEASE);
+  static mrb_value moon_mrb_keyboard_is_pressed(mrb_state *mrb, mrb_value self) {
+    return moon_mrb_keyboard_state_eq_(mrb, self, GLFW_PRESS);
   }
 
-  static mrb_value moon_mrb_input_is_repeated(mrb_state *mrb, mrb_value self) {
-    return moon_mrb_input_state_eq_(mrb, self, GLFW_REPEAT);
+  static mrb_value moon_mrb_keyboard_is_released(mrb_state *mrb, mrb_value self) {
+    return moon_mrb_keyboard_state_eq_(mrb, self, GLFW_RELEASE);
   }
 
-  static mrb_value moon_mrb_input_is_modded(mrb_state *mrb, mrb_value self) {
+  static mrb_value moon_mrb_keyboard_is_repeated(mrb_state *mrb, mrb_value self) {
+    return moon_mrb_keyboard_state_eq_(mrb, self, GLFW_REPEAT);
+  }
+
+  static mrb_value moon_mrb_keyboard_is_modded(mrb_state *mrb, mrb_value self) {
     mrb_int key_id;
     mrb_int mod_id;
     mrb_get_args(mrb, "ii", &key_id, &mod_id);
-    return mrb_bool_value(Input::key_mod(key_id, mod_id));
-  }
-
-  static mrb_value moon_mrb_input_hold(mrb_state *mrb, mrb_value self) {
-    mrb_int key_id;
-    mrb_int state;
-    mrb_get_args(mrb, "ii", &key_id, &state);
-    return mrb_fixnum_value(Input::key_state_hold(key_id, state));
+    return mrb_bool_value(Input::Keyboard::key_is_modded(key_id, mod_id));
   }
 
   static mrb_value moon_mrb_mouse_x(mrb_state *mrb, mrb_value self) {
@@ -56,7 +55,7 @@ namespace Moon
     return mrb_fixnum_value(Input::Mouse::y());
   }
 
-  static mrb_value moon_mrb_mouse_state_eq_(mrb_state *mrb, mrb_value self, 
+  static mrb_value moon_mrb_mouse_state_eq_(mrb_state *mrb, mrb_value self,
                                             int state) {
     mrb_int button_id;
     mrb_int mod_id;
@@ -74,6 +73,12 @@ namespace Moon
     }
   }
 
+  static mrb_value moon_mrb_mouse_mods(mrb_state *mrb, mrb_value self) {
+    mrb_int button_id;
+    mrb_get_args(mrb, "i", &button_id);
+    return mrb_fixnum_value(Input::Mouse::button_mods(button_id));
+  }
+
   static mrb_value moon_mrb_mouse_is_pressed(mrb_state *mrb, mrb_value self) {
     return moon_mrb_mouse_state_eq_(mrb, self, GLFW_PRESS);
   }
@@ -86,29 +91,33 @@ namespace Moon
     mrb_int button_id;
     mrb_int mod_id;
     mrb_get_args(mrb, "ii", &button_id, &mod_id);
-    return mrb_bool_value(Input::Mouse::button_mod(button_id, mod_id));
+    return mrb_bool_value(Input::Mouse::button_is_modded(button_id, mod_id));
   }
 
   void moon_mrb_input_init(mrb_state *mrb) {
-    struct RClass *input_class;
+    struct RClass *input_module;
+    struct RClass *keyboard_module;
     struct RClass *key_module;
-    struct RClass *button_module;
     struct RClass *mouse_module;
-    
-    input_class   = mrb_define_class(mrb, "Input", mrb->object_class);
-    key_module    = mrb_define_module_under(mrb, input_class, "Keys");
-    mouse_module  = mrb_define_module_under(mrb, input_class, "Mouse");
-    button_module = mrb_define_module_under(mrb, mouse_module, "Buttons");
+    struct RClass *button_module;
+
+    input_module    = mrb_define_module(mrb, "Input");
+    keyboard_module = mrb_define_module_under(mrb, input_module,    "Keyboard");
+    mouse_module    = mrb_define_module_under(mrb, input_module,    "Mouse");
+    key_module      = mrb_define_module_under(mrb, keyboard_module, "Keys");
+    button_module   = mrb_define_module_under(mrb, mouse_module,    "Buttons");
 
     // input functions
-    mrb_define_class_method(mrb, input_class, "pressed?",  moon_mrb_input_is_pressed,  MRB_ARGS_ARG(1, 1));
-    mrb_define_class_method(mrb, input_class, "released?", moon_mrb_input_is_released, MRB_ARGS_ARG(1, 1));
-    mrb_define_class_method(mrb, input_class, "repeated?", moon_mrb_input_is_repeated, MRB_ARGS_ARG(1, 1));
-    mrb_define_class_method(mrb, input_class, "modded?",   moon_mrb_input_is_modded,   MRB_ARGS_REQ(2));
+    mrb_define_class_method(mrb, keyboard_module, "mods",      moon_mrb_keyboard_mods,        MRB_ARGS_REQ(1));
+    mrb_define_class_method(mrb, keyboard_module, "pressed?",  moon_mrb_keyboard_is_pressed,  MRB_ARGS_ARG(1, 1));
+    mrb_define_class_method(mrb, keyboard_module, "released?", moon_mrb_keyboard_is_released, MRB_ARGS_ARG(1, 1));
+    mrb_define_class_method(mrb, keyboard_module, "repeated?", moon_mrb_keyboard_is_repeated, MRB_ARGS_ARG(1, 1));
+    mrb_define_class_method(mrb, keyboard_module, "modded?",   moon_mrb_keyboard_is_modded,   MRB_ARGS_REQ(2));
 
     // mouse functions
-    mrb_define_class_method(mrb, mouse_module, "x", moon_mrb_mouse_x, MRB_ARGS_NONE());
-    mrb_define_class_method(mrb, mouse_module, "y", moon_mrb_mouse_y, MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, mouse_module, "x",         moon_mrb_mouse_x,           MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, mouse_module, "y",         moon_mrb_mouse_y,           MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, mouse_module, "mods",      moon_mrb_mouse_mods,        MRB_ARGS_REQ(1));
     mrb_define_class_method(mrb, mouse_module, "pressed?",  moon_mrb_mouse_is_pressed,  MRB_ARGS_ARG(1, 1));
     mrb_define_class_method(mrb, mouse_module, "released?", moon_mrb_mouse_is_released, MRB_ARGS_ARG(1, 1));
     mrb_define_class_method(mrb, mouse_module, "modded?",   moon_mrb_mouse_is_modded,   MRB_ARGS_REQ(2));
@@ -119,7 +128,7 @@ namespace Moon
       auto& key = i.second;
       mrb_define_const(mrb, key_module, key.name, mrb_fixnum_value(key.button_id));
     };
-    // key modifiers 
+    // key modifiers
     mrb_define_const(mrb, key_module, "MOD_SHIFT",   mrb_fixnum_value(GLFW_MOD_SHIFT));
     mrb_define_const(mrb, key_module, "MOD_CONTROL", mrb_fixnum_value(GLFW_MOD_CONTROL));
     mrb_define_const(mrb, key_module, "MOD_ALT",     mrb_fixnum_value(GLFW_MOD_ALT));
@@ -137,7 +146,7 @@ namespace Moon
   }
 
 }
-/* 
-  mruby.api reference 
+/*
+  mruby.api reference
     void mrb_define_const(mrb_state*, struct RClass*, const char *name, mrb_value);
 */
