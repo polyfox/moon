@@ -50,13 +50,13 @@ class State_PullBlock < State
         @block_node.move_straight(dir)
       end
     end
-    if Input.pressed?(Input::Keys::DOWN)
+    if Input::Keyboard.pressed?(Input::Keyboard::Keys::DOWN)
       @block_node.move_straight(2)
-    elsif Input.pressed?(Input::Keys::LEFT)
+    elsif Input::Keyboard.pressed?(Input::Keyboard::Keys::LEFT)
       @block_node.move_straight(4)
-    elsif Input.pressed?(Input::Keys::RIGHT)
+    elsif Input::Keyboard.pressed?(Input::Keyboard::Keys::RIGHT)
       @block_node.move_straight(6)
-    elsif Input.pressed?(Input::Keys::UP)
+    elsif Input::Keyboard.pressed?(Input::Keyboard::Keys::UP)
       @block_node.move_straight(8)
     end
   end

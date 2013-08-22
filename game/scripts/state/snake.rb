@@ -126,13 +126,13 @@ class State_Snake < State
 
   def update
     super
-    if Input.pressed?(Input::Keys::DOWN)
+    if Input::Keyboard.pressed?(Input::Keyboard::Keys::DOWN)
       @dir = 2
-    elsif Input.pressed?(Input::Keys::LEFT)
+    elsif Input::Keyboard.pressed?(Input::Keyboard::Keys::LEFT)
       @dir = 4
-    elsif Input.pressed?(Input::Keys::RIGHT)
+    elsif Input::Keyboard.pressed?(Input::Keyboard::Keys::RIGHT)
       @dir = 6
-    elsif Input.pressed?(Input::Keys::UP)
+    elsif Input::Keyboard.pressed?(Input::Keyboard::Keys::UP)
       @dir = 8
     end
     if @ticks % @time == 0

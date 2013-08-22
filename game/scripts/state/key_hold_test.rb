@@ -52,7 +52,7 @@ class State_KeyHoldTest < State
   end
 
   def init
-    @hud = Hud_KeyHold.new(Input, Input::Keys::SPACE, 8, 8)
+    @hud = Hud_KeyHold.new(Input::Keyboard, Input::Keyboard::Keys::SPACE, 8, 8)
     super
   end
 

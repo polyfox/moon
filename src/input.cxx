@@ -10,7 +10,7 @@ namespace Moon {
     mods      = 0;
   }
 
-  Button::Button(int glfw_key, char* kname) {
+  Button::Button(int glfw_key, const char* kname) {
     button_id = glfw_key;
     state     = GLFW_RELEASE;
     name      = kname;
@@ -147,7 +147,7 @@ namespace Moon {
     { GLFW_MOUSE_BUTTON_3, { GLFW_MOUSE_BUTTON_3, "BUTTON_3" } }, // MIDDLE
     { GLFW_MOUSE_BUTTON_4, { GLFW_MOUSE_BUTTON_4, "BUTTON_4" } },
     { GLFW_MOUSE_BUTTON_5, { GLFW_MOUSE_BUTTON_5, "BUTTON_5" } },
-    { GLFW_MOUSE_BUTTON_6, { GLFW_MOUSE_BUTTON_6, "BUTTON_6" } }, 
+    { GLFW_MOUSE_BUTTON_6, { GLFW_MOUSE_BUTTON_6, "BUTTON_6" } },
     { GLFW_MOUSE_BUTTON_7, { GLFW_MOUSE_BUTTON_7, "BUTTON_7" } },
     { GLFW_MOUSE_BUTTON_8, { GLFW_MOUSE_BUTTON_8, "BUTTON_8" } }
   };
@@ -156,11 +156,11 @@ namespace Moon {
 
   void Input::initialize(GLFWwindow* glfw_window) {
     window = glfw_window;
-    glfwSetKeyCallback(window, Input::update_key);
+    glfwSetKeyCallback(window, Input::Keyboard::update_key);
     glfwSetMouseButtonCallback(window, Input::Mouse::update_button);
   }
 
-  void Input::update_key(GLFWwindow* window, 
+  void Input::Keyboard::update_key(GLFWwindow* window,
                          int key_id, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
       keyboard_keys[key_id].held_at = glfwGetTime();
@@ -172,23 +172,27 @@ namespace Moon {
     keyboard_keys[key_id].mods = mods;
   }
 
-  KeyboardKey* Input::get_key(int key_id) {
+  KeyboardKey* Input::Keyboard::get_key(int key_id) {
     return &keyboard_keys[key_id];
   }
 
-  bool Input::key_mod(int key_id, int mod) {
+  int Input::Keyboard::key_mods(int key_id) {
+    return keyboard_keys[key_id].mods;
+  }
+
+  bool Input::Keyboard::key_is_modded(int key_id, int mod) {
     return (keyboard_keys[key_id].mods & mod) == mod;
   }
 
-  bool Input::key_state_is_eq(int key_id, int state) {
+  bool Input::Keyboard::key_state_is_eq(int key_id, int state) {
     return keyboard_keys[key_id].state == state;
   }
 
-  bool Input::key_state_is_eq_with_mod(int key_id, int state, int mod) {
-    return Input::key_state_is_eq(key_id, state) && Input::key_mod(key_id, mod);
+  bool Input::Keyboard::key_state_is_eq_with_mod(int key_id, int state, int mod) {
+    return Input::Keyboard::key_state_is_eq(key_id, state) && Input::Keyboard::key_is_modded(key_id, mod);
   }
 
-  double Input::key_state_hold(int key_id, int state) {
+  double Input::Keyboard::key_state_hold(int key_id, int state) {
     if (mouse_buttons[key_id].held_at != 0) {
       return glfwGetTime() - mouse_buttons[key_id].held_at;
     } else {
@@ -198,7 +202,7 @@ namespace Moon {
 
   /* Mouse functions */
 
-  void Input::Mouse::update_button(GLFWwindow* window, 
+  void Input::Mouse::update_button(GLFWwindow* window,
                                    int button_id, int action, int mods) {
     if (action == GLFW_PRESS) {
       mouse_buttons[button_id].held_at = glfwGetTime();
@@ -210,7 +214,11 @@ namespace Moon {
     mouse_buttons[button_id].mods = mods;
   }
 
-  bool Input::Mouse::button_mod(int button_id, int mod) {
+  int Input::Mouse::button_mods(int button_id) {
+    return mouse_buttons[button_id].mods;
+  }
+
+  bool Input::Mouse::button_is_modded(int button_id, int mod) {
     return (mouse_buttons[button_id].mods & mod) == mod;
   }
 
@@ -218,10 +226,10 @@ namespace Moon {
     return mouse_buttons[button_id].state == state;
   }
 
-  bool Input::Mouse::button_state_is_eq_with_mod(int button_id, int state, 
+  bool Input::Mouse::button_state_is_eq_with_mod(int button_id, int state,
                                                  int mod) {
-    return Input::Mouse::button_state_is_eq(button_id, state) && 
-           Input::Mouse::button_mod(button_id, mod);
+    return Input::Mouse::button_state_is_eq(button_id, state) &&
+           Input::Mouse::button_is_modded(button_id, mod);
   }
 
   double Input::Mouse::button_state_hold(int button_id, int state) {

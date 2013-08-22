@@ -35,11 +35,11 @@ class Container < Rectangle
     @draggable = false
 
     on :mousedown do |event|
-      # bonus: be able to specify a drag rectangle: 
+      # bonus: be able to specify a drag rectangle:
       # the area where the user can click to drag
       # the window (useful if we only want it to
       # drag by the titlebar)
-      
+
       # initiate dragging if @draggable = true
       if @draggable
         @dragging = true
@@ -126,8 +126,7 @@ class Container < Rectangle
   # @param [Proc] block The block we want to execute when we catch the type.
   def on *types, &block
     types.each do |type|
-      @event_listeners[type] ||= []
-      @event_listeners[type].push block
+      (@event_listeners[type] ||= []).push block
     end
   end
 
