@@ -4,6 +4,7 @@
 #include "moon.hxx"
 #include <GLFW/glfw3.h>
 #include <cmath>
+#include <array>
 
 #include "mrb.hxx" /* required for friend function */
 
@@ -45,6 +46,8 @@ namespace Moon {
     public:
       static int x();
       static int y();
+      static std::array<int, 2> pos();
+
       static void update_button(GLFWwindow* window, int button_id, int action, int mods);
       static int button_mods(int button_id);
       static bool button_is_modded(int button_id, int mod);

@@ -55,6 +55,15 @@ namespace Moon
     return mrb_fixnum_value(Input::Mouse::y());
   }
 
+  static mrb_value moon_mrb_mouse_pos(mrb_state *mrb, mrb_value self) {
+    auto pos = Input::Mouse::pos();
+
+    mrb_value ary = mrb_ary_new(mrb);
+    mrb_ary_push(mrb, ary, mrb_fixnum_value(pos[0]));
+    mrb_ary_push(mrb, ary, mrb_fixnum_value(pos[1]));
+    return ary;
+  }
+
   static mrb_value moon_mrb_mouse_state_eq_(mrb_state *mrb, mrb_value self,
                                             int state) {
     mrb_int button_id;
@@ -117,6 +126,7 @@ namespace Moon
     // mouse functions
     mrb_define_class_method(mrb, mouse_module, "x",         moon_mrb_mouse_x,           MRB_ARGS_NONE());
     mrb_define_class_method(mrb, mouse_module, "y",         moon_mrb_mouse_y,           MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, mouse_module, "pos",       moon_mrb_mouse_pos,           MRB_ARGS_NONE());
     mrb_define_class_method(mrb, mouse_module, "mods",      moon_mrb_mouse_mods,        MRB_ARGS_REQ(1));
     mrb_define_class_method(mrb, mouse_module, "pressed?",  moon_mrb_mouse_is_pressed,  MRB_ARGS_ARG(1, 1));
     mrb_define_class_method(mrb, mouse_module, "released?", moon_mrb_mouse_is_released, MRB_ARGS_ARG(1, 1));

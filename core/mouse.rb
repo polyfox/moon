@@ -15,10 +15,6 @@ module Moon::Input
     MODS = [0, Input::Keyboard::Keys::MOD_SHIFT, Input::Keyboard::Keys::MOD_CONTROL,
                Input::Keyboard::Keys::MOD_ALT, Input::Keyboard::Keys::MOD_SUPER]
 
-    def self.pos
-      [x, y]
-    end
-
     def self.in_area?(x, y, width, height)
       self.x.between?(x, x+width) && self.y.between?(y, y+height)
     end
