@@ -22,16 +22,23 @@ namespace Moon
 
   static mrb_value moon_mrb_font_draw_text(mrb_state *mrb, mrb_value self) {
     mrb_float x, y;
+    mrb_value color;
     char* str;
-    mrb_get_args(mrb, "ffz", &x, &y, &str);
+    mrb_get_args(mrb, "ffz|o", &x, &y, &str, &color);
 
     // convert to wide char (UTF-8)
     wchar_t *text = char_to_utf8(str);
 
     Font *font;
     Data_Get_Struct(mrb, self, &font_data_type, font);
-    font->draw_text(x, y, text);
 
+    if(!mrb_nil_p(color)) {
+      std::shared_ptr<Color>* text_color;
+      Data_Get_Struct(mrb, color, &color_data_type, text_color);
+      font->draw_text(x, y, text, **text_color); //text_color needs to be dereferenced to shared_ptr first and then to value
+    } else {
+      font->draw_text(x, y, text);
+    }
     delete[] text;
 
     return mrb_nil_value();

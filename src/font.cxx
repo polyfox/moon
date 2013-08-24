@@ -25,7 +25,6 @@ namespace Moon {
   }
 
   void Font::draw_text(float x, float y, const wchar_t *text, Color color) {
-
     // outline
     font->outline_type = 2;
     font->outline_thickness = 1;

@@ -7,7 +7,7 @@ namespace Moon {
     delete((std::shared_ptr<Tone>*)p);
   };
 
-  const struct mrb_data_type tone_data_type = { /* const was used */
+  const struct mrb_data_type tone_data_type = {
     "Tone", moon_mrb_tone_deallocate,
   };
 

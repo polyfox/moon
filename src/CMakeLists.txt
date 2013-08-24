@@ -21,6 +21,7 @@ set(moonLibraries ${moonLibraries} freetype-gl)
 
 add_library(moon STATIC
   ext/mrb.cxx
+  ext/mrb_color.cxx
   ext/mrb_font.cxx
   ext/mrb_input.cxx
   ext/mrb_music.cxx

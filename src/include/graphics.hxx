@@ -22,6 +22,13 @@ namespace Moon {
   };
 
   struct Color {
+    Color() = default;
+    Color(GLfloat r, GLfloat g, GLfloat b, GLfloat a) {
+      this->r = r;
+      this->g = g;
+      this->b = b;
+      this->a = a;
+    };
     GLfloat r;
     GLfloat g;
     GLfloat b;

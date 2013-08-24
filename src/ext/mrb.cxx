@@ -13,6 +13,7 @@ void moon_init_mrb_core(mrb_state *mrb) {
   struct RClass *moon_module;
   moon_module = mrb_define_module(mrb, "Moon");
 
+  Moon::moon_mrb_color_init(mrb);
   Moon::moon_mrb_font_init(mrb);
   Moon::moon_mrb_input_init(mrb);
   Moon::moon_mrb_sprite_init(mrb);

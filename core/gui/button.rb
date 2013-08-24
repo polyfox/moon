@@ -19,7 +19,7 @@ class Button < Widget
 
   def render
     super
-    @@font.draw_text(@x, @y+@@font.size, @text)
+    @@font.draw_text(@x, @y+@@font.size, @text, Moon::Color.new(1.0, 0.0, 0.0, 1.0))
   end
 
 end
