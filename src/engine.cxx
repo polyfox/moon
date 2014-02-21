@@ -1,5 +1,6 @@
 #include "engine.hxx"
 #include "font.hxx"
+#include <clocale>
 
 namespace Moon {
   Engine::Engine() : window(640, 480, "Hello World") {
@@ -65,6 +66,12 @@ namespace Moon {
     if(error != GL_NO_ERROR) {
       printf( "Error initializing OpenGL! glGetError: %i\n", error);
       throw;
+    }
+
+    if (GLEW_OK != glewInit())
+    {
+        // GLEW failed!
+        exit(1);
     }
   }
 

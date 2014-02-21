@@ -34,7 +34,7 @@ FIND_PATH(GLFW_INCLUDE_DIR GLFW/glfw3.h DOC "Path to GLFW include directory."
 )
 
 FIND_LIBRARY(GLFW_LIBRARY_TEMP DOC "Absolute path to GLFW library."
-  NAMES glfw GLFW.lib
+  NAMES glfw GLFW.lib libglfw3.dylib
   HINTS
   $ENV{GLFW_ROOT}
   # In the expanded GLFW source archive. Should be uncommon, but whatever.
@@ -45,7 +45,6 @@ FIND_LIBRARY(GLFW_LIBRARY_TEMP DOC "Absolute path to GLFW library."
   ${GLFW_ROOT_DIR}/lib-msvc100/release # added by ptr
 )
 
-SET(GLFW_FOUND "NO")
 IF(GLFW_LIBRARY_TEMP AND GLFW_INCLUDE_DIR)
   SET(GLFW_FOUND "YES")
   message(STATUS "Found GLFW: ${GLFW_LIBRARY_TEMP}")

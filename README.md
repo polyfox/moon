@@ -37,6 +37,8 @@ GLFW 3 is required to be externally installed at the moment. If you are using Wi
 define an environment variable called GLFW_ROOT which points to the root of the glfw library
 installation. This is pretty useful on a Windows platform.
 
+The above also applies for freetype and GLEW.
+
 Compilation is done via the CMake build system. Use cmake in the build folder to generate your
 Makefiles or (VS/CodeBlocks) projects of choice for your platform:
 

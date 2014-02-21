@@ -8,6 +8,8 @@ endif()
 set(moonLibraries ${moonLibraries} ${OPENGL_LIBRARIES})
 # GLFW
 set(moonLibraries ${moonLibraries} ${GLFW_LIBRARY})
+# GLEW
+set(moonLibraries ${moonLibraries} ${GLEW_LIBRARY})
 # SOIL
 set(moonLibraries ${moonLibraries} SOIL)
 # mruby

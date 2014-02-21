@@ -35,7 +35,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8.5)
 find_package(OpenGL REQUIRED)
 find_package(Freetype REQUIRED)
 
-include_directories(${OPENGL_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIRS})
+include_directories(${OPENGL_INCLUDE_DIRS} ${FREETYPE_INCLUDE_DIR})
 
 set(FREETYPE_GL_SRC freetype-gl.h
                      vec234.h

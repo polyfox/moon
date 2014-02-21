@@ -37,7 +37,7 @@ namespace Moon {
   };
 
   bool Window::should_close() {
-    glfwWindowShouldClose(window);
+    return glfwWindowShouldClose(window);
   }
 
   int Window::width() {

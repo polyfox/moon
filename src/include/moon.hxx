@@ -13,9 +13,8 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
-/* OpenGL */
-#define GL_GLEXT_PROTOTYPES
-#include <GL/gl.h>
+/* OpenGL via GLEW */
+#include <GL/glew.h>
 
 /* GLM */
 #include <glm/glm.hpp>
