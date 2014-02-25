@@ -220,7 +220,7 @@ if(ENABLE_OPENAL)
   if(MSVC)
     target_link_libraries(gorilla ${CMAKE_CURRENT_SOURCE_DIR}/../ext/OpenAL/libs/Win32/OpenAL32.lib)
   else()
-    target_link_libraries(gorilla ${OPENAL_LIBRARY})
+    target_link_libraries(gorilla ${OPENAL_LIBRARY} pthread)
   endif()
 endif()
 
