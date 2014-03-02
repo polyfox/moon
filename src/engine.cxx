@@ -68,6 +68,7 @@ namespace Moon {
       throw;
     }
 
+    glewExperimental = GL_TRUE;
     if (GLEW_OK != glewInit())
     {
         // GLEW failed!
