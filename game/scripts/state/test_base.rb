@@ -19,17 +19,21 @@ class State::TestBase < State
   def init
     super
     begin
-      prep_test
-      do_test
-    rescue
-      STDERR.puts "Test aborted!"
+      run_tests
+    rescue => ex
+      puts "run_tests has failed: #{ex.inspect}"
     end
   end
 
-  def prep_test
+  def test(name)
+    begin
+      yield
+    rescue => ex
+      puts "Test(#{name}) has failed: #{ex.inspect}"
+    end
   end
 
-  def do_test
+  def run_tests
     # replace.me
   end
 
