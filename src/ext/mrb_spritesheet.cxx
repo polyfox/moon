@@ -44,7 +44,7 @@ namespace Moon {
 
   void moon_mrb_spritesheet_init(mrb_state *mrb) {
     struct RClass *spritesheet_class;
-    spritesheet_class = mrb_define_class_under(mrb, mrb_class_get(mrb, "Moon"), "Spritesheet", mrb->object_class);
+    spritesheet_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Spritesheet", mrb->object_class);
     MRB_SET_INSTANCE_TT(spritesheet_class, MRB_TT_DATA);
     
     mrb_define_class_method(mrb, spritesheet_class, "new", moon_mrb_spritesheet_new, MRB_ARGS_REQ(3));

@@ -21,7 +21,7 @@ namespace Moon {
 
     auto tone_ptr = new std::shared_ptr<Tone>(sprite->tone);
     tone = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get(mrb, "Tone"), &tone_data_type, tone_ptr));
-    mrb_iv_set(mrb, self, mrb_intern(mrb, "@tone"), tone);
+    mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), tone);
 
     return self;
   };
@@ -94,7 +94,7 @@ namespace Moon {
   };
 
   static mrb_value moon_mrb_sprite_tone_getter(mrb_state *mrb, mrb_value self) {
-    return mrb_iv_get(mrb, self, mrb_intern(mrb, "@tone"));
+    return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@tone"));
   }
 
   static mrb_value moon_mrb_sprite_tone_setter(mrb_state *mrb, mrb_value self) {
@@ -104,7 +104,7 @@ namespace Moon {
     if (strcmp(mrb_obj_classname(mrb, new_tone), "Tone") != 0)
       mrb_raisef(mrb, E_TYPE_ERROR, "expected Tone but recieved %s", mrb_obj_classname(mrb, new_tone));
 
-    mrb_iv_set(mrb, self, mrb_intern(mrb, "@tone"), new_tone);
+    mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), new_tone);
 
     // Besides updating the ivar, we need to update the actual sprite->tone:
 
@@ -120,7 +120,7 @@ namespace Moon {
 
   void moon_mrb_sprite_init(mrb_state *mrb) {
     struct RClass *sprite_class;
-    sprite_class = mrb_define_class_under(mrb, mrb_class_get(mrb, "Moon"), "Sprite", mrb->object_class);
+    sprite_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Sprite", mrb->object_class);
     MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
 
     mrb_define_class_method(mrb, sprite_class, "new", moon_mrb_sprite_new, MRB_ARGS_REQ(1));

@@ -46,7 +46,7 @@ namespace Moon {
     //struct RObject *music_class;
     //music_class = (struct RObject*) mrb_obj_alloc(mrb, MRB_TT_OBJECT, mrb->object_class);
     struct RClass *music_class;
-    music_class = mrb_define_class_under(mrb, mrb_class_get(mrb, "Moon"), "Music", mrb->object_class);
+    music_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Music", mrb->object_class);
     /* Playback */
     mrb_define_class_method(mrb, music_class, "play", moon_mrb_music_play, MRB_ARGS_REQ(2));
     mrb_define_class_method(mrb, music_class, "stop", moon_mrb_music_stop, MRB_ARGS_NONE());
