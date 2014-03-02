@@ -25,10 +25,10 @@ namespace Moon {
 
   void Engine::run() {
     // Get the ruby object containing the state manager
-    mrb_value states = mrb_iv_get(mrb, 
-                                  mrb_obj_value(mrb_class_get(mrb, "State")), 
+    mrb_value states = mrb_iv_get(mrb,
+                                  mrb_obj_value(mrb_class_get(mrb, "State")),
                                   mrb_intern_cstr(mrb, "@states"));
-    
+
     int ai = mrb_gc_arena_save(mrb);
 
     while (!window.should_close())
@@ -78,7 +78,7 @@ namespace Moon {
 
   void Engine::load_mrb() {
     mrb = mrb_open();
-  
+
     moon_init_mrb_core(mrb);
     moon_init_mrb_ext(mrb);
 
@@ -87,7 +87,7 @@ namespace Moon {
 
     mrb_value window_val = mrb_obj_value(Data_Wrap_Struct(mrb, mrb->object_class, &window_data_type, (void*)(&window)));
     mrb_mod_cv_set(mrb, mrb_module_get(mrb, "Moon"), mrb_intern_cstr(mrb, "window"), window_val);
-    
+
     load_core_classes();
     load_user_scripts();
   }
@@ -95,7 +95,7 @@ namespace Moon {
   void Engine::load_user_scripts() {
     load_mrb_file("./scripts/load.rb");
   }
-  
+
   void Engine::load_core_classes() {
     load_mrb_file("./core/load.rb");
   }
@@ -109,7 +109,8 @@ namespace Moon {
 
       mrbc_filename(mrb, cxt, path);
       mrb_gv_set(mrb, mrb_intern_cstr(mrb, "$0"), mrb_str_new_cstr(mrb, path));
-      mrb_value v = mrb_load_file_cxt(mrb, file, cxt);
+
+      mrb_load_file_cxt(mrb, file, cxt);
 
       fclose(file);
       mrbc_context_free(mrb, cxt);

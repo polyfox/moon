@@ -1,8 +1,8 @@
 #include "sprite.hxx"
 
 namespace Moon {
-  Sprite::Sprite(std::string filename) 
-  : VBO(GL_DYNAMIC_DRAW) 
+  Sprite::Sprite(std::string filename)
+  : VBO(GL_DYNAMIC_DRAW)
   {
     x = 0;
     y = 0;
@@ -57,7 +57,9 @@ namespace Moon {
       GLuint indices[4] = {0, 1, 3, 2}; // rendering indices
 
       VBO.push_back(vertices, 4, indices, 4);
+      return true;
     };
+    return false;
   };
 
   // change Sprite's texture

@@ -18,17 +18,17 @@ namespace Moon {
 
     void bind();
 
-    GLuint width();
-    GLuint height();
+    GLint width();
+    GLint height();
     GLuint id();
   private:
     Texture(std::string filename);
 
     std::shared_ptr<Shader> shader;
 
-    GLuint texture_id;
     GLint texture_width;
     GLint texture_height;
+    GLuint texture_id;
 
   friend class Cache<Texture>;
   };

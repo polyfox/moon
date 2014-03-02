@@ -26,11 +26,11 @@ namespace Moon {
     }
   };
 
-  GLuint Texture::width() {
+  GLint Texture::width() {
     return texture_width;
   };
 
-  GLuint Texture::height() {
+  GLint Texture::height() {
     return texture_height;
   };
 
