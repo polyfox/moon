@@ -20,7 +20,8 @@ namespace Moon {
 
   };
 
-  bool Spritesheet::generate_buffers() {
+  bool Sprite::generate_buffers() {
+    VBO.clear();
     // If the texture exists
     if(texture->id() != 0) {
       //Texture coordinates
@@ -57,6 +58,12 @@ namespace Moon {
 
       VBO.push_back(vertices, 4, indices, 4);
     };
+  };
+
+  // change Sprite's texture
+  void Sprite::setTexture(std::shared_ptr<Texture> tex) {
+    texture = std::move(tex); // passing by value already makes a copy
+    generate_buffers();
   };
 
   // TODO: clipping

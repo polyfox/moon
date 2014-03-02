@@ -15,7 +15,8 @@ namespace Moon {
     char* filename;
     mrb_get_args(mrb, "z", &filename);
 
-    auto texture = Texture::load(filename);
+    // ugly hack to make a pointer to shared_ptr
+    auto texture = new std::shared_ptr<Texture>(Texture::load(filename));
 
     return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(klass), &texture_data_type, texture));
   };

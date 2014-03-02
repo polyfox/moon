@@ -118,6 +118,32 @@ namespace Moon {
     return new_tone;
   }
 
+
+  static mrb_value moon_mrb_sprite_texture_getter(mrb_state *mrb, mrb_value self) {
+    return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@texture"));
+  }
+
+  static mrb_value moon_mrb_sprite_texture_setter(mrb_state *mrb, mrb_value self) {
+    mrb_value new_texture;
+    mrb_get_args(mrb, "o", &new_texture);
+
+    if (strcmp(mrb_obj_classname(mrb, new_texture), "Texture") != 0)
+      mrb_raisef(mrb, E_TYPE_ERROR, "expected Texture but recieved %s", mrb_obj_classname(mrb, new_texture));
+
+    mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@texture"), new_texture);
+
+    // Besides updating the ivar, we need to update the actual sprite->texture:
+
+    // Get the passed-in object's shared_ptr
+    std::shared_ptr<Texture>* texture_ptr;
+    Data_Get_Struct(mrb, new_texture, &texture_data_type, texture_ptr);
+
+    // Create a new shared_ptr for this instance and overwrite the old one
+    ((Sprite*)DATA_PTR(self))->setTexture(*texture_ptr);
+
+    return new_texture;
+  }
+
   void moon_mrb_sprite_init(mrb_state *mrb) {
     struct RClass *sprite_class;
     sprite_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Sprite", mrb->object_class);
@@ -136,5 +162,7 @@ namespace Moon {
 
     mrb_define_method(mrb, sprite_class, "tone", moon_mrb_sprite_tone_getter, MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "tone=", moon_mrb_sprite_tone_setter, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "texture", moon_mrb_sprite_texture_getter, MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "texture=", moon_mrb_sprite_texture_setter, MRB_ARGS_REQ(1));
   };
 };
