@@ -1,3 +1,6 @@
+###
+# entry script for moon
+###
 require 'scripts/cache'
 require 'scripts/block/block_core.rb'
 require 'scripts/state'
@@ -11,4 +14,5 @@ require 'scripts/music_activity_hud'
 #State.push(State_Snake)         # a small game of Snake
 #State.push(State_TilemapTest)   # demonstrates basic Tilemap usage
 #State.push(State_Test)          # common testing state
-State.push(State_Mouse_Events)
+#State.push(State_Mouse_Events)
+State.push(State::CoreTest)
