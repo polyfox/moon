@@ -6,13 +6,13 @@ class State::TestBase < State
 
   def assert(str, obj)
     unless obj
-      raise AssertFailure, "[#{str}] #{obj}"
+      raise AssertFailure, "[#{str}] \n  #{obj}"
     end
   end
 
   def assert_equal(str, obj, other)
     unless obj == other
-      raise AssertFailure, "[#{str}] #{obj} was not equal to #{other}"
+      raise AssertFailure, "[#{str}] \n  #{obj} was not equal to #{other}"
     end
   end
 
@@ -21,7 +21,7 @@ class State::TestBase < State
     begin
       run_tests
     rescue => ex
-      puts "run_tests has failed: #{ex.inspect}"
+      puts "run_tests has failed: \n  #{ex.inspect}"
     end
   end
 
@@ -29,7 +29,7 @@ class State::TestBase < State
     begin
       yield
     rescue => ex
-      puts "Test(#{name}) has failed: #{ex.inspect}"
+      puts "Test(#{name}) has failed: \n  #{ex.inspect}"
     end
   end
 
