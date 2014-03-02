@@ -13,7 +13,14 @@ namespace Moon {
 
     shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
     texture = Texture::load(filename);
+    generate_buffers();
+  };
 
+  Sprite::~Sprite() {
+
+  };
+
+  bool Spritesheet::generate_buffers() {
     // If the texture exists
     if(texture->id() != 0) {
       //Texture coordinates
@@ -50,10 +57,6 @@ namespace Moon {
 
       VBO.push_back(vertices, 4, indices, 4);
     };
-  };
-
-  Sprite::~Sprite() {
-
   };
 
   // TODO: clipping
