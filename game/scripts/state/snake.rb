@@ -34,10 +34,12 @@ end
 
 class State::Snake < State
 
+  include Moon
+
   def init
     super
-    @width  = (Screen.width / 16).to_i # Screen#width / 16
-    @height = (Screen.height / 16).to_i # Screen#height / 16
+    @width  = (Moon::Screen.width / 16).to_i # Screen#width / 16
+    @height = (Moon::Screen.height / 16).to_i # Screen#height / 16
     @height -= 2 # making space for the text_score
     @field = Moon::Rect.new(0, 24, @width * 16, @height * 16)
     puts "Board Size is: #{@width} x #{@height}"
@@ -50,7 +52,7 @@ class State::Snake < State
   end
 
   def init_snake
-    @snake = Snake.new(0, 0)
+    @snake = ::Snake.new(0, 0)
   end
 
   def init_spriteset
@@ -59,6 +61,7 @@ class State::Snake < State
 
   def init_texts
     @text_score = Cache.font("vera", 24)
+    @text_color = Color.new(255, 255, 255, 255)
   end
 
   def setup
@@ -121,7 +124,7 @@ class State::Snake < State
       @spritesheet.render(@field.x + x * @cell_width,
                           @field.y + y * @cell_height, 1, sp_i)
     end
-    @text_score.draw_text(0, @text_score.size, @points_s)
+    @text_score.draw_text(0, @text_score.size, @points_s, @text_color)
   end
 
   def update

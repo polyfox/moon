@@ -8,29 +8,29 @@ module Cache
       filename = "resources/" + cache_name + ".png"
       cw, ch = *ary
       hsh[cache_name] = -> do
-        Spritesheet.new(filename, cw, ch)
+        Moon::Spritesheet.new(filename, cw, ch)
       end
     end
   end
 
   branch :font do |hsh|
     hsh["ipaexg"] = ->(size) do
-      Font.new("resources/fonts/ipaexg/ipaexg.ttf", size)
+      Moon::Font.new("resources/fonts/ipaexg/ipaexg.ttf", size)
     end
     hsh["vera"] = ->(size) do
-      Font.new("resources/fonts/vera/Vera.ttf", size)
+      Moon::Font.new("resources/fonts/vera/Vera.ttf", size)
     end
     hsh["vera_mono"] = ->(size) do
-      Font.new("resources/fonts/vera/VeraMono.ttf", size)
+      Moon::Font.new("resources/fonts/vera/VeraMono.ttf", size)
     end
     hsh["vera_mono_bold_italic"] = ->(size) do
-      Font.new("resources/fonts/vera/VeraMoBI.ttf", size)
+      Moon::Font.new("resources/fonts/vera/VeraMoBI.ttf", size)
     end
     hsh["vera_mono_bold"] = ->(size) do
-      Font.new("resources/fonts/vera/VeraMoBd.ttf", size)
+      Moon::Font.new("resources/fonts/vera/VeraMoBd.ttf", size)
     end
     hsh["vera_mono_italic"] = ->(size) do
-      Font.new("resources/fonts/vera/VeraMoIt.ttf", size)
+      Moon::Font.new("resources/fonts/vera/VeraMoIt.ttf", size)
     end
   end
 
