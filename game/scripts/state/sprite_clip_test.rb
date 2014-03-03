@@ -20,8 +20,9 @@ class State::SpriteClipTest < State
 
   def update
     if Mouse.triggered?(Mouse::Buttons::BUTTON_1)
-
       @sprite.clip_rect = Rect.new(0, 0, 48, 36)
+    elsif Mouse.triggered?(Mouse::Buttons::BUTTON_3)
+      @sprite.clip_rect = Rect.new(0, 0, @sprite.texture.width*2, 36)
     else
       @sprite.clip_rect = nil
     end
