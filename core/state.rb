@@ -10,12 +10,11 @@ class State
   def initialize(engine)
     @engine = engine
     @ticks = 0
-    init
   end
 
   # use this instead to initialize a State
   def init
-    #
+    puts "[self.class] init"
   end
 
   # Gets called when we close the state
@@ -42,10 +41,19 @@ class State
   # Gets called in each game loop iteration
   def update
     @ticks += 1
+    if Moon::Input::Keyboard.triggered?(Moon::Input::Keyboard::Keys::F8)
+      State.pop
+    elsif Moon::Input::Keyboard.triggered?(Moon::Input::Keyboard::Keys::F9)
+      puts State.states.reverse.join(" >| ")
+    end
   end
 
   def self.debug?
     true
+  end
+
+  def self.states
+    @states
   end
 
   def self.change state
@@ -54,24 +62,26 @@ class State
       @states.last.terminate
       last_state = @states.pop
     end
-    @states.push state.new(self)
     puts "[State] change #{last_state.class} >> #{state}" if debug?
+    @states.push state.new(self)
+    @states.last.init
   end
 
   def self.pop
     @states.last.terminate
     last_state = @states.pop
 
-    @states.last.resume if !@states.empty?
     puts "[State] pop #{last_state.class} > #{@states.last.class}" if debug?
-    #Engine.stop if @states.empty? # TODO
+    @states.last.resume if !@states.empty?
+    puts "--State now empty--" if @states.empty? # TODO
   end
 
   def self.push state
     last_state = @states.last
-    @states.last.pause if !@states.empty?
-    @states.push state.new(self)
+    @states.last.pause unless @states.empty?
     puts "[State] push #{last_state.class} > #{state}" if debug?
+    @states.push state.new(self)
+    @states.last.init
   end
 
 end
