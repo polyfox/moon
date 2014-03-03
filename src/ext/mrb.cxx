@@ -20,6 +20,7 @@ void moon_init_mrb_core(mrb_state *mrb) {
   Moon::moon_mrb_spritesheet_init(mrb);
   Moon::moon_mrb_sound_init(mrb);
   Moon::moon_mrb_music_init(mrb);
+  Moon::moon_mrb_rectangle_init(mrb);
   Moon::moon_mrb_texture_init(mrb);
   Moon::moon_mrb_tone_init(mrb);
   Moon::moon_mrb_screen_init(mrb);

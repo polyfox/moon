@@ -9,7 +9,6 @@ namespace Moon {
     z = 0.0;
     opacity = 1.0;
     tone = std::make_shared<Tone>(1.0, 1.0, 1.0);
-    clip = false;
 
     shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
     texture = Texture::load(filename);
@@ -35,17 +34,17 @@ namespace Moon {
       GLfloat height = texture->height();
 
       //Handle clipping
-      /*if(clip != NULL) {
+      if(clip_rect) {
         //Texture coordinates
-        s0 = clip->x / texture_width;
-        s1 = (clip->x + clip->w) / texture_width;
-        t0 = clip->y / texture_height;
-        t1 = (clip->y + clip->h) / texture_height;
+        s0 = clip_rect->x / texture->width();
+        s1 = (clip_rect->x + clip_rect->w) / texture->width();
+        t0 = clip_rect->y / texture->height();
+        t1 = (clip_rect->y + clip_rect->h) / texture->height();
 
         //Vertex coordinates
-        width = clip->w;
-        height = clip->h;
-      }*/
+        width = clip_rect->w;
+        height = clip_rect->h;
+      }
 
       vertex vertices[4] = {
         { {0.f,   0.f},    {s0, t0} },
@@ -72,7 +71,15 @@ namespace Moon {
     generate_buffers();
   };
 
-  // TODO: clipping
+  std::shared_ptr<Rect> Sprite::getClip() {
+    return clip_rect;
+  };
+
+  void Sprite::setClip(std::shared_ptr<Rect> clip) {
+    clip_rect = std::move(clip); // passing by value already makes a copy
+    generate_buffers();
+  };
+
   void Sprite::render() {
     shader->use();
 

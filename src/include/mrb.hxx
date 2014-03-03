@@ -32,6 +32,7 @@ namespace Moon {
   void moon_mrb_spritesheet_init(mrb_state *mrb);
   void moon_mrb_sound_init(mrb_state *mrb);
   void moon_mrb_music_init(mrb_state *mrb);
+  void moon_mrb_rectangle_init(mrb_state *mrb);
   void moon_mrb_texture_init(mrb_state *mrb);
   void moon_mrb_tone_init(mrb_state *mrb);
   void moon_mrb_screen_init(mrb_state *mrb);
