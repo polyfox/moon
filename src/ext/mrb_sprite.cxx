@@ -20,7 +20,7 @@ namespace Moon {
     self = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(klass), &sprite_data_type, sprite));
 
     auto tone_ptr = new std::shared_ptr<Tone>(sprite->tone);
-    tone = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get(mrb, "Tone"), &tone_data_type, tone_ptr));
+    tone = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Tone"), &tone_data_type, tone_ptr));
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), tone);
 
     return self;

@@ -1,6 +1,7 @@
 #include "mrb.hxx"
 
 namespace Moon {
+  struct RClass *moon_module;
   const struct mrb_data_type engine_data_type = {
     "Engine", NULL,
   };
@@ -10,8 +11,7 @@ namespace Moon {
 }
 
 void moon_init_mrb_core(mrb_state *mrb) {
-  struct RClass *moon_module;
-  moon_module = mrb_define_module(mrb, "Moon");
+  Moon::moon_module = mrb_define_module(mrb, "Moon");
 
   Moon::moon_mrb_color_init(mrb);
   Moon::moon_mrb_font_init(mrb);

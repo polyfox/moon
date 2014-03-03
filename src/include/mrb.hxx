@@ -22,6 +22,9 @@ namespace Moon {
   extern const struct mrb_data_type engine_data_type;
   extern const struct mrb_data_type window_data_type;
 
+  /* TODO. Expose of the other moon class/modules */
+  extern struct RClass *moon_module;
+
   void moon_mrb_color_init(mrb_state *mrb);
   void moon_mrb_font_init(mrb_state *mrb);
   void moon_mrb_input_init(mrb_state *mrb);
