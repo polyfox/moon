@@ -62,6 +62,10 @@ namespace Moon {
     return false;
   };
 
+  std::shared_ptr<Texture> Sprite::getTexture() {
+    return texture;
+  };
+
   // change Sprite's texture
   void Sprite::setTexture(std::shared_ptr<Texture> tex) {
     texture = std::move(tex); // passing by value already makes a copy

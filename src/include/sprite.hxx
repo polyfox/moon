@@ -21,6 +21,7 @@ namespace Moon {
     bool clip;
 
     void render();
+    std::shared_ptr<Texture> getTexture();
     void setTexture(std::shared_ptr<Texture> tex);
   private:
     bool generate_buffers(); // use only in constructor
