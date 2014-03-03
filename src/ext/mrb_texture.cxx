@@ -35,7 +35,7 @@ namespace Moon {
     return mrb_float_value(mrb, (*texture)->height());
   }
 
-  void moon_mrb_texture_init(mrb_state *mrb) {
+  struct RClass* moon_mrb_texture_init(mrb_state *mrb) {
     struct RClass *texture_class;
     texture_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Texture", mrb->object_class);
     MRB_SET_INSTANCE_TT(texture_class, MRB_TT_DATA);
@@ -43,6 +43,8 @@ namespace Moon {
     mrb_define_class_method(mrb, texture_class, "new", moon_mrb_texture_new, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, texture_class, "width", moon_mrb_texture_width, MRB_ARGS_NONE());
     mrb_define_method(mrb, texture_class, "height", moon_mrb_texture_height, MRB_ARGS_NONE());
+
+    return texture_class;
   };
 
 }

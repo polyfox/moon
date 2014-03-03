@@ -65,8 +65,8 @@ namespace Moon {
     static KeyMap keyboard_keys;
     static ButtonMap mouse_buttons;
 
-  friend void Moon::moon_mrb_input_init(mrb_state*); // give access to map key enums
+  friend struct ::RClass* Moon::moon_mrb_input_init(mrb_state*); // give access to map key enums
   };
-}
+};
 
 #endif

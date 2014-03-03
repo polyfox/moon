@@ -1,4 +1,5 @@
 #include "mrb.hxx"
+#include "mrb_err.hxx"
 #include "sprite.hxx"
 
 namespace Moon {
@@ -113,9 +114,7 @@ namespace Moon {
     mrb_value new_tone;
     mrb_get_args(mrb, "o", &new_tone);
 
-    /* TODO. compare ruby classes, not classname */
-    if (strcmp(mrb_obj_classname(mrb, new_tone), "Moon::Tone") != 0)
-      mrb_raisef(mrb, E_TYPE_ERROR, "expected Tone but recieved %s", mrb_obj_classname(mrb, new_tone));
+    moon_mrb_check_class(mrb, new_tone, moon_cTone, false);
 
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), new_tone);
 
@@ -140,9 +139,7 @@ namespace Moon {
     mrb_value new_texture;
     mrb_get_args(mrb, "o", &new_texture);
 
-    /* TODO. compare ruby classes, not classname */
-    if (strcmp(mrb_obj_classname(mrb, new_texture), "Moon::Texture") != 0)
-      mrb_raisef(mrb, E_TYPE_ERROR, "expected Texture but recieved %s", mrb_obj_classname(mrb, new_texture));
+    moon_mrb_check_class(mrb, new_texture, moon_cTexture, false);
 
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@texture"), new_texture);
 
@@ -166,9 +163,8 @@ namespace Moon {
     mrb_value new_clip;
     mrb_get_args(mrb, "o", &new_clip);
 
-    /* TODO. compare ruby classes, not classname */
-    if (strcmp(mrb_obj_classname(mrb, new_clip), "Moon::Rectangle") != 0 && !mrb_nil_p(new_clip))
-      mrb_raisef(mrb, E_TYPE_ERROR, "expected Rectangle or nil but recieved %s", mrb_obj_classname(mrb, new_clip));
+    if (!mrb_nil_p(new_clip))
+      moon_mrb_check_class(mrb, new_clip, moon_cRectangle, false);
 
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@clip"), new_clip);
 
@@ -190,7 +186,7 @@ namespace Moon {
   }
 
 
-  void moon_mrb_sprite_init(mrb_state *mrb) {
+  struct RClass* moon_mrb_sprite_init(mrb_state *mrb) {
     struct RClass *sprite_class;
     sprite_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Sprite", mrb->object_class);
     MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
@@ -212,5 +208,7 @@ namespace Moon {
     mrb_define_method(mrb, sprite_class, "texture=", moon_mrb_sprite_texture_setter, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, sprite_class, "clip_rect", moon_mrb_sprite_clip_getter, MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "clip_rect=", moon_mrb_sprite_clip_setter, MRB_ARGS_REQ(1));
+
+    return sprite_class;
   };
 };

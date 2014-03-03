@@ -42,14 +42,16 @@ namespace Moon {
     return mrb_fixnum_value((int)spritesheet->tile_height);
   }
 
-  void moon_mrb_spritesheet_init(mrb_state *mrb) {
+  struct RClass* moon_mrb_spritesheet_init(mrb_state *mrb) {
     struct RClass *spritesheet_class;
     spritesheet_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Spritesheet", mrb->object_class);
     MRB_SET_INSTANCE_TT(spritesheet_class, MRB_TT_DATA);
-    
+
     mrb_define_class_method(mrb, spritesheet_class, "new", moon_mrb_spritesheet_new, MRB_ARGS_REQ(3));
     mrb_define_method(mrb, spritesheet_class, "render", moon_mrb_spritesheet_render, MRB_ARGS_REQ(4));
     mrb_define_method(mrb, spritesheet_class, "cell_width", moon_mrb_spritesheet_cell_width, MRB_ARGS_NONE());
     mrb_define_method(mrb, spritesheet_class, "cell_height", moon_mrb_spritesheet_cell_height, MRB_ARGS_NONE());
+
+    return spritesheet_class;
   };
 };

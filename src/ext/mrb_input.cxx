@@ -103,7 +103,7 @@ namespace Moon
     return mrb_bool_value(Input::Mouse::button_is_modded(button_id, mod_id));
   }
 
-  void moon_mrb_input_init(mrb_state *mrb) {
+  struct RClass* moon_mrb_input_init(mrb_state *mrb) {
     struct RClass *input_module;
     struct RClass *keyboard_module;
     struct RClass *key_module;
@@ -153,6 +153,8 @@ namespace Moon
     mrb_define_const(mrb, button_module, "LEFT",   mrb_fixnum_value(Input::mouse_buttons[GLFW_MOUSE_BUTTON_LEFT].button_id));
     mrb_define_const(mrb, button_module, "RIGHT",  mrb_fixnum_value(Input::mouse_buttons[GLFW_MOUSE_BUTTON_RIGHT].button_id));
     mrb_define_const(mrb, button_module, "MIDDLE", mrb_fixnum_value(Input::mouse_buttons[GLFW_MOUSE_BUTTON_MIDDLE].button_id));
+
+    return input_module;
   }
 
 }

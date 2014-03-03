@@ -42,7 +42,7 @@ namespace Moon {
     return mrb_fixnum_value(Music::length());
   }
 
-  void moon_mrb_music_init(mrb_state *mrb) {
+  struct RClass* moon_mrb_music_init(mrb_state *mrb) {
     //struct RObject *music_class;
     //music_class = (struct RObject*) mrb_obj_alloc(mrb, MRB_TT_OBJECT, mrb->object_class);
     struct RClass *music_class;
@@ -61,6 +61,8 @@ namespace Moon {
     mrb_define_class_method(mrb, music_class, "stopped?",  moon_mrb_music_is_stopped, MRB_ARGS_NONE());
     mrb_define_class_method(mrb, music_class, "finished?", moon_mrb_music_is_finished, MRB_ARGS_NONE());
     //mrb_define_global_const(mrb, "Music", mrb_obj_value(music_class));
+
+    return music_class;
   }
 
 }

@@ -97,7 +97,7 @@ namespace Moon {
     return mrb_float_value(mrb, (*color)->a);
   }
 
-  void moon_mrb_color_init(mrb_state *mrb) {
+  struct RClass* moon_mrb_color_init(mrb_state *mrb) {
     struct RClass *color_class;
     color_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Color", mrb->object_class);
     MRB_SET_INSTANCE_TT(color_class, MRB_TT_DATA);
@@ -110,7 +110,9 @@ namespace Moon {
     mrb_define_method(mrb, color_class, "blue=", moon_mrb_color_blue_setter, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, color_class, "blue", moon_mrb_color_blue_getter, MRB_ARGS_NONE());
     mrb_define_method(mrb, color_class, "alpha=", moon_mrb_color_alpha_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, color_class, "alpha", moon_mrb_color_alpha_getter, MRB_ARGS_NONE()); 
+    mrb_define_method(mrb, color_class, "alpha", moon_mrb_color_alpha_getter, MRB_ARGS_NONE());
+
+    return color_class;
   };
 
 }

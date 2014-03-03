@@ -34,6 +34,7 @@ add_library(moon STATIC
   ext/mrb_texture.cxx
   ext/mrb_tone.cxx
   ext/mrb_screen.cxx
+  ext/mrb_err.cxx
 
   audio.cxx
   engine.cxx

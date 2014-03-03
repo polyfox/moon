@@ -41,13 +41,15 @@ namespace Moon {
     };
   };
 
-  void moon_mrb_sound_init(mrb_state *mrb) {
+  struct RClass* moon_mrb_sound_init(mrb_state *mrb) {
     struct RClass *sound_class;
     sound_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Sound", mrb->object_class);
     MRB_SET_INSTANCE_TT(sound_class, MRB_TT_DATA);
-    
+
     mrb_define_class_method(mrb, sound_class, "new", moon_mrb_sound_new, MRB_ARGS_REQ(2));
     mrb_define_method(mrb, sound_class, "play", moon_mrb_sound_play, MRB_ARGS_OPT(3));
+
+    return sound_class;
   };
-  
+
 };

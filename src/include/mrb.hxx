@@ -23,20 +23,30 @@ namespace Moon {
   extern const struct mrb_data_type engine_data_type;
   extern const struct mrb_data_type window_data_type;
 
-  /* TODO. Expose of the other moon class/modules */
   extern struct RClass *moon_module;
+  extern struct RClass *moon_cColor;
+  extern struct RClass *moon_cFont;
+  extern struct RClass *moon_mInput;
+  extern struct RClass *moon_cSprite;
+  extern struct RClass *moon_cSpritesheet;
+  extern struct RClass *moon_cSound;
+  extern struct RClass *moon_cMusic;
+  extern struct RClass *moon_cRectangle;
+  extern struct RClass *moon_cTexture;
+  extern struct RClass *moon_cTone;
+  extern struct RClass *moon_cScreen;
 
-  void moon_mrb_color_init(mrb_state *mrb);
-  void moon_mrb_font_init(mrb_state *mrb);
-  void moon_mrb_input_init(mrb_state *mrb);
-  void moon_mrb_sprite_init(mrb_state *mrb);
-  void moon_mrb_spritesheet_init(mrb_state *mrb);
-  void moon_mrb_sound_init(mrb_state *mrb);
-  void moon_mrb_music_init(mrb_state *mrb);
-  void moon_mrb_rectangle_init(mrb_state *mrb);
-  void moon_mrb_texture_init(mrb_state *mrb);
-  void moon_mrb_tone_init(mrb_state *mrb);
-  void moon_mrb_screen_init(mrb_state *mrb);
+  struct RClass* moon_mrb_color_init(mrb_state *mrb);
+  struct RClass* moon_mrb_font_init(mrb_state *mrb);
+  struct RClass* moon_mrb_input_init(mrb_state *mrb);
+  struct RClass* moon_mrb_sprite_init(mrb_state *mrb);
+  struct RClass* moon_mrb_spritesheet_init(mrb_state *mrb);
+  struct RClass* moon_mrb_sound_init(mrb_state *mrb);
+  struct RClass* moon_mrb_music_init(mrb_state *mrb);
+  struct RClass* moon_mrb_rectangle_init(mrb_state *mrb);
+  struct RClass* moon_mrb_texture_init(mrb_state *mrb);
+  struct RClass* moon_mrb_tone_init(mrb_state *mrb);
+  struct RClass* moon_mrb_screen_init(mrb_state *mrb);
 };
 
 void moon_init_mrb_core(mrb_state *mrb);

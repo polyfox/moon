@@ -80,7 +80,7 @@ namespace Moon {
     return mrb_float_value(mrb, (*tone)->lightness);
   }
 
-  void moon_mrb_tone_init(mrb_state *mrb) {
+  struct RClass* moon_mrb_tone_init(mrb_state *mrb) {
     struct RClass *tone_class;
     tone_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Tone", mrb->object_class);
     MRB_SET_INSTANCE_TT(tone_class, MRB_TT_DATA);
@@ -92,6 +92,8 @@ namespace Moon {
     mrb_define_method(mrb, tone_class, "saturation", moon_mrb_tone_saturation_getter, MRB_ARGS_NONE());
     mrb_define_method(mrb, tone_class, "lightness=", moon_mrb_tone_lightness_setter, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, tone_class, "lightness", moon_mrb_tone_lightness_getter, MRB_ARGS_NONE());
+
+    return tone_class;
   };
 
 }

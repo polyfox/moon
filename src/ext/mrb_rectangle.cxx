@@ -97,7 +97,7 @@ namespace Moon {
     return mrb_float_value(mrb, (*rectangle)->h);
   }
 
-  void moon_mrb_rectangle_init(mrb_state *mrb) {
+  struct RClass* moon_mrb_rectangle_init(mrb_state *mrb) {
     struct RClass *rectangle_class;
     rectangle_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Rect", mrb->object_class);
     MRB_SET_INSTANCE_TT(rectangle_class, MRB_TT_DATA);
@@ -111,6 +111,8 @@ namespace Moon {
     mrb_define_method(mrb, rectangle_class, "width", moon_mrb_rectangle_width_getter, MRB_ARGS_NONE());
     mrb_define_method(mrb, rectangle_class, "height=", moon_mrb_rectangle_height_setter, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, rectangle_class, "height", moon_mrb_rectangle_height_getter, MRB_ARGS_NONE());
+
+    return rectangle_class;
   };
 
 }
