@@ -44,25 +44,34 @@ class State
     @ticks += 1
   end
 
+  def self.debug?
+    true
+  end
+
   def self.change state
+    last_state = nil
     if !@states.empty?
       @states.last.terminate
-      @states.pop
+      last_state = @states.pop
     end
     @states.push state.new(self)
+    puts "[State] change #{last_state.class} >> #{state}" if debug?
   end
 
   def self.pop
     @states.last.terminate
-    @states.pop
+    last_state = @states.pop
 
     @states.last.resume if !@states.empty?
+    puts "[State] pop #{last_state.class} > #{@states.last.class}" if debug?
     #Engine.stop if @states.empty? # TODO
   end
 
   def self.push state
+    last_state = @states.last
     @states.last.pause if !@states.empty?
     @states.push state.new(self)
+    puts "[State] push #{last_state.class} > #{state}" if debug?
   end
 
 end
