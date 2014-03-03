@@ -16,5 +16,5 @@ require 'scripts/music_activity_hud'
 #State.push(State_TilemapTest)   # demonstrates basic Tilemap usage
 #State.push(State_Test)          # common testing state
 #State.push(State_Mouse_Events)
-#State.push(State::CoreTest)
 State.push(State::SpriteTest)
+State.push(State::CoreTest)

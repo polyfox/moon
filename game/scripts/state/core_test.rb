@@ -17,20 +17,23 @@ class State::CoreTest < State::TestBase
       assert_equal("it's #height is equal to 32.0", texture_from_wh.height, 32.0)
     end
 
-    test("Sprite") do
-      sprite = Moon::Sprite.new
-      assert("it exists", sprite)
-    end
+    #test("Sprite") do
+    #  sprite = Moon::Sprite.new
+    #  assert("it exists", sprite)
+    #end
 
     test("Sprite|change_texture") do
-      sprite = Moon::Sprite.new
+      sprite = Moon::Sprite.new("resources/media_buttons_16x16.png")
       texture1 = Moon::Texture.new("resources/media_buttons_96x96.png")
       texture2 = Moon::Texture.new("resources/media_buttons_32x32.png")
-      assert_equal("it has a sane default", sprite.texture, nil)
+      assert_class_is_kind_of("it has a sane default", sprite.texture, Moon::Texture)
       sprite.texture = texture1
       assert_equal("it changes its texture when assigned", sprite.texture, texture1)
       sprite.texture = texture2
       assert_equal("it changes its texture when assigned again", sprite.texture, texture2)
+      assert_exception("it should error when assigning non-Texture object", TypeError) do
+        sprite.texture = "Hello World"
+      end
     end
   end
 
