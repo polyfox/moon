@@ -8,6 +8,6 @@ require 'core/data_matrix' # 3d Table
 require 'core/modules'
 require 'core/tilemap'
 require 'core/tone'
-require 'core/mouse'
+require 'core/input'
 require 'core/gui'
 require 'core/state'

@@ -1,4 +1,11 @@
 module Moon::Input
+  module Keyboard
+
+    def self.triggered?(key_id)
+      return (pressed?(key_id) || repeated?(key_id)) == 0
+    end
+
+  end
   module Mouse
 
     BUTTONS = [
