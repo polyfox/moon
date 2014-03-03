@@ -6,6 +6,7 @@ require 'scripts/block/block_core.rb'
 require 'scripts/state'
 require 'scripts/music_activity_hud'
 
+#State.push(State::IntegrityTest)
 #State.push(State_KeyHoldTest)   #
 #State.push(State_ModifierTest)  #
 #State.push(State_MoonPlayer)    #
@@ -15,4 +16,5 @@ require 'scripts/music_activity_hud'
 #State.push(State_TilemapTest)   # demonstrates basic Tilemap usage
 #State.push(State_Test)          # common testing state
 #State.push(State_Mouse_Events)
-State.push(State::CoreTest)
+#State.push(State::CoreTest)
+State.push(State::SpriteTest)
