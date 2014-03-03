@@ -5,10 +5,17 @@
 
 namespace Moon {
   struct Rect {
-    GLfloat x;
-    GLfloat y;
-    GLfloat w;
-    GLfloat h;
+    Rect() = default;
+    Rect(GLint x, GLint y, GLint w, GLint h)  {
+      this->x = x;
+      this->y = y;
+      this->w = w;
+      this->h = h;
+    }
+    GLint x;
+    GLint y;
+    GLint w;
+    GLint h;
   };
 
   struct vec2 {

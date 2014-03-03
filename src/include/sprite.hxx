@@ -17,14 +17,17 @@ namespace Moon {
     float z;
     float opacity;
     std::shared_ptr<Tone> tone;
-    Rect clip_rect;
-    bool clip;
 
     void render();
+    std::shared_ptr<Texture> getTexture();
     void setTexture(std::shared_ptr<Texture> tex);
-  private:
-    bool generate_buffers(); // use only in constructor
 
+    std::shared_ptr<Rect> getClip();
+    void setClip(std::shared_ptr<Rect> clip);
+  private:
+    bool generate_buffers();
+
+    std::shared_ptr<Rect> clip_rect; // default constructor nullptr
     std::shared_ptr<Shader>  shader;
     std::shared_ptr<Texture> texture;
     VertexBuffer VBO;

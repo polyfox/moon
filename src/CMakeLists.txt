@@ -27,6 +27,7 @@ add_library(moon STATIC
   ext/mrb_font.cxx
   ext/mrb_input.cxx
   ext/mrb_music.cxx
+  ext/mrb_rectangle.cxx
   ext/mrb_sound.cxx
   ext/mrb_sprite.cxx
   ext/mrb_spritesheet.cxx
