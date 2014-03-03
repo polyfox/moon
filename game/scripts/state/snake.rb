@@ -32,7 +32,7 @@ class Glob < Vector2
 
 end
 
-class State_Snake < State
+class State::Snake < State
 
   def init
     super

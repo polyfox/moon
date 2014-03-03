@@ -177,7 +177,9 @@ class Window < Container
   end
 end
 
-class State_Mouse_Events < State
+class State::MouseEvents < State
+
+  include Moon
 
   def init
     @handler = EventDispatcher.new

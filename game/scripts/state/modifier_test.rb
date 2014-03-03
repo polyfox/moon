@@ -2,7 +2,9 @@
 # core/state_modifier_test.rb
 #   Press the Mouse buttons, and try pressing the modifier keys with it
 #   SHIFT, CONTROL, ALT, SUPER
-class State_ModifierTest < State
+class State::ModifierTest < State
+
+  include Moon
 
   CNULL  = 0
   CFALSE = 0
@@ -19,7 +21,7 @@ class State_ModifierTest < State
   end
 
   def init_spriteset
-    @spritesheet = Spritesheet.new("resources/media_buttons_32x32.png", 32, 32)
+    @spritesheet = Moon::Spritesheet.new("resources/media_buttons_32x32.png", 32, 32)
   end
 
   def render

@@ -4,7 +4,9 @@
 #   first row is the press count (currently does not work correctly)
 #   second row is the release count (currently does not work correctly)
 #   third is the repeat count
-class State_KeyHoldTest < State
+class State::KeyHoldTest < State
+
+  include Moon
 
   class Hud_KeyHold
 
@@ -22,7 +24,7 @@ class State_KeyHoldTest < State
 
     def init_spritesheet
       filename = "resources/media_buttons_#{@cell_width}x#{@cell_height}.png"
-      @spritesheet = Spritesheet.new(filename, @cell_width, @cell_height)
+      @spritesheet = Moon::Spritesheet.new(filename, @cell_width, @cell_height)
     end
 
     def render

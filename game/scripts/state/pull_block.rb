@@ -1,7 +1,7 @@
 #
 # moon/core/state/pull_block
 #   A block chasing its tail, what more could you want
-class State_PullBlock < State
+class State::PullBlock < State
 
   def init
     super
@@ -22,7 +22,7 @@ class State_PullBlock < State
   end
 
   def init_spriteset
-    @spritesheet = Spritesheet.new("resources/media_buttons_32x32.png", 32, 32)
+    @spritesheet = Moon::Spritesheet.new("resources/media_buttons_32x32.png", 32, 32)
   end
 
   def render
@@ -50,13 +50,13 @@ class State_PullBlock < State
         @block_node.move_straight(dir)
       end
     end
-    if Input::Keyboard.pressed?(Input::Keyboard::Keys::DOWN)
+    if Moon::Input::Keyboard.pressed?(Moon::Input::Keyboard::Keys::DOWN)
       @block_node.move_straight(2)
-    elsif Input::Keyboard.pressed?(Input::Keyboard::Keys::LEFT)
+    elsif Moon::Input::Keyboard.pressed?(Moon::Input::Keyboard::Keys::LEFT)
       @block_node.move_straight(4)
-    elsif Input::Keyboard.pressed?(Input::Keyboard::Keys::RIGHT)
+    elsif Moon::Input::Keyboard.pressed?(Moon::Input::Keyboard::Keys::RIGHT)
       @block_node.move_straight(6)
-    elsif Input::Keyboard.pressed?(Input::Keyboard::Keys::UP)
+    elsif Moon::Input::Keyboard.pressed?(Moon::Input::Keyboard::Keys::UP)
       @block_node.move_straight(8)
     end
   end

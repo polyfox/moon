@@ -4,13 +4,6 @@
 #   This State is used to demonstrate various functions in the Moon engine.
 #
 # extension
-module Input
-
-  def self.triggered?(key_id)
-    return (pressed?(key_id) || repeated?(key_id)) == 0
-  end
-
-end
 
 # Maybe we could prefer:
 #   Music.new(filename, filetype)
@@ -104,6 +97,8 @@ end
 # the actual player container
 class MoonPlayer < Container
 
+  include Moon
+
   def initialize(x, y)
     # just for now, just for now
     @music = BGM.new("resources/CamelsNommingHay.ogg", "ogg")
@@ -196,8 +191,8 @@ class MoonPlayer < Container
   end
 
   def init_spriteset
-    @spritesheet_16x16 = Spritesheet.new("resources/media_buttons_16x16.png", 16, 16)
-    @spritesheet_32x32 = Spritesheet.new("resources/media_buttons_32x32.png", 32, 32)
+    @spritesheet_16x16  = Spritesheet.new("resources/media_buttons_16x16.png", 16, 16)
+    @spritesheet_32x32  = Spritesheet.new("resources/media_buttons_32x32.png", 32, 32)
     @spritesheet_128x16 = Spritesheet.new("resources/media_buttons_128x16.png", 128, 16)
   end
 
@@ -245,7 +240,9 @@ end
 
 #
 # and finally the state
-class State_MoonPlayer < State
+class State::MoonPlayer < State
+
+  include Moon
 
   # TODO:
   #  optional:

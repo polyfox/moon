@@ -1,7 +1,7 @@
 #
 # core/state/tilemap_test.rb
 #
-class State_TilemapTest < State
+class State::TilemapTest < State
 
   ##
   # init
