@@ -1,6 +1,6 @@
 # small data requirement
 # eventually this will be implemented in C++
-class Moon::Rectangle
+class Moon::Rect
 
   def to_a
     [x, y, width, height]
