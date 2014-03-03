@@ -101,7 +101,8 @@ namespace Moon {
     mrb_value new_tone;
     mrb_get_args(mrb, "o", &new_tone);
 
-    if (strcmp(mrb_obj_classname(mrb, new_tone), "Tone") != 0)
+    /* TODO. compare ruby classes, not classname */
+    if (strcmp(mrb_obj_classname(mrb, new_tone), "Moon::Tone") != 0)
       mrb_raisef(mrb, E_TYPE_ERROR, "expected Tone but recieved %s", mrb_obj_classname(mrb, new_tone));
 
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), new_tone);
@@ -127,7 +128,8 @@ namespace Moon {
     mrb_value new_texture;
     mrb_get_args(mrb, "o", &new_texture);
 
-    if (strcmp(mrb_obj_classname(mrb, new_texture), "Texture") != 0)
+    /* TODO. compare ruby classes, not classname */
+    if (strcmp(mrb_obj_classname(mrb, new_texture), "Moon::Texture") != 0)
       mrb_raisef(mrb, E_TYPE_ERROR, "expected Texture but recieved %s", mrb_obj_classname(mrb, new_texture));
 
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@texture"), new_texture);
