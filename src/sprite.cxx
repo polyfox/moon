@@ -36,10 +36,10 @@ namespace Moon {
       //Handle clipping
       if(clip_rect) {
         //Texture coordinates
-        s0 = clip_rect->x / texture->width();
-        s1 = (clip_rect->x + clip_rect->w) / texture->width();
-        t0 = clip_rect->y / texture->height();
-        t1 = (clip_rect->y + clip_rect->h) / texture->height();
+        s0 = (float)clip_rect->x / texture->width();
+        s1 = (float)(clip_rect->x + clip_rect->w) / texture->width();
+        t0 = (float)clip_rect->y / texture->height();
+        t1 = (float)(clip_rect->y + clip_rect->h) / texture->height();
 
         //Vertex coordinates
         width = clip_rect->w;

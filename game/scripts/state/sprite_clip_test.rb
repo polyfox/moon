@@ -20,9 +20,10 @@ class State::SpriteClipTest < State
 
   def update
     if Mouse.triggered?(Mouse::Buttons::BUTTON_1)
-      i = rand(@total)
-      @sprite.clip_rect = Rect.new((i % 4) * 96, (i / 4) * 96, 96, 96)
-      puts i
+
+      @sprite.clip_rect = Rect.new(0, 0, 48, 36)
+    else
+      @sprite.clip_rect = nil
     end
     super
   end
