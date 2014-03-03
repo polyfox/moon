@@ -13,6 +13,7 @@
 namespace Moon {
   extern const struct mrb_data_type color_data_type;
   extern const struct mrb_data_type font_data_type;
+  extern const struct mrb_data_type rectangle_data_type;
   extern const struct mrb_data_type sound_data_type;
   extern const struct mrb_data_type sprite_data_type;
   extern const struct mrb_data_type spritesheet_data_type;

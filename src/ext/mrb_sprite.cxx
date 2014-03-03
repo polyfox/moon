@@ -15,7 +15,7 @@ namespace Moon {
     char* filename;
     mrb_get_args(mrb, "z", &filename);
 
-    mrb_value self, tone, texture;
+    mrb_value self, tone, texture, clip;
     Sprite *sprite = new Sprite(filename);
     self = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(klass), &sprite_data_type, sprite));
 
@@ -26,6 +26,14 @@ namespace Moon {
     auto texture_ptr = new std::shared_ptr<Texture>(sprite->getTexture());
     texture = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Texture"), &texture_data_type, texture_ptr));
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@texture"), texture);
+
+    auto clip_ptr = new std::shared_ptr<Rect>(sprite->getClip());
+    if (*clip_ptr) { // if shared_ptr is not NULL internally
+      clip = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Rectangle"), &rectangle_data_type, clip_ptr));
+    } else {
+      clip = mrb_nil_value();
+    }
+    mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@clip"), clip);
 
     return self;
   };
@@ -150,6 +158,38 @@ namespace Moon {
     return new_texture;
   }
 
+  static mrb_value moon_mrb_sprite_clip_getter(mrb_state *mrb, mrb_value self) {
+    return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@clip"));
+  }
+
+  static mrb_value moon_mrb_sprite_clip_setter(mrb_state *mrb, mrb_value self) {
+    mrb_value new_clip;
+    mrb_get_args(mrb, "o", &new_clip);
+
+    /* TODO. compare ruby classes, not classname */
+    if (strcmp(mrb_obj_classname(mrb, new_clip), "Moon::Rectangle") != 0 && !mrb_nil_p(new_clip))
+      mrb_raisef(mrb, E_TYPE_ERROR, "expected Rectangle or nil but recieved %s", mrb_obj_classname(mrb, new_clip));
+
+    mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@clip"), new_clip);
+
+    // Besides updating the ivar, we need to update the actual sprite->clip:
+    if(!mrb_nil_p(new_clip)) {
+      // Get the passed-in object's shared_ptr
+      std::shared_ptr<Rect>* clip_ptr;
+      Data_Get_Struct(mrb, new_clip, &rectangle_data_type, clip_ptr);
+
+      // Create a new shared_ptr for this instance and overwrite the old one
+      ((Sprite*)DATA_PTR(self))->setClip(*clip_ptr);
+    } else {
+      std::shared_ptr<Rect> nilrect;
+      ((Sprite*)DATA_PTR(self))->setClip(nilrect);
+    }
+
+
+    return new_clip;
+  }
+
+
   void moon_mrb_sprite_init(mrb_state *mrb) {
     struct RClass *sprite_class;
     sprite_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Sprite", mrb->object_class);
@@ -170,5 +210,7 @@ namespace Moon {
     mrb_define_method(mrb, sprite_class, "tone=", moon_mrb_sprite_tone_setter, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, sprite_class, "texture", moon_mrb_sprite_texture_getter, MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "texture=", moon_mrb_sprite_texture_setter, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "clip_rect", moon_mrb_sprite_clip_getter, MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "clip_rect=", moon_mrb_sprite_clip_setter, MRB_ARGS_REQ(1));
   };
 };
