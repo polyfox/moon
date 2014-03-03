@@ -39,7 +39,7 @@ class State_Snake < State
     @width  = (Screen.width / 16).to_i # Screen#width / 16
     @height = (Screen.height / 16).to_i # Screen#height / 16
     @height -= 2 # making space for the text_score
-    @field = Rectangle.new(0, 24, @width * 16, @height * 16)
+    @field = Moon::Rectangle.new(0, 24, @width * 16, @height * 16)
     puts "Board Size is: #{@width} x #{@height}"
     init_snake
     init_spriteset

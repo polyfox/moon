@@ -1,5 +1,5 @@
 # containers
-class Container < Rectangle
+class Container < Moon::Rectangle
   attr_accessor :draggable
 
   def initialize(x, y, width, height)
