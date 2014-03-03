@@ -22,7 +22,6 @@ namespace Moon {
     auto tone_ptr = new std::shared_ptr<Tone>(sprite->tone);
     tone = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Tone"), &tone_data_type, tone_ptr));
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), tone);
-    mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@texture"), MRB_Qnil);
 
     auto texture_ptr = new std::shared_ptr<Texture>(sprite->getTexture());
     texture = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Texture"), &texture_data_type, texture_ptr));
