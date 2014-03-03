@@ -15,7 +15,7 @@ namespace Moon {
     char* filename;
     mrb_get_args(mrb, "z", &filename);
 
-    mrb_value self, tone;
+    mrb_value self, tone, texture;
     Sprite *sprite = new Sprite(filename);
     self = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(klass), &sprite_data_type, sprite));
 
@@ -23,6 +23,10 @@ namespace Moon {
     tone = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Tone"), &tone_data_type, tone_ptr));
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), tone);
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@texture"), MRB_Qnil);
+
+    auto texture_ptr = new std::shared_ptr<Texture>(sprite->getTexture());
+    texture = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Texture"), &texture_data_type, texture_ptr));
+    mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@texture"), texture);
 
     return self;
   };
