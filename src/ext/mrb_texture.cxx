@@ -40,9 +40,9 @@ namespace Moon {
     texture_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Texture", mrb->object_class);
     MRB_SET_INSTANCE_TT(texture_class, MRB_TT_DATA);
 
-    mrb_define_class_method(mrb, texture_class, "new", moon_mrb_texture_new, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, texture_class, "width", moon_mrb_texture_width, MRB_ARGS_NONE());
-    mrb_define_method(mrb, texture_class, "height", moon_mrb_texture_height, MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, texture_class, "new", moon_mrb_texture_new,    MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, texture_class, "width",     moon_mrb_texture_width,  MRB_ARGS_NONE());
+    mrb_define_method(mrb, texture_class, "height",    moon_mrb_texture_height, MRB_ARGS_NONE());
 
     return texture_class;
   };

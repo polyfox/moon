@@ -191,23 +191,23 @@ namespace Moon {
     sprite_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Sprite", mrb->object_class);
     MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
 
-    mrb_define_class_method(mrb, sprite_class, "new", moon_mrb_sprite_new, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, sprite_class, "render", moon_mrb_sprite_render, MRB_ARGS_NONE());
-    mrb_define_method(mrb, sprite_class, "x", moon_mrb_sprite_x_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, sprite_class, "x=", moon_mrb_sprite_x_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, sprite_class, "y", moon_mrb_sprite_y_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, sprite_class, "y=", moon_mrb_sprite_y_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, sprite_class, "z", moon_mrb_sprite_z_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, sprite_class, "z=", moon_mrb_sprite_z_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, sprite_class, "opacity", moon_mrb_sprite_opacity_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, sprite_class, "opacity=", moon_mrb_sprite_opacity_setter, MRB_ARGS_REQ(1));
+    mrb_define_class_method(mrb, sprite_class, "new",  moon_mrb_sprite_new,            MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "render",     moon_mrb_sprite_render,         MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "x",          moon_mrb_sprite_x_getter,       MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "x=",         moon_mrb_sprite_x_setter,       MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "y",          moon_mrb_sprite_y_getter,       MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "y=",         moon_mrb_sprite_y_setter,       MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "z",          moon_mrb_sprite_z_getter,       MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "z=",         moon_mrb_sprite_z_setter,       MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "opacity",    moon_mrb_sprite_opacity_getter, MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "opacity=",   moon_mrb_sprite_opacity_setter, MRB_ARGS_REQ(1));
 
-    mrb_define_method(mrb, sprite_class, "tone", moon_mrb_sprite_tone_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, sprite_class, "tone=", moon_mrb_sprite_tone_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, sprite_class, "texture", moon_mrb_sprite_texture_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, sprite_class, "texture=", moon_mrb_sprite_texture_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, sprite_class, "clip_rect", moon_mrb_sprite_clip_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, sprite_class, "clip_rect=", moon_mrb_sprite_clip_setter, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "tone",       moon_mrb_sprite_tone_getter,    MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "tone=",      moon_mrb_sprite_tone_setter,    MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "texture",    moon_mrb_sprite_texture_getter, MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "texture=",   moon_mrb_sprite_texture_setter, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "clip_rect",  moon_mrb_sprite_clip_getter,    MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "clip_rect=", moon_mrb_sprite_clip_setter,    MRB_ARGS_REQ(1));
 
     return sprite_class;
   };

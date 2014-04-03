@@ -11,9 +11,9 @@ namespace Moon
         return false;
       else {
         mrb_raisef(mrb, E_TYPE_ERROR,
-                   "expected %S but recieved %S",
-                   mrb_str_new_cstr(mrb, mrb_class_name(mrb, klass)),
-                   mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, obj)));
+                   "recieved %S (expected %S)",
+                   mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, obj)),
+                   mrb_str_new_cstr(mrb, mrb_class_name(mrb, klass)));
       }
     }
     return true;

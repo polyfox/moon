@@ -102,15 +102,15 @@ namespace Moon {
     rectangle_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Rect", mrb->object_class);
     MRB_SET_INSTANCE_TT(rectangle_class, MRB_TT_DATA);
 
-    mrb_define_class_method(mrb, rectangle_class, "new", moon_mrb_rectangle_new, MRB_ARGS_REQ(3));
-    mrb_define_method(mrb, rectangle_class, "x=", moon_mrb_rectangle_x_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, rectangle_class, "x", moon_mrb_rectangle_x_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, rectangle_class, "y=", moon_mrb_rectangle_y_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, rectangle_class, "y", moon_mrb_rectangle_y_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, rectangle_class, "width=", moon_mrb_rectangle_width_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, rectangle_class, "width", moon_mrb_rectangle_width_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, rectangle_class, "height=", moon_mrb_rectangle_height_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, rectangle_class, "height", moon_mrb_rectangle_height_getter, MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, rectangle_class, "new", moon_mrb_rectangle_new,            MRB_ARGS_REQ(3));
+    mrb_define_method(mrb, rectangle_class, "x=",        moon_mrb_rectangle_x_setter,       MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, rectangle_class, "x",         moon_mrb_rectangle_x_getter,       MRB_ARGS_NONE());
+    mrb_define_method(mrb, rectangle_class, "y=",        moon_mrb_rectangle_y_setter,       MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, rectangle_class, "y",         moon_mrb_rectangle_y_getter,       MRB_ARGS_NONE());
+    mrb_define_method(mrb, rectangle_class, "width=",    moon_mrb_rectangle_width_setter,   MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, rectangle_class, "width",     moon_mrb_rectangle_width_getter,   MRB_ARGS_NONE());
+    mrb_define_method(mrb, rectangle_class, "height=",   moon_mrb_rectangle_height_setter,  MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, rectangle_class, "height",    moon_mrb_rectangle_height_getter,  MRB_ARGS_NONE());
 
     return rectangle_class;
   };

@@ -102,15 +102,15 @@ namespace Moon {
     color_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Color", mrb->object_class);
     MRB_SET_INSTANCE_TT(color_class, MRB_TT_DATA);
 
-    mrb_define_class_method(mrb, color_class, "new", moon_mrb_color_new, MRB_ARGS_REQ(4));
-    mrb_define_method(mrb, color_class, "red=", moon_mrb_color_red_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, color_class, "red", moon_mrb_color_red_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, color_class, "green=", moon_mrb_color_green_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, color_class, "green", moon_mrb_color_green_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, color_class, "blue=", moon_mrb_color_blue_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, color_class, "blue", moon_mrb_color_blue_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, color_class, "alpha=", moon_mrb_color_alpha_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, color_class, "alpha", moon_mrb_color_alpha_getter, MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, color_class, "new", moon_mrb_color_new,          MRB_ARGS_REQ(4));
+    mrb_define_method(mrb, color_class, "red=",      moon_mrb_color_red_setter,   MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, color_class, "red",       moon_mrb_color_red_getter,   MRB_ARGS_NONE());
+    mrb_define_method(mrb, color_class, "green=",    moon_mrb_color_green_setter, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, color_class, "green",     moon_mrb_color_green_getter, MRB_ARGS_NONE());
+    mrb_define_method(mrb, color_class, "blue=",     moon_mrb_color_blue_setter,  MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, color_class, "blue",      moon_mrb_color_blue_getter,  MRB_ARGS_NONE());
+    mrb_define_method(mrb, color_class, "alpha=",    moon_mrb_color_alpha_setter, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, color_class, "alpha",     moon_mrb_color_alpha_getter, MRB_ARGS_NONE());
 
     return color_class;
   };

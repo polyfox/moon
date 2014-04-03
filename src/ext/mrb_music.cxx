@@ -52,13 +52,13 @@ namespace Moon {
     mrb_define_class_method(mrb, music_class, "stop", moon_mrb_music_stop, MRB_ARGS_NONE());
 
     /* Position */
-    mrb_define_class_method(mrb, music_class, "seek",   moon_mrb_music_seek, MRB_ARGS_REQ(1));
-    mrb_define_class_method(mrb, music_class, "pos",    moon_mrb_music_pos, MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, music_class, "seek",   moon_mrb_music_seek,   MRB_ARGS_REQ(1));
+    mrb_define_class_method(mrb, music_class, "pos",    moon_mrb_music_pos,    MRB_ARGS_NONE());
     mrb_define_class_method(mrb, music_class, "length", moon_mrb_music_length, MRB_ARGS_NONE());
 
     /* Query */
-    mrb_define_class_method(mrb, music_class, "playing?",  moon_mrb_music_is_playing, MRB_ARGS_NONE());
-    mrb_define_class_method(mrb, music_class, "stopped?",  moon_mrb_music_is_stopped, MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, music_class, "playing?",  moon_mrb_music_is_playing,  MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, music_class, "stopped?",  moon_mrb_music_is_stopped,  MRB_ARGS_NONE());
     mrb_define_class_method(mrb, music_class, "finished?", moon_mrb_music_is_finished, MRB_ARGS_NONE());
     //mrb_define_global_const(mrb, "Music", mrb_obj_value(music_class));
 
