@@ -163,7 +163,8 @@ namespace Moon {
   void Input::Keyboard::update_key(GLFWwindow* window,
                          int key_id, int scancode, int action, int mods) {
     if (action == GLFW_PRESS) {
-      keyboard_keys[key_id].held_at = glfwGetTime();
+      if (keyboard_keys[key_id].held_at == 0)
+        keyboard_keys[key_id].held_at = glfwGetTime();
     } else if (action == GLFW_RELEASE) {
       keyboard_keys[key_id].held_at = 0;
     }
@@ -193,8 +194,8 @@ namespace Moon {
   }
 
   double Input::Keyboard::key_state_hold(int key_id, int state) {
-    if (mouse_buttons[key_id].held_at != 0) {
-      return glfwGetTime() - mouse_buttons[key_id].held_at;
+    if (keyboard_keys[key_id].held_at != 0) {
+      return glfwGetTime() - keyboard_keys[key_id].held_at;
     } else {
       return 0;
     }
@@ -205,7 +206,8 @@ namespace Moon {
   void Input::Mouse::update_button(GLFWwindow* window,
                                    int button_id, int action, int mods) {
     if (action == GLFW_PRESS) {
-      mouse_buttons[button_id].held_at = glfwGetTime();
+      if (mouse_buttons[button_id].held_at == 0)
+        mouse_buttons[button_id].held_at = glfwGetTime();
     } else if (action == GLFW_RELEASE) {
       mouse_buttons[button_id].held_at = 0;
     }

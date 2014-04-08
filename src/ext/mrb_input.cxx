@@ -16,7 +16,7 @@ namespace Moon
       res = Input::Keyboard::key_state_is_eq(key_id, state);
     }
     if (res) {
-      return mrb_fixnum_value(Input::Keyboard::key_state_hold(key_id, state));
+      return mrb_float_value(mrb, (mrb_float)Input::Keyboard::key_state_hold(key_id, state));
     } else {
       return mrb_bool_value(false);
     }
@@ -76,7 +76,7 @@ namespace Moon
       res = Input::Mouse::button_state_is_eq(button_id, state);
     }
     if (res) {
-      return mrb_fixnum_value(Input::Mouse::button_state_hold(button_id, state));
+      return mrb_float_value(mrb, (mrb_float)Input::Mouse::button_state_hold(button_id, state));
     } else {
       return mrb_bool_value(false);
     }
