@@ -6,6 +6,10 @@ class Moon::Rect
     [x, y, width, height]
   end
 
+  def to_h
+    { x: x, y: y, width: width, height: height }
+  end
+
   def x2
     x + width
   end
