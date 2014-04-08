@@ -29,7 +29,7 @@ class State
   ###
   def init
     @ticks = 0
-    puts "[#{self.class}] init"
+    puts "[State:#{self.class}] init"
   end
 
   # Gets called when we close the state
@@ -85,7 +85,7 @@ class State
       @states.last.terminate
       last_state = @states.pop
     end
-    puts "[State] change #{last_state.class} >> #{state}" if debug?
+    puts "[State] CHANGE #{last_state.class} >> #{state}" if debug?
     @states.push state.new(self)
     @states.last.init
   end
@@ -94,7 +94,7 @@ class State
     @states.last.terminate
     last_state = @states.pop
 
-    puts "[State] pop #{last_state.class} > #{@states.last.class}" if debug?
+    puts "[State] POP #{last_state.class} > #{@states.last.class}" if debug?
     @states.last.resume if !@states.empty?
     puts "--State now empty--" if @states.empty? # TODO
   end
@@ -102,7 +102,7 @@ class State
   def self.push state
     last_state = @states.last
     @states.last.pause unless @states.empty?
-    puts "[State] push #{last_state.class} > #{state}" if debug?
+    puts "[State] PUSH #{last_state.class} > #{state}" if debug?
     @states.push state.new(self)
     @states.last.init
   end
