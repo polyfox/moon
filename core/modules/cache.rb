@@ -20,10 +20,16 @@ module Cache
 
   def branch(branch_name)
     define_method(branch_name) do |name, *args|
+      puts "[Cache:#{branch_name}] GET #{name}, #{args.join(", ")}"
       key = [name, *args]
-      (@cache[branch_name] ||= {})[key] ||= @constructor[branch_name][name].(*args)
+      constructor = @constructor[branch_name]
+      if constructor.is_a?(Proc)
+        (@cache[branch_name] ||= {})[key] ||= constructor.(name, *args)
+      else
+        (@cache[branch_name] ||= {})[key] ||= constructor[name].(*args)
+      end
     end
-    yield (@constructor[branch_name] ||= {})
+    @constructor[branch_name] = yield
   end
 
   class << self

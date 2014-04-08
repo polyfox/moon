@@ -1,7 +1,8 @@
 module Cache
 
-  branch :spritesheet do |hsh|
+  branch :spritesheet do
 
+    hsh = {}
     [[128, 128], [128, 16], [16, 128], [16, 16], [16, 32],
      [256, 256], [32, 16], [32, 32], [8, 8], [96, 96]].each do |ary|
 
@@ -15,9 +16,12 @@ module Cache
       end
     end
 
+    hsh
   end
 
-  branch :font do |hsh|
+  branch :font do
+
+    hsh = {}
 
     hsh["ipaexg"] = ->(size) do
       Moon::Font.new("resources/fonts/ipaexg/ipaexg.ttf", size)
@@ -43,6 +47,7 @@ module Cache
       Moon::Font.new("resources/fonts/vera/VeraMoIt.ttf", size)
     end
 
+    hsh
   end
 
 end
