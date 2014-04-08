@@ -1,8 +1,8 @@
-class State::LunarMetal < State::Base
+class LunarMetal::StateGame < State
 
   def init
-    @game = State::LunarMetal::Game.new
-    @hud = State::LunarMetal::Hud.new(@game)
+    @game = LunarMetal::Game.new
+    @hud = LunarMetal::Hud.new(@game)
     super
   end
 

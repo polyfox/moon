@@ -5,6 +5,7 @@ require 'scripts/cache'
 require 'scripts/block/block_core'
 require 'scripts/state'
 require 'scripts/music_activity_hud'
+require 'scripts/lunar_metal'
 
 #State.push(State::ModifierTest)  #
 #State.push(State::MoonPlayer)    #
@@ -17,6 +18,6 @@ require 'scripts/music_activity_hud'
 #State.push(State::SpriteClipTest)
 #State.push(State::KeyHoldTest)   #
 #State.push(State::MouseEvents)
-State.push(State::LunarMetal)
+State.push(LunarMetal::StateGame)
 State.push(State::CoreTest)
 #State.push(State::IntegrityTest)
