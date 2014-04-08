@@ -5,16 +5,31 @@ class State
 
   attr_reader :ticks
 
+  ###
+  # @type [Array<State>]
+  ###
   @states = []
 
+  ###
+  # @type [???]
+  ###
+  attr_accessor :engine
+
+  ###
+  # @param [???] engine
+  ###
   def initialize(engine)
     @engine = engine
-    @ticks = 0
   end
 
+  ###
+  # Init
   # use this instead to initialize a State
+  # @return [void]
+  ###
   def init
-    puts "[self.class] init"
+    @ticks = 0
+    puts "[#{self.class}] init"
   end
 
   # Gets called when we close the state
@@ -33,12 +48,20 @@ class State
     #
   end
 
+  ###
+  # Per frame render function, called by moon
   # called when the state is intended to be rendered to screen
+  # @return [void]
+  ###
   def render
     #
   end
 
   # Gets called in each game loop iteration
+  ###
+  # Per frame update function, called by moon
+  # @return [void]
+  ###
   def update
     @ticks += 1
     if Moon::Input::Keyboard.triggered?(Moon::Input::Keyboard::Keys::F8)
