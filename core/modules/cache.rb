@@ -20,7 +20,7 @@ module Cache
 
   def branch(branch_name)
     define_method(branch_name) do |name, *args|
-      puts "[Cache:#{branch_name}] GET #{name}, #{args.join(", ")}"
+      puts "[Cache:#{branch_name}] GET #{name.inspect}, #{args.join(", ")}"
       key = [name, *args]
       constructor = @constructor[branch_name]
       if constructor.is_a?(Proc)
