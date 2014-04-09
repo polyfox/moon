@@ -31,34 +31,42 @@ class Vector2
     { x: @x, y: @y }
   end
 
-  def obj_to_vec2a(obj)
+  def obj_to_vec2_a(obj)
     case obj
+    when Array
+      raise ArgumentError, "expected Array of size 2" if obj.size != 2
+      return *obj
     when Numeric then return obj, obj
     when Vector2 then return *obj
     else
       raise TypeError,
-            "wrong argument type #{obj.class} (expected Numeric or Vector2)"
+            "wrong argument type #{obj.class} (expected Array, Numeric or Vector2)"
     end
   end
 
+  def set(*args)
+    @x, @y = *obj_to_vec2_a(args.size > 1 ? args : args.first)
+    self
+  end
+
   def +(other)
-    x, y = *obj_to_vec2a(other)
-    Vector2.new(@x + x, @y + y)
+    x, y = *obj_to_vec2_a(other)
+    Vector2.new @x + x, @y + y
   end
 
   def -(other)
-    x, y = *obj_to_vec2a(other)
-    Vector2.new(@x - x, @y - y)
+    x, y = *obj_to_vec2_a(other)
+    Vector2.new @x - x, @y - y
   end
 
   def *(other)
-    x, y = *obj_to_vec2a(other)
-    Vector2.new(@x * x, @y * y)
+    x, y = *obj_to_vec2_a(other)
+    Vector2.new @x * x, @y * y
   end
 
   def /(other)
-    x, y = *obj_to_vec2a(other)
-    Vector2.new(@x / x, @y / y)
+    x, y = *obj_to_vec2_a(other)
+    Vector2.new @x / x, @y / y
   end
 
   def dot(other)
@@ -71,16 +79,32 @@ class Vector2
   #  @x * x + @y * y + @z * z
   #end
 
+  def xy
+    dup
+  end
+
+  def xyz
+    Vector3.new @x, @y, 0
+  end
+
   def self.[](*objs)
     obj = objs.size == 1 ? objs[0] : objs
     case obj
-    when Array   then new(*obj)  # laziness, instead of checking for exactly 2 args
-    when Numeric then new(obj, obj)
-    when Vector2 then new(obj.x, obj.y)
-    else raise(TypeError, "wrong argument type #{obj.class}: expected Array, Numeric or Vector2")
+    when Array
+      raise ArgumentError, "expected Array of size 3" if obj.size != 2
+      new(*obj)
+    when Numeric then new obj, obj
+    when Vector2 then new obj.x, obj.y
+    else
+      raise TypeError,
+            "wrong argument type #{obj.class} (expected Array, Numeric or Vector2)"
     end
   end
 
-  private :obj_to_vec2a
+  def self.zero
+    new(0.0, 0.0)
+  end
+
+  private :obj_to_vec2_a
 
 end
