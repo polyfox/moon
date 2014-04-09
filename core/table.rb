@@ -12,6 +12,7 @@ class Table
     @xsize = xsize
     @ysize = ysize
     @data = Array.new(@ysize) { Array.new(@xsize, 0) }
+    yield self if block_given?
   end
 
   def change_data(data_p, xsize, ysize)
@@ -44,14 +45,14 @@ class Table
     end
   end
 
-  def map_with_xy!
+  def map_with_xy
     each_with_xy do |n, x, y|
       @data[y][x] = yield @data[y][x], x, y
     end
   end
 
   def fill(n)
-    map_with_xy! { |old_n, x, y| n }
+    map_with_xy { |old_n, x, y| n }
   end
 
   def clear

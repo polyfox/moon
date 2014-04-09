@@ -14,6 +14,7 @@ class DataMatrix
     @ysize = ysize
     @zsize = zsize
     @data = Array.new(@zsize) { Array.new(@ysize) { Array.new(@xsize, 0) } }
+    yield self if block_given?
   end
 
   def [](x, y, z)
@@ -44,14 +45,14 @@ class DataMatrix
     end
   end
 
-  def map_with_xyz!
+  def map_with_xyz
     each_with_xyz do |n, x, y, z|
       @data[z][y][x] = yield @data[z][y][x], x, y, z
     end
   end
 
   def fill(n)
-    map_with_xyz! { |old_n, x, y, z| n }
+    map_with_xyz { |old_n, x, y, z| n }
   end
 
   def clear

@@ -57,7 +57,7 @@ class State::TilemapTest < State
     @tilemap  = Tilemap.new
     @map_data = DataMatrix.new(20, 15, layers.size) #((Screen.width / 32).to_i, (Screen.height / 32).to_i, 3)
     @tileset  = Spritesheet.new("resources/hyptosis_tile-art-batch-1.png", 32, 32)
-    @map_data.map_with_xyz! do |n, x, y, z|
+    @map_data.map_with_xyz do |n, x, y, z|
       layer = layers[z]
       # tiled spits out map data, that has its index +1, so we need to
       # subtract 1 from it to get the needed index.
@@ -87,7 +87,7 @@ end
 # Spritesheet#size -> returns the total number of cells in the Spritesheet (or just #cols * #rows)
 
 # notes:
-#   @map_data.map_with_xyz! { |n, x, y, z| rand(16 * 16) }
+#   @map_data.map_with_xyz { |n, x, y, z| rand(16 * 16) }
 #     60 fps with only data loop
 #     26 fps with data loop rendering
 #
