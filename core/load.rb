@@ -4,6 +4,7 @@
 require 'core/vector2'
 require 'core/vector3'
 require 'core/rectangle'
+require 'core/cuboid'
 require 'core/table'       # 2d Table
 require 'core/data_matrix' # 3d Table
 require 'core/modules'
