@@ -30,7 +30,7 @@ namespace Moon {
 
     (*color)->r = red;
 
-    return mrb_float_value(mrb, (*color)->r);
+    return mrb_nil_value();
   }
 
   static mrb_value moon_mrb_color_red_getter(mrb_state *mrb, mrb_value self) {
@@ -49,7 +49,7 @@ namespace Moon {
 
     (*color)->g = green;
 
-    return mrb_float_value(mrb, (*color)->g);
+    return mrb_nil_value();
   }
 
   static mrb_value moon_mrb_color_green_getter(mrb_state *mrb, mrb_value self) {
@@ -68,7 +68,7 @@ namespace Moon {
 
     (*color)->b = blue;
 
-    return mrb_float_value(mrb, (*color)->b);
+    return mrb_nil_value();
   }
 
   static mrb_value moon_mrb_color_blue_getter(mrb_state *mrb, mrb_value self) {

@@ -30,13 +30,14 @@ namespace Moon {
 
     (*rectangle)->x = x;
 
-    return mrb_float_value(mrb, (*rectangle)->x);
+    return mrb_nil_value();
   }
 
   static mrb_value moon_mrb_rectangle_x_getter(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Rect>* rectangle;
     Data_Get_Struct(mrb, self, &rectangle_data_type, rectangle);
 
+    //return mrb_fixnum_value((int)(*rectangle)->x);
     return mrb_float_value(mrb, (*rectangle)->x);
   }
 
@@ -49,13 +50,14 @@ namespace Moon {
 
     (*rectangle)->y = y;
 
-    return mrb_float_value(mrb, (*rectangle)->y);
+    return mrb_nil_value();
   }
 
   static mrb_value moon_mrb_rectangle_y_getter(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Rect>* rectangle;
     Data_Get_Struct(mrb, self, &rectangle_data_type, rectangle);
 
+    //return mrb_fixnum_value((int)(*rectangle)->y);
     return mrb_float_value(mrb, (*rectangle)->y);
   }
 
@@ -68,13 +70,14 @@ namespace Moon {
 
     (*rectangle)->w = width;
 
-    return mrb_float_value(mrb, (*rectangle)->w);
+    return mrb_nil_value();
   }
 
   static mrb_value moon_mrb_rectangle_width_getter(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Rect>* rectangle;
     Data_Get_Struct(mrb, self, &rectangle_data_type, rectangle);
 
+    //return mrb_fixnum_value((int)(*rectangle)->w);
     return mrb_float_value(mrb, (*rectangle)->w);
   }
 
@@ -87,13 +90,14 @@ namespace Moon {
 
     (*rectangle)->h = height;
 
-    return mrb_float_value(mrb, (*rectangle)->h);
+    return mrb_nil_value();
   }
 
   static mrb_value moon_mrb_rectangle_height_getter(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Rect>* rectangle;
     Data_Get_Struct(mrb, self, &rectangle_data_type, rectangle);
 
+    //return mrb_fixnum_value((int)(*rectangle)->h);
     return mrb_float_value(mrb, (*rectangle)->h);
   }
 
@@ -102,7 +106,7 @@ namespace Moon {
     rectangle_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Rect", mrb->object_class);
     MRB_SET_INSTANCE_TT(rectangle_class, MRB_TT_DATA);
 
-    mrb_define_class_method(mrb, rectangle_class, "new", moon_mrb_rectangle_new,            MRB_ARGS_REQ(3));
+    mrb_define_class_method(mrb, rectangle_class, "new", moon_mrb_rectangle_new,            MRB_ARGS_REQ(4));
     mrb_define_method(mrb, rectangle_class, "x=",        moon_mrb_rectangle_x_setter,       MRB_ARGS_REQ(1));
     mrb_define_method(mrb, rectangle_class, "x",         moon_mrb_rectangle_x_getter,       MRB_ARGS_NONE());
     mrb_define_method(mrb, rectangle_class, "y=",        moon_mrb_rectangle_y_setter,       MRB_ARGS_REQ(1));

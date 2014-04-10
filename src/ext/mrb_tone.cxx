@@ -32,7 +32,7 @@ namespace Moon {
 
     (*tone)->hue = hue;
 
-    return mrb_float_value(mrb, (*tone)->hue);
+    return mrb_nil_value();
   }
 
   static mrb_value moon_mrb_tone_hue_getter(mrb_state *mrb, mrb_value self) {
@@ -51,7 +51,7 @@ namespace Moon {
 
     (*tone)->saturation = saturation;
 
-    return mrb_float_value(mrb, (*tone)->saturation);
+    return mrb_nil_value();
   }
 
   static mrb_value moon_mrb_tone_saturation_getter(mrb_state *mrb, mrb_value self) {
@@ -70,7 +70,7 @@ namespace Moon {
 
     (*tone)->lightness = lightness;
 
-    return mrb_float_value(mrb, (*tone)->lightness);
+    return mrb_nil_value();
   }
 
   static mrb_value moon_mrb_tone_lightness_getter(mrb_state *mrb, mrb_value self) {
