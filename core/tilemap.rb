@@ -79,7 +79,7 @@ class Tilemap
           # and therefore should not be rendered
           next if tile_id < 0
 
-          zm = @data_zmap ? @data_zmap[x, y, z] : 0
+          zm = @data_zmap ? @data_zmap[dx, dy, dz] : 0
 
           @tileset.render x + j * cell_width,
                           y + i * cell_height,
