@@ -1,7 +1,7 @@
 #include "spritesheet.hxx"
 
 namespace Moon {
-  Spritesheet::Spritesheet(std::string filename, int tile_width, int tile_height) 
+  Spritesheet::Spritesheet(std::string filename, int tile_width, int tile_height)
   : VBO(GL_STATIC_DRAW)
   {
     shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
@@ -50,9 +50,7 @@ namespace Moon {
       VBO.push_back_indices(indices, 4);
 
     } else {   //Error
-      if(texture->id() == 0) {
-        printf("No texture to render with!\n");
-      }
+      printf("No texture to render with!\n");
       return false;
     }
 
@@ -60,6 +58,11 @@ namespace Moon {
   };
 
   void Spritesheet::render(const int &x, const int &y, const float &z, const int &index) {
+
+    // if you somehow managed to go out-of-bounds
+    if ((index < 0) || (index >= (int)total_sprites)) return;
+    if (texture->id() == 0) return;
+
     Tone tone;
     float opacity = 1.0;
     int offset = index*4;
