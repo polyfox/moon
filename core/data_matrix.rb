@@ -8,26 +8,39 @@ class DataMatrix
   attr_reader :xsize
   attr_reader :ysize
   attr_reader :zsize
+  attr_reader :data
 
   def initialize(xsize, ysize, zsize)
     @xsize = xsize
     @ysize = ysize
     @zsize = zsize
-    @data = Array.new(@zsize) { Array.new(@ysize) { Array.new(@xsize, 0) } }
+    create_data
     yield self if block_given?
   end
 
+  def create_data
+    @data = Array.new(@zsize) { Array.new(@ysize) { Array.new(@xsize, 0) } }
+  end
+
+  def initialize_copy(org)
+    super org
+    create_data
+    map_with_xyz { |_, x, y, z| org.data[z][y][x] }
+  end
+
   def [](x, y, z)
-    return 0 if (x < 0 || x >= @xsize) ||
-                (y < 0 || y >= @xsize) ||
-                (z < 0 || z >= @xsize)
+    x = x.to_i; y = y.to_i; z = z.to_i
+    return 0 if ((x < 0) || (x >= @xsize)) ||
+                ((y < 0) || (y >= @ysize)) ||
+                ((z < 0) || (z >= @zsize))
     @data[z][y][x]
   end
 
   def []=(x, y, z, n)
-    return if (x < 0 || x >= @xsize) ||
-              (y < 0 || y >= @xsize) ||
-              (z < 0 || z >= @xsize)
+    x = x.to_i; y = y.to_i; z = z.to_i; n = n.to_i
+    return if ((x < 0) || (x >= @xsize)) ||
+              ((y < 0) || (y >= @ysize)) ||
+              ((z < 0) || (z >= @zsize))
     @data[z][y][x] = n
   end
 
@@ -80,5 +93,8 @@ class DataMatrix
     end
     return result
   end
+
+  #protected :data
+  private :create_data
 
 end

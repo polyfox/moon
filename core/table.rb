@@ -11,8 +11,18 @@ class Table
   def initialize(xsize, ysize)
     @xsize = xsize
     @ysize = ysize
-    @data = Array.new(@ysize) { Array.new(@xsize, 0) }
+    create_data
     yield self if block_given?
+  end
+
+  def create_data
+    @data = Array.new(@ysize) { Array.new(@xsize, 0) }
+  end
+
+  def initialize_copy(org)
+    super org
+    create_data
+    map_with_xy { |_, x, y| org.data[y][x] }
   end
 
   def change_data(data_p, xsize, ysize)
@@ -22,14 +32,16 @@ class Table
   end
 
   def [](x, y)
+    x = x.to_i; y = y.to_i
     return 0 if (x < 0 || x >= @xsize) ||
-                (y < 0 || y >= @xsize)
+                (y < 0 || y >= @ysize)
     @data[y][x]
   end
 
   def []=(x, y, n)
+    x = x.to_i; y = y.to_i; n = n.to_i
     return if (x < 0 || x >= @xsize) ||
-              (y < 0 || y >= @xsize)
+              (y < 0 || y >= @zsize)
     @data[y][x] = n
   end
 
