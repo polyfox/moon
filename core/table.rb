@@ -22,10 +22,14 @@ class Table
   end
 
   def [](x, y)
-    @data[y][x] || 0
+    return 0 if (x < 0 || x >= @xsize) ||
+                (y < 0 || y >= @xsize)
+    @data[y][x]
   end
 
   def []=(x, y, n)
+    return if (x < 0 || x >= @xsize) ||
+              (y < 0 || y >= @xsize)
     @data[y][x] = n
   end
 

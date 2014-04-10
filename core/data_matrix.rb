@@ -18,10 +18,16 @@ class DataMatrix
   end
 
   def [](x, y, z)
-    @data[z][y][x] || 0
+    return 0 if (x < 0 || x >= @xsize) ||
+                (y < 0 || y >= @xsize) ||
+                (z < 0 || z >= @xsize)
+    @data[z][y][x]
   end
 
   def []=(x, y, z, n)
+    return if (x < 0 || x >= @xsize) ||
+              (y < 0 || y >= @xsize) ||
+              (z < 0 || z >= @xsize)
     @data[z][y][x] = n
   end
 
