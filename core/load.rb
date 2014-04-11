@@ -1,6 +1,7 @@
 #
 # core/load.rb
 #   Entry script for Moon's mrb
+require 'core/core_ext'
 require 'core/color'
 require 'core/cuboid'
 require 'core/data_matrix' # 3d Table
