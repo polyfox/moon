@@ -40,6 +40,27 @@ class Vector3
     { x: @x, y: @y, z: @z }
   end
 
+  def round(*a)
+    @x = @x.round(*a)
+    @y = @y.round(*a)
+    @z = @z.round(*a)
+    self
+  end
+
+  def floor
+    @x = @x.floor
+    @y = @y.floor
+    @z = @z.floor
+    self
+  end
+
+  def ceil
+    @x = @x.ceil
+    @y = @y.ceil
+    @z = @z.ceil
+    self
+  end
+
   def normalize
     m = [x, y, z].max.to_f
     Vector3.new x / m, y / m, z / m
