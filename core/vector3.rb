@@ -91,11 +91,14 @@ class Vector3
 
   def self.obj_to_vec3_a(obj)
     case obj
-    when Array
-      raise ArgumentError, "expected Array of size 3" if obj.size != 3
-      return *obj
-    when Numeric then return obj, obj, obj
     when Vector3 then return *obj
+    when Numeric then return obj, obj, obj
+    when Array
+      if obj.size != 3
+        raise ArgumentError,
+              "wrong Array size #{obj.size} (expected Array of size 3)"
+      end
+      return *obj
     else
       raise TypeError,
             "wrong argument type #{obj.class} (expected Array, Numeric or Vector3)"

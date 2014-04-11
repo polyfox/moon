@@ -89,11 +89,14 @@ class Vector2
 
   def self.obj_to_vec2_a(obj)
     case obj
-    when Array
-      raise ArgumentError, "expected Array of size 2" if obj.size != 2
-      return *obj
-    when Numeric then return obj, obj
     when Vector2 then return *obj
+    when Numeric then return obj, obj
+    when Array
+      if obj.size != 2
+        raise ArgumentError,
+              "wrong Array size #{obj.size} (expected Array of size 2)"
+      end
+      return *obj
     else
       raise TypeError,
             "wrong argument type #{obj.class} (expected Array, Numeric or Vector2)"
