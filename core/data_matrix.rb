@@ -28,6 +28,10 @@ class DataMatrix
     map_with_xyz { |_, x, y, z| org.data[z][y][x] }
   end
 
+  def size
+    Vector3.new @xsize, @ysize, @zsize
+  end
+
   def [](x, y, z)
     x = x.to_i; y = y.to_i; z = z.to_i
     return 0 if ((x < 0) || (x >= @xsize)) ||

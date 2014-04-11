@@ -31,6 +31,10 @@ class Table
     @data  = data_p
   end
 
+  def size
+    Vector2.new @xsize, @ysize
+  end
+
   def [](x, y)
     x = x.to_i; y = y.to_i
     return 0 if (x < 0 || x >= @xsize) ||
@@ -43,6 +47,14 @@ class Table
     return if (x < 0 || x >= @xsize) ||
               (y < 0 || y >= @zsize)
     @data[y][x] = n
+  end
+
+  ###
+  # Because sometimes its too damn troublesom to convert an index to the
+  # proper coords
+  ###
+  def set_by_index(i, value)
+    self[i % xsize, i / xsize] = value
   end
 
   def each
