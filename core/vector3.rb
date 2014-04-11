@@ -46,6 +46,11 @@ class Vector3
     end
   end
 
+  def normalize
+    m = [x, y, z].max.to_f
+    Vector3.new x / m, y / m, z / m
+  end
+
   def set(*args)
     @x, @y, @z = *obj_to_vec3_a(args.size > 1 ? args : args.first)
     self

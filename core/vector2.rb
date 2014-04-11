@@ -44,6 +44,11 @@ class Vector2
     end
   end
 
+  def normalize
+    m = [x, y].max.to_f
+    Vector2.new x / m, y / m
+  end
+
   def set(*args)
     @x, @y = *obj_to_vec2_a(args.size > 1 ? args : args.first)
     self
