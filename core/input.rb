@@ -10,6 +10,10 @@ module Moon
         val && val < Moon::Input::TRIGGERED_THRESHOLD
       end
 
+      def self.held?(key_id, *args)
+        pressed?(key_id, *args) || repeated?(key_id, *args)
+      end
+
     end
     module Mouse
 
@@ -38,6 +42,10 @@ module Moon
       def self.triggered?(key_id, *args)
         val = pressed?(key_id, *args)
         val && val < Moon::Input::TRIGGERED_THRESHOLD
+      end
+
+      class << self
+        alias :held? :pressed?
       end
 
     end
