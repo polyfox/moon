@@ -45,7 +45,7 @@ class Table
   def []=(x, y, n)
     x = x.to_i; y = y.to_i; n = n.to_i
     return if (x < 0 || x >= @xsize) ||
-              (y < 0 || y >= @zsize)
+              (y < 0 || y >= @ysize)
     @data[y][x] = n
   end
 
