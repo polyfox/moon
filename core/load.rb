@@ -7,7 +7,7 @@ require 'core/data_matrix' # 3d Table
 require 'core/gui'
 require 'core/input'
 require 'core/modules'
-require 'core/rectangle'
+require 'core/rect'
 require 'core/state'
 require 'core/table'       # 2d Table
 require 'core/tilemap'

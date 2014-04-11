@@ -74,8 +74,8 @@ class DataMatrix
     map_with_xyz { |old_n, x, y, z| n }
   end
 
-  def clear
-    fill(0)
+  def clear(n=0)
+    fill(n)
   end
 
   def layer(z)

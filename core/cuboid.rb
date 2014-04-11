@@ -29,22 +29,57 @@ class Cuboid
 
   def clear
     @x, @y, @z, @width, @height, @depth = 0, 0, 0, 0, 0, 0
+    self
   end
 
-  def obj_to_vec3a(obj)
-    case obj
-    when Array
-      raise ArgumentError, "expected Array of size 3" if obj.size != 3
-      return *obj
-    when Numeric then return obj, obj, obj
-    when Vector3 then return *obj
-    else
-      raise TypeError,
-            "wrong argument type #{obj.class} (expected Array, Numeric or Vector3)"
-    end
+  def set(*args)
+    @x, @y, @z, @width, @height, @depth = *Cube.obj_to_cuboid_a(args.size > 1 ? args : args.first)
+    self
   end
 
-  def obj_to_cuboid_a(obj)
+  def move(*args)
+    @x, @y, @z = *Vector3.obj_to_vec3a(args.size > 1 ? args : args.first)
+    self
+  end
+
+  def resize(*args)
+    @width, @height, @depth = *Vector3.obj_to_vec3_a(args.size > 1 ? args : args.first)
+    self
+  end
+
+  def xy
+    Vector2.new @x, @y
+  end
+
+  def xy=(other)
+    self.x, self.y = *Vector2.obj_to_vec2_a(other)
+  end
+
+  def xyz
+    Vector3.new @x, @y, @z
+  end
+
+  def xyz=(other)
+    self.x, self.y, self.z = *Vector3.obj_to_vec3_a(other)
+  end
+
+  def wh
+    Vector2.new @width, @height
+  end
+
+  def wh=(other)
+    self.w, self.h = *Vector2.obj_to_vec2_a(other)
+  end
+
+  def whd
+    Vector3.new @width, @height, @depth
+  end
+
+  def whd=(other)
+    self.w, self.h, self.d = *Vector3.obj_to_vec3_a(other)
+  end
+
+  def self.obj_to_cuboid_a(obj)
     case obj
     when Array
       case obj.size
@@ -65,36 +100,9 @@ class Cuboid
     end
   end
 
-  def set(*args)
-    @x, @y, @z, @width, @height, @depth = *obj_to_cuboid_a(args.size > 1 ? args : args.first)
-    self
+  def self.[](*objs)
+    obj = objs.size == 1 ? objs.first : objs
+    new(*obj_to_cuboid_a(obj))
   end
-
-  def move(*args)
-    @x, @y, @z = *obj_to_vec3a(args.size > 1 ? args : args.first)
-  end
-
-  def resize(*args)
-    @width, @height, @depth = *obj_to_vec3_a(args.size > 1 ? args : args.first)
-  end
-
-  def xy
-    Vector2.new @x, @y
-  end
-
-  def xyz
-    Vector3.new @x, @y, @z
-  end
-
-  def wh
-    Vector2.new @width, @height
-  end
-
-  def whd
-    Vector3.new @width, @height, @depth
-  end
-
-  private :obj_to_cuboid_a
-  private :obj_to_vec3_a
 
 end

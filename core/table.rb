@@ -71,8 +71,8 @@ class Table
     map_with_xy { |old_n, x, y| n }
   end
 
-  def clear
-    fill(0)
+  def clear(n=0)
+    fill(n)
   end
 
   def row(y)
