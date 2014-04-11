@@ -3,12 +3,19 @@
 #   Everyone loves a Vector class
 class Vector2
 
+  include Comparable
+
   attr_accessor :x
   attr_accessor :y
 
   def initialize(x=0.0, y=0.0)
     @x = x
     @y = y
+  end
+
+  def <=>(other)
+    ox, oy = *Vector2.obj_to_vec2_a(other)
+    [ox, oy] <=> [@x, @y]
   end
 
   def -@
@@ -62,7 +69,7 @@ class Vector2
   end
 
   def dot(other)
-    x, y = *Vector2.obj_to_vec2a(other)
+    x, y = *Vector2.obj_to_vec2_a(other)
     @x * x + @y * y
   end
 

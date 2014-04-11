@@ -3,6 +3,8 @@
 #   Everyone loves a Vector class
 class Vector3
 
+  include Comparable
+
   attr_accessor :x
   attr_accessor :y
   attr_accessor :z
@@ -11,6 +13,11 @@ class Vector3
     @x = x
     @y = y
     @z = z
+  end
+
+  def <=>(other)
+    ox, oy, oz = *Vector3.obj_to_vec3_a(other)
+    [ox, oy, oz] <=> [@x, @y, @z]
   end
 
   def -@
