@@ -8,4 +8,8 @@ class Numeric
     Vector3.new(self, self, self)
   end
 
+  def masked?(flag)
+    (self & flag) == flag
+  end
+
 end
