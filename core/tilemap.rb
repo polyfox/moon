@@ -102,9 +102,32 @@ class Tilemap
           flag = @flags ? @flags[dx, dy, dz] : 0
 
           if flag > 0
-            @tileset.render x + j * cell_width,
-                            y + i * cell_height,
-                            z + zm, tile_id
+            rx, ry, rz = 0, 0, 0
+            vx, vy = 0, 0
+
+            if (flag.masked?(DataFlag::FULL_OFF_TILE))
+              vx, vy = cell_width, cell_height
+            elsif (flag.masked?(DataFlag::TQUART_OFF_TILE))
+              vx, vy = (cell_width / 4) * 3, (cell_height / 4) * 3
+            elsif (flag.masked?(DataFlag::HALF_OFF_TILE))
+              vx, vy = cell_width / 2, cell_height / 2
+            elsif (flag.masked?(DataFlag::QUART_OFF_TILE))
+              vx, vy = cell_width / 4, cell_height / 4
+            end
+
+            if (flag.masked?(DataFlag::OFF_LEFT))
+              rx -= vx
+            elsif (flag.masked?(DataFlag::OFF_RIGHT))
+              rx += vx
+            end
+            if (flag.masked?(DataFlag::OFF_DOWN))
+              ry += vy
+            elsif (flag.masked?(DataFlag::OFF_UP))
+              ry -= vy
+            end
+            @tileset.render rx + x + j * cell_width,
+                            ry + y + i * cell_height,
+                            rz + z + zm, tile_id
           else
             @tileset.render x + j * cell_width,
                             y + i * cell_height,
