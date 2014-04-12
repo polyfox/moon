@@ -40,35 +40,26 @@ class Vector3
     { x: @x, y: @y, z: @z }
   end
 
-  def round(*a)
-    @x = @x.round(*a)
-    @y = @y.round(*a)
-    @z = @z.round(*a)
+  def set(*args)
+    @x, @y, @z = *Vector3.obj_to_vec3_a(args.size > 1 ? args : args.first)
     self
+  end
+
+  def round(*a)
+    Vector3.new @x.round(*a), @y.round(*a), @z.round(*a)
   end
 
   def floor
-    @x = @x.floor
-    @y = @y.floor
-    @z = @z.floor
-    self
+    Vector3.new @x.floor, @y.floor, @z.floor
   end
 
   def ceil
-    @x = @x.ceil
-    @y = @y.ceil
-    @z = @z.ceil
-    self
+    Vector3.new @x.ceil, @y.ceil, @z.ceil
   end
 
   def normalize
     m = [@x, @y, @z].max.to_f
     Vector3.new @x / m, @y / m, @z / m
-  end
-
-  def set(*args)
-    @x, @y, @z = *Vector3.obj_to_vec3_a(args.size > 1 ? args : args.first)
-    self
   end
 
   def +(other)

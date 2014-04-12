@@ -38,32 +38,26 @@ class Vector2
     { x: @x, y: @y }
   end
 
-  def round(*a)
-    @x = @x.round(*a)
-    @y = @y.round(*a)
+  def set(*args)
+    @x, @y = *Vector2.obj_to_vec2_a(args.size > 1 ? args : args.first)
     self
+  end
+
+  def round(*a)
+    Vector2.new @x.round(*a), @y.round(*a)
   end
 
   def floor
-    @x = @x.floor
-    @y = @y.floor
-    self
+    Vector2.new @x.floor, @y.floor
   end
 
   def ceil
-    @x = @x.ceil
-    @y = @y.ceil
-    self
+    Vector2.new @x.ceil, @y.ceil
   end
 
   def normalize
     m = [@x, @y].max.to_f
     Vector2.new @x / m, @y / m
-  end
-
-  def set(*args)
-    @x, @y = *Vector2.obj_to_vec2_a(args.size > 1 ? args : args.first)
-    self
   end
 
   def +(other)
