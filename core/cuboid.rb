@@ -52,7 +52,7 @@ class Cuboid
   end
 
   def xy=(other)
-    self.x, self.y = *Vector2.obj_to_vec2_a(other)
+    @x, @y = *Vector2.obj_to_vec2_a(other)
   end
 
   def xyz
@@ -60,7 +60,7 @@ class Cuboid
   end
 
   def xyz=(other)
-    self.x, self.y, self.z = *Vector3.obj_to_vec3_a(other)
+    @x, @y, @z = *Vector3.obj_to_vec3_a(other)
   end
 
   def wh
@@ -68,7 +68,7 @@ class Cuboid
   end
 
   def wh=(other)
-    self.w, self.h = *Vector2.obj_to_vec2_a(other)
+    @width, @height = *Vector2.obj_to_vec2_a(other)
   end
 
   def whd
@@ -76,9 +76,14 @@ class Cuboid
   end
 
   def whd=(other)
-    self.w, self.h, self.d = *Vector3.obj_to_vec3_a(other)
+    @width, @height, @depth = *Vector3.obj_to_vec3_a(other)
   end
 
+  ###
+  # Converts a given Object to Cuboid array
+  # @param [Object]
+  # @return [Array<Numeric>] (x, y, z, w, h, d)
+  ###
   def self.obj_to_cuboid_a(obj)
     case obj
     when Array
@@ -93,7 +98,8 @@ class Cuboid
       else
         raise ArgumentError, "expected Array of size 2 or 6" if obj.size != 6
       end
-    when Numeric then return 0, 0, 0, obj, obj, obj
+    when Numeric
+      return 0, 0, 0, obj, obj, obj
     else
       raise TypeError,
             "wrong argument type #{obj.class} (expected Array or Numeric)"
