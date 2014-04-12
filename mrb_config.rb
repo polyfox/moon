@@ -11,4 +11,8 @@ MRuby::Build.new do |conf|
   #conf.gem :github => 'archSeer/mruby-require'
   # We will use IceDragon's Spoon!
   conf.gem :github => 'IceDragon200/mruby-require'
+
+  # so we can have nice things
+  conf.gem :github => "AndrewBelt/mruby-yaml"
+  conf.gem :github => "iij/mruby-io"
 end

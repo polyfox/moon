@@ -4,6 +4,8 @@ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR) # Make sure the user is 
   message(FATAL_ERROR "Use the top-level cmake script!")
 endif()
 
+# YAML
+set(moonLibraries ${moonLibraries} yaml)
 # OpenGL
 set(moonLibraries ${moonLibraries} ${OPENGL_LIBRARIES})
 # GLFW
