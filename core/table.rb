@@ -35,6 +35,14 @@ class Table
     Vector2.new @xsize, @ysize
   end
 
+  def rect
+    Moon::Rect.new(0, 0, @xsize, @ysize)
+  end
+
+  def cuboid
+    Cuboid.new(0, 0, 0, @xsize, @ysize, 1)
+  end
+
   def [](x, y)
     x = x.to_i; y = y.to_i
     return 0 if (x < 0 || x >= @xsize) ||

@@ -32,6 +32,14 @@ class DataMatrix
     Vector3.new @xsize, @ysize, @zsize
   end
 
+  def rect
+    Moon::Rect.new(0, 0, @xsize, @ysize)
+  end
+
+  def cuboid
+    Cuboid.new(0, 0, 0, @xsize, @ysize, @zsize)
+  end
+
   def [](x, y, z)
     x = x.to_i; y = y.to_i; z = z.to_i
     return 0 if ((x < 0) || (x >= @xsize)) ||
@@ -96,6 +104,15 @@ class DataMatrix
       result.concat("\n")
     end
     return result
+  end
+
+  def to_h
+    {
+      xsize: @xsize,
+      ysize: @ysize,
+      zsize: @zsize,
+      data: @data
+    }
   end
 
   #protected :data
