@@ -112,4 +112,14 @@ class Table
     return result
   end
 
+  def to_h
+    {
+      xsize: @xsize,
+      ysize: @ysize,
+      data: @data
+    }
+  end
+
+  private :create_data
+
 end

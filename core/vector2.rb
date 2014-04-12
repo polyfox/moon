@@ -57,8 +57,8 @@ class Vector2
   end
 
   def normalize
-    m = [x, y].max.to_f
-    Vector2.new x / m, y / m
+    m = [@x, @y].max.to_f
+    Vector2.new @x / m, @y / m
   end
 
   def set(*args)
@@ -112,6 +112,11 @@ class Vector2
     @x, @y, @z = *Vector3.obj_to_vec3_a(other)
   end
 
+  ###
+  # Converts a given Object to Vector2 array
+  # @param [Object]
+  # @return [Array<Numeric>] (x, y)
+  ###
   def self.obj_to_vec2_a(obj)
     case obj
     when Vector2 then return *obj
