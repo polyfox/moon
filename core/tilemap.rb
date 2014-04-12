@@ -26,6 +26,7 @@ class Tilemap
   attr_accessor :data_zmap  # DataMatrix
   attr_accessor :repeat_map # Boolean
   attr_accessor :view       # Cuboid
+  attr_accessor :position   # Vector3
 
   ##
   # initialize
@@ -36,6 +37,7 @@ class Tilemap
     @data_zmap  = nil
     @repeat_map = false
     @view       = nil
+    @position   = Vector3.new(0, 0, 0)
     yield self if block_given?
   end
 
@@ -51,22 +53,25 @@ class Tilemap
   def render(x, y, z)
     return unless @data
     return unless @tileset
+
     cell_width  = @tileset.cell_width
     cell_height = @tileset.cell_height
 
-    ox = 0
-    oy = 0
-    oz = 0
+    dox = 0
+    doy = 0
+    doz = 0
     width = @data.xsize
     height = @data.ysize
     layers = @data.zsize
 
-    ox, oy, oz, width, height, layers = *@view if @view
+    dox, doy, doz, width, height, layers = *@view if @view
+
+    px, py, pz = *@position
 
     # we loop by layer
     layers.times do |l|
 
-      dz = l + oz # offset data z index
+      dz = l + doz # offset data z index
       if @repeat_map
         dz %= @data.zsize
       else
@@ -76,7 +81,7 @@ class Tilemap
       # and then by row
       height.times do |i|
 
-        dy = i + oy # offset data y index
+        dy = i + doy # offset data y index
         if @repeat_map
           dy %= @data.ysize
         else
@@ -86,7 +91,7 @@ class Tilemap
         # and then render by cell
         width.times do |j|
 
-          dx = j + ox # offset data x index
+          dx = j + dox # offset data x index
           if @repeat_map
             dx %= @data.xsize
           else
@@ -125,13 +130,15 @@ class Tilemap
             elsif (flag.masked?(DataFlag::OFF_UP))
               ry -= vy
             end
-            @tileset.render rx + x + j * cell_width,
-                            ry + y + i * cell_height,
-                            rz + z + zm, tile_id
+            @tileset.render px + rx + x + j * cell_width,
+                            py + ry + y + i * cell_height,
+                            pz + rz + z + zm,
+                            tile_id
           else
-            @tileset.render x + j * cell_width,
-                            y + i * cell_height,
-                            z + zm, tile_id
+            @tileset.render px + x + j * cell_width,
+                            py + y + i * cell_height,
+                            pz + z + zm,
+                            tile_id
           end
 
         end
