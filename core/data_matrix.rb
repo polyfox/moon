@@ -1,4 +1,3 @@
-#
 # moon/core/data_matrix.rb
 #   aka. 3d table
 class DataMatrix
@@ -99,8 +98,11 @@ class DataMatrix
 
   def to_s
     result = ""
-    for y in 0...@ysize
-      result.concat(@data[y].join(", "))
+    @zsize.times do |z|
+      @ysize.times do |y|
+        result.concat(@data[z][y].join(", "))
+        result.concat("\n")
+      end
       result.concat("\n")
     end
     return result
