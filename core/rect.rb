@@ -24,8 +24,16 @@ module Moon
       x + width
     end
 
+    def x2=(x2)
+      self.width = x2 - x
+    end
+
     def y2
       y + height
+    end
+
+    def y2=(y2)
+      self.height = y2 - y
     end
 
     def xy
