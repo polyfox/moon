@@ -8,6 +8,10 @@ namespace Moon {
     y = 0;
     z = 0.0;
     opacity = 1.0;
+
+    angle = 0.0;
+    ox = 0;
+    oy = 0;
     tone = std::make_shared<Tone>(1.0, 1.0, 1.0);
 
     shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
@@ -83,10 +87,19 @@ namespace Moon {
   void Sprite::render() {
     shader->use();
 
-    //model matrix - move it to the correct position in the world
+    // rotation matrix - rotate the model around specified origin
+    // really ugly, we translate the rotation origin to 0,0, rotate,
+    // then translate back to original position
+    glm::mat4 rotation_matrix = glm::translate(glm::rotate(
+      glm::translate(glm::mat4(1.0f), glm::vec3(-ox, -oy, 0)),
+      angle,
+      glm::vec3(0, 0, 1)
+    ), glm::vec3(ox, oy, 0));
+
+    // model matrix - move it to the correct position in the world
     glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
     // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
-    glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
+    glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix * rotation_matrix;
     glUniformMatrix4fv(shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
     glUniform1f(shader->get_uniform("opacity"), opacity);

@@ -16,6 +16,9 @@ namespace Moon {
     int y;
     float z;
     float opacity;
+    float angle;
+    int ox;
+    int oy;
     std::shared_ptr<Tone> tone;
 
     void render();

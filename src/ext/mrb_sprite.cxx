@@ -106,6 +106,51 @@ namespace Moon {
     return mrb_float_value(mrb, f);
   };
 
+  static mrb_value moon_mrb_sprite_angle_getter(mrb_state *mrb, mrb_value self) {
+    Sprite *sprite;
+    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+    return mrb_float_value(mrb, sprite->angle);
+  };
+
+  static mrb_value moon_mrb_sprite_angle_setter(mrb_state *mrb, mrb_value self) {
+    Sprite *sprite;
+    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+    mrb_float f;
+    mrb_get_args(mrb, "f", &f);
+    sprite->angle = f;
+    return mrb_float_value(mrb, f);
+  };
+
+  static mrb_value moon_mrb_sprite_ox_getter(mrb_state *mrb, mrb_value self) {
+    Sprite *sprite;
+    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+    return mrb_fixnum_value(sprite->ox);
+  };
+
+  static mrb_value moon_mrb_sprite_ox_setter(mrb_state *mrb, mrb_value self) {
+    Sprite *sprite;
+    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+    mrb_int i;
+    mrb_get_args(mrb, "i", &i);
+    sprite->ox = i;
+    return mrb_fixnum_value(i);
+  };
+
+  static mrb_value moon_mrb_sprite_oy_getter(mrb_state *mrb, mrb_value self) {
+    Sprite *sprite;
+    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+    return mrb_fixnum_value(sprite->oy);
+  };
+
+  static mrb_value moon_mrb_sprite_oy_setter(mrb_state *mrb, mrb_value self) {
+    Sprite *sprite;
+    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+    mrb_int i;
+    mrb_get_args(mrb, "i", &i);
+    sprite->oy = i;
+    return mrb_fixnum_value(i);
+  };
+
   static mrb_value moon_mrb_sprite_tone_getter(mrb_state *mrb, mrb_value self) {
     return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@tone"));
   }
@@ -201,6 +246,14 @@ namespace Moon {
     mrb_define_method(mrb, sprite_class, "z=",         moon_mrb_sprite_z_setter,       MRB_ARGS_REQ(1));
     mrb_define_method(mrb, sprite_class, "opacity",    moon_mrb_sprite_opacity_getter, MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "opacity=",   moon_mrb_sprite_opacity_setter, MRB_ARGS_REQ(1));
+
+
+    mrb_define_method(mrb, sprite_class, "angle",      moon_mrb_sprite_angle_getter,   MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "angle=",     moon_mrb_sprite_angle_setter,   MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "ox",         moon_mrb_sprite_ox_getter,      MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "ox=",        moon_mrb_sprite_ox_setter,      MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "oy",         moon_mrb_sprite_oy_getter,      MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "oy=",        moon_mrb_sprite_oy_setter,      MRB_ARGS_REQ(1));
 
     mrb_define_method(mrb, sprite_class, "tone",       moon_mrb_sprite_tone_getter,    MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "tone=",      moon_mrb_sprite_tone_setter,    MRB_ARGS_REQ(1));
