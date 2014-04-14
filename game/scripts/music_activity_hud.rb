@@ -12,7 +12,7 @@ class MusicActivityHud
     @x = x
     @y = y
     @z = z
-    @music = Music
+    @music = Moon::Music
     @spritesheet = Cache.spritesheet("media_buttons_8x8")
     @cell_width = @spritesheet.cell_width
   end

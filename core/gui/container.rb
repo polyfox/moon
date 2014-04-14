@@ -2,9 +2,17 @@
 class Container < Moon::Rect
 
   attr_accessor :draggable
+  attr_accessor :widgets
+  attr_accessor :rx
+  attr_accessor :ry
 
   def initialize(x, y, width, height)
-    super(x, y, width, height)
+    #@rect = Moon::Rect.new x, y, width, height
+    super x, y, width, height
+    @rx, @ry = 0, 0
+
+    @widgets ||= []
+
     @event_listeners = {:any => []}
 
     @last_mousedown_id = 0 # dirty, dirty!
@@ -82,23 +90,40 @@ class Container < Moon::Rect
     trigger :move
   end
 
+  #def x
+  #  @rect.x
+  #end
+  #def y
+  #  @rect.y
+  #end
+  #def width
+  #  @rect.width
+  #end
+  #def height
+  #  @rect.height
+  #end
+
   def x=(new_x)
     super(new_x)
+    #@rect.x = new_x
     trigger :move
   end
 
   def y=(new_y)
     super(new_y)
+    #@rect.y = new_y
     trigger :move
   end
 
   def width=(new_width)
     super(new_width)
+    #@rect.width = new_width
     trigger :resize
   end
 
   def height=(new_height)
     super(new_height)
+    #@rect.height = new_height
     trigger :resize
   end
 
@@ -107,19 +132,15 @@ class Container < Moon::Rect
   end
 
   def ry2
-    ry + height
+    ry + width
   end
 
   def pos
-    return [x, y]
-  end
-
-  def rpos
-    return [rx, ry]
+    Vector2.new x, y
   end
 
   def size
-    return [width, height]
+    Vector2.new width, height
   end
 
   # Adds a new event listener.

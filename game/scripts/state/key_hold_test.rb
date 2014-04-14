@@ -58,13 +58,13 @@ class State::KeyHoldTest < State
     super
   end
 
-  def render
-    super
-    @hud.render
-  end
-
   def update
     @hud.update
+    super
+  end
+
+  def render
+    @hud.render
     super
   end
 

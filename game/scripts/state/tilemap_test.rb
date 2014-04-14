@@ -56,7 +56,7 @@ class State::TilemapTest < State
     layers = [layer1, layer2, layer3]
     @tilemap  = Tilemap.new
     @map_data = DataMatrix.new(20, 15, layers.size) #((Screen.width / 32).to_i, (Screen.height / 32).to_i, 3)
-    @tileset  = Spritesheet.new("resources/hyptosis_tile-art-batch-1.png", 32, 32)
+    @tileset  = Moon::Spritesheet.new("resources/hyptosis_tile-art-batch-1.png", 32, 32)
     @map_data.map_with_xyz do |n, x, y, z|
       layer = layers[z]
       # tiled spits out map data, that has its index +1, so we need to

@@ -5,7 +5,7 @@ class State::Test < State
 
   def init
     @sprites = []
-    @font = Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 16);
+    @font = Moon::Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 16);
     #@sound = Sound.new("resources/startup.wav", "wav")
     #@sound.play
     #Music.play("resources/CamelsNommingHay.ogg", "ogg")
@@ -13,7 +13,7 @@ class State::Test < State
     # 6 FPS at 15000 items
     # 55 FPS at 1500 items
     #1500.times do |i|
-      sprite = Sprite.new("resources/obama_sprite.png")
+      sprite = Moon::Sprite.new("resources/obama_sprite.png")
       sprite.x = rand(640)
       sprite.y = rand(480)
       #sprite.z = -(i-1500) / 1500

@@ -200,14 +200,18 @@ class State::MouseEvents < State
         @window.trigger event
       end
     end
+    super
   end
 
   def update
     @handler.update
     @window.update
+    super
   end
 
   def render
     @window.render
+    super
   end
+
 end
