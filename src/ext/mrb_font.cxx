@@ -57,9 +57,10 @@ namespace Moon
   struct RClass* moon_mrb_font_init(mrb_state *mrb) {
     struct RClass *font_class;
     font_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Font", mrb->object_class);
+    MRB_SET_INSTANCE_TT(font_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, font_class, "initialize", moon_mrb_font_initialize, MRB_ARGS_REQ(2));
-    mrb_define_method(mrb, font_class, "draw_text",  moon_mrb_font_draw_text,  MRB_ARGS_REQ(3));
+    mrb_define_method(mrb, font_class, "draw_text",  moon_mrb_font_draw_text,  MRB_ARGS_REQ(3) | MRB_ARGS_OPT(1));
     mrb_define_method(mrb, font_class, "size",       moon_mrb_font_size,       MRB_ARGS_NONE());
 
     return font_class;
