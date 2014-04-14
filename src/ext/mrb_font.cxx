@@ -26,7 +26,7 @@ namespace Moon
 
   static mrb_value moon_mrb_font_draw_text(mrb_state *mrb, mrb_value self) {
     mrb_float x, y;
-    mrb_value color;
+    mrb_value color = mrb_nil_value();
     char* str;
     mrb_get_args(mrb, "ffz|o", &x, &y, &str, &color);
 
