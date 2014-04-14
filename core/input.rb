@@ -31,8 +31,8 @@ module Moon
       MODS = [0, Input::Keyboard::Keys::MOD_SHIFT, Input::Keyboard::Keys::MOD_CONTROL,
                  Input::Keyboard::Keys::MOD_ALT, Input::Keyboard::Keys::MOD_SUPER]
 
-      def self.in_area?(ax, ay, aw, ah)
-        self.x.between?(ax, ax+aw) && self.y.between?(ay, ay+ah)
+      def self.in_area?(x, y, width, height)
+        self.x.between?(x, x+width) && self.y.between?(y, y+height)
       end
 
       def self.in_rect?(rect)
