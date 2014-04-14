@@ -91,10 +91,10 @@ namespace Moon {
     // really ugly, we translate the rotation origin to 0,0, rotate,
     // then translate back to original position
     glm::mat4 rotation_matrix = glm::translate(glm::rotate(
-      glm::translate(glm::mat4(1.0f), glm::vec3(-ox, -oy, 0)),
+      glm::translate(glm::mat4(1.0f), glm::vec3(ox, oy, 0)),
       angle,
       glm::vec3(0, 0, 1)
-    ), glm::vec3(ox, oy, 0));
+    ), glm::vec3(-ox, -oy, 0));
 
     // model matrix - move it to the correct position in the world
     glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
