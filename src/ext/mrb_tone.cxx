@@ -11,7 +11,7 @@ namespace Moon {
     "Tone", moon_mrb_tone_deallocate,
   };
 
-  static mrb_value moon_mrb_tone_new(mrb_state *mrb, mrb_value klass) {
+  static mrb_value moon_mrb_tone_initialize(mrb_state *mrb, mrb_value self) {
     mrb_float h, s, l;
     mrb_get_args(mrb, "fff", &h, &s, &l);
 
@@ -20,7 +20,10 @@ namespace Moon {
     // Vinnie_win │ Have you seen the movie Inception? It's particularly appropriate in this case.
     auto tone = new std::shared_ptr<Tone>(new Tone(h, s, l)); // std::make_shared<Tone>(h, s, l) would be better
 
-    return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(klass), &tone_data_type, tone));
+    DATA_TYPE(self) = &tone_data_type;
+    DATA_PTR(self) = tone;
+
+    return mrb_nil_value();
   };
 
   static mrb_value moon_mrb_tone_hue_setter(mrb_state *mrb, mrb_value self) {
@@ -85,7 +88,7 @@ namespace Moon {
     tone_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Tone", mrb->object_class);
     MRB_SET_INSTANCE_TT(tone_class, MRB_TT_DATA);
 
-    mrb_define_class_method(mrb, tone_class, "new",   moon_mrb_tone_new,               MRB_ARGS_REQ(3));
+    mrb_define_method(mrb, tone_class, "initialize",  moon_mrb_tone_initialize,        MRB_ARGS_REQ(3));
     mrb_define_method(mrb, tone_class, "hue=",        moon_mrb_tone_hue_setter,        MRB_ARGS_REQ(1));
     mrb_define_method(mrb, tone_class, "hue",         moon_mrb_tone_hue_getter,        MRB_ARGS_NONE());
     mrb_define_method(mrb, tone_class, "saturation=", moon_mrb_tone_saturation_setter, MRB_ARGS_REQ(1));

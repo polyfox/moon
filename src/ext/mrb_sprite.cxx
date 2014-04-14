@@ -12,13 +12,15 @@ namespace Moon {
     "Sprite", moon_mrb_sprite_deallocate,
   };
 
-  static mrb_value moon_mrb_sprite_new(mrb_state *mrb, mrb_value klass) {
+  static mrb_value moon_mrb_sprite_initialize(mrb_state *mrb, mrb_value self) {
     char* filename;
     mrb_get_args(mrb, "z", &filename);
 
     mrb_value self, tone, texture, clip;
     Sprite *sprite = new Sprite(filename);
-    self = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(klass), &sprite_data_type, sprite));
+
+    DATA_TYPE(self) = &sprite_data_type;
+    DATA_PTR(self) = sprite;
 
     auto tone_ptr = new std::shared_ptr<Tone>(sprite->tone);
     tone = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Tone"), &tone_data_type, tone_ptr));
@@ -36,7 +38,7 @@ namespace Moon {
     }
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@clip"), clip);
 
-    return self;
+    return mrb_nil_value();
   };
 
   static mrb_value moon_mrb_sprite_render(mrb_state *mrb, mrb_value self) {
@@ -236,7 +238,7 @@ namespace Moon {
     sprite_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Sprite", mrb->object_class);
     MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
 
-    mrb_define_class_method(mrb, sprite_class, "new",  moon_mrb_sprite_new,            MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "initialize", moon_mrb_sprite_initialize,     MRB_ARGS_REQ(1));
     mrb_define_method(mrb, sprite_class, "render",     moon_mrb_sprite_render,         MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "x",          moon_mrb_sprite_x_getter,       MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "x=",         moon_mrb_sprite_x_setter,       MRB_ARGS_REQ(1));

@@ -12,13 +12,16 @@ namespace Moon {
     "Color", moon_mrb_color_deallocate,
   };
 
-  static mrb_value moon_mrb_color_new(mrb_state *mrb, mrb_value klass) {
+  static mrb_value moon_mrb_color_initialize(mrb_state *mrb, mrb_value self) {
     mrb_float r, g, b, a;
     mrb_get_args(mrb, "ffff", &r, &g, &b, &a);
 
     auto color = new std::shared_ptr<Color>(new Color(r, g, b, a));
 
-    return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(klass), &color_data_type, color));
+    DATA_TYPE(self) = &color_data_type;
+    DATA_PTR(self) = color;
+
+    return mrb_nil_value();
   };
 
   static mrb_value moon_mrb_color_red_setter(mrb_state *mrb, mrb_value self) {
@@ -102,15 +105,15 @@ namespace Moon {
     color_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Color", mrb->object_class);
     MRB_SET_INSTANCE_TT(color_class, MRB_TT_DATA);
 
-    mrb_define_class_method(mrb, color_class, "new", moon_mrb_color_new,          MRB_ARGS_REQ(4));
-    mrb_define_method(mrb, color_class, "red=",      moon_mrb_color_red_setter,   MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, color_class, "red",       moon_mrb_color_red_getter,   MRB_ARGS_NONE());
-    mrb_define_method(mrb, color_class, "green=",    moon_mrb_color_green_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, color_class, "green",     moon_mrb_color_green_getter, MRB_ARGS_NONE());
-    mrb_define_method(mrb, color_class, "blue=",     moon_mrb_color_blue_setter,  MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, color_class, "blue",      moon_mrb_color_blue_getter,  MRB_ARGS_NONE());
-    mrb_define_method(mrb, color_class, "alpha=",    moon_mrb_color_alpha_setter, MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, color_class, "alpha",     moon_mrb_color_alpha_getter, MRB_ARGS_NONE());
+    mrb_define_method(mrb, color_class, "initialize", moon_mrb_color_initialize,   MRB_ARGS_REQ(4));
+    mrb_define_method(mrb, color_class, "red=",       moon_mrb_color_red_setter,   MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, color_class, "red",        moon_mrb_color_red_getter,   MRB_ARGS_NONE());
+    mrb_define_method(mrb, color_class, "green=",     moon_mrb_color_green_setter, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, color_class, "green",      moon_mrb_color_green_getter, MRB_ARGS_NONE());
+    mrb_define_method(mrb, color_class, "blue=",      moon_mrb_color_blue_setter,  MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, color_class, "blue",       moon_mrb_color_blue_getter,  MRB_ARGS_NONE());
+    mrb_define_method(mrb, color_class, "alpha=",     moon_mrb_color_alpha_setter, MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, color_class, "alpha",      moon_mrb_color_alpha_getter, MRB_ARGS_NONE());
 
     return color_class;
   };

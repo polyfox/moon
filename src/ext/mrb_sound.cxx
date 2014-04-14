@@ -11,18 +11,23 @@ namespace Moon {
     "Sound", moon_mrb_sound_deallocate,
   };
 
-  static mrb_value moon_mrb_sound_new(mrb_state *mrb, mrb_value klass) {
+  static mrb_value moon_mrb_sound_initialize(mrb_state *mrb, mrb_value self) {
     char* filename;
     char* format;
 
     mrb_get_args(mrb, "zz", &filename, &format);
     Sound *sound;
+
     try {
       sound = new Sound(filename, format);
     } catch (std::invalid_argument& e) {
       mrb_raisef(mrb, E_SCRIPT_ERROR, "cannot load such file -- %S", mrb_str_new_cstr(mrb, filename));
     };
-    return mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_ptr(klass), &sound_data_type, sound));
+
+    DATA_TYPE(self) = &sound_data_type;
+    DATA_PTR(self) = sound;
+
+    return mrb_nil_value();
   };
 
   static mrb_value moon_mrb_sound_play(mrb_state *mrb, mrb_value self) {
@@ -46,8 +51,8 @@ namespace Moon {
     sound_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Sound", mrb->object_class);
     MRB_SET_INSTANCE_TT(sound_class, MRB_TT_DATA);
 
-    mrb_define_class_method(mrb, sound_class, "new", moon_mrb_sound_new, MRB_ARGS_REQ(2));
-    mrb_define_method(mrb, sound_class, "play", moon_mrb_sound_play,     MRB_ARGS_OPT(3));
+    mrb_define_method(mrb, sound_class, "initialize", moon_mrb_sound_initialize, MRB_ARGS_REQ(2));
+    mrb_define_method(mrb, sound_class, "play", moon_mrb_sound_play,             MRB_ARGS_OPT(3));
 
     return sound_class;
   };
