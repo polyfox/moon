@@ -16,8 +16,6 @@ the compiler will crash.
 
 We support graphics cards with OpenGL 2.1 support and the following extensions:
 
-- GL_ARB_explicit_attrib_location
-  - GL_ARB_fragment_coord_conventions
 - GL_ARB_draw_elements_base_vertex
 - GL_ARB_vertex_array_object
 

@@ -87,8 +87,6 @@ namespace Moon {
       "#define lowp   \n"
       "#define mediump\n"
       "#define highp  \n"
-      "#extension GL_ARB_fragment_coord_conventions : require\n" // required in order for layout() to work with attribute/varying
-      "#extension GL_ARB_explicit_attrib_location : require\n"
   #endif
       ,
       source };
@@ -126,6 +124,10 @@ namespace Moon {
       glAttachShader(program, shader);
       glDeleteShader(shader);
     }
+
+    this->bind_attribute(0, "vertex_pos");
+    this->bind_attribute(1, "texcoord");
+    this->bind_attribute(2, "color");
 
     glLinkProgram(program);
     GLint status;
@@ -174,6 +176,10 @@ namespace Moon {
       _uniformLocationList[name] = uniform;
       return uniform;
     }
+  }
+
+  void Shader::bind_attribute(GLuint location, const char *name) {
+    glBindAttribLocation(_program, location, name);
   }
 
   GLuint Shader::get_program() {
