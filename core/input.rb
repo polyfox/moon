@@ -31,17 +31,21 @@ module Moon
       MODS = [0, Input::Keyboard::Keys::MOD_SHIFT, Input::Keyboard::Keys::MOD_CONTROL,
                  Input::Keyboard::Keys::MOD_ALT, Input::Keyboard::Keys::MOD_SUPER]
 
-      def self.in_area?(x, y, width, height)
-        self.x.between?(x, x+width) && self.y.between?(y, y+height)
+      def self.in_area?(ax, ay, aw, ah)
+        self.x.between?(ax, ax+aw) && self.y.between?(ay, ay+ah)
       end
 
       def self.in_rect?(rect)
-        in_area?(rect.x, rect.y, rect.width, rect.height)
+        in_area? *rect
       end
 
       def self.triggered?(key_id, *args)
         val = pressed?(key_id, *args)
         val && val < Moon::Input::TRIGGERED_THRESHOLD
+      end
+
+      def self.pos
+        Vector2.new x, y
       end
 
       class << self

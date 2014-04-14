@@ -8,8 +8,16 @@ module Moon
     alias :h :height
     alias :h= :height=
 
+    def &(other)
+      nx  = x < other.x ? other.x : x
+      ny  = y < other.y ? other.y : y
+      nx2 = x2 < other.x2 ? x2 : other.x2
+      ny2 = y2 < other.y2 ? y2 : other.y2
+      Rect.new nx, ny, nx2 - nx, ny2 - ny
+    end
+
     def set(*args)
-      self.x, self.y, self.w, self.h = Rect.obj_to_rect_a(args.size > 1 ? args : args.first)
+      self.x, self.y, self.w, self.h = *Rect.obj_to_rect_a(args.size > 1 ? args : args.first)
     end
 
     def to_a

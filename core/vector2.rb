@@ -90,6 +90,25 @@ class Vector2
   #  @x * x + @y * y + @z * z
   #end
 
+  def rotate(r)
+    Vector2.new @x * Math.cos(r) - @y * Math.sin(r),
+                @x * Math.sin(r) + @y * Math.cos(r)
+  end
+
+  def mag
+    Math.sqrt @x * @x + @y * @y
+  end
+
+  def rad
+    Math.atan2(@y, @x)
+  end
+
+  def rad=(n)
+    m = mag
+    @x = m * Math.cos(n)
+    @y = m * Math.sin(n)
+  end
+
   def xy
     dup
   end
