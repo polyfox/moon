@@ -67,7 +67,7 @@ namespace Moon {
   #ifdef GL_ES_VERSION_2_0
       "#version 100\n"
   #else
-      "#version 150\n"
+      "#version 330\n"
   #endif
       ,
       // GLES2 precision specifiers
@@ -125,10 +125,6 @@ namespace Moon {
       glDeleteShader(shader);
     }
 
-    this->bind_attribute(0, "vertex_pos");
-    this->bind_attribute(1, "texcoord");
-    this->bind_attribute(2, "color");
-
     glLinkProgram(program);
     GLint status;
     glGetProgramiv(program, GL_LINK_STATUS, &status);
@@ -176,10 +172,6 @@ namespace Moon {
       _uniformLocationList[name] = uniform;
       return uniform;
     }
-  }
-
-  void Shader::bind_attribute(GLuint location, const char *name) {
-    glBindAttribLocation(_program, location, name);
   }
 
   GLuint Shader::get_program() {

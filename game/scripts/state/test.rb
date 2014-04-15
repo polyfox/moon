@@ -5,7 +5,7 @@ class State::Test < State
 
   def init
     @sprites = []
-    #@font = Moon::Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 16);
+    @font = Moon::Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 16);
     #@sound = Sound.new("resources/startup.wav", "wav")
     #@sound.play
     #Music.play("resources/CamelsNommingHay.ogg", "ogg")
@@ -36,8 +36,8 @@ class State::Test < State
     #end
     #@s.render(10, 10, 0, 5)
     @sprites.each {|sprite| sprite.render }
-    #@font.draw_text(48, 64, "Sphinx of black quartz, judge my vow.")
-    #@font.draw_text(64,128, "日本国 音読みと中国語")
+    @font.draw_text(48, 64, "Sphinx of black quartz, judge my vow.")
+    @font.draw_text(64,128, "日本国 音読みと中国語")
   end
 
 end

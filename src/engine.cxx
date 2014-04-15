@@ -54,7 +54,7 @@ namespace Moon {
     // Sets up the projection matrix so that (0,0) corresponds to the top left corner, and (640,480) corresponds to the bottom right corner.
     GLfloat viewport[4];
     glGetFloatv(GL_VIEWPORT, viewport);
-    Shader::projection_matrix = glm::ortho(0.f, viewport[2], viewport[3], 0.f, -1.f, 1.f);
+    Shader::projection_matrix = glm::ortho(0.f, viewport[2] / 2, viewport[3] / 2, 0.f, -1.f, 1.f);
 
     glDisable(GL_DITHER);
 
