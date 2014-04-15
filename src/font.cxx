@@ -38,7 +38,7 @@ namespace Moon {
 
     glBindTexture(GL_TEXTURE_2D, atlas->id);
 
-    glUniform1i(shader->get_uniform("texture"), /*GL_TEXTURE*/0);
+    glUniform1i(shader->get_uniform("tex"), /*GL_TEXTURE*/0);
 
     //model matrix
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down

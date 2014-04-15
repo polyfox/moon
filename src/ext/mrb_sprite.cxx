@@ -16,7 +16,7 @@ namespace Moon {
     char* filename;
     mrb_get_args(mrb, "z", &filename);
 
-    mrb_value self, tone, texture, clip;
+    mrb_value tone, texture, clip;
     Sprite *sprite = new Sprite(filename);
 
     DATA_TYPE(self) = &sprite_data_type;

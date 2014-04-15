@@ -1,7 +1,8 @@
-varying vec2 f_texcoord;
-uniform sampler2D texture;
+in vec2 f_texcoord;
+uniform sampler2D tex;
 uniform float opacity;
 uniform vec3 tone;
+out vec4 fragColor;
 
 /*
 ** Hue, saturation, luminance
@@ -86,7 +87,7 @@ vec3 HSLtoRGB(vec3 hsl) {
 }
 
 void main(void) {
-  vec4 basecolor = texture2D(texture, f_texcoord);
+  vec4 basecolor = texture(tex, f_texcoord);
   if(basecolor.a == 0.0) discard; // alpha testing
-  gl_FragColor = vec4(HSLtoRGB(RGBtoHSL(basecolor.rgb) * tone), basecolor.a * opacity);
+  fragColor = vec4(HSLtoRGB(RGBtoHSL(basecolor.rgb) * tone), basecolor.a * opacity);
 }

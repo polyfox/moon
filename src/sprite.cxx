@@ -110,7 +110,7 @@ namespace Moon {
     //Set texture ID
     glActiveTexture(GL_TEXTURE0);
     texture->bind();
-    glUniform1i(shader->get_uniform("texture"), /*GL_TEXTURE*/0);
+    glUniform1i(shader->get_uniform("tex"), /*GL_TEXTURE*/0);
 
     VBO.render(GL_TRIANGLE_STRIP);
   };
