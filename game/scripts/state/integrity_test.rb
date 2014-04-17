@@ -1,10 +1,15 @@
 class State::IntegrityTest < State
 
   def init
-    abort "Moon::Sprite was not defined" unless Moon.const_defined?(:Sprite)
-    abort "Moon::Tone was not defined" unless Moon.const_defined?(:Tone)
-    abort "Moon::Color was not defined" unless Moon.const_defined?(:Color)
     super
+    [:Color, :Font, :Music, :Rect, :Screen,
+     :Sound, :Sprite, :Spritesheet, :Texture, :Tone].each do |sym|
+      if Moon.const_defined?(sym)
+        puts "[INTEGRITY] @@ Moon::#{sym}"
+      else
+        abort "[INTEGRITY] !! Moon::#{sym}"
+      end
+    end
     State.pop
   end
 
