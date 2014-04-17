@@ -24,6 +24,14 @@ namespace Moon
     return mrb_nil_value();
   };
 
+  /*
+   * Font#draw_text(x, y, str[, color])
+   * @param [Numeric] x
+   * @param [Numeric] y
+   * @param [String] str
+   * @param [Color] color
+   *   @optional
+   */
   static mrb_value moon_mrb_font_draw_text(mrb_state *mrb, mrb_value self) {
     mrb_float x, y;
     mrb_value color = mrb_nil_value();
