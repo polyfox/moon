@@ -17,7 +17,7 @@ TODO
 
 
 ## IceDragon's wishlist! :D
-* ~~Sprite.scale_x/y~~ DONE
+* Sprite.scale_x/y
 * Spritesheet.opacity, or should I just change to using Sprite ;-; ?
   Spritesheet is pretty nice for rendering tilemaps since we don't have to
   regenerate the vbo, it would be nice to have some opacity though.
