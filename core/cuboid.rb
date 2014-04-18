@@ -111,4 +111,7 @@ class Cuboid
     new(*obj_to_cuboid_a(obj))
   end
 
+  alias :position :xyz
+  alias :size :whd
+
 end
