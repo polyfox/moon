@@ -1,4 +1,5 @@
-# containers
+require 'core/gui/observer'
+
 class Container < Moon::Rect
 
   attr_accessor :draggable
