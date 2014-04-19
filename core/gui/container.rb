@@ -2,19 +2,22 @@ require 'core/gui/observer'
 
 class Container < Moon::Rect
 
+  include Eventable
+  include ScreenElement
+
   attr_accessor :draggable
   attr_accessor :widgets
   attr_accessor :rx
   attr_accessor :ry
 
   def initialize(x, y, width, height)
-    #@rect = Moon::Rect.new x, y, width, height
     super x, y, width, height
+
     @rx, @ry = 0, 0
 
     @widgets ||= []
 
-    @event_listeners = {:any => []}
+    init_eventable
 
     @last_mousedown_id = 0 # dirty, dirty!
     @last_click_at = 0.0
@@ -91,40 +94,23 @@ class Container < Moon::Rect
     trigger :move
   end
 
-  #def x
-  #  @rect.x
-  #end
-  #def y
-  #  @rect.y
-  #end
-  #def width
-  #  @rect.width
-  #end
-  #def height
-  #  @rect.height
-  #end
-
   def x=(new_x)
     super(new_x)
-    #@rect.x = new_x
     trigger :move
   end
 
   def y=(new_y)
     super(new_y)
-    #@rect.y = new_y
     trigger :move
   end
 
   def width=(new_width)
     super(new_width)
-    #@rect.width = new_width
     trigger :resize
   end
 
   def height=(new_height)
     super(new_height)
-    #@rect.height = new_height
     trigger :resize
   end
 
@@ -134,32 +120,6 @@ class Container < Moon::Rect
 
   def ry2
     ry + width
-  end
-
-  def pos
-    Vector2.new x, y
-  end
-
-  def size
-    Vector2.new width, height
-  end
-
-  # Adds a new event listener.
-  # @param [Symbol] types The types to listen for..
-  # @param [Proc] block The block we want to execute when we catch the type.
-  def on *types, &block
-    types.each do |type|
-      (@event_listeners[type] ||= []).push block
-    end
-  end
-
-  def trigger event
-    event = Event.new(event) if !event.is_a?(Event) # TEMP
-    @event_listeners[:any].each {|block| block.call(event) }
-    return unless @event_listeners[event.type]
-    @event_listeners[event.type].each do |block|
-      block.call(event)
-    end
   end
 
 end

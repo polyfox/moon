@@ -82,15 +82,22 @@ class Vector3
     Vector3.new @x / x, @y / y, @z / z
   end
 
+  def %(other)
+    x, y, z = *Vector3.obj_to_vec3_a(other)
+    Vector3.new @x % x, @y % y, @z % z
+  end
+
   def dot(other)
     x, y, z = *Vector3.obj_to_vec3_a(other)
     @x * x + @y * y + @z * z
   end
 
-  #def cross(other)
-  #  x, y, z = *obj_to_vec3_a other
-  #  @x * x + @y * y + @z * z
-  #end
+  def cross(other)
+    x, y, z = *Vector3.obj_to_vec3_a(other)
+    Vector3.new @y * z - y * @z,
+                @z * x - z * @x,
+                @x * y - x * @y
+  end
 
   def rotate(rx, ry, rz, n)
     # one day, when IceDragon doesn't suck at Math, he will fix this function
