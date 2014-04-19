@@ -13,6 +13,8 @@ namespace Moon {
   struct RClass *moon_cTexture;
   struct RClass *moon_cTone;
   struct RClass *moon_cScreen;
+  struct RClass *moon_cVector2;
+  struct RClass *moon_cVector3;
 
   const struct mrb_data_type engine_data_type = {
     "Engine", NULL,
@@ -37,4 +39,6 @@ void moon_init_mrb_core(mrb_state *mrb) {
   Moon::moon_cTexture = Moon::moon_mrb_texture_init(mrb);
   Moon::moon_cTone = Moon::moon_mrb_tone_init(mrb);
   Moon::moon_cScreen = Moon::moon_mrb_screen_init(mrb);
+  Moon::moon_cVector2 = Moon::moon_mrb_vector2_init(mrb);
+  Moon::moon_cVector3 = Moon::moon_mrb_vector3_init(mrb);
 };

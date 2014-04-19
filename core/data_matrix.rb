@@ -11,9 +11,9 @@ class DataMatrix
   attr_accessor :default
 
   def initialize(xsize, ysize, zsize)
-    @xsize = xsize
-    @ysize = ysize
-    @zsize = zsize
+    @xsize = xsize.to_i
+    @ysize = ysize.to_i
+    @zsize = zsize.to_i
     @default = 0
     create_data
     yield self if block_given?
