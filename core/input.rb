@@ -1,14 +1,20 @@
 module Moon
   module Input
 
+    class KeyboardEvent < Event
+    end
+
+    class MouseEvent < Event
+    end
+
     def self.on_key key, scancode, action, mods
       state = State.states.last # delagator shim
-      state.input.trigger Event.new(key, action, mods)
+      state.input.trigger KeyboardEvent.new(key, action, mods)
     end
 
     def self.on_button button, action, mods
       state = State.states.last # delagator shim
-      state.input.trigger Event.new(button, action, mods)
+      state.input.trigger MouseEvent.new(button, action, mods)
     end
 
     class Observer
@@ -47,11 +53,16 @@ module Moon
 
     module Mouse
 
-      BUTTONS = [ BUTTON_1, BUTTON_2, BUTTON_3, BUTTON_4, BUTTON_5,
-                  BUTTON_6, BUTTON_7, BUTTON_8 ]
+      BUTTONS = [ MOUSE_BUTTON_1,
+                  MOUSE_BUTTON_2,
+                  MOUSE_BUTTON_3,
+                  MOUSE_BUTTON_4,
+                  MOUSE_BUTTON_5,
+                  MOUSE_BUTTON_6,
+                  MOUSE_BUTTON_7,
+                  MOUSE_BUTTON_8 ]
 
-      MODS = [0, Input::Keyboard::MOD_SHIFT, Input::Keyboard::MOD_CONTROL,
-                 Input::Keyboard::MOD_ALT, Input::Keyboard::MOD_SUPER]
+      MODS = [0, MOD_SHIFT, MOD_CONTROL, MOD_ALT, MOD_SUPER]
 
       def self.in_area?(x, y, width, height)
         self.x.between?(x, x+width) && self.y.between?(y, y+height)

@@ -14,7 +14,8 @@ namespace Moon {
 
   /* Callbacks */
 
-  static mrb_value glfw_state_to_mrb_symbol(mrb_state *mrb, int state) {
+  static mrb_value
+  glfw_state_to_mrb_symbol(mrb_state *mrb, int state) {
     switch (state) {
     case GLFW_PRESS:
       return mrb_symbol_value(mrb_intern_cstr(mrb, "press"));
