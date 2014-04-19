@@ -92,6 +92,11 @@ class Vector3
   #  @x * x + @y * y + @z * z
   #end
 
+  def rotate(rx, ry, rz, n)
+    # one day, when IceDragon doesn't suck at Math, he will fix this function
+    dup
+  end
+
   def xy
     Vector2.new @x, @y
   end

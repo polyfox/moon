@@ -24,6 +24,14 @@ namespace Moon
     return mrb_nil_value();
   };
 
+  /*
+   * Font#draw_text(x, y, str[, color])
+   * @param [Numeric] x
+   * @param [Numeric] y
+   * @param [String] str
+   * @param [Color] color
+   *   @optional
+   */
   static mrb_value moon_mrb_font_draw_text(mrb_state *mrb, mrb_value self) {
     mrb_float x, y;
     mrb_value color = mrb_nil_value();
@@ -60,7 +68,7 @@ namespace Moon
     MRB_SET_INSTANCE_TT(font_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, font_class, "initialize", moon_mrb_font_initialize, MRB_ARGS_REQ(2));
-    mrb_define_method(mrb, font_class, "draw_text",  moon_mrb_font_draw_text,  MRB_ARGS_REQ(3));
+    mrb_define_method(mrb, font_class, "draw_text",  moon_mrb_font_draw_text,  MRB_ARGS_REQ(3) | MRB_ARGS_OPT(1));
     mrb_define_method(mrb, font_class, "size",       moon_mrb_font_size,       MRB_ARGS_NONE());
 
     return font_class;

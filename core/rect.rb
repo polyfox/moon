@@ -109,5 +109,8 @@ module Moon
       new(*obj_to_rect_a(obj))
     end
 
+    alias :position :xy
+    alias :size :wh
+
   end
 end
