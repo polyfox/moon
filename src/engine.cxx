@@ -8,13 +8,13 @@ namespace Moon {
 
     setup_opengl();
 
-    // setup Input engine
-    Input::initialize(window.glfw());
-
     // setup Gorilla Audio
     Audio::initialize();
 
     load_mrb();
+
+    // setup Input engine
+    Input::initialize(window.glfw(), mrb);
   }
 
   Engine::~Engine() { /* Terminate in the reverse order */
