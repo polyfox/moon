@@ -1,6 +1,10 @@
 TODO
 ====
 
+## Urgent
+
+* mousepos events, and clicking events need to be sorted out
+
 ## The regular
 * Tone rgbs instead of hsl
 

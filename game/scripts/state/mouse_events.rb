@@ -3,7 +3,7 @@ class State::MouseEvents < State
   include Moon
 
   def init
-    @observer = Observer.new
+    #@observer = Observer.new
     @window = Window.new(32,32,128,128)
 
     button = Button.new(@window, 0, 0, "Test") { puts "button click'd!" }
@@ -16,11 +16,11 @@ class State::MouseEvents < State
       puts "double clicked!"
     end
 
-    @observer.on :any do |event|
-      if Moon::Input::Mouse.in_rect? @window
-        @window.trigger event
-      end
-    end
+    #@observer.on :any do |event|
+    #  if Moon::Input::Mouse.in_rect? @window
+    #    @window.trigger event
+    #  end
+    #end
     super
   end
 

@@ -1,10 +1,48 @@
 module Moon
   module Input
 
-    def self.on_key(key, scancode, action, mods)
+    def self.on_key key, scancode, action, mods
+      state = State.states.last # delagator shim
+      state.input.trigger Event.new(key, action, mods)
     end
 
-    def self.on_button(button, action, mods)
+    def self.on_button button, action, mods
+      state = State.states.last # delagator shim
+      state.input.trigger Event.new(button, action, mods)
+    end
+
+    class Observer
+      def initialize
+        @event_listeners = {any: [], press: [], release: [], repeat: []}
+      end
+
+      ###
+      # Adds a new event listener.
+      # @param [Symbol] keys The keys to listen for..
+      # @param [Proc] block The block we want to execute when we catch the type.
+      ###
+      def on action, *keys, &block
+        @event_listeners[action].push(keys: keys, block: block)
+      end
+
+      ###
+      # @param [Event] event
+      ###
+      def trigger event
+        @event_listeners[:any].each do |listener|
+          listener[:block].call(event)
+        end
+
+        return unless @event_listeners[event.type]
+
+        @event_listeners[event.type].each do |listener|
+          listener[:block].call(event) if listener[:keys].include? event.key
+        end
+      end
+
+      def clear
+        @event_listeners = {any: [], press: [], release: [], repeat: []}
+      end
     end
 
     module Mouse
