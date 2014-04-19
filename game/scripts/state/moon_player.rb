@@ -251,7 +251,7 @@ class State::MoonPlayer < State
   def init
     @music_hud = MusicActivityHud.new(0, 0, 0)
     @player = ContainerMoonPlayer.new(96, 128)
-    puts @player.pos
+    puts @player.position
 
     # evil stuff don't do this
     device = Moon::Input::Mouse

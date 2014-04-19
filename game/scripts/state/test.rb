@@ -4,6 +4,7 @@
 class State::Test < State
 
   def init
+    super
     @sprites = []
     @font = Moon::Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 16);
     #@sound = Sound.new("resources/startup.wav", "wav")
@@ -28,6 +29,7 @@ class State::Test < State
     #p "SPACE is PRESSED!" if Input.pressed?(Input::Keys::SPACE)
     #p "Mouse is in area!" if Input::Mouse.in_area?(0, 0, 32, 32)
     #p Input::Mouse.pos
+    super
   end
 
   def render
@@ -38,6 +40,7 @@ class State::Test < State
     @sprites.each {|sprite| sprite.render }
     @font.draw_text(48, 64, "Sphinx of black quartz, judge my vow.")
     @font.draw_text(64,128, "日本国 音読みと中国語")
+    super
   end
 
 end
