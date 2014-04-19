@@ -80,15 +80,20 @@ class Vector2
     Vector2.new @x / x, @y / y
   end
 
+  def %(other)
+    x, y = *Vector2.obj_to_vec2_a(other)
+    Vector2.new @x % x, @y % y
+  end
+
   def dot(other)
     x, y = *Vector2.obj_to_vec2_a(other)
     @x * x + @y * y
   end
 
-  #def cross(other)
-  #  x, y = *obj_to_vec3a other
-  #  @x * x + @y * y + @z * z
-  #end
+  def cross(other)
+    x, y = *Vector2.obj_to_vec2_a(other)
+    Vector2.new @x * y, @y * x
+  end
 
   def rotate(r)
     Vector2.new @x * Math.cos(r) - @y * Math.sin(r),
