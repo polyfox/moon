@@ -3,7 +3,7 @@
 #   Base class for all States
 class State
 
-  attr_reader :ticks
+  attr_reader :ticks, :input
 
   ###
   # @type [Array<State>]
@@ -20,6 +20,14 @@ class State
   ###
   def initialize(engine)
     @engine = engine
+    @input = Moon::Input::Observer.new
+
+    @input.on :press, Moon::Input::F8 do
+      State.pop
+    end
+    @input.on :press, Moon::Input::F9 do
+      puts State.states.reverse.join(" >| ")
+    end
   end
 
   ###
@@ -64,11 +72,6 @@ class State
   ###
   def update
     @ticks += 1
-    if Moon::Input::Keyboard.triggered?(Moon::Input::Keyboard::Keys::F8)
-      State.pop
-    elsif Moon::Input::Keyboard.triggered?(Moon::Input::Keyboard::Keys::F9)
-      puts State.states.reverse.join(" >| ")
-    end
   end
 
   def self.debug?

@@ -43,25 +43,8 @@
 # drop: fired when an element is released over another.
 #=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
 
-
-class Event
-  attr_reader :type, :altKey, :shiftKey, :ctrlKey, :metaKey
-  attr_accessor :id # TEMP, proper initialization later
-
-  def initialize(type)
-    @type = type
-
-    # modifier keys
-    keys = Moon::Input::Keyboard::Keys
-    button = Moon::Input::Mouse::Buttons::LEFT
-    @altKey   = Moon::Input::Mouse.modded?(button, keys::MOD_ALT)
-    @shiftKey = Moon::Input::Mouse.modded?(button, keys::MOD_SHIFT)
-    @ctrlKey  = Moon::Input::Mouse.modded?(button, keys::MOD_CONTROL)
-    @metaKey  = Moon::Input::Mouse.modded?(button, keys::MOD_SUPER)
-  end
-end
-
 # Dirty, dirty, dirty temporary mouse wrapper
+=begin
 class Observer
   include Eventable
 
@@ -103,3 +86,4 @@ class Observer
     end
   end
 end
+=end
