@@ -38,4 +38,15 @@ module ScreenElement
     px.between?(x, x2) && py.between?(y, y2)
   end
 
+  ###
+  # Determines if position is inside the Container relatively
+  # @overload pos_inside?(x, y)
+  # @overload pos_inside?(vec2)
+  # @return [Boolean]
+  ###
+  def relative_pos_inside?(*args)
+    px, py = *Vector2.obj_to_vec2_a(args.size > 1 ? args : args.first)
+    px.between?(0, width) && py.between?(0, height)
+  end
+
 end
