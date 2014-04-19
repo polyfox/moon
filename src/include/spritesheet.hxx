@@ -9,6 +9,7 @@ namespace Moon {
   public:
     GLfloat tile_width;
     GLfloat tile_height;
+    int total_sprites;
 
     Spritesheet(std::string filename, int tile_width, int tile_height);
     ~Spritesheet();
@@ -19,7 +20,6 @@ namespace Moon {
 
     VertexBuffer VBO;
 
-    int total_sprites;
 
     std::shared_ptr<Texture> texture;
     std::shared_ptr<Shader>  shader;
