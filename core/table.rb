@@ -8,15 +8,18 @@ class Table
   attr_reader :xsize
   attr_reader :ysize
 
+  attr_accessor :default
+
   def initialize(xsize, ysize)
     @xsize = xsize
     @ysize = ysize
+    @default = 0
     create_data
     yield self if block_given?
   end
 
   def create_data
-    @data = Array.new(@ysize) { Array.new(@xsize, 0) }
+    @data = Array.new(@ysize) { Array.new(@xsize, @default) }
   end
 
   def initialize_copy(org)
@@ -45,8 +48,8 @@ class Table
 
   def [](x, y)
     x = x.to_i; y = y.to_i
-    return 0 if (x < 0 || x >= @xsize) ||
-                (y < 0 || y >= @ysize)
+    return @default if (x < 0 || x >= @xsize) ||
+                       (y < 0 || y >= @ysize)
     @data[y][x]
   end
 
@@ -116,6 +119,7 @@ class Table
     {
       xsize: @xsize,
       ysize: @ysize,
+      default: @default,
       data: @data
     }
   end

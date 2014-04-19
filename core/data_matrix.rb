@@ -8,17 +8,19 @@ class DataMatrix
   attr_reader :ysize
   attr_reader :zsize
   attr_reader :data
+  attr_accessor :default
 
   def initialize(xsize, ysize, zsize)
     @xsize = xsize
     @ysize = ysize
     @zsize = zsize
+    @default = 0
     create_data
     yield self if block_given?
   end
 
   def create_data
-    @data = Array.new(@zsize) { Array.new(@ysize) { Array.new(@xsize, 0) } }
+    @data = Array.new(@zsize) { Array.new(@ysize) { Array.new(@xsize, @default) } }
   end
 
   def initialize_copy(org)
@@ -41,9 +43,9 @@ class DataMatrix
 
   def [](x, y, z)
     x = x.to_i; y = y.to_i; z = z.to_i
-    return 0 if ((x < 0) || (x >= @xsize)) ||
-                ((y < 0) || (y >= @ysize)) ||
-                ((z < 0) || (z >= @zsize))
+    return @default if ((x < 0) || (x >= @xsize)) ||
+                       ((y < 0) || (y >= @ysize)) ||
+                       ((z < 0) || (z >= @zsize))
     @data[z][y][x]
   end
 
@@ -113,6 +115,7 @@ class DataMatrix
       xsize: @xsize,
       ysize: @ysize,
       zsize: @zsize,
+      default: @default,
       data: @data
     }
   end
