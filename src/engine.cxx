@@ -50,11 +50,6 @@ namespace Moon {
   }
 
   void Engine::setup_opengl() {
-    // Sets up the projection matrix so that (0,0) corresponds to the top left corner, and (640,480) corresponds to the bottom right corner.
-    GLfloat viewport[4];
-    glGetFloatv(GL_VIEWPORT, viewport);
-    Shader::projection_matrix = glm::ortho(0.f, viewport[2], viewport[3], 0.f, -1.f, 1.f);
-
     glDisable(GL_DITHER);
 
     glEnable(GL_BLEND); // Enable blending (alpha transparency)
@@ -68,10 +63,9 @@ namespace Moon {
     }
 
     glewExperimental = GL_TRUE;
-    if (GLEW_OK != glewInit())
-    {
-        // GLEW failed!
-        exit(1);
+    if (GLEW_OK != glewInit()) {
+      // GLEW failed!
+      exit(1);
     }
   }
 

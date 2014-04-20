@@ -6,7 +6,6 @@
 #include "window.hxx"
 #include "input.hxx"
 #include "audio.hxx"
-#include "shader.hxx"
 
 #include "mrb.hxx"
 
