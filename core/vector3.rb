@@ -6,6 +6,10 @@ module Moon
 
     include Comparable
 
+    def zero?
+      x == 0 && y == 0 && z == 0
+    end
+
     def <=>(other)
       ox, oy, oz = *Vector3.extract(other)
       [ox, oy, oz] <=> [x, y, z]
