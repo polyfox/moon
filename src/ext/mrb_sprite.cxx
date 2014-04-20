@@ -108,7 +108,7 @@ namespace Moon {
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     mrb_float f;
     mrb_get_args(mrb, "f", &f);
-    sprite->opacity = f;
+    sprite->opacity = glm::clamp(f, 0.0, 1.0);
     return mrb_float_value(mrb, f);
   };
 
