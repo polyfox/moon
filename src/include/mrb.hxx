@@ -33,7 +33,7 @@ namespace Moon {
   extern struct RClass *moon_cSpritesheet;
   extern struct RClass *moon_cSound;
   extern struct RClass *moon_cMusic;
-  extern struct RClass *moon_cRectangle;
+  extern struct RClass *moon_cRect;
   extern struct RClass *moon_cTexture;
   extern struct RClass *moon_cTone;
   extern struct RClass *moon_cScreen;
@@ -53,6 +53,8 @@ namespace Moon {
   struct RClass* moon_mrb_screen_init(mrb_state *mrb);
   struct RClass* moon_mrb_vector2_init(mrb_state *mrb);
   struct RClass* moon_mrb_vector3_init(mrb_state *mrb);
+
+
 };
 
 void moon_init_mrb_core(mrb_state *mrb);

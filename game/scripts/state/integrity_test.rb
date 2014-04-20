@@ -7,7 +7,7 @@ class State::IntegrityTest < State
       if Moon.const_defined?(sym)
         puts "[INTEGRITY] @@ Moon::#{sym}"
       else
-        abort "[INTEGRITY] !! Moon::#{sym}"
+        puts "[INTEGRITY] !! Moon::#{sym}"
       end
     end
     State.pop

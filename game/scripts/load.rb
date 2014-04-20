@@ -16,7 +16,8 @@ require 'scripts/lunar_metal'
 #State.push(State::Test)           # common testing state
 #State.push(State::SpriteTest)
 #State.push(State::SpriteClipTest)
-State.push(State::KeyHoldTest)    #
+ State.push(State::SpriteColorTest)
+#State.push(State::KeyHoldTest)    #
 #State.push(State::MouseEvents)
 #State.push(State::SpriteAngleTest)
 #State.push(LunarMetal::StateGame)

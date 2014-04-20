@@ -1,6 +1,7 @@
 varying vec2 f_texcoord;
 uniform sampler2D texture;
 uniform float opacity;
+uniform vec4 color;
 uniform vec4 tone;
 
 vec3 rgb2hsv(vec3 c) {
@@ -20,9 +21,13 @@ vec3 hsv2rgb(vec3 c) {
 }
 
 void main(void) {
+  const vec3 white = vec3(1.0, 1.0, 1.0);
+
   vec4 basecolor = texture2D(texture, f_texcoord);
   if(basecolor.a == 0.0) discard; // alpha testing
 
-  vec3 white = vec3(1.0, 1.0, 1.0);
-  gl_FragColor = vec4(hsv2rgb(rgb2hsv(mix(basecolor.rgb, white, tone.rgb)) * vec3(1.0, tone.a, 1.0)), basecolor.a * opacity);
+  gl_FragColor = vec4(hsv2rgb(
+                        rgb2hsv(mix(basecolor.rgb, white, tone.rgb)) *
+                        vec3(1.0, tone.a, 1.0)),
+                      basecolor.a * opacity) * color;
 }

@@ -12,6 +12,7 @@ namespace Moon {
     angle = 0.0;
     ox = 0;
     oy = 0;
+    color = std::make_shared<Color>(1.0, 1.0, 1.0, 1.0);
     tone = std::make_shared<Color>(0.0, 0.0, 0.0, 1.0);
 
     shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
@@ -103,6 +104,10 @@ namespace Moon {
     glUniformMatrix4fv(shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
     glUniform1f(shader->get_uniform("opacity"), opacity);
+    // color
+    GLfloat rgba[4] = {color->r, color->g, color->b, color->a};
+    glUniform4fv(shader->get_uniform("color"), 1, rgba);
+    // tone
     GLfloat rgbs[4] = {tone->r, tone->g, tone->b, tone->a};
     glUniform4fv(shader->get_uniform("tone"), 1, rgbs);
 

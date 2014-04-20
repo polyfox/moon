@@ -19,6 +19,7 @@ namespace Moon {
     float angle;
     int ox;
     int oy;
+    std::shared_ptr<Color> color;
     std::shared_ptr<Color> tone;
 
     void render();

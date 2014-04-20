@@ -16,23 +16,27 @@ namespace Moon {
     char* filename;
     mrb_get_args(mrb, "z", &filename);
 
-    mrb_value tone, texture, clip;
+    mrb_value color, tone, texture, clip;
     Sprite *sprite = new Sprite(filename);
 
     DATA_TYPE(self) = &sprite_data_type;
     DATA_PTR(self) = sprite;
 
+    auto color_ptr = new std::shared_ptr<Color>(sprite->color);
+    color = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cColor, &color_data_type, color_ptr));
+    mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@color"), color);
+
     auto tone_ptr = new std::shared_ptr<Color>(sprite->tone);
-    tone = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Tone"), &color_data_type, tone_ptr));
+    tone = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cColor, &color_data_type, tone_ptr));
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), tone);
 
     auto texture_ptr = new std::shared_ptr<Texture>(sprite->getTexture());
-    texture = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Texture"), &texture_data_type, texture_ptr));
+    texture = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cTexture, &texture_data_type, texture_ptr));
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@texture"), texture);
 
     auto clip_ptr = new std::shared_ptr<Rect>(sprite->getClip());
     if (*clip_ptr) { // if shared_ptr is not NULL internally
-      clip = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Rectangle"), &rectangle_data_type, clip_ptr));
+      clip = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cRect, &rectangle_data_type, clip_ptr));
     } else {
       clip = mrb_nil_value();
     }
@@ -153,6 +157,30 @@ namespace Moon {
     return mrb_fixnum_value(i);
   };
 
+  static mrb_value moon_mrb_sprite_color_getter(mrb_state *mrb, mrb_value self) {
+    return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@color"));
+  }
+
+  static mrb_value moon_mrb_sprite_color_setter(mrb_state *mrb, mrb_value self) {
+    mrb_value new_color;
+    mrb_get_args(mrb, "o", &new_color);
+
+    moon_mrb_check_class(mrb, new_color, moon_cColor, false);
+
+    mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@color"), new_color);
+
+    // Besides updating the ivar, we need to update the actual sprite->color:
+
+    // Get the passed-in object's shared_ptr
+    std::shared_ptr<Color>* color_ptr;
+    Data_Get_Struct(mrb, new_color, &color_data_type, color_ptr);
+
+    // Create a new shared_ptr for this instance and overwrite the old one
+    ((Sprite*)DATA_PTR(self))->color = std::shared_ptr<Color>(*color_ptr);
+
+    return new_color;
+  }
+
   static mrb_value moon_mrb_sprite_tone_getter(mrb_state *mrb, mrb_value self) {
     return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@tone"));
   }
@@ -211,7 +239,7 @@ namespace Moon {
     mrb_get_args(mrb, "o", &new_clip);
 
     if (!mrb_nil_p(new_clip))
-      moon_mrb_check_class(mrb, new_clip, moon_cRectangle, false);
+      moon_mrb_check_class(mrb, new_clip, moon_cRect, false);
 
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@clip"), new_clip);
 
@@ -257,8 +285,12 @@ namespace Moon {
     mrb_define_method(mrb, sprite_class, "oy",         moon_mrb_sprite_oy_getter,      MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "oy=",        moon_mrb_sprite_oy_setter,      MRB_ARGS_REQ(1));
 
+    mrb_define_method(mrb, sprite_class, "color",       moon_mrb_sprite_color_getter,  MRB_ARGS_NONE());
+    mrb_define_method(mrb, sprite_class, "color=",      moon_mrb_sprite_color_setter,  MRB_ARGS_REQ(1));
+
     mrb_define_method(mrb, sprite_class, "tone",       moon_mrb_sprite_tone_getter,    MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "tone=",      moon_mrb_sprite_tone_setter,    MRB_ARGS_REQ(1));
+
     mrb_define_method(mrb, sprite_class, "texture",    moon_mrb_sprite_texture_getter, MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "texture=",   moon_mrb_sprite_texture_setter, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, sprite_class, "clip_rect",  moon_mrb_sprite_clip_getter,    MRB_ARGS_NONE());
