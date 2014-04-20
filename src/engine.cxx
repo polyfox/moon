@@ -1,5 +1,4 @@
 #include "engine.hxx"
-#include "font.hxx"
 #include <clocale>
 
 namespace Moon {
@@ -51,11 +50,6 @@ namespace Moon {
   }
 
   void Engine::setup_opengl() {
-    // Sets up the projection matrix so that (0,0) corresponds to the top left corner, and (640,480) corresponds to the bottom right corner.
-    GLfloat viewport[4];
-    glGetFloatv(GL_VIEWPORT, viewport);
-    Shader::projection_matrix = glm::ortho(0.f, viewport[2] / 2, viewport[3] / 2, 0.f, -1.f, 1.f);
-
     glDisable(GL_DITHER);
 
     glEnable(GL_BLEND); // Enable blending (alpha transparency)
@@ -69,10 +63,9 @@ namespace Moon {
     }
 
     glewExperimental = GL_TRUE;
-    if (GLEW_OK != glewInit())
-    {
-        // GLEW failed!
-        exit(1);
+    if (GLEW_OK != glewInit()) {
+      // GLEW failed!
+      exit(1);
     }
   }
 
@@ -83,21 +76,13 @@ namespace Moon {
     moon_init_mrb_ext(mrb);
 
     mrb_value engine_val = mrb_obj_value(Data_Wrap_Struct(mrb, mrb->object_class, &engine_data_type, (void*)this));
-    mrb_mod_cv_set(mrb, mrb_module_get(mrb, "Moon"), mrb_intern_cstr(mrb, "engine"), engine_val);
+    mrb_mod_cv_set(mrb, moon_module, mrb_intern_cstr(mrb, "engine"), engine_val);
 
     mrb_value window_val = mrb_obj_value(Data_Wrap_Struct(mrb, mrb->object_class, &window_data_type, (void*)(&window)));
-    mrb_mod_cv_set(mrb, mrb_module_get(mrb, "Moon"), mrb_intern_cstr(mrb, "window"), window_val);
+    mrb_mod_cv_set(mrb, moon_module, mrb_intern_cstr(mrb, "window"), window_val);
 
-    load_core_classes();
-    load_user_scripts();
-  }
-
-  void Engine::load_user_scripts() {
-    load_mrb_file("./scripts/load.rb");
-  }
-
-  void Engine::load_core_classes() {
-    load_mrb_file("./core/load.rb");
+    load_mrb_file("./core/load.rb"); // load core classes
+    load_mrb_file("./scripts/load.rb"); // load user scripts
   }
 
   bool Engine::load_mrb_file(const char *path) {
@@ -125,14 +110,6 @@ namespace Moon {
       return false;
     }
     return true;
-  }
-
-  int Engine::window_width() {
-    return window.width();
-  }
-
-  int Engine::window_height() {
-    return window.height();
   }
 
 }

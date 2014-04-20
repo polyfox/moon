@@ -16,7 +16,7 @@ class Snake < Block_Link
 
 end
 
-class Glob < Vector2
+class Glob < Moon::Vector2
 
   attr_accessor :is_main
   attr_accessor :points
@@ -49,6 +49,19 @@ class State::Snake < State
     @cell_width = @spritesheet.cell_width
     @cell_height = @spritesheet.cell_height
     setup
+
+    @input.on :press, Input::DOWN do
+      @dir = 2
+    end
+    @input.on :press, Input::LEFT do
+      @dir = 4
+    end
+    @input.on :press, Input::RIGHT do
+      @dir = 6
+    end
+    @input.on :press, Input::UP do
+      @dir = 8
+    end
   end
 
   def init_snake
@@ -129,15 +142,6 @@ class State::Snake < State
 
   def update
     super
-    if Input::Keyboard.pressed?(Input::Keyboard::Keys::DOWN)
-      @dir = 2
-    elsif Input::Keyboard.pressed?(Input::Keyboard::Keys::LEFT)
-      @dir = 4
-    elsif Input::Keyboard.pressed?(Input::Keyboard::Keys::RIGHT)
-      @dir = 6
-    elsif Input::Keyboard.pressed?(Input::Keyboard::Keys::UP)
-      @dir = 8
-    end
     if @ticks % @time == 0
       @snake.move_straight(@dir)
       @snake.x %= @width

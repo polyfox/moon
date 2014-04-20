@@ -30,25 +30,31 @@ class State::KeyHoldTest < State
     def render
       if @release
         @release.times do |i|
-          @spritesheet.render(@x + @cell_width * i, @y, 0, 0)
+          @spritesheet.render(@x + @cell_width * i, @y + @cell_height * 0, 0, 1)
+        end
+      end
+      if @triggered
+        @triggered.times do |i|
+          @spritesheet.render(@x + @cell_width * i, @y + @cell_height * 1, 0, 2)
         end
       end
       if @press
         @press.times do |i|
-          @spritesheet.render(@x + @cell_width * i, @y + @cell_height, 0, 1)
+          @spritesheet.render(@x + @cell_width * i, @y + @cell_height * 2, 0, 3)
         end
       end
       if @hold
         @hold.times do |i|
-          @spritesheet.render(@x + @cell_width * i, @y + @cell_height * 2, 0, 2)
+          @spritesheet.render(@x + @cell_width * i, @y + @cell_height * 3, 0, 4)
         end
       end
     end
 
     def update
-      @press   = @device.pressed?(@key)
-      @release = @device.released?(@key)
-      @hold    = @device.repeated?(@key)
+      p [@triggered = @device.triggered?(@key),
+         @press     = @device.pressed?(@key),
+         @release   = @device.released?(@key),
+         @hold      = @device.repeated?(@key)]
     end
 
   end

@@ -34,7 +34,7 @@ module ScreenElement
   # @return [Boolean]
   ###
   def pos_inside?(*args)
-    px, py = *Vector2.obj_to_vec2_a(args.size > 1 ? args : args.first)
+    px, py = *Vector2.extract(args.size > 1 ? args : args.first)
     px.between?(x, x2) && py.between?(y, y2)
   end
 
@@ -45,7 +45,7 @@ module ScreenElement
   # @return [Boolean]
   ###
   def relative_pos_inside?(*args)
-    px, py = *Vector2.obj_to_vec2_a(args.size > 1 ? args : args.first)
+    px, py = *Vector2.extract(args.size > 1 ? args : args.first)
     px.between?(0, width) && py.between?(0, height)
   end
 

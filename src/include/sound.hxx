@@ -1,7 +1,6 @@
 #ifndef MOON_SOUND_H
 #define MOON_SOUND_H
 
-#include "moon.hxx"
 #include "audio.hxx"
 
 namespace Moon {

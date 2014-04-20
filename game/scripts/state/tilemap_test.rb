@@ -70,9 +70,7 @@ class State::TilemapTest < State
 
   def render
     super
-    @tilemap.render(0, 0, 0, # position
-                    0, 0, 0, # offset
-                    @map_data.xsize, @map_data.ysize, @map_data.zsize) # size
+    @tilemap.render(0, 0, 0)
   end
 
   def update

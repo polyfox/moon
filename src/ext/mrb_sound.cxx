@@ -11,7 +11,8 @@ namespace Moon {
     "Sound", moon_mrb_sound_deallocate,
   };
 
-  static mrb_value moon_mrb_sound_initialize(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sound_initialize(mrb_state *mrb, mrb_value self) {
     char* filename;
     char* format;
 
@@ -30,7 +31,8 @@ namespace Moon {
     return mrb_nil_value();
   };
 
-  static mrb_value moon_mrb_sound_play(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sound_play(mrb_state *mrb, mrb_value self) {
     mrb_float gain = 1.0;
     mrb_float pitch = 0.0;
     mrb_float pan = 0.0;
@@ -46,9 +48,10 @@ namespace Moon {
     };
   };
 
-  struct RClass* moon_mrb_sound_init(mrb_state *mrb) {
+  struct RClass*
+  moon_mrb_sound_init(mrb_state *mrb) {
     struct RClass *sound_class;
-    sound_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Sound", mrb->object_class);
+    sound_class = mrb_define_class_under(mrb, moon_module, "Sound", mrb->object_class);
     MRB_SET_INSTANCE_TT(sound_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, sound_class, "initialize", moon_mrb_sound_initialize, MRB_ARGS_REQ(2));

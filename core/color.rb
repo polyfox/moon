@@ -11,8 +11,8 @@ module Moon
     alias :a= :alpha=
 
     def set(*args)
-      r, g, b, a = *Color.obj_to_color_a(args.size > 1 ? args : args.first)
-      self.r, self.g, self.b, self.a = r.to_i, g.to_i, b.to_i, a.to_i
+      r, g, b, a = *Color.extract(args.size > 1 ? args : args.first)
+      self.r, self.g, self.b, self.a = r.to_f, g.to_f, b.to_f, a.to_f
     end
 
     def dup
@@ -27,14 +27,18 @@ module Moon
       { r: r, g: g, b: b, a: a }
     end
 
-    def self.obj_to_color_a(obj)
+    def rgb
+      Color.new r, g, b, 1.0
+    end
+
+    def self.extract(obj)
       case obj
       when Moon::Color
         return *obj
       when Array
         case obj.size
         when 3
-          return *obj, 255
+          return *obj, 1.0
         # x, y, w, h
         when 4 then
           return *obj

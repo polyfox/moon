@@ -9,7 +9,11 @@ class Numeric
   end
 
   def masked?(flag)
-    (self & flag) == flag
+    if flag == 0
+      self == 0
+    else
+      (self & flag) == flag
+    end
   end
 
 end

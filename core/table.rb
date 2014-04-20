@@ -11,8 +11,8 @@ class Table
   attr_accessor :default
 
   def initialize(xsize, ysize)
-    @xsize = xsize
-    @ysize = ysize
+    @xsize = xsize.to_i
+    @ysize = ysize.to_i
     @default = 0
     create_data
     yield self if block_given?

@@ -2,13 +2,14 @@
 #define MOON_MRB_H
 
 #include <mruby.h>
-#include <mruby/class.h>
 #include <mruby/array.h>
-#include <mruby/proc.h>
-#include <mruby/data.h>
+#include <mruby/class.h>
 #include <mruby/compile.h>
-#include <mruby/variable.h>
+#include <mruby/data.h>
+#include <mruby/numeric.h>
+#include <mruby/proc.h>
 #include <mruby/string.h>
+#include <mruby/variable.h>
 
 namespace Moon {
   extern const struct mrb_data_type color_data_type;
@@ -19,6 +20,8 @@ namespace Moon {
   extern const struct mrb_data_type spritesheet_data_type;
   extern const struct mrb_data_type texture_data_type;
   extern const struct mrb_data_type tone_data_type;
+  extern const struct mrb_data_type vector2_data_type;
+  extern const struct mrb_data_type vector3_data_type;
 
   extern const struct mrb_data_type engine_data_type;
   extern const struct mrb_data_type window_data_type;
@@ -31,10 +34,12 @@ namespace Moon {
   extern struct RClass *moon_cSpritesheet;
   extern struct RClass *moon_cSound;
   extern struct RClass *moon_cMusic;
-  extern struct RClass *moon_cRectangle;
+  extern struct RClass *moon_cRect;
   extern struct RClass *moon_cTexture;
   extern struct RClass *moon_cTone;
   extern struct RClass *moon_cScreen;
+  extern struct RClass *moon_cVector2;
+  extern struct RClass *moon_cVector3;
 
   struct RClass* moon_mrb_color_init(mrb_state *mrb);
   struct RClass* moon_mrb_font_init(mrb_state *mrb);
@@ -47,6 +52,10 @@ namespace Moon {
   struct RClass* moon_mrb_texture_init(mrb_state *mrb);
   struct RClass* moon_mrb_tone_init(mrb_state *mrb);
   struct RClass* moon_mrb_screen_init(mrb_state *mrb);
+  struct RClass* moon_mrb_vector2_init(mrb_state *mrb);
+  struct RClass* moon_mrb_vector3_init(mrb_state *mrb);
+
+
 };
 
 void moon_init_mrb_core(mrb_state *mrb);

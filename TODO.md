@@ -6,10 +6,10 @@ TODO
 * mousepos events, and clicking events need to be sorted out
 
 ## The regular
-* Tone rgbs instead of hsl
+* ~~Tone rgbs instead of hsl~~
 
-  Yup, r,g,b,s components (red, green, blue, saturation)
-  instead of h,s,l (hue, saturation, lumin-whatever)
+  ~~Yup, r,g,b,s components (red, green, blue, saturation)~~
+  ~~instead of h,s,l (hue, saturation, lumin-whatever)~~
 
 * Font#draw_text outline_color
 
@@ -19,6 +19,17 @@ TODO
 
   Big Topic, somehow, some manner of texture compositing.
 
+* make Camera class, wrapping the view_matrix
+
+* State#update(delta)
+
+* Register a callback with glfwSetWindowSizeCallback that triggers a window resize event in ruby.
+
+* A Engine#debug flag, that turns debugging features on/off (for instance FPS in titlebar)
+
+* clamp and normalize values for Color
+
+* port stuff to OGL 3.3
 
 ## IceDragon's wishlist! :D
 * Sprite.scale_x/y

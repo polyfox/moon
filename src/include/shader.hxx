@@ -3,6 +3,7 @@
 
 #include "moon.hxx"
 //#include <utility> // std::pair
+#include <fstream>
 #include "cache.hxx"
 
 namespace Moon {

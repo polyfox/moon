@@ -50,6 +50,7 @@ class Observer
 
   def initialize
     super
+    init_eventable
     @last_state = nil
     @last_pos = [nil, nil]
     @clicks = 1

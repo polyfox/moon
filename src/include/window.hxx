@@ -3,6 +3,7 @@
 
 #include "moon.hxx"
 #include "fps.hxx"
+#include "shader.hxx" // window.resize()
 #include <GLFW/glfw3.h>
 
 namespace Moon {
@@ -13,6 +14,7 @@ namespace Moon {
 
     GLFWwindow* glfw(); // TEMPORARY HACK
     void update();
+    void resize(int width, int height);
     bool should_close();
     int width();
     int height();

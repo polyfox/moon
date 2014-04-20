@@ -1,5 +1,5 @@
-#ifndef MOON_MRB_ERR_H_
-#define MOON_MRB_ERR_H_
+#ifndef MOON_MRB_ERR_H
+#define MOON_MRB_ERR_H
 
 #include "mrb.hxx"
 

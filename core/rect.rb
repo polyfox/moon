@@ -17,7 +17,7 @@ module Moon
     end
 
     def set(*args)
-      self.x, self.y, self.w, self.h = *Rect.obj_to_rect_a(args.size > 1 ? args : args.first)
+      self.x, self.y, self.w, self.h = *Rect.extract(args.size > 1 ? args : args.first)
     end
 
     def to_a
@@ -49,7 +49,7 @@ module Moon
     end
 
     def xy=(other)
-      self.x, self.y = *Vector2.obj_to_vec2_a(other)
+      self.x, self.y = *Vector2.extract(other)
     end
 
     def xyz
@@ -57,7 +57,7 @@ module Moon
     end
 
     def xyz=(other)
-      self.x, self.y, _ = *Vector3.obj_to_vec3_a(other)
+      self.x, self.y, _ = *Vector3.extract(other)
     end
 
     def wh
@@ -65,7 +65,7 @@ module Moon
     end
 
     def wh=(other)
-      self.w, self.h = *Vector2.obj_to_vec2_a(other)
+      self.w, self.h = *Vector2.extract(other)
     end
 
     def whd
@@ -73,7 +73,7 @@ module Moon
     end
 
     def whd=(other)
-      self.w, self.h, _ = *Vector3.obj_to_vec3_a(other)
+      self.w, self.h, _ = *Vector3.extract(other)
     end
 
     ##
@@ -82,7 +82,7 @@ module Moon
       Moon::Rect.new x, y, width, height
     end
 
-    def self.obj_to_rect_a(obj)
+    def self.extract(obj)
       case obj
       when Moon::Rect
         return *obj
@@ -106,7 +106,7 @@ module Moon
 
     def self.[](*objs)
       obj = objs.size == 1 ? objs.first : objs
-      new(*obj_to_rect_a(obj))
+      new(*extract(obj))
     end
 
     alias :position :xy

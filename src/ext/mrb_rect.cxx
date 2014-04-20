@@ -12,7 +12,8 @@ namespace Moon {
     "Rect", moon_mrb_rectangle_deallocate,
   };
 
-  static mrb_value moon_mrb_rectangle_initialize(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_rectangle_initialize(mrb_state *mrb, mrb_value self) {
     mrb_int x, y, w, h;
     mrb_get_args(mrb, "iiii", &x, &y, &w, &h);
 
@@ -24,7 +25,8 @@ namespace Moon {
     return mrb_nil_value();
   };
 
-  static mrb_value moon_mrb_rectangle_x_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_rectangle_x_setter(mrb_state *mrb, mrb_value self) {
     mrb_int x;
     mrb_get_args(mrb, "i", &x);
 
@@ -36,7 +38,8 @@ namespace Moon {
     return mrb_nil_value();
   }
 
-  static mrb_value moon_mrb_rectangle_x_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_rectangle_x_getter(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Rect>* rectangle;
     Data_Get_Struct(mrb, self, &rectangle_data_type, rectangle);
 
@@ -44,7 +47,8 @@ namespace Moon {
     return mrb_float_value(mrb, (*rectangle)->x);
   }
 
-  static mrb_value moon_mrb_rectangle_y_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_rectangle_y_setter(mrb_state *mrb, mrb_value self) {
     mrb_int y;
     mrb_get_args(mrb, "i", &y);
 
@@ -56,15 +60,16 @@ namespace Moon {
     return mrb_nil_value();
   }
 
-  static mrb_value moon_mrb_rectangle_y_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_rectangle_y_getter(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Rect>* rectangle;
     Data_Get_Struct(mrb, self, &rectangle_data_type, rectangle);
 
-    //return mrb_fixnum_value((int)(*rectangle)->y);
     return mrb_float_value(mrb, (*rectangle)->y);
   }
 
-  static mrb_value moon_mrb_rectangle_width_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_rectangle_width_setter(mrb_state *mrb, mrb_value self) {
     mrb_int width;
     mrb_get_args(mrb, "i", &width);
 
@@ -76,15 +81,16 @@ namespace Moon {
     return mrb_nil_value();
   }
 
-  static mrb_value moon_mrb_rectangle_width_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_rectangle_width_getter(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Rect>* rectangle;
     Data_Get_Struct(mrb, self, &rectangle_data_type, rectangle);
 
-    //return mrb_fixnum_value((int)(*rectangle)->w);
     return mrb_float_value(mrb, (*rectangle)->w);
   }
 
-  static mrb_value moon_mrb_rectangle_height_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_rectangle_height_setter(mrb_state *mrb, mrb_value self) {
     mrb_int height;
     mrb_get_args(mrb, "i", &height);
 
@@ -96,17 +102,18 @@ namespace Moon {
     return mrb_nil_value();
   }
 
-  static mrb_value moon_mrb_rectangle_height_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_rectangle_height_getter(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Rect>* rectangle;
     Data_Get_Struct(mrb, self, &rectangle_data_type, rectangle);
 
-    //return mrb_fixnum_value((int)(*rectangle)->h);
     return mrb_float_value(mrb, (*rectangle)->h);
   }
 
-  struct RClass* moon_mrb_rectangle_init(mrb_state *mrb) {
+  struct RClass*
+  moon_mrb_rectangle_init(mrb_state *mrb) {
     struct RClass *rectangle_class;
-    rectangle_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Rect", mrb->object_class);
+    rectangle_class = mrb_define_class_under(mrb, moon_module, "Rect", mrb->object_class);
     MRB_SET_INSTANCE_TT(rectangle_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, rectangle_class, "initialize", moon_mrb_rectangle_initialize,     MRB_ARGS_REQ(4));
