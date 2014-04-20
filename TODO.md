@@ -23,9 +23,7 @@ TODO
 
 * State#update(delta)
 
-* Screen#resize or Screen#width, Screen#height (using glfwSetWindowSize)
-
-  Register a callback with glfwSetWindowSizeCallback that then resets the viewport matrix.
+* Register a callback with glfwSetWindowSizeCallback that triggers a window resize event in ruby.
 
 * A Engine#debug flag, that turns debugging features on/off (for instance FPS in titlebar)
 
