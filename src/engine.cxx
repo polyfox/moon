@@ -87,16 +87,8 @@ namespace Moon {
     mrb_value window_val = mrb_obj_value(Data_Wrap_Struct(mrb, mrb->object_class, &window_data_type, (void*)(&window)));
     mrb_mod_cv_set(mrb, moon_module, mrb_intern_cstr(mrb, "window"), window_val);
 
-    load_core_classes();
-    load_user_scripts();
-  }
-
-  void Engine::load_user_scripts() {
-    load_mrb_file("./scripts/load.rb");
-  }
-
-  void Engine::load_core_classes() {
-    load_mrb_file("./core/load.rb");
+    load_mrb_file("./core/load.rb"); // load core classes
+    load_mrb_file("./scripts/load.rb"); // load user scripts
   }
 
   bool Engine::load_mrb_file(const char *path) {

@@ -24,8 +24,6 @@ namespace Moon {
 
     void load_mrb();
     bool load_mrb_file(const char* path);
-    void load_core_classes();
-    void load_user_scripts();
 
     void setup_opengl();
   };
