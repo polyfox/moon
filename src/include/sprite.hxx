@@ -4,7 +4,7 @@
 #include "moon.hxx"
 #include "texture.hxx"
 #include "vertex_buffer.hxx"
-#include "tone.hxx"
+#include "graphics.hxx"
 
 namespace Moon {
   class Sprite {
@@ -19,7 +19,7 @@ namespace Moon {
     float angle;
     int ox;
     int oy;
-    std::shared_ptr<Tone> tone;
+    std::shared_ptr<Color> tone;
 
     void render();
     std::shared_ptr<Texture> getTexture();

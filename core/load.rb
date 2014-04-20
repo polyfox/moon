@@ -10,7 +10,6 @@ require 'core/data_matrix' # 3d Table
 require 'core/rect'
 require 'core/table'       # 2d Table
 require 'core/tilemap'
-require 'core/tone'
 require 'core/aabb'
 require 'core/vector2'
 require 'core/vector3'

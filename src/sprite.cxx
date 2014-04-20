@@ -12,7 +12,7 @@ namespace Moon {
     angle = 0.0;
     ox = 0;
     oy = 0;
-    tone = std::make_shared<Tone>(1.0, 1.0, 1.0);
+    tone = std::make_shared<Color>(0.0, 0.0, 0.0, 1.0);
 
     shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
     texture = Texture::load(filename);
@@ -103,9 +103,8 @@ namespace Moon {
     glUniformMatrix4fv(shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
     glUniform1f(shader->get_uniform("opacity"), opacity);
-
-    GLfloat hsl[3] = {tone->hue, tone->saturation, tone->lightness};
-    glUniform3fv(shader->get_uniform("tone"), 1, hsl);
+    GLfloat rgbs[4] = {tone->r, tone->g, tone->b, tone->a};
+    glUniform4fv(shader->get_uniform("tone"), 1, rgbs);
 
     //Set texture ID
     glActiveTexture(GL_TEXTURE0);

@@ -22,8 +22,8 @@ namespace Moon {
     DATA_TYPE(self) = &sprite_data_type;
     DATA_PTR(self) = sprite;
 
-    auto tone_ptr = new std::shared_ptr<Tone>(sprite->tone);
-    tone = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Tone"), &tone_data_type, tone_ptr));
+    auto tone_ptr = new std::shared_ptr<Color>(sprite->tone);
+    tone = mrb_obj_value(Data_Wrap_Struct(mrb, mrb_class_get_under(mrb, moon_module, "Tone"), &color_data_type, tone_ptr));
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), tone);
 
     auto texture_ptr = new std::shared_ptr<Texture>(sprite->getTexture());
@@ -161,18 +161,18 @@ namespace Moon {
     mrb_value new_tone;
     mrb_get_args(mrb, "o", &new_tone);
 
-    moon_mrb_check_class(mrb, new_tone, moon_cTone, false);
+    moon_mrb_check_class(mrb, new_tone, moon_cColor, false);
 
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), new_tone);
 
     // Besides updating the ivar, we need to update the actual sprite->tone:
 
     // Get the passed-in object's shared_ptr
-    std::shared_ptr<Tone>* tone_ptr;
-    Data_Get_Struct(mrb, new_tone, &tone_data_type, tone_ptr);
+    std::shared_ptr<Color>* tone_ptr;
+    Data_Get_Struct(mrb, new_tone, &color_data_type, tone_ptr);
 
     // Create a new shared_ptr for this instance and overwrite the old one
-    ((Sprite*)DATA_PTR(self))->tone = std::shared_ptr<Tone>(*tone_ptr);
+    ((Sprite*)DATA_PTR(self))->tone = std::shared_ptr<Color>(*tone_ptr);
 
     return new_tone;
   }

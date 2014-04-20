@@ -23,6 +23,12 @@ TODO
 
 * State#update(delta)
 
+* Screen#resize or Screen#width, Screen#height (using glfwSetWindowSize)
+
+  Register a callback with glfwSetWindowSizeCallback that then resets the viewport matrix.
+
+* A Engine#debug flag, that turns debugging features on/off (for instance FPS in titlebar)
+
 ## IceDragon's wishlist! :D
 * Sprite.scale_x/y
 * Spritesheet.opacity, or should I just change to using Sprite ;-; ?
