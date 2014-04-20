@@ -11,7 +11,8 @@ namespace Moon {
     "Texture", moon_mrb_texture_deallocate,
   };
 
-  static mrb_value moon_mrb_texture_initialize(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_texture_initialize(mrb_state *mrb, mrb_value self) {
     char* filename;
     mrb_get_args(mrb, "z", &filename);
 
@@ -24,23 +25,26 @@ namespace Moon {
     return mrb_nil_value();
   };
 
-  static mrb_value moon_mrb_texture_width(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_texture_width(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Texture>* texture;
     Data_Get_Struct(mrb, self, &texture_data_type, texture);
 
     return mrb_float_value(mrb, (*texture)->width());
   }
 
-  static mrb_value moon_mrb_texture_height(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_texture_height(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Texture>* texture;
     Data_Get_Struct(mrb, self, &texture_data_type, texture);
 
     return mrb_float_value(mrb, (*texture)->height());
   }
 
-  struct RClass* moon_mrb_texture_init(mrb_state *mrb) {
+  struct RClass*
+  moon_mrb_texture_init(mrb_state *mrb) {
     struct RClass *texture_class;
-    texture_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Texture", mrb->object_class);
+    texture_class = mrb_define_class_under(mrb, moon_module, "Texture", mrb->object_class);
     MRB_SET_INSTANCE_TT(texture_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, texture_class, "initialize", moon_mrb_texture_initialize, MRB_ARGS_REQ(1));

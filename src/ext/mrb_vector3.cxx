@@ -1,3 +1,6 @@
+/*
+ * Moon Vector3, a wrapper around glm::vec3
+ */
 #include "mrb.hxx"
 #include <memory>
 #include <glm/glm.hpp>
@@ -319,7 +322,7 @@ namespace Moon {
   }
 
   struct RClass* moon_mrb_vector3_init(mrb_state *mrb) {
-    vector3_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Vector3", mrb->object_class);
+    vector3_class = mrb_define_class_under(mrb, moon_module, "Vector3", mrb->object_class);
     MRB_SET_INSTANCE_TT(vector3_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, vector3_class, "initialize",      moon_mrb_vector3_initialize,      MRB_ARGS_OPT(3));

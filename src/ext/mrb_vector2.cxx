@@ -1,3 +1,6 @@
+/*
+ * Moon Vector2, a wrapper around glm::vec2
+ */
 #include "mrb.hxx"
 #include <memory>
 #include <glm/glm.hpp>
@@ -281,7 +284,7 @@ namespace Moon {
   }
 
   struct RClass* moon_mrb_vector2_init(mrb_state *mrb) {
-    vector2_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Vector2", mrb->object_class);
+    vector2_class = mrb_define_class_under(mrb, moon_module, "Vector2", mrb->object_class);
     MRB_SET_INSTANCE_TT(vector2_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, vector2_class, "initialize",      moon_mrb_vector2_initialize,      MRB_ARGS_OPT(2));

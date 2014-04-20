@@ -28,7 +28,7 @@ namespace Moon {
   }
 
   void Input::update_key(GLFWwindow* window, int key_id, int scancode, int action, int mods) {
-    mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, mrb_module_get(mrb, "Moon"), "Input"));
+    mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, moon_module, "Input"));
     mrb_funcall(mrb, klass, "on_key", 4,
       mrb_fixnum_value(key_id),
       mrb_fixnum_value(scancode),
@@ -37,7 +37,7 @@ namespace Moon {
   }
 
   void Input::update_button(GLFWwindow* window, int button_id, int action, int mods) {
-    mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, mrb_module_get(mrb, "Moon"), "Input"));
+    mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, moon_module, "Input"));
     mrb_funcall(mrb, klass, "on_button", 3,
       mrb_fixnum_value(button_id),
       glfw_state_to_mrb_symbol(mrb, action),

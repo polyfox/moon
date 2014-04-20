@@ -82,10 +82,10 @@ namespace Moon {
     moon_init_mrb_ext(mrb);
 
     mrb_value engine_val = mrb_obj_value(Data_Wrap_Struct(mrb, mrb->object_class, &engine_data_type, (void*)this));
-    mrb_mod_cv_set(mrb, mrb_module_get(mrb, "Moon"), mrb_intern_cstr(mrb, "engine"), engine_val);
+    mrb_mod_cv_set(mrb, moon_module, mrb_intern_cstr(mrb, "engine"), engine_val);
 
     mrb_value window_val = mrb_obj_value(Data_Wrap_Struct(mrb, mrb->object_class, &window_data_type, (void*)(&window)));
-    mrb_mod_cv_set(mrb, mrb_module_get(mrb, "Moon"), mrb_intern_cstr(mrb, "window"), window_val);
+    mrb_mod_cv_set(mrb, moon_module, mrb_intern_cstr(mrb, "window"), window_val);
 
     load_core_classes();
     load_user_scripts();

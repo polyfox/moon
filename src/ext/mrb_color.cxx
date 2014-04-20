@@ -12,7 +12,8 @@ namespace Moon {
     "Color", moon_mrb_color_deallocate,
   };
 
-  static mrb_value moon_mrb_color_initialize(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_color_initialize(mrb_state *mrb, mrb_value self) {
     mrb_float r, g, b, a;
     mrb_get_args(mrb, "ffff", &r, &g, &b, &a);
 
@@ -24,7 +25,8 @@ namespace Moon {
     return mrb_nil_value();
   };
 
-  static mrb_value moon_mrb_color_red_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_color_red_setter(mrb_state *mrb, mrb_value self) {
     mrb_float red;
     mrb_get_args(mrb, "f", &red);
 
@@ -36,14 +38,16 @@ namespace Moon {
     return mrb_nil_value();
   }
 
-  static mrb_value moon_mrb_color_red_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_color_red_getter(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Color>* color;
     Data_Get_Struct(mrb, self, &color_data_type, color);
 
     return mrb_float_value(mrb, (*color)->r);
   }
 
-  static mrb_value moon_mrb_color_green_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_color_green_setter(mrb_state *mrb, mrb_value self) {
     mrb_float green;
     mrb_get_args(mrb, "f", &green);
 
@@ -55,14 +59,16 @@ namespace Moon {
     return mrb_nil_value();
   }
 
-  static mrb_value moon_mrb_color_green_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_color_green_getter(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Color>* color;
     Data_Get_Struct(mrb, self, &color_data_type, color);
 
     return mrb_float_value(mrb, (*color)->g);
   }
 
-  static mrb_value moon_mrb_color_blue_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_color_blue_setter(mrb_state *mrb, mrb_value self) {
     mrb_float blue;
     mrb_get_args(mrb, "f", &blue);
 
@@ -74,14 +80,16 @@ namespace Moon {
     return mrb_nil_value();
   }
 
-  static mrb_value moon_mrb_color_blue_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_color_blue_getter(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Color>* color;
     Data_Get_Struct(mrb, self, &color_data_type, color);
 
     return mrb_float_value(mrb, (*color)->b);
   }
 
-  static mrb_value moon_mrb_color_alpha_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_color_alpha_setter(mrb_state *mrb, mrb_value self) {
     mrb_float alpha;
     mrb_get_args(mrb, "f", &alpha);
 
@@ -93,16 +101,18 @@ namespace Moon {
     return mrb_float_value(mrb, (*color)->a);
   }
 
-  static mrb_value moon_mrb_color_alpha_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_color_alpha_getter(mrb_state *mrb, mrb_value self) {
     std::shared_ptr<Color>* color;
     Data_Get_Struct(mrb, self, &color_data_type, color);
 
     return mrb_float_value(mrb, (*color)->a);
   }
 
-  struct RClass* moon_mrb_color_init(mrb_state *mrb) {
+  struct RClass*
+  moon_mrb_color_init(mrb_state *mrb) {
     struct RClass *color_class;
-    color_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Color", mrb->object_class);
+    color_class = mrb_define_class_under(mrb, moon_module, "Color", mrb->object_class);
     MRB_SET_INSTANCE_TT(color_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, color_class, "initialize", moon_mrb_color_initialize,   MRB_ARGS_REQ(4));

@@ -11,7 +11,8 @@ namespace Moon
     "Font", moon_mrb_font_deallocate,
   };
 
-  static mrb_value moon_mrb_font_initialize(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_font_initialize(mrb_state *mrb, mrb_value self) {
     char* filename;
     mrb_int font_size;
     mrb_get_args(mrb, "zi", &filename, &font_size);
@@ -32,7 +33,8 @@ namespace Moon
    * @param [Color] color
    *   @optional
    */
-  static mrb_value moon_mrb_font_draw_text(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_font_draw_text(mrb_state *mrb, mrb_value self) {
     mrb_float x, y;
     mrb_value color = mrb_nil_value();
     char* str;
@@ -56,15 +58,17 @@ namespace Moon
     return mrb_nil_value();
   };
 
-  static mrb_value moon_mrb_font_size(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_font_size(mrb_state *mrb, mrb_value self) {
     Font *font;
     Data_Get_Struct(mrb, self, &font_data_type, font);
     return mrb_fixnum_value(font->size());
   }
 
-  struct RClass* moon_mrb_font_init(mrb_state *mrb) {
+  struct RClass*
+  moon_mrb_font_init(mrb_state *mrb) {
     struct RClass *font_class;
-    font_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Font", mrb->object_class);
+    font_class = mrb_define_class_under(mrb, moon_module, "Font", mrb->object_class);
     MRB_SET_INSTANCE_TT(font_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, font_class, "initialize", moon_mrb_font_initialize, MRB_ARGS_REQ(2));

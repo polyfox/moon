@@ -3,15 +3,18 @@
 
 namespace Moon {
 
-  static mrb_value moon_mrb_mouse_x(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_mouse_x(mrb_state *mrb, mrb_value self) {
     return mrb_fixnum_value(Input::Mouse::x());
   }
 
-  static mrb_value moon_mrb_mouse_y(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_mouse_y(mrb_state *mrb, mrb_value self) {
     return mrb_fixnum_value(Input::Mouse::y());
   }
 
-  static mrb_value moon_mrb_mouse_pos(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_mouse_pos(mrb_state *mrb, mrb_value self) {
     auto pos = Input::Mouse::pos();
 
     mrb_value ary = mrb_ary_new(mrb);
@@ -20,11 +23,12 @@ namespace Moon {
     return ary;
   }
 
-  struct RClass* moon_mrb_input_init(mrb_state *mrb) {
+  struct RClass*
+  moon_mrb_input_init(mrb_state *mrb) {
     struct RClass *input_module;
     struct RClass *mouse_module;
 
-    input_module = mrb_define_module_under(mrb, mrb_module_get(mrb, "Moon"), "Input");
+    input_module = mrb_define_module_under(mrb, moon_module, "Input");
     mouse_module = mrb_define_module_under(mrb, input_module, "Mouse");
 
     // mouse functions

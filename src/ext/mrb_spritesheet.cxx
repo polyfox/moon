@@ -11,7 +11,8 @@ namespace Moon {
     "Spritesheet", moon_mrb_spritesheet_deallocate,
   };
 
-  static mrb_value moon_mrb_spritesheet_initialize(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_spritesheet_initialize(mrb_state *mrb, mrb_value self) {
     mrb_value filename;
     mrb_int tile_width, tile_height;
     mrb_get_args(mrb, "Sii", &filename, &tile_width, &tile_height);
@@ -24,10 +25,11 @@ namespace Moon {
     return mrb_nil_value();
   };
 
-  static mrb_value moon_mrb_spritesheet_render(mrb_state *mrb, mrb_value self) {
-    mrb_int x, y, index;
-    mrb_float z;
-    mrb_get_args(mrb, "iifi", &x, &y, &z, &index);
+  static mrb_value
+  moon_mrb_spritesheet_render(mrb_state *mrb, mrb_value self) {
+    mrb_int index;
+    mrb_float x, y, z;
+    mrb_get_args(mrb, "fffi", &x, &y, &z, &index);
 
     Spritesheet *spritesheet;
     Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
@@ -35,13 +37,15 @@ namespace Moon {
     return mrb_nil_value();
   };
 
-  static mrb_value moon_mrb_spritesheet_opacity_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_spritesheet_opacity_getter(mrb_state *mrb, mrb_value self) {
     Spritesheet *spritesheet;
     Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
     return mrb_float_value(mrb, spritesheet->opacity);
   };
 
-  static mrb_value moon_mrb_spritesheet_opacity_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_spritesheet_opacity_setter(mrb_state *mrb, mrb_value self) {
     Spritesheet *spritesheet;
     Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
     mrb_float f;
@@ -50,19 +54,22 @@ namespace Moon {
     return mrb_float_value(mrb, f);
   };
 
-  static mrb_value moon_mrb_spritesheet_cell_width(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_spritesheet_cell_width(mrb_state *mrb, mrb_value self) {
     Spritesheet *spritesheet;
     Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
     return mrb_fixnum_value((int)spritesheet->tile_width);
   }
 
-  static mrb_value moon_mrb_spritesheet_cell_height(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_spritesheet_cell_height(mrb_state *mrb, mrb_value self) {
     Spritesheet *spritesheet;
     Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
     return mrb_fixnum_value((int)spritesheet->tile_height);
   }
 
-  static mrb_value moon_mrb_spritesheet_cell_count(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_spritesheet_cell_count(mrb_state *mrb, mrb_value self) {
     Spritesheet *spritesheet;
     Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
     return mrb_fixnum_value((int)spritesheet->total_sprites);
@@ -70,7 +77,7 @@ namespace Moon {
 
   struct RClass* moon_mrb_spritesheet_init(mrb_state *mrb) {
     struct RClass *spritesheet_class;
-    spritesheet_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Spritesheet", mrb->object_class);
+    spritesheet_class = mrb_define_class_under(mrb, moon_module, "Spritesheet", mrb->object_class);
     MRB_SET_INSTANCE_TT(spritesheet_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, spritesheet_class, "initialize",  moon_mrb_spritesheet_initialize,     MRB_ARGS_REQ(3));

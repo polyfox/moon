@@ -25,18 +25,17 @@ namespace Moon {
 }
 
 void moon_init_mrb_core(mrb_state *mrb) {
-  Moon::moon_module = mrb_define_module(mrb, "Moon");
-
-  Moon::moon_cColor = Moon::moon_mrb_color_init(mrb);
-  Moon::moon_cFont = Moon::moon_mrb_font_init(mrb);
-  Moon::moon_mInput = Moon::moon_mrb_input_init(mrb);
-  Moon::moon_cSprite = Moon::moon_mrb_sprite_init(mrb);
+  Moon::moon_module       = mrb_define_module(mrb, "Moon");
+  Moon::moon_cColor       = Moon::moon_mrb_color_init(mrb);
+  Moon::moon_cFont        = Moon::moon_mrb_font_init(mrb);
+  Moon::moon_mInput       = Moon::moon_mrb_input_init(mrb);
+  Moon::moon_cSprite      = Moon::moon_mrb_sprite_init(mrb);
   Moon::moon_cSpritesheet = Moon::moon_mrb_spritesheet_init(mrb);
-  Moon::moon_cSound = Moon::moon_mrb_sound_init(mrb);
-  Moon::moon_cMusic = Moon::moon_mrb_music_init(mrb);
-  Moon::moon_cRect = Moon::moon_mrb_rectangle_init(mrb);
-  Moon::moon_cTexture = Moon::moon_mrb_texture_init(mrb);
-  Moon::moon_cScreen = Moon::moon_mrb_screen_init(mrb);
-  Moon::moon_cVector2 = Moon::moon_mrb_vector2_init(mrb);
-  Moon::moon_cVector3 = Moon::moon_mrb_vector3_init(mrb);
+  Moon::moon_cSound       = Moon::moon_mrb_sound_init(mrb);
+  Moon::moon_cMusic       = Moon::moon_mrb_music_init(mrb);
+  Moon::moon_cRect        = Moon::moon_mrb_rectangle_init(mrb);
+  Moon::moon_cTexture     = Moon::moon_mrb_texture_init(mrb);
+  Moon::moon_cScreen      = Moon::moon_mrb_screen_init(mrb);
+  Moon::moon_cVector2     = Moon::moon_mrb_vector2_init(mrb);
+  Moon::moon_cVector3     = Moon::moon_mrb_vector3_init(mrb);
 };

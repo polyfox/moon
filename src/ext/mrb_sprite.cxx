@@ -12,7 +12,8 @@ namespace Moon {
     "Sprite", moon_mrb_sprite_deallocate,
   };
 
-  static mrb_value moon_mrb_sprite_initialize(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_initialize(mrb_state *mrb, mrb_value self) {
     char* filename;
     mrb_get_args(mrb, "z", &filename);
 
@@ -45,20 +46,23 @@ namespace Moon {
     return mrb_nil_value();
   };
 
-  static mrb_value moon_mrb_sprite_render(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_render(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     sprite->render();
     return mrb_nil_value();
   };
 
-  static mrb_value moon_mrb_sprite_x_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_x_getter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     return mrb_fixnum_value(sprite->x);
   };
 
-  static mrb_value moon_mrb_sprite_x_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_x_setter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     mrb_int i;
@@ -67,13 +71,15 @@ namespace Moon {
     return mrb_fixnum_value(i);
   };
 
-  static mrb_value moon_mrb_sprite_y_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_y_getter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     return mrb_fixnum_value(sprite->y);
   };
 
-  static mrb_value moon_mrb_sprite_y_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_y_setter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     mrb_int i;
@@ -82,13 +88,15 @@ namespace Moon {
     return mrb_fixnum_value(i);
   };
 
-  static mrb_value moon_mrb_sprite_z_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_z_getter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     return mrb_float_value(mrb, sprite->z);
   };
 
-  static mrb_value moon_mrb_sprite_z_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_z_setter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     mrb_float f;
@@ -97,13 +105,15 @@ namespace Moon {
     return mrb_float_value(mrb, f);
   };
 
-  static mrb_value moon_mrb_sprite_opacity_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_opacity_getter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     return mrb_float_value(mrb, sprite->opacity);
   };
 
-  static mrb_value moon_mrb_sprite_opacity_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_opacity_setter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     mrb_float f;
@@ -112,13 +122,15 @@ namespace Moon {
     return mrb_float_value(mrb, f);
   };
 
-  static mrb_value moon_mrb_sprite_angle_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_angle_getter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     return mrb_float_value(mrb, sprite->angle);
   };
 
-  static mrb_value moon_mrb_sprite_angle_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_angle_setter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     mrb_float f;
@@ -127,13 +139,15 @@ namespace Moon {
     return mrb_float_value(mrb, f);
   };
 
-  static mrb_value moon_mrb_sprite_ox_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_ox_getter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     return mrb_fixnum_value(sprite->ox);
   };
 
-  static mrb_value moon_mrb_sprite_ox_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_ox_setter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     mrb_int i;
@@ -142,13 +156,15 @@ namespace Moon {
     return mrb_fixnum_value(i);
   };
 
-  static mrb_value moon_mrb_sprite_oy_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_oy_getter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     return mrb_fixnum_value(sprite->oy);
   };
 
-  static mrb_value moon_mrb_sprite_oy_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_oy_setter(mrb_state *mrb, mrb_value self) {
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
     mrb_int i;
@@ -157,11 +173,13 @@ namespace Moon {
     return mrb_fixnum_value(i);
   };
 
-  static mrb_value moon_mrb_sprite_color_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_color_getter(mrb_state *mrb, mrb_value self) {
     return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@color"));
   }
 
-  static mrb_value moon_mrb_sprite_color_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_color_setter(mrb_state *mrb, mrb_value self) {
     mrb_value new_color;
     mrb_get_args(mrb, "o", &new_color);
 
@@ -181,11 +199,13 @@ namespace Moon {
     return new_color;
   }
 
-  static mrb_value moon_mrb_sprite_tone_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_tone_getter(mrb_state *mrb, mrb_value self) {
     return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@tone"));
   }
 
-  static mrb_value moon_mrb_sprite_tone_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_tone_setter(mrb_state *mrb, mrb_value self) {
     mrb_value new_tone;
     mrb_get_args(mrb, "o", &new_tone);
 
@@ -206,11 +226,13 @@ namespace Moon {
   }
 
 
-  static mrb_value moon_mrb_sprite_texture_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_texture_getter(mrb_state *mrb, mrb_value self) {
     return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@texture"));
   }
 
-  static mrb_value moon_mrb_sprite_texture_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_texture_setter(mrb_state *mrb, mrb_value self) {
     mrb_value new_texture;
     mrb_get_args(mrb, "o", &new_texture);
 
@@ -230,11 +252,13 @@ namespace Moon {
     return new_texture;
   }
 
-  static mrb_value moon_mrb_sprite_clip_getter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_clip_getter(mrb_state *mrb, mrb_value self) {
     return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@clip"));
   }
 
-  static mrb_value moon_mrb_sprite_clip_setter(mrb_state *mrb, mrb_value self) {
+  static mrb_value
+  moon_mrb_sprite_clip_setter(mrb_state *mrb, mrb_value self) {
     mrb_value new_clip;
     mrb_get_args(mrb, "o", &new_clip);
 
@@ -261,9 +285,10 @@ namespace Moon {
   }
 
 
-  struct RClass* moon_mrb_sprite_init(mrb_state *mrb) {
+  struct RClass*
+  moon_mrb_sprite_init(mrb_state *mrb) {
     struct RClass *sprite_class;
-    sprite_class = mrb_define_class_under(mrb, mrb_module_get(mrb, "Moon"), "Sprite", mrb->object_class);
+    sprite_class = mrb_define_class_under(mrb, moon_module, "Sprite", mrb->object_class);
     MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, sprite_class, "initialize", moon_mrb_sprite_initialize,     MRB_ARGS_REQ(1));
