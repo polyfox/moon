@@ -2,13 +2,14 @@
 #define MOON_MRB_H
 
 #include <mruby.h>
-#include <mruby/class.h>
 #include <mruby/array.h>
-#include <mruby/proc.h>
-#include <mruby/data.h>
+#include <mruby/class.h>
 #include <mruby/compile.h>
-#include <mruby/variable.h>
+#include <mruby/data.h>
+#include <mruby/numeric.h>
+#include <mruby/proc.h>
 #include <mruby/string.h>
+#include <mruby/variable.h>
 
 namespace Moon {
   extern const struct mrb_data_type color_data_type;

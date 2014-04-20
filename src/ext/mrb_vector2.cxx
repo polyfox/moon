@@ -74,8 +74,8 @@ namespace Moon {
             mrb_raisef(mrb, E_ARGUMENT_ERROR,
                        "wrong array size %d (expected 2)", _ary_len);
           } else {
-            result.x = (float)mrb_float(RARRAY_PTR(val)[0]);
-            result.y = (float)mrb_float(RARRAY_PTR(val)[1]);
+            result.x = mrb_to_flo(mrb, RARRAY_PTR(val)[0]);
+            result.y = mrb_to_flo(mrb, RARRAY_PTR(val)[1]);
           }
         } else if (mrb_type(val) == MRB_TT_DATA) {
           moon_vec2* _vec2;
