@@ -73,7 +73,7 @@ module Moon
     end
 
     def xyz=(other)
-      self.x, self.y, _ = *Vector3.obj_to_vec3_a(other)
+      self.x, self.y, _ = *Vector3.extract(other)
     end
 
     def self.zero

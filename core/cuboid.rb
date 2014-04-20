@@ -33,17 +33,17 @@ class Cuboid
   end
 
   def set(*args)
-    @x, @y, @z, @width, @height, @depth = *Cube.obj_to_cuboid_a(args.size > 1 ? args : args.first)
+    @x, @y, @z, @width, @height, @depth = *Cube.extract(args.size > 1 ? args : args.first)
     self
   end
 
   def move(*args)
-    @x, @y, @z = *Vector3.obj_to_vec3a(args.size > 1 ? args : args.first)
+    @x, @y, @z = *Vector3.extract(args.size > 1 ? args : args.first)
     self
   end
 
   def resize(*args)
-    @width, @height, @depth = *Vector3.obj_to_vec3_a(args.size > 1 ? args : args.first)
+    @width, @height, @depth = *Vector3.extract(args.size > 1 ? args : args.first)
     self
   end
 
@@ -52,7 +52,7 @@ class Cuboid
   end
 
   def xy=(other)
-    @x, @y = *Vector2.obj_to_vec2_a(other)
+    @x, @y = *Vector2.extract(other)
   end
 
   def xyz
@@ -60,7 +60,7 @@ class Cuboid
   end
 
   def xyz=(other)
-    @x, @y, @z = *Vector3.obj_to_vec3_a(other)
+    @x, @y, @z = *Vector3.extract(other)
   end
 
   def wh
@@ -68,7 +68,7 @@ class Cuboid
   end
 
   def wh=(other)
-    @width, @height = *Vector2.obj_to_vec2_a(other)
+    @width, @height = *Vector2.extract(other)
   end
 
   def whd
@@ -76,7 +76,7 @@ class Cuboid
   end
 
   def whd=(other)
-    @width, @height, @depth = *Vector3.obj_to_vec3_a(other)
+    @width, @height, @depth = *Vector3.extract(other)
   end
 
   ###
@@ -84,7 +84,7 @@ class Cuboid
   # @param [Object]
   # @return [Array<Numeric>] (x, y, z, w, h, d)
   ###
-  def self.obj_to_cuboid_a(obj)
+  def self.extract(obj)
     case obj
     when Array
       case obj.size
@@ -108,7 +108,7 @@ class Cuboid
 
   def self.[](*objs)
     obj = objs.size == 1 ? objs.first : objs
-    new(*obj_to_cuboid_a(obj))
+    new(*extract(obj))
   end
 
   alias :position :xyz
