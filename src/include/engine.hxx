@@ -5,12 +5,8 @@
 
 #include "window.hxx"
 #include "input.hxx"
-#include "texture.hxx"
-#include "sprite.hxx"
-#include "spritesheet.hxx"
 #include "audio.hxx"
-#include "music.hxx"
-#include "sound.hxx"
+#include "shader.hxx"
 
 #include "mrb.hxx"
 

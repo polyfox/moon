@@ -1,5 +1,4 @@
 #include "engine.hxx"
-#include "font.hxx"
 #include <clocale>
 
 namespace Moon {
