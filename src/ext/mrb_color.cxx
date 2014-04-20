@@ -33,7 +33,7 @@ namespace Moon {
     std::shared_ptr<Color>* color;
     Data_Get_Struct(mrb, self, &color_data_type, color);
 
-    (*color)->r = red;
+    (*color)->r = glm::clamp(red, 0.0, 1.0);
 
     return mrb_nil_value();
   }
@@ -54,7 +54,7 @@ namespace Moon {
     std::shared_ptr<Color>* color;
     Data_Get_Struct(mrb, self, &color_data_type, color);
 
-    (*color)->g = green;
+    (*color)->g = glm::clamp(green, 0.0, 1.0);
 
     return mrb_nil_value();
   }
@@ -75,7 +75,7 @@ namespace Moon {
     std::shared_ptr<Color>* color;
     Data_Get_Struct(mrb, self, &color_data_type, color);
 
-    (*color)->b = blue;
+    (*color)->b = glm::clamp(blue, 0.0, 1.0);
 
     return mrb_nil_value();
   }
@@ -96,7 +96,7 @@ namespace Moon {
     std::shared_ptr<Color>* color;
     Data_Get_Struct(mrb, self, &color_data_type, color);
 
-    (*color)->a = alpha;
+    (*color)->a = glm::clamp(alpha, 0.0, 1.0);
 
     return mrb_float_value(mrb, (*color)->a);
   }
