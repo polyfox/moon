@@ -13,40 +13,6 @@ namespace Moon {
   }
 
   /* Callbacks */
-<<<<<<< HEAD
-
-  static mrb_value glfw_state_to_mrb_symbol(mrb_state *mrb, int state) {
-    switch (state) {
-    case GLFW_PRESS:
-      return mrb_symbol_value(mrb_intern_cstr(mrb, "press"));
-    case GLFW_RELEASE:
-      return mrb_symbol_value(mrb_intern_cstr(mrb, "release"));
-    case GLFW_REPEAT:
-      return mrb_symbol_value(mrb_intern_cstr(mrb, "repeat"));
-    }
-    return mrb_nil_value();
-  }
-
-  void Input::update_key(GLFWwindow* window, int key_id, int scancode, int action, int mods) {
-    mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, mrb_module_get(mrb, "Moon"), "Input"));
-    mrb_funcall(mrb, klass, "on_key", 4,
-      mrb_fixnum_value(key_id),
-      mrb_fixnum_value(scancode),
-      glfw_state_to_mrb_symbol(mrb, action),
-      mrb_fixnum_value(mods));
-  }
-
-  void Input::update_button(GLFWwindow* window, int button_id, int action, int mods) {
-    mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, mrb_module_get(mrb, "Moon"), "Input"));
-    mrb_funcall(mrb, klass, "on_button", 3,
-      mrb_fixnum_value(button_id),
-      glfw_state_to_mrb_symbol(mrb, action),
-      mrb_fixnum_value(mods));
-  }
-
-  /* Mouse functions */
-
-=======
 
   static mrb_value
   glfw_state_to_mrb_symbol(mrb_state *mrb, int state) {
@@ -80,7 +46,6 @@ namespace Moon {
 
   /* Mouse functions */
 
->>>>>>> master
   int Input::Mouse::x() {
     double x;
     glfwGetCursorPos(window, &x, NULL);
