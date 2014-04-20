@@ -12,8 +12,8 @@ namespace Moon {
   typedef std::shared_ptr<glm::vec2> moon_vec2;
 
   struct float2a {
-    float x;
-    float y;
+    mrb_float x;
+    mrb_float y;
   };
 
   #define mrb_set_vector2_value_xy(mrb, target, x, y)    \
@@ -64,13 +64,13 @@ namespace Moon {
         if (mrb_type(val) == MRB_TT_FIXNUM) {
           mrb_int i;
           mrb_get_args(mrb, "i", &i);
-          result.x = (float)i;
-          result.y = (float)i;
+          result.x = (mrb_float)i;
+          result.y = (mrb_float)i;
         } else if (mrb_type(val) == MRB_TT_FLOAT) {
           mrb_float f;
           mrb_get_args(mrb, "f", &f);
-          result.x = (float)f;
-          result.y = (float)f;
+          result.x = f;
+          result.y = f;
         } else if (mrb_type(val) == MRB_TT_ARRAY) {
           int _ary_len = mrb_ary_len(mrb, val);
           if (_ary_len != 2) {
@@ -83,8 +83,8 @@ namespace Moon {
         } else if (mrb_type(val) == MRB_TT_DATA) {
           moon_vec2* _vec2;
           Data_Get_Struct(mrb, val, &vector2_data_type, _vec2);
-          result.x = (float)(*_vec2)->x;
-          result.y = (float)(*_vec2)->y;
+          result.x = (mrb_float)(*_vec2)->x;
+          result.y = (mrb_float)(*_vec2)->y;
         } else {
           mrb_raisef(mrb, E_TYPE_ERROR,
                      "wrong type %S (expected Numeric, Array or Vector2)",

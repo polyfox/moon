@@ -12,9 +12,9 @@ namespace Moon {
   typedef std::shared_ptr<glm::vec3> moon_vec3;
 
   struct float3a {
-    float x;
-    float y;
-    float z;
+    mrb_float x;
+    mrb_float y;
+    mrb_float z;
   };
 
   #define mrb_set_vector3_value_xyz(mrb, target, x, y, z)    \
@@ -65,15 +65,15 @@ namespace Moon {
         if (mrb_type(val) == MRB_TT_FIXNUM) {
           mrb_int i;
           mrb_get_args(mrb, "i", &i);
-          result.x = (float)i;
-          result.y = (float)i;
-          result.z = (float)i;
+          result.x = (mrb_float)i;
+          result.y = (mrb_float)i;
+          result.z = (mrb_float)i;
         } else if (mrb_type(val) == MRB_TT_FLOAT) {
           mrb_float f;
           mrb_get_args(mrb, "f", &f);
-          result.x = (float)f;
-          result.y = (float)f;
-          result.z = (float)f;
+          result.x = (mrb_float)f;
+          result.y = (mrb_float)f;
+          result.z = (mrb_float)f;
         } else if (mrb_type(val) == MRB_TT_ARRAY) {
           int _ary_len = mrb_ary_len(mrb, val);
           if (_ary_len != 3) {
@@ -87,9 +87,9 @@ namespace Moon {
         } else if (mrb_type(val) == MRB_TT_DATA) {
           moon_vec3* vec3;
           Data_Get_Struct(mrb, val, &vector3_data_type, vec3);
-          result.x = (float)(*vec3)->x;
-          result.y = (float)(*vec3)->y;
-          result.z = (float)(*vec3)->z;
+          result.x = (*vec3)->x;
+          result.y = (*vec3)->y;
+          result.z = (*vec3)->z;
         } else {
           mrb_raisef(mrb, E_TYPE_ERROR,
                      "wrong type %S (expected Numeric, Array or vector3)",
