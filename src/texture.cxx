@@ -1,5 +1,4 @@
 #include "texture.hxx"
-#include <SOIL.h>
 
 namespace Moon {
   Texture::Texture(std::string filename)

@@ -7,6 +7,7 @@
 #include "shader.hxx"
 #include <memory>
 #include "tone.hxx"
+#include <SOIL.h>
 
 #include "vertex_buffer.hxx"
 
