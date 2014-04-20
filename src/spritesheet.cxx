@@ -7,6 +7,8 @@ namespace Moon {
     shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
     texture = Texture::load(filename);
 
+    opacity = 1.0f;
+
     this->tile_height = tile_height;
     this->tile_width = tile_width;
     total_sprites = 0;
@@ -63,7 +65,6 @@ namespace Moon {
     if ((index < 0) || (index >= (int)total_sprites)) return;
     if (texture->id() == 0) return;
 
-    float opacity = 1.0;
     int offset = index*4;
 
     shader->use();
@@ -78,6 +79,9 @@ namespace Moon {
 
     GLfloat rgbs[4] = {0.0, 0.0, 0.0, 1.0};
     glUniform4fv(shader->get_uniform("tone"), 1, rgbs);
+
+    GLfloat rgba[4] = {1.0, 1.0, 1.0, 1.0};
+    glUniform4fv(shader->get_uniform("color"), 1, rgba);
 
     //Set texture ID
     glActiveTexture(GL_TEXTURE0);

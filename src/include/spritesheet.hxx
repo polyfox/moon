@@ -9,6 +9,7 @@ namespace Moon {
   public:
     GLfloat tile_width;
     GLfloat tile_height;
+    float opacity;
     int total_sprites;
 
     Spritesheet(std::string filename, int tile_width, int tile_height);
