@@ -7,6 +7,7 @@ namespace Moon {
     shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
     texture = Texture::load(filename);
 
+    color = std::make_shared<Color>(1.0, 1.0, 1.0, 1.0);
     opacity = 1.0f;
 
     this->tile_height = tile_height;
@@ -77,10 +78,10 @@ namespace Moon {
 
     glUniform1f(shader->get_uniform("opacity"), opacity);
 
-    GLfloat rgbs[4] = {0.0, 0.0, 0.0, 1.0};
+    GLfloat rgbs[4] = { 0.0, 0.0, 0.0, 1.0 };
     glUniform4fv(shader->get_uniform("tone"), 1, rgbs);
 
-    GLfloat rgba[4] = {1.0, 1.0, 1.0, 1.0};
+    GLfloat rgba[4] = { color->r, color->g, color->b, color->a };
     glUniform4fv(shader->get_uniform("color"), 1, rgba);
 
     //Set texture ID

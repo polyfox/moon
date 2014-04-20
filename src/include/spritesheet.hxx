@@ -9,21 +9,23 @@ namespace Moon {
   public:
     GLfloat tile_width;
     GLfloat tile_height;
+
     float opacity;
     int total_sprites;
+
+    std::shared_ptr<Color> color;
 
     Spritesheet(std::string filename, int tile_width, int tile_height);
     ~Spritesheet();
 
     void render(const int &x, const int &y, const float &z, const int &index);
   private:
-    bool generate_buffers(); // use only in constructor
-
     VertexBuffer VBO;
-
 
     std::shared_ptr<Texture> texture;
     std::shared_ptr<Shader>  shader;
+
+    bool generate_buffers(); // use only in constructor
   };
 };
 

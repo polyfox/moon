@@ -1,4 +1,5 @@
 #include "mrb.hxx"
+#include "mrb_err.hxx"
 #include "spritesheet.hxx"
 
 namespace Moon {
@@ -13,7 +14,7 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_spritesheet_initialize(mrb_state *mrb, mrb_value self) {
-    mrb_value filename;
+    mrb_value color, filename;
     mrb_int tile_width, tile_height;
     mrb_get_args(mrb, "Sii", &filename, &tile_width, &tile_height);
 
@@ -21,6 +22,10 @@ namespace Moon {
 
     DATA_TYPE(self) = &spritesheet_data_type;
     DATA_PTR(self) = spritesheet;
+
+    auto color_ptr = new std::shared_ptr<Color>(spritesheet->color);
+    color = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cColor, &color_data_type, color_ptr));
+    mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@color"), color);
 
     return mrb_nil_value();
   };
@@ -36,6 +41,27 @@ namespace Moon {
     spritesheet->render(x, y, z, index);
     return mrb_nil_value();
   };
+
+  static mrb_value
+  moon_mrb_spritesheet_color_getter(mrb_state *mrb, mrb_value self) {
+    return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@color"));
+  }
+
+  static mrb_value
+  moon_mrb_spritesheet_color_setter(mrb_state *mrb, mrb_value self) {
+    mrb_value new_color;
+    mrb_get_args(mrb, "o", &new_color);
+
+    moon_mrb_check_class(mrb, new_color, moon_cColor, false);
+
+    mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@color"), new_color);
+
+    std::shared_ptr<Color>* color_ptr;
+    Data_Get_Struct(mrb, new_color, &color_data_type, color_ptr);
+    ((Spritesheet*)DATA_PTR(self))->color = std::shared_ptr<Color>(*color_ptr);
+
+    return new_color;
+  }
 
   static mrb_value
   moon_mrb_spritesheet_opacity_getter(mrb_state *mrb, mrb_value self) {
@@ -82,6 +108,9 @@ namespace Moon {
 
     mrb_define_method(mrb, spritesheet_class, "initialize",  moon_mrb_spritesheet_initialize,     MRB_ARGS_REQ(3));
     mrb_define_method(mrb, spritesheet_class, "render",      moon_mrb_spritesheet_render,         MRB_ARGS_REQ(4));
+
+    mrb_define_method(mrb, spritesheet_class, "color",       moon_mrb_spritesheet_color_getter,   MRB_ARGS_NONE());
+    mrb_define_method(mrb, spritesheet_class, "color=",      moon_mrb_spritesheet_color_setter,   MRB_ARGS_REQ(1));
 
     mrb_define_method(mrb, spritesheet_class, "opacity",     moon_mrb_spritesheet_opacity_getter, MRB_ARGS_NONE());
     mrb_define_method(mrb, spritesheet_class, "opacity=",    moon_mrb_spritesheet_opacity_setter, MRB_ARGS_REQ(1));
