@@ -19,6 +19,9 @@ TODO
 
   Big Topic, somehow, some manner of texture compositing.
 
+* make Camera class, wrapping the view_matrix
+
+* State#update(delta)
 
 ## IceDragon's wishlist! :D
 * Sprite.scale_x/y
