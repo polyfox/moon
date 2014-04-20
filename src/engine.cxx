@@ -127,12 +127,4 @@ namespace Moon {
     return true;
   }
 
-  int Engine::window_width() {
-    return window.width();
-  }
-
-  int Engine::window_height() {
-    return window.height();
-  }
-
 }
