@@ -6,6 +6,7 @@
 #include <mruby/class.h>
 #include <mruby/compile.h>
 #include <mruby/data.h>
+#include <mruby/hash.h>
 #include <mruby/numeric.h>
 #include <mruby/proc.h>
 #include <mruby/string.h>
