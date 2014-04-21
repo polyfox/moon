@@ -5,6 +5,8 @@ TODO
 
 * mousepos events, and clicking events need to be sorted out
 
+* 3.3 -- figure out how to handle retina (fonts not sharp)
+
 ## The regular
 * ~~Tone rgbs instead of hsl~~
 
@@ -28,8 +30,6 @@ TODO
 * A Engine#debug flag, that turns debugging features on/off (for instance FPS in titlebar)
 
 * clamp and normalize values for Color
-
-* port stuff to OGL 3.3
 
 ## IceDragon's wishlist! :D
 * Sprite.scale_x/y
