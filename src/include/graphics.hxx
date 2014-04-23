@@ -47,5 +47,11 @@ namespace Moon {
     uvMap tex_coord;
     Color color;
   };
+
+  struct render_options {
+    float opacity;
+    Color color;
+    Color tone;
+  };
 }
 #endif

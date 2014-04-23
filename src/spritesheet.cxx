@@ -7,9 +7,6 @@ namespace Moon {
     shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
     texture = Texture::load(filename);
 
-    color = std::make_shared<Color>(1.0, 1.0, 1.0, 1.0);
-    opacity = 1.0f;
-
     this->tile_height = tile_height;
     this->tile_width = tile_width;
     total_sprites = 0;
@@ -60,7 +57,8 @@ namespace Moon {
     return true;
   };
 
-  void Spritesheet::render(const int &x, const int &y, const float &z, const int &index) {
+  void Spritesheet::render(const int &x, const int &y, const float &z,
+                           const int &index, const render_options &render_ops) {
 
     // if you somehow managed to go out-of-bounds
     if ((index < 0) || (index >= (int)total_sprites)) return;
@@ -76,12 +74,12 @@ namespace Moon {
     glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
     glUniformMatrix4fv(shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
-    glUniform1f(shader->get_uniform("opacity"), opacity);
+    glUniform1f(shader->get_uniform("opacity"), render_ops.opacity);
 
-    GLfloat rgbs[4] = { 0.0, 0.0, 0.0, 1.0 };
+    GLfloat rgbs[4] = { render_ops.tone.r, render_ops.tone.g, render_ops.tone.b, render_ops.tone.a };
     glUniform4fv(shader->get_uniform("tone"), 1, rgbs);
 
-    GLfloat rgba[4] = { color->r, color->g, color->b, color->a };
+    GLfloat rgba[4] = { render_ops.color.r, render_ops.color.g, render_ops.color.b, render_ops.color.a };
     glUniform4fv(shader->get_uniform("color"), 1, rgba);
 
     //Set texture ID
