@@ -1,2 +1,5 @@
+require "core/core_ext/hash"
 require "core/core_ext/integer"
+require "core/core_ext/module"
 require "core/core_ext/numeric"
+require "core/core_ext/object"
