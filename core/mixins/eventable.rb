@@ -24,7 +24,7 @@ module Eventable
   # @param [Event] event
   ###
   def trigger event
-    event = Event.new(event) if !event.is_a?(Event) # TEMP
+    event = Moon::Event.new(event) unless event.is_a?(Moon::Event) # TEMP
 
     @event_listeners[:any].each {|block| block.call(event) }
 
