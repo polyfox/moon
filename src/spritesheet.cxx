@@ -57,7 +57,7 @@ namespace Moon {
     return true;
   };
 
-  void Spritesheet::render(const int &x, const int &y, const float &z,
+  void Spritesheet::render(const float &x, const float &y, const float &z,
                            const int &index, const render_options &render_ops) {
 
     // if you somehow managed to go out-of-bounds

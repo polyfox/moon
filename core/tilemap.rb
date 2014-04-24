@@ -21,24 +21,26 @@ module Moon
 
     end
 
-    attr_accessor :tileset    # Spritesheet
-    attr_accessor :data       # DataMatrix
-    attr_accessor :flags      # DataMatrix
-    attr_accessor :data_zmap  # DataMatrix
-    attr_accessor :repeat_map # Boolean
-    attr_accessor :view       # Cuboid
-    attr_accessor :position   # Vector3
+    attr_accessor :tileset       # Spritesheet
+    attr_accessor :data          # DataMatrix
+    attr_accessor :flags         # DataMatrix
+    attr_accessor :data_zmap     # DataMatrix
+    attr_accessor :layer_opacity # Array
+    attr_accessor :repeat_map    # Boolean
+    attr_accessor :view          # Cuboid
+    attr_accessor :position      # Vector3
 
     ##
     # initialize
     def initialize
-      @tileset    = nil
-      @data       = nil
-      @flags      = nil
-      @data_zmap  = nil
-      @repeat_map = false
-      @view       = nil
-      @position   = Vector3.new(0, 0, 0)
+      @tileset       = nil
+      @data          = nil
+      @flags         = nil
+      @data_zmap     = nil
+      @layer_opacity = nil
+      @repeat_map    = false
+      @view          = nil
+      @position      = Vector3.new(0, 0, 0)
       yield self if block_given?
     end
 
@@ -107,6 +109,8 @@ module Moon
             zm = @data_zmap ? @data_zmap[dx, dy, dz] : 0
             flag = @flags ? @flags[dx, dy, dz] : 0
 
+            opacity = @layer_opacity ? @layer_opacity[dz] : 1.0
+
             if flag > 0
               rx, ry, rz = 0, 0, 0
               vx, vy = 0, 0
@@ -134,12 +138,12 @@ module Moon
               @tileset.render px + rx + x + j * cell_width,
                               py + ry + y + i * cell_height,
                               pz + rz + z + zm,
-                              tile_id
+                              tile_id, opacity: opacity
             else
               @tileset.render px + x + j * cell_width,
                               py + y + i * cell_height,
                               pz + z + zm,
-                              tile_id
+                              tile_id, opacity: opacity
             end
 
           end

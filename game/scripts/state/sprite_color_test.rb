@@ -10,7 +10,7 @@ class State::SpriteColorTest < State
 
   def render
     super
-    @sprite.render
+    @sprite.render 0, 0, 0
   end
 
 end
