@@ -48,61 +48,14 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_sprite_render(mrb_state *mrb, mrb_value self) {
+    mrb_float x, y, z;
+    mrb_get_args(mrb, "fff", &x, &y, &z);
+
     Sprite *sprite;
     Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
-    sprite->render();
+
+    sprite->render(x, y, z);
     return mrb_nil_value();
-  };
-
-  static mrb_value
-  moon_mrb_sprite_x_getter(mrb_state *mrb, mrb_value self) {
-    Sprite *sprite;
-    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
-    return mrb_fixnum_value(sprite->x);
-  };
-
-  static mrb_value
-  moon_mrb_sprite_x_setter(mrb_state *mrb, mrb_value self) {
-    Sprite *sprite;
-    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
-    mrb_int i;
-    mrb_get_args(mrb, "i", &i);
-    sprite->x = i;
-    return mrb_fixnum_value(i);
-  };
-
-  static mrb_value
-  moon_mrb_sprite_y_getter(mrb_state *mrb, mrb_value self) {
-    Sprite *sprite;
-    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
-    return mrb_fixnum_value(sprite->y);
-  };
-
-  static mrb_value
-  moon_mrb_sprite_y_setter(mrb_state *mrb, mrb_value self) {
-    Sprite *sprite;
-    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
-    mrb_int i;
-    mrb_get_args(mrb, "i", &i);
-    sprite->y = i;
-    return mrb_fixnum_value(i);
-  };
-
-  static mrb_value
-  moon_mrb_sprite_z_getter(mrb_state *mrb, mrb_value self) {
-    Sprite *sprite;
-    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
-    return mrb_float_value(mrb, sprite->z);
-  };
-
-  static mrb_value
-  moon_mrb_sprite_z_setter(mrb_state *mrb, mrb_value self) {
-    Sprite *sprite;
-    Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
-    mrb_float f;
-    mrb_get_args(mrb, "f", &f);
-    sprite->z = f;
-    return mrb_float_value(mrb, f);
   };
 
   static mrb_value
@@ -292,13 +245,7 @@ namespace Moon {
     MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, sprite_class, "initialize", moon_mrb_sprite_initialize,     MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, sprite_class, "render",     moon_mrb_sprite_render,         MRB_ARGS_NONE());
-    mrb_define_method(mrb, sprite_class, "x",          moon_mrb_sprite_x_getter,       MRB_ARGS_NONE());
-    mrb_define_method(mrb, sprite_class, "x=",         moon_mrb_sprite_x_setter,       MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, sprite_class, "y",          moon_mrb_sprite_y_getter,       MRB_ARGS_NONE());
-    mrb_define_method(mrb, sprite_class, "y=",         moon_mrb_sprite_y_setter,       MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, sprite_class, "z",          moon_mrb_sprite_z_getter,       MRB_ARGS_NONE());
-    mrb_define_method(mrb, sprite_class, "z=",         moon_mrb_sprite_z_setter,       MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, sprite_class, "render",     moon_mrb_sprite_render,         MRB_ARGS_REQ(3));
     mrb_define_method(mrb, sprite_class, "opacity",    moon_mrb_sprite_opacity_getter, MRB_ARGS_NONE());
     mrb_define_method(mrb, sprite_class, "opacity=",   moon_mrb_sprite_opacity_setter, MRB_ARGS_REQ(1));
 

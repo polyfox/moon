@@ -4,9 +4,6 @@ namespace Moon {
   Sprite::Sprite(std::string filename)
   : VBO(GL_DYNAMIC_DRAW)
   {
-    x = 0;
-    y = 0;
-    z = 0.0;
     opacity = 1.0;
 
     angle = 0.0;
@@ -85,7 +82,7 @@ namespace Moon {
     generate_buffers();
   };
 
-  void Sprite::render() {
+  void Sprite::render(const float &x, const float &y, const float &z) {
     shader->use();
 
     // rotation matrix - rotate the model around specified origin

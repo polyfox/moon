@@ -12,9 +12,6 @@ namespace Moon {
     Sprite(std::string filename);
     ~Sprite();
 
-    int x;
-    int y;
-    float z;
     float opacity;
     float angle;
     int ox;
@@ -22,7 +19,7 @@ namespace Moon {
     std::shared_ptr<Color> color;
     std::shared_ptr<Color> tone;
 
-    void render();
+    void render(const float &x, const float &y, const float &z);
     std::shared_ptr<Texture> getTexture();
     void setTexture(std::shared_ptr<Texture> tex);
 
