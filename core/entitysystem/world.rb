@@ -40,6 +40,7 @@ class World
   # Systems
 
   def register(system)
+    system = System[system] if system.is_a?(Symbol)
     @systems << system
   end
 
