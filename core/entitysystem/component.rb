@@ -1,7 +1,19 @@
 # Component as mixin
 module Component
 
+  @@component_list = {}
+
+  def self.[](key)
+    @@component_list[key]
+  end
+
+  def self.list
+    @@component_list
+  end
+
   module ComponentClass
+
+    attr_reader :registered
 
     def field(name, data)
       (@fields ||= {})[name] = data
@@ -18,6 +30,13 @@ module Component
       else
         @fields
       end
+    end
+
+    def register(sym)
+      # of course we'd like something prettier... -,-
+      Component.list.delete(@registered) if @registered
+      @registered = sym
+      Component.list[sym] = self
     end
 
   end
@@ -38,7 +57,7 @@ module Component
   end
 
   def export
-    to_h.merge(class: self.class.to_s).stringify_keys
+    to_h.merge(component_type: self.class.registered).stringify_keys
   end
 
   def import(data)
@@ -48,10 +67,11 @@ module Component
 
   def self.included(mod)
     mod.extend ComponentClass
+    mod.register mod.to_s.demodulize.downcase.to_sym
   end
 
   def self.load(data)
-    Object.const_get(data["class"]).new(data.symbolize_keys)
+    self[data["component_type"].to_sym].new(data.symbolize_keys)
   end
 
   private :setup

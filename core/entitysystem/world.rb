@@ -17,25 +17,24 @@ class World
     return entity
   end
 
-  def [](*klasses) # get entities for each component and intersect
-    klasses.map { |klass| @components[klass].keys }.inject(:&)
+  def [](*syms) # get entities for each component and intersect
+    syms.map { |sym| @components[sym].keys }.inject(:&)
   end
 
   # Components
 
   # not to be used directly
   def add_component(entity, component)
-    #sym = component.class.to_s.demodulize.downcase.to_sym # this is the sweetest thing...
-    key = component.class
+    key = component.class.registered
     (@components[key][entity] ||= []) << component
     component
   end
 
-  def get_component(entity, component) # component is class here
+  def get_component(entity, component_sym) # component is class here
     # .first is a hack? return first element, always
     # will be hard when we have more than one component
     # of the same type
-    @components[component][entity].first
+    @components[component_sym][entity].first
   end
 
   # Systems
@@ -62,12 +61,13 @@ class World
 
   def export
     components = @components.each_with_object({}) do |d, comp_hash|
-      component_klass, comps = *d
+      component_sym, comps = *d
       entities = comps.each_with_object({}) do |a, hsh|
         eid, comp = *a
-        hsh[eid] = comp.map { |c| c.export }
+        # entities are exported using their ids
+        hsh[eid.id] = comp.map { |c| c.export }
       end
-      comp_hash[component_klass.to_s] = entities
+      comp_hash[component_sym.to_s] = entities
     end
     {
       "random"     => @random.export,
@@ -79,16 +79,19 @@ class World
 
   def import(data)
     @random = Moon::SeedRandom.load(data["random"])
-    @components = data["components"].each_with_object({}) do |d, comp_hash|
-      component_klass, comps = *d
-      entities = comps.each_with_object({}) do |a, hsh|
-        eid, comp = *a
-        hsh[eid] = comp.map { |c| Component.load(c) }
-      end
-      comp_hash[component_klass.to_s] = entities
-    end
+    entity_table = {}
     @entities = data["entities"].map do |d|
       Entity.new(self).import(d)
+    end
+    entity_table = @entities.each_with_object({}) { |e, h| h[e.id] = e }
+    @components = data["components"].each_with_object({}) do |d, comp_hash|
+      component_sym, comps = *d
+      entities = comps.each_with_object({}) do |a, hsh|
+        eid, comp = *a
+        # entities are imported from their ids and then remaped
+        hsh[entity_table[eid]] = comp.map { |c| Component.load(c) }
+      end
+      comp_hash[component_sym.to_sym] = entities
     end
     @systems = data["systems"].map do |d|
       System.load(d)
