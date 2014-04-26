@@ -57,6 +57,10 @@ class Entity
     @world.get_component(self, component)
   end
 
+  def []=(key, component)
+    @world.set_component(self, key, component)
+  end
+
   def to_h
     {
       id: @id

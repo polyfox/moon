@@ -9,7 +9,7 @@ class World
     @systems = []
   end
 
-  # Entities
+  ## Entities
 
   def spawn # new entity
     entity = Entity.new self
@@ -21,12 +21,12 @@ class World
     syms.map { |sym| @components[sym].keys }.inject(:&)
   end
 
-  # Components
+  ## Components
 
   # not to be used directly
-  def add_component(entity, component)
-    key = component.class.registered
-    (@components[key][entity] ||= []) << component
+  def set_component(entity, component_sym, component)
+    #(@components[component_sym][entity] ||= []) << component
+    @components[component_sym][entity] = component
     component
   end
 
@@ -34,10 +34,15 @@ class World
     # .first is a hack? return first element, always
     # will be hard when we have more than one component
     # of the same type
-    @components[component_sym][entity].first
+    @components[component_sym][entity]
   end
 
-  # Systems
+  def add_component(entity, component)
+    component_sym = component.class.registered
+    set_component(entity, component_sym, component)
+  end
+
+  ## Systems
 
   def register(system)
     system = System[system] if system.is_a?(Symbol)
@@ -66,7 +71,8 @@ class World
       entities = comps.each_with_object({}) do |a, hsh|
         eid, comp = *a
         # entities are exported using their ids
-        hsh[eid.id] = comp.map { |c| c.export }
+        #hsh[eid.id] = comp.map { |c| c.export }
+        hsh[eid.id] = comp.export
       end
       comp_hash[component_sym.to_s] = entities
     end
@@ -90,7 +96,8 @@ class World
       entities = comps.each_with_object({}) do |a, hsh|
         eid, comp = *a
         # entities are imported from their ids and then remaped
-        hsh[entity_table[eid]] = comp.map { |c| Component.load(c) }
+        #hsh[entity_table[eid]] = comp.map { |c| Component.load(c) }
+        hsh[entity_table[eid]] = Component.load(comp)
       end
       comp_hash[component_sym.to_sym] = entities
     end
