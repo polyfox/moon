@@ -9,13 +9,20 @@ namespace Moon {
 
     glfwDefaultWindowHints();
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    // Use OpenGL Core v2.1
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for 3.0
-    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // for 3.0 and on
+    // Use OpenGL Core v3.3
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for 3.0
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // for 3.0 and on
 
     window = glfwCreateWindow(width, height, title, NULL, NULL);
+
+    if(!window) { // 3.3 wasn't created, let's try 2.1
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+      window = glfwCreateWindow(width, height, title, NULL, NULL);
+    }
+
     window_width = width;
     window_height = height;
     glfwMakeContextCurrent(window);
