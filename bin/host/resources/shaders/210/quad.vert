@@ -1,6 +1,6 @@
-varying vec2 vertex_pos;
-varying vec2 texcoord;
-attribute vec2 f_texcoord;
+attribute vec2 vertex_pos;
+attribute vec2 texcoord;
+varying vec2 f_texcoord;
 uniform mat4 mvp_matrix;
 
 

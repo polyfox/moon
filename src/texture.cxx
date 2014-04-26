@@ -4,7 +4,7 @@ namespace Moon {
   Texture::Texture(std::string filename)
   : Cache(filename)
   {
-    shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
+    shader = Shader::load("resources/shaders/210/quad.vert", "resources/shaders/210/quad.frag");
 
     unsigned char* pixels;
     int channels;

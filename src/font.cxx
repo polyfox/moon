@@ -2,10 +2,10 @@
 #include "SOIL.h"
 
 namespace Moon {
-  Font::Font(std::string filename, int font_size) 
+  Font::Font(std::string filename, int font_size)
   : buffer(GL_DYNAMIC_DRAW)
   {
-    shader = Shader::load("resources/shaders/text.vert", "resources/shaders/text.frag");
+    shader = Shader::load("resources/shaders/210/text.vert", "resources/shaders/210/text.frag");
     atlas = texture_atlas_new(512, 512, 1);
     font = texture_font_new(atlas, filename.c_str(), font_size);
 
@@ -38,7 +38,7 @@ namespace Moon {
 
     glBindTexture(GL_TEXTURE_2D, atlas->id);
 
-    glUniform1i(shader->get_uniform("texture"), /*GL_TEXTURE*/0);
+    glUniform1i(shader->get_uniform("tex"), /*GL_TEXTURE*/0);
 
     //model matrix
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down

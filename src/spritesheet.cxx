@@ -4,7 +4,7 @@ namespace Moon {
   Spritesheet::Spritesheet(std::string filename, int tile_width, int tile_height)
   : VBO(GL_STATIC_DRAW)
   {
-    shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
+    shader = Shader::load("resources/shaders/210/quad.vert", "resources/shaders/210/quad.frag");
     texture = Texture::load(filename);
 
     this->tile_height = tile_height;
@@ -85,7 +85,7 @@ namespace Moon {
     //Set texture ID
     glActiveTexture(GL_TEXTURE0);
     texture->bind();
-    glUniform1i(shader->get_uniform("texture"), /*GL_TEXTURE*/0);
+    glUniform1i(shader->get_uniform("tex"), /*GL_TEXTURE*/0);
 
     VBO.render_with_offset(GL_TRIANGLE_STRIP, offset);
   };

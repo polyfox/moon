@@ -1,10 +1,10 @@
 uniform mat4 mvp_matrix;
 
-varying vec2 vertex_pos;
-varying vec2 texcoord;
-varying vec4 color;
-attribute vec2 f_texcoord;
-attribute vec4 f_color;
+attribute vec2 vertex_pos;
+attribute vec2 texcoord;
+attribute vec4 color;
+varying vec2 f_texcoord;
+varying vec4 f_color;
 
 
 void main()

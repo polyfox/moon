@@ -12,7 +12,7 @@ namespace Moon {
     color = std::make_shared<Color>(1.0, 1.0, 1.0, 1.0);
     tone = std::make_shared<Color>(0.0, 0.0, 0.0, 1.0);
 
-    shader = Shader::load("resources/shaders/quad.vert", "resources/shaders/quad.frag");
+    shader = Shader::load("resources/shaders/210/quad.vert", "resources/shaders/210/quad.frag");
     texture = Texture::load(filename);
     generate_buffers();
   };
@@ -111,7 +111,7 @@ namespace Moon {
     //Set texture ID
     glActiveTexture(GL_TEXTURE0);
     texture->bind();
-    glUniform1i(shader->get_uniform("texture"), /*GL_TEXTURE*/0);
+    glUniform1i(shader->get_uniform("tex"), /*GL_TEXTURE*/0);
 
     VBO.render(GL_TRIANGLE_STRIP);
   };

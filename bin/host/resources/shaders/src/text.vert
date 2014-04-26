@@ -1,10 +1,10 @@
 uniform mat4 mvp_matrix;
 
-layout(location = 0) in vec2 vertex_pos;
-layout(location = 1) in vec2 texcoord;
-layout(location = 2) in vec4 color;
-out vec2 f_texcoord;
-out vec4 f_color;
+layout(location = 0) inattr vec2 vertex_pos;
+layout(location = 1) inattr vec2 texcoord;
+layout(location = 2) inattr vec4 color;
+outvar vec2 f_texcoord;
+outvar vec4 f_color;
 
 
 void main()
