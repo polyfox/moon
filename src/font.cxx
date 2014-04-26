@@ -5,7 +5,11 @@ namespace Moon {
   Font::Font(std::string filename, int font_size)
   : buffer(GL_DYNAMIC_DRAW)
   {
-    shader = Shader::load("resources/shaders/210/text.vert", "resources/shaders/210/text.frag");
+    if (!glewIsSupported("GL_VERSION_3_3")) {
+      shader = Shader::load("resources/shaders/120/text.vert", "resources/shaders/120/text.frag");
+    } else {
+      shader = Shader::load("resources/shaders/330/text.vert", "resources/shaders/330/text.frag");
+    }
     atlas = texture_atlas_new(512, 512, 1);
     font = texture_font_new(atlas, filename.c_str(), font_size);
 

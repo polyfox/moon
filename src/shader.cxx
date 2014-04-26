@@ -16,7 +16,7 @@ namespace Moon {
       std::string buffer(std::istreambuf_iterator<char>(fileStream), (std::istreambuf_iterator<char>()));
       return buffer;
     } else {
-      fprintf(stderr, "Could not read shader file %s. File does not exist.", filePath);
+      fprintf(stderr, "Could not read shader file %s. File does not exist.\n", filePath);
       return "";
     };
   };
@@ -56,11 +56,11 @@ namespace Moon {
     const GLchar* source = contents.c_str();
 
     if (source == NULL) {
-      fprintf(stderr, "Error opening %s: ", filename);
+      fprintf(stderr, "Error opening %s: \n", filename);
       return 0;
     }
     GLuint res = glCreateShader(type);
-    glShaderSource(res, 3, source, NULL);
+    glShaderSource(res, 1, &source, NULL);
 
     glCompileShader(res);
     GLint status;
@@ -95,9 +95,11 @@ namespace Moon {
       glDeleteShader(shader);
     }
 
-    this->bind_attribute(0, "vertex_pos");
-    this->bind_attribute(1, "texcoord");
-    this->bind_attribute(2, "color");
+    if (!glewIsSupported("GL_VERSION_3_3")) {
+      this->bind_attribute(0, "vertex_pos");
+      this->bind_attribute(1, "texcoord");
+      this->bind_attribute(2, "color");
+    }
 
     glLinkProgram(program);
     GLint status;

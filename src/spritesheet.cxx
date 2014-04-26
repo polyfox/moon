@@ -4,7 +4,11 @@ namespace Moon {
   Spritesheet::Spritesheet(std::string filename, int tile_width, int tile_height)
   : VBO(GL_STATIC_DRAW)
   {
-    shader = Shader::load("resources/shaders/210/quad.vert", "resources/shaders/210/quad.frag");
+    if (!glewIsSupported("GL_VERSION_3_3")) {
+      shader = Shader::load("resources/shaders/120/quad.vert", "resources/shaders/120/quad.frag");
+    } else {
+      shader = Shader::load("resources/shaders/330/quad.vert", "resources/shaders/330/quad.frag");
+    }
     texture = Texture::load(filename);
 
     this->tile_height = tile_height;

@@ -12,7 +12,11 @@ namespace Moon {
     color = std::make_shared<Color>(1.0, 1.0, 1.0, 1.0);
     tone = std::make_shared<Color>(0.0, 0.0, 0.0, 1.0);
 
-    shader = Shader::load("resources/shaders/210/quad.vert", "resources/shaders/210/quad.frag");
+    if (!glewIsSupported("GL_VERSION_3_3")) {
+      shader = Shader::load("resources/shaders/120/quad.vert", "resources/shaders/120/quad.frag");
+    } else {
+      shader = Shader::load("resources/shaders/330/quad.vert", "resources/shaders/330/quad.frag");
+    }
     texture = Texture::load(filename);
     generate_buffers();
   };
