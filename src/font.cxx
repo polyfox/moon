@@ -5,7 +5,7 @@ namespace Moon {
   Font::Font(std::string filename, int font_size)
   : buffer(GL_DYNAMIC_DRAW)
   {
-    if (!glewIsSupported("GL_VERSION_3_3")) {
+    if (SHADER_VERSION_IS_LEGACY) {
       shader = Shader::load("resources/shaders/120/text.vert", "resources/shaders/120/text.frag");
     } else {
       shader = Shader::load("resources/shaders/330/text.vert", "resources/shaders/330/text.frag");
