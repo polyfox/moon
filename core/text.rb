@@ -2,11 +2,16 @@ module Moon
   class Text
 
     attr_accessor :color    # Moon::Color
-    attr_accessor :font     # Moon::Font
+    attr_reader :font     # Moon::Font
     attr_accessor :position # Moon::Vector3
     attr_reader :string   # String
     attr_reader :width
     attr_reader :height
+
+    def font=(new_font)
+      @font = new_font
+      refresh_size
+    end
 
     def string=(new_string)
       @string = new_string
@@ -14,10 +19,25 @@ module Moon
     end
 
     def initialize(string=nil, font=nil)
+      @width = 0
+      @height = 0
+      @string = string
       @font = font
       @position = Moon::Vector3.new(0, 0, 0)
       @color = Moon::Color.new(255, 255, 255, 255)
-      self.string = string
+      refresh_size
+    end
+
+    def x
+      @position.x
+    end
+
+    def y
+      @position.y
+    end
+
+    def z
+      @position.z
     end
 
     def render(x, y, z)
@@ -28,7 +48,7 @@ module Moon
     end
 
     def refresh_size
-      size = @font.calc_size(@string)
+      size = @font.calc_bounds(@string)
       @width = size[0]
       @height = size[1]
     end
