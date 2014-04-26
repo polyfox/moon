@@ -20,7 +20,7 @@ compile_shader() {
   local outfile=${3}
   local tmpfile="${outfile}.tmp"
 
-  $PP -I. -nostdinc -E -xc \
+  $PP -I. -nostdinc -E -P -xc \
       -D__GLSL_VERSION__=$glslv \
       -DGL_ES=$build_for_gl_es \
       -include common.h "${infile}" -o "${tmpfile}"
@@ -36,7 +36,9 @@ compile_shader() {
   # This is done for the layout args in 120, since they leave an extra
   # space before the varying/attribute declarations.
   ###
-  sed "/^#\s/d" "${tmpfile}" | sed "s/^\s\b//g" > "${outfile}"
+  #sed "/^#\s/d" "${tmpfile}" | sed "s/^\s\b//g" > "${outfile}"
+  sed "s/^\s\b//g" "${tmpfile}" > "${outfile}"
+  #cp $tmpfile $outfile
 
   ##
   # remove the tmpfile
@@ -44,17 +46,18 @@ compile_shader() {
 }
 
 build_for_gl_es=0
-for glsl in 120 150 330 ; do
+for glsl in 120 330 ; do
   rm -rf "${glsl}" && mkdir -p "${glsl}"
   for shader in "quad.frag" "quad.vert" "text.vert" "text.frag" ; do
     compile_shader $glsl "src/${shader}" "${glsl}/${shader}"
   done
 done
 
-build_for_gl_es=1
-for glsl in 100 200 ; do
-  rm -rf "es${glsl}" && mkdir -p "es${glsl}"
-  for shader in "quad.frag" "quad.vert" "text.vert" "text.frag" ; do
-    compile_shader $glsl "src/${shader}" "es${glsl}/${shader}"
-  done
-done
+## ES Shaders
+#build_for_gl_es=1
+#for glsl in 100 200 ; do
+#  rm -rf "es${glsl}" && mkdir -p "es${glsl}"
+#  for shader in "quad.frag" "quad.vert" "text.vert" "text.frag" ; do
+#    compile_shader $glsl "src/${shader}" "es${glsl}/${shader}"
+#  done
+#done

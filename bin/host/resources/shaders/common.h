@@ -1,12 +1,13 @@
 #if GL_ES
 #  define OLD_SKOOL_GLSL 1
-#  ifdef GL_ES_VERSION_2_0
+#  if __GLSL_VERSION__ == 200
 #    define shader_version #version 100
-#    ifdef GL_FRAGMENT_PRECISION_HIGH
-#      define var_precision precision highp float;
-#    else
-#      define var_precision precision mediump float;
-#    endif
+#    define var_precision \
+#      ifdef GL_FRAGMENT_PRECISION_HIGH \
+#        define var_precision precision highp float; \
+#      else \
+#        define var_precision precision mediump float; \
+#      endif
 #  else
 #    define shader_version #version 120
 #    define var_precision
