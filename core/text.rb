@@ -14,7 +14,7 @@ module Moon
     end
 
     def string=(new_string)
-      @string = new_string
+      @string = new_string != nil ? new_string.to_s : nil
       refresh_size
     end
 
@@ -43,14 +43,17 @@ module Moon
     def render(x, y, z)
       if @font && @string
         pos = @position + [x, y, z]
-        font.render(pos.x, pos.y, pos.z, @string, @color)
+        font.render(pos.x, pos.y + @font.size, pos.z, @string, @color)
       end
     end
 
     def refresh_size
-      size = @font.calc_bounds(@string)
-      @width = size[0]
-      @height = size[1]
+      if @string
+        @width, @height = *@font.calc_bounds(@string)
+        @height += @font.size
+      else
+        @width, @height = 0, 0
+      end
     end
 
   end
