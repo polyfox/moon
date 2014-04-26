@@ -18,6 +18,8 @@ namespace Moon {
     window = glfwCreateWindow(width, height, title, NULL, NULL);
 
     if(!window) { // 3.3 wasn't created, let's try 2.1
+      glfwDefaultWindowHints();
+      glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
       glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
       glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
       window = glfwCreateWindow(width, height, title, NULL, NULL);
