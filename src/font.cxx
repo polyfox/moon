@@ -10,8 +10,8 @@ namespace Moon {
     font = texture_font_new(atlas, filename.c_str(), font_size);
 
     texture_font_load_glyphs(font, L" !\"#$%&'()*+,-./0123456789:;<=>?"
-                                     L"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
-                                     L"`abcdefghijklmnopqrstuvwxyz{|}~");
+                                   L"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
+                                   L"`abcdefghijklmnopqrstuvwxyz{|}~");
   }
 
   Font::~Font() {
@@ -19,12 +19,14 @@ namespace Moon {
     texture_atlas_delete(atlas);
   }
 
-  void Font::draw_text(float x, float y, const wchar_t *text) {
-    Color color = {1.0,1.0,1.0,1.0};
-    draw_text(x, y, text, color);
+  void Font::draw_text(const float &x, const float &y, const float &z,
+                       const wchar_t *text) {
+    Color color = { 1.0, 1.0, 1.0, 1.0 };
+    draw_text(x, y, z, text, color);
   }
 
-  void Font::draw_text(float x, float y, const wchar_t *text, Color color) {
+  void Font::draw_text(const float &x, const float &y, const float &z,
+                       const wchar_t *text, Color color) {
     // outline
     font->outline_type = 2;
     font->outline_thickness = 1;
@@ -42,7 +44,7 @@ namespace Moon {
 
     //model matrix
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down
-      glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0)), // move it to the correct position in the world
+      glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z)), // move it to the correct position in the world
       180.0f,
       glm::vec3(1.0f, 0.0f, 0.0f)
     );
@@ -75,6 +77,9 @@ namespace Moon {
         float s1 = glyph->s1;
         float t1 = glyph->t1;
 
+        width = x1;
+        height = y1;
+
         GLuint indices[6] = {0,1,2, 0,2,3};
         vertex vertices[4] = { {x0,y0,  s0,t0, c},
                                {x0,y1,  s0,t1, c},
@@ -84,6 +89,17 @@ namespace Moon {
         cursor += glyph->advance_x;
       }
     }
+  }
+
+  glm::vec2 Font::calc_bounds(const wchar_t *text) {
+    Color color = { 1.0, 1.0, 1.0, 1.0 };
+    add_text(text, color);
+
+    glm::vec2 bounds(width, height);
+
+    buffer.clear();
+
+    return bounds;
   }
 
   int Font::size() {

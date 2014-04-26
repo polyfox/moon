@@ -14,10 +14,13 @@ namespace Moon {
     Font(std::string name, int font_size);
     ~Font();
 
-    void draw_text(float x, float y, const wchar_t *text); /* white text */
-    void draw_text(float x, float y, const wchar_t *text, Color color);
+    void draw_text(const float &x, const float &y, const float &z, const wchar_t *text); /* white text */
+    void draw_text(const float &x, const float &y, const float &z, const wchar_t *text, Color color);
     int size();
+    glm::vec2 calc_bounds(const wchar_t *text);
   private:
+    float width;
+    float height;
     texture_font_t *font;
     texture_atlas_t *atlas;
 
