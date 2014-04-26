@@ -30,9 +30,6 @@ class State::Test < State
     #p "Mouse is in area!" if Input::Mouse.in_area?(0, 0, 32, 32)
     #p Input::Mouse.pos
     super
-    #p "SPACE is PRESSED!" if Moon::Input::Keyboard.pressed?(Moon::Input::Keyboard::Keys::SPACE)
-    #p "Mouse is in area!" if Moon::Input::Mouse.in_area?(0, 0, 32, 32)
-    #p Moon::Input::Mouse.pos
   end
 
   def render

@@ -149,7 +149,7 @@ namespace Moon {
       return uniform;
     }
   }
-
+  
   void Shader::bind_attribute(GLuint location, const char *name) {
     glBindAttribLocation(_program, location, name);
   }
