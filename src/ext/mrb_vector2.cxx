@@ -32,8 +32,9 @@ namespace Moon {
 
   #define vec2_math_op(_op_)                                           \
     vec2_math_head({                                                   \
-      mrb_value dest_vec = mrb_obj_new(mrb, vector2_class, 0, {});     \
-      **((moon_vec2*)DATA_PTR(dest_vec)) = **src_vec2 _op_ oth_vec2; \
+      /*mrb_value dest_vec = mrb_obj_new(mrb, vector2_class, 0, {});*/ \
+      mrb_value dest_vec = mrb_obj_dup(mrb, self);                     \
+      **((moon_vec2*)DATA_PTR(dest_vec)) = **src_vec2 _op_ oth_vec2;   \
       return dest_vec;                                                 \
     })
 
@@ -186,7 +187,8 @@ namespace Moon {
     moon_vec2* dvec2;
     moon_vec2* svec2;
 
-    mrb_value dest_vec = mrb_obj_new(mrb, vector2_class, 0, {});
+    //mrb_value dest_vec = mrb_obj_new(mrb, vector2_class, 0, {});
+    mrb_value dest_vec = mrb_obj_dup(mrb, self);
 
     Data_Get_Struct(mrb, dest_vec, &vector2_data_type, dvec2);
     Data_Get_Struct(mrb, self, &vector2_data_type, svec2);
@@ -232,7 +234,8 @@ namespace Moon {
   //static mrb_value
   //moon_mrb_vector2_cross(mrb_state *mrb, mrb_value self) {
   //  vec2_math_head({
-  //    mrb_value dest_vec = mrb_obj_new(mrb, vector2_class, 0, {});
+  //    //mrb_value dest_vec = mrb_obj_new(mrb, vector2_class, 0, {});
+  //    mrb_value dest_vec = mrb_obj_dup(mrb, self);
   //    **((moon_vec2*)DATA_PTR(dest_vec)) = glm::cross(**src_vec2, oth_vec2);
   //    return dest_vec;
   //  })

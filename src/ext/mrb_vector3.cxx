@@ -33,7 +33,8 @@ namespace Moon {
 
   #define vec3_math_op(_op_)                                           \
     vec3_math_head({                                                   \
-      mrb_value dest_vec = mrb_obj_new(mrb, vector3_class, 0, {});     \
+      /*mrb_value dest_vec = mrb_obj_new(mrb, vector3_class, 0, {});*/ \
+      mrb_value dest_vec = mrb_obj_dup(mrb, self);                     \
       **((moon_vec3*)DATA_PTR(dest_vec)) = **src_vec3 _op_ oth_vec3;   \
       return dest_vec;                                                 \
     })
@@ -218,7 +219,8 @@ namespace Moon {
     moon_vec3* dvec3;
     moon_vec3* svec3;
 
-    mrb_value dest_vec = mrb_obj_new(mrb, vector3_class, 0, {});
+    //mrb_value dest_vec = mrb_obj_new(mrb, vector3_class, 0, {});
+    mrb_value dest_vec = mrb_obj_dup(mrb, self);
 
     Data_Get_Struct(mrb, dest_vec, &vector3_data_type, dvec3);
     Data_Get_Struct(mrb, self, &vector3_data_type, svec3);
@@ -265,7 +267,8 @@ namespace Moon {
   static mrb_value
   moon_mrb_vector3_cross(mrb_state *mrb, mrb_value self) {
     vec3_math_head({
-      mrb_value dest_vec = mrb_obj_new(mrb, vector3_class, 0, {});
+      //mrb_value dest_vec = mrb_obj_new(mrb, vector3_class, 0, {});
+      mrb_value dest_vec = mrb_obj_dup(mrb, self);
       **((moon_vec3*)DATA_PTR(dest_vec)) = glm::cross(**src_vec3, oth_vec3);
       return dest_vec;
     })
