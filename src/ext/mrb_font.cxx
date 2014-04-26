@@ -34,7 +34,7 @@ namespace Moon
    *   @optional
    */
   static mrb_value
-  moon_mrb_font_draw_text(mrb_state *mrb, mrb_value self) {
+  moon_mrb_font_render(mrb_state *mrb, mrb_value self) {
     mrb_float x, y, z;
     mrb_value color = mrb_nil_value();
     char* str;
@@ -90,7 +90,7 @@ namespace Moon
     MRB_SET_INSTANCE_TT(font_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, font_class, "initialize",  moon_mrb_font_initialize,  MRB_ARGS_REQ(2));
-    mrb_define_method(mrb, font_class, "draw_text",   moon_mrb_font_draw_text,   MRB_ARGS_ARG(4,1));
+    mrb_define_method(mrb, font_class, "render",      moon_mrb_font_render,      MRB_ARGS_ARG(4,1));
     mrb_define_method(mrb, font_class, "size",        moon_mrb_font_size,        MRB_ARGS_NONE());
     mrb_define_method(mrb, font_class, "calc_bounds", moon_mrb_font_calc_bounds, MRB_ARGS_REQ(1));
 
