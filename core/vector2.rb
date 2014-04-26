@@ -19,6 +19,15 @@ module Moon
       { x: x, y: y }
     end
 
+    def export
+      to_h.merge(class: self.class.to_s).stringify_keys
+    end
+
+    def import(data)
+      self.x = data["x"]
+      self.y = data["y"]
+    end
+
     def round(*a)
       Vector2.new x.round(*a), y.round(*a)
     end

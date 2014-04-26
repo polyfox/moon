@@ -121,6 +121,14 @@ module Moon
       }
     end
 
+    def export
+      to_h.merge(class: self.class.to_s).stringify_keys
+    end
+
+    def import(data)
+      # TODO
+    end
+
     #protected :data
     private :create_data
 
