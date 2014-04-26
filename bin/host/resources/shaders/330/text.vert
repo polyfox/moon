@@ -1,3 +1,6 @@
+ #version 330
+
+
 uniform mat4 mvp_matrix;
 
 layout(location = 0) in vec2 vertex_pos;

@@ -1,3 +1,6 @@
+shader_version
+var_precision
+
 uniform mat4 mvp_matrix;
 
 layout(location = 0) inattr vec2 vertex_pos;

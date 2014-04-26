@@ -1,3 +1,6 @@
+ #version 330
+
+
 uniform sampler2D tex;
 in vec2 f_texcoord;
 in vec4 f_color;

@@ -1,3 +1,6 @@
+ #version 150
+
+
 uniform sampler2D tex;
 varying vec2 f_texcoord;
 varying vec4 f_color;

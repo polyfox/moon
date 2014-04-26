@@ -1,3 +1,6 @@
+ #version 120
+
+
 varying vec2 f_texcoord;
 uniform sampler2D tex;
 uniform float opacity;
@@ -30,6 +33,11 @@ void main(void) {
   if(basecolor.a == 0.0) discard;
 
   vec3 blendcolor = mix(basecolor.rgb, white, tone.rgb);
+
+
+
+
+
   if (tone.a != 1.0) {
     gl_FragColor = vec4(hsv2rgb(rgb2hsv(blendcolor) * vec3(1.0, tone.a, 1.0)),
                         basecolor.a * opacity) * color;

@@ -1,3 +1,6 @@
+shader_version
+var_precision
+
 layout(location = 0) inattr vec2 vertex_pos;
 layout(location = 1) inattr vec2 texcoord;
 outvar vec2 f_texcoord;

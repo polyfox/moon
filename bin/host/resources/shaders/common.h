@@ -1,4 +1,32 @@
-#if __GLSL_VERSION__ <= 150
+#if GL_ES
+#  define OLD_SKOOL_GLSL 1
+#  ifdef GL_ES_VERSION_2_0
+#    define shader_version #version 100
+#    ifdef GL_FRAGMENT_PRECISION_HIGH
+#      define var_precision precision highp float;
+#    else
+#      define var_precision precision mediump float;
+#    endif
+#  else
+#    define shader_version #version 120
+#    define var_precision
+#    define lowp
+#    define mediump
+#    define highp
+#  endif
+#else
+#  if __GLSL_VERSION__ <= 150
+#    define OLD_SKOOL_GLSL 1
+#  else
+#    define OLD_SKOOL_GLSL 0
+#  endif
+#  define shader_version #version __GLSL_VERSION__
+#  define var_precision
+#  define lowp
+#  define mediump
+#  define highp
+#endif
+#if OLD_SKOOL_GLSL
 #  define invar varying
 #  define outvar varying
 #  define inattr attribute

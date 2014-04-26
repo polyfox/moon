@@ -1,3 +1,6 @@
+shader_version
+var_precision
+
 uniform sampler2D tex;
 invar vec2 f_texcoord;
 invar vec4 f_color;

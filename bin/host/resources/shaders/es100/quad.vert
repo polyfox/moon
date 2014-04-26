@@ -1,9 +1,9 @@
- #version 330
+ #version 120
 
 
-layout(location = 0) in vec2 vertex_pos;
-layout(location = 1) in vec2 texcoord;
-out vec2 f_texcoord;
+attribute vec2 vertex_pos;
+attribute vec2 texcoord;
+varying vec2 f_texcoord;
 uniform mat4 mvp_matrix;
 
 

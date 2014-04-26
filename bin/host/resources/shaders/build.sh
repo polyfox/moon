@@ -20,7 +20,10 @@ compile_shader() {
   local outfile=${3}
   local tmpfile="${outfile}.tmp"
 
-  $PP -nostdinc -E -xc -D__GLSL_VERSION__=$glslv -include common.h "${infile}" -o "${tmpfile}"
+  $PP -I. -nostdinc -E -xc \
+      -D__GLSL_VERSION__=$glslv \
+      -DGL_ES=$build_for_gl_es \
+      -include common.h "${infile}" -o "${tmpfile}"
 
   ###
   # Clean up:
@@ -33,24 +36,25 @@ compile_shader() {
   # This is done for the layout args in 120, since they leave an extra
   # space before the varying/attribute declarations.
   ###
-  sed "/^#/d" "${tmpfile}" | sed "s/^\s\b//g" > "${outfile}"
+  sed "/^#\s/d" "${tmpfile}" | sed "s/^\s\b//g" > "${outfile}"
 
   ##
   # remove the tmpfile
   rm -f "${tmpfile}"
 }
 
+build_for_gl_es=0
+for glsl in 120 150 330 ; do
+  rm -rf "${glsl}" && mkdir -p "${glsl}"
+  for shader in "quad.frag" "quad.vert" "text.vert" "text.frag" ; do
+    compile_shader $glsl "src/${shader}" "${glsl}/${shader}"
+  done
+done
 
-rm -rf "210"
-rm -rf "330"
-mkdir -p "210"
-mkdir -p "330"
-
-for shader in "quad.frag" "quad.vert" "text.vert" "text.frag" ; do
-  ##
-  # build the 120 shaders
-  compile_shader 120 "src/${shader}" "210/${shader}"
-  ##
-  # build the 330 shaders
-  compile_shader 330 "src/${shader}" "330/${shader}"
+build_for_gl_es=1
+for glsl in 100 200 ; do
+  rm -rf "es${glsl}" && mkdir -p "es${glsl}"
+  for shader in "quad.frag" "quad.vert" "text.vert" "text.frag" ; do
+    compile_shader $glsl "src/${shader}" "es${glsl}/${shader}"
+  done
 done

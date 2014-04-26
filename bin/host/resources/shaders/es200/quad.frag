@@ -1,12 +1,12 @@
-shader_version
-var_precision
+ #version 120
 
-invar vec2 f_texcoord;
+
+varying vec2 f_texcoord;
 uniform sampler2D tex;
 uniform float opacity;
 uniform vec4 color;
 uniform vec4 tone;
-def_frag_color
+
 
 
 vec3 rgb2hsv(vec3 c) {
@@ -29,19 +29,19 @@ vec3 hsv2rgb(vec3 c) {
 void main(void) {
   const vec3 white = vec3(1.0, 1.0, 1.0);
 
-  vec4 basecolor = texture(tex, f_texcoord);
-  if(basecolor.a == 0.0) discard; // alpha testing
+  vec4 basecolor = texture2D(tex, f_texcoord);
+  if(basecolor.a == 0.0) discard;
 
   vec3 blendcolor = mix(basecolor.rgb, white, tone.rgb);
 
-  /* Tone optimization
-   * If the tone's saturation (color.alpha) is 100% then we can simply ignore
-   * it, as hsv.input == input
-   */
-  if (tone.a != 1.0) { // tone testing
-    frag_color = vec4(hsv2rgb(rgb2hsv(blendcolor) * vec3(1.0, tone.a, 1.0)),
+
+
+
+
+  if (tone.a != 1.0) {
+    gl_FragColor = vec4(hsv2rgb(rgb2hsv(blendcolor) * vec3(1.0, tone.a, 1.0)),
                         basecolor.a * opacity) * color;
-  } else { // yay, we saved some GPU
-    frag_color = vec4(blendcolor, basecolor.a * opacity) * color;
+  } else {
+    gl_FragColor = vec4(blendcolor, basecolor.a * opacity) * color;
   }
 }
