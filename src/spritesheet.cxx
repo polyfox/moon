@@ -4,7 +4,7 @@ namespace Moon {
   Spritesheet::Spritesheet(std::string filename, int tile_width, int tile_height)
   : VBO(GL_STATIC_DRAW)
   {
-    if (SHADER_VERSION_IS_LEGACY) {
+    if (SHADER_VERSION_120) {
       shader = Shader::load("resources/shaders/120/quad.vert", "resources/shaders/120/quad.frag");
     } else {
       shader = Shader::load("resources/shaders/330/quad.vert", "resources/shaders/330/quad.frag");
