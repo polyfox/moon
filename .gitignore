@@ -1,5 +1,7 @@
 build/
-bin/
+bin/*/core
+bin/*/scripts
+bin/*/game
 lib/
 
 # Compiled Object files
