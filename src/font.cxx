@@ -48,7 +48,7 @@ namespace Moon {
 
     //model matrix
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down
-      glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z)), // move it to the correct position in the world
+      glm::translate(glm::mat4(1.0f), glm::vec3(x, y + font->ascender, z)), // move it to the correct position in the world
       180.0f,
       glm::vec3(1.0f, 0.0f, 0.0f)
     );

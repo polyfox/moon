@@ -38,8 +38,8 @@ class State::Test < State
     #  @s.render(i, i, i)
     #end
     #@s.render(10, 10, 0, 5)
-    @sprites.each {|sprite| sprite.render(20, 20, 1) }
-    @font.render(48, 64, 1, "Sphinx of black quartz, judge my vow.")
+    @sprites.each {|sprite| sprite.render(0, 0, 1) }
+    @font.render(0, 0, 1, "Sphinx of black quartz, judge my vow.")
     @font.render(64,128, 1, "日本国 音読みと中国語")
     super
   end
