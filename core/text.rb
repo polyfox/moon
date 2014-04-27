@@ -67,8 +67,16 @@ module Moon
 
     def refresh_size
       if @string
-        @width, @height = *@font.calc_bounds(@string)
-        @height += @font.size
+        vec2 = @string.split("\n").inject(Vector2.new(0, 0)) do |vec2, line|
+          bounds = @font.calc_bounds(line)
+          vec2.x = bounds[0] if vec2.x < bounds[0]
+          vec2.y += @font.size * 1.2
+          # compensate for ligaments
+          #vec2.y += @font.size * 1.2 + [bounds[1] - @font.size, 0].max
+          vec2.y += 2 # compensate for outline
+          vec2
+        end
+        @width, @height = *vec2.floor
       else
         @width, @height = 0, 0
       end
