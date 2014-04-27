@@ -40,10 +40,16 @@ module Moon
       @position.z
     end
 
+    def line_height
+      @font.size * 1.2
+    end
+
     def render(x, y, z)
       if @font && @string
-        pos = @position + [x, y, z]
-        font.render(pos.x, pos.y + @font.size, pos.z, @string, @color)
+        @string.split("\n").each_with_index do |line, index|
+          pos = @position + [x, y, z]
+          font.render(pos.x, pos.y + index * line_height, pos.z, line, @color)
+        end
       end
     end
 
