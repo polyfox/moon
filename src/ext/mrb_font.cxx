@@ -26,9 +26,10 @@ namespace Moon
   };
 
   /*
-   * Font#draw_text(x, y, str[, color])
+   * Font#draw_text(x, y, z, str[, color])
    * @param [Numeric] x
    * @param [Numeric] y
+   * @param [Numeric] z
    * @param [String] str
    * @param [Color] color
    *   @optional
@@ -75,9 +76,9 @@ namespace Moon
 
     Font* font;
     Data_Get_Struct(mrb, self, &font_data_type, font);
-    glm::vec2 bounds = font->calc_bounds(text);
+    glm::vec2 bounds = font->compute_string_bbox(text);
     delete[] text;
-    mrb_value argv[2] = { mrb_float_value(mrb, bounds.x), mrb_float_value(mrb, bounds.y) };
+    mrb_value argv[2] = { mrb_fixnum_value(bounds.x), mrb_fixnum_value(bounds.y) };
 
 
     return mrb_ary_new_from_values(mrb, 2, argv);

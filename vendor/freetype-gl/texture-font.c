@@ -370,6 +370,7 @@ texture_font_load_glyphs( texture_font_t * self,
     for( i=0; i<wcslen(charcodes); ++i )
     {
         FT_Int32 flags = 0;
+        FT_BBox ft_glyph_bbox;
         int ft_bitmap_width = 0;
         int ft_bitmap_rows = 0;
         int ft_bitmap_pitch = 0;
@@ -417,7 +418,6 @@ texture_font_load_glyphs( texture_font_t * self,
             return wcslen(charcodes)-i;
         }
 
-
         if( self->outline_type == 0 )
         {
             slot            = face->glyph;
@@ -427,6 +427,16 @@ texture_font_load_glyphs( texture_font_t * self,
             ft_bitmap_pitch = slot->bitmap.pitch;
             ft_glyph_top    = slot->bitmap_top;
             ft_glyph_left   = slot->bitmap_left;
+
+            error = FT_Get_Glyph( face->glyph, &ft_glyph);
+            if( error )
+            {
+                fprintf(stderr, "FT_Error (0x%02x) : %s\n",
+                        FT_Errors[error].code, FT_Errors[error].message);
+                FT_Done_Face( face );
+                FT_Done_FreeType( library );
+                return 0;
+            }
         }
         else
         {
@@ -516,6 +526,7 @@ texture_font_load_glyphs( texture_font_t * self,
             FT_Stroker_Done(stroker);
         }
 
+        FT_Glyph_Get_CBox(ft_glyph, ft_glyph_bbox_pixels, &ft_glyph_bbox);
 
         // We want each glyph to be separated by at least one black pixel
         // (for example for shader used in demo-subpixel.c)
@@ -548,6 +559,12 @@ texture_font_load_glyphs( texture_font_t * self,
         glyph->s1       = (x + glyph->width)/(float)width;
         glyph->t1       = (y + glyph->height)/(float)height;
 
+        // Save glyph bounding box
+        glyph->bbox.xMin = ft_glyph_bbox.xMin/64.0;
+        glyph->bbox.xMax = ft_glyph_bbox.xMax/64.0;
+        glyph->bbox.yMin = ft_glyph_bbox.yMin/64.0;
+        glyph->bbox.yMax = ft_glyph_bbox.yMax/64.0;
+
         // Discard hinting to get advance
         FT_Load_Glyph( face, glyph_index, FT_LOAD_RENDER | FT_LOAD_NO_HINTING);
         slot = face->glyph;
@@ -556,10 +573,7 @@ texture_font_load_glyphs( texture_font_t * self,
 
         vector_push_back( self->glyphs, &glyph );
 
-        if( self->outline_type > 0 )
-        {
-            FT_Done_Glyph( ft_glyph );
-        }
+        FT_Done_Glyph( ft_glyph );
     }
     FT_Done_Face( face );
     FT_Done_FreeType( library );

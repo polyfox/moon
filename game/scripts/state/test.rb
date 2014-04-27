@@ -7,6 +7,7 @@ class State::Test < State
     super
     @sprites = []
     @font = Moon::Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 16);
+    puts "Bounds: #{@font.calc_bounds("Sphinx of black quartz, judge my vow.")}"
     #@sound = Sound.new("resources/startup.wav", "wav")
     #@sound.play
     #Music.play("resources/CamelsNommingHay.ogg", "ogg")
@@ -15,8 +16,8 @@ class State::Test < State
     # 55 FPS at 1500 items
     #1500.times do |i|
       sprite = Moon::Sprite.new("resources/obama_sprite.png")
-      sprite.x = rand(640)
-      sprite.y = rand(480)
+      #sprite.x = rand(640)
+      #sprite.y = rand(480)
       #sprite.z = -(i-1500) / 1500
       #sprite.tone.hue = (rand(9000)/1000)
       #sprite.opacity = (rand(1000)/1000)
@@ -37,9 +38,9 @@ class State::Test < State
     #  @s.render(i, i, i)
     #end
     #@s.render(10, 10, 0, 5)
-    @sprites.each {|sprite| sprite.render }
-    @font.draw_text(48, 64, "Sphinx of black quartz, judge my vow.")
-    @font.draw_text(64,128, "日本国 音読みと中国語")
+    @sprites.each {|sprite| sprite.render(20, 20, 1) }
+    @font.render(48, 64, 1, "Sphinx of black quartz, judge my vow.")
+    @font.render(64,128, 1, "日本国 音読みと中国語")
     super
   end
 

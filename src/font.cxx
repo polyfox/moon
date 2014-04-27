@@ -81,9 +81,6 @@ namespace Moon {
         float s1 = glyph->s1;
         float t1 = glyph->t1;
 
-        width = x1;
-        height = y1;
-
         GLuint indices[6] = {0,1,2, 0,2,3};
         vertex vertices[4] = { {x0,y0,  s0,t0, c},
                                {x0,y1,  s0,t1, c},
@@ -95,15 +92,58 @@ namespace Moon {
     }
   }
 
-  glm::vec2 Font::calc_bounds(const wchar_t *text) {
-    Color color = { 1.0, 1.0, 1.0, 1.0 };
-    add_text(text, color);
+  glm::vec2 Font::compute_string_bbox(const wchar_t *text) {
+    bbox_t bbox;
 
-    glm::vec2 bounds(width, height);
+    /* initialize string bbox to "empty" values */
+    bbox.xMin = bbox.yMin =  32000;
+    bbox.xMax = bbox.yMax = -32000;
 
-    buffer.clear();
+    float cursor = 0; // position of the write cursor
 
-    return bounds;
+    /* for each glyph image, compute its bounding box, */
+    /* translate it, and grow the string bbox          */
+    for(size_t i = 0; i < wcslen(text); ++i) {
+      texture_glyph_t *glyph = texture_font_get_glyph(font, text[i]);
+
+      if(glyph != NULL) {
+        float kerning = 0;
+        if(i > 0) {
+          kerning = texture_glyph_get_kerning(glyph, text[i-1]);
+        }
+        cursor += kerning;
+        float x0 = (cursor + glyph->offset_x);
+        float y0 = glyph->offset_y;
+
+        if (glyph->bbox.xMin + x0 < bbox.xMin)
+          bbox.xMin = glyph->bbox.xMin + x0;
+
+        if (glyph->bbox.yMin + y0 < bbox.yMin)
+          bbox.yMin = glyph->bbox.yMin + y0;
+
+        if (glyph->bbox.xMax + x0 > bbox.xMax)
+          bbox.xMax = glyph->bbox.xMax + x0;
+
+        if (glyph->bbox.yMax + y0 > bbox.yMax)
+          bbox.yMax = glyph->bbox.yMax + y0;
+
+        cursor += glyph->advance_x;
+      }
+    }
+
+    /* check that we really grew the string bbox */
+    if (bbox.xMin > bbox.xMax) {
+      bbox.xMin = 0;
+      bbox.yMin = 0;
+      bbox.xMax = 0;
+      bbox.yMax = 0;
+    }
+
+    /* return string bbox */
+    int width  = bbox.xMax - bbox.xMin;
+    int height = bbox.yMax - bbox.yMin;
+
+    return glm::vec2(width, height);
   }
 
   int Font::size() {

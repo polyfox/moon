@@ -86,7 +86,13 @@ typedef struct
 
 } kerning_t;
 
-
+typedef struct
+{
+    float xMin;
+    float xMax;
+    float yMin;
+    float yMax;
+} bbox_t;
 
 
 /*
@@ -208,6 +214,8 @@ typedef struct
      * Glyph outline thickness
      */
     float outline_thickness;
+
+    bbox_t bbox;
 
 } texture_glyph_t;
 
