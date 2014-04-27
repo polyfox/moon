@@ -41,6 +41,10 @@ module Component
 
   end
 
+  def initialize(options={})
+    setup(options)
+  end
+
   def setup(options={})
     self.class.fields.each do |key, data|
       send("#{key}=", data[:default]) if data.key?(:default)
