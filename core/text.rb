@@ -18,13 +18,14 @@ module Moon
       refresh_size
     end
 
-    def initialize(string=nil, font=nil)
+    def initialize(string=nil, font=nil, align=:left)
       @width = 0
       @height = 0
       @string = string
       @font = font
       @position = Moon::Vector3.new(0, 0, 0)
       @color = Moon::Color.new(255, 255, 255, 255)
+      @align = align
       refresh_size
     end
 
@@ -48,7 +49,18 @@ module Moon
       if @font && @string
         @string.split("\n").each_with_index do |line, index|
           pos = @position + [x, y, z]
+
+          case @align
+          when :left
+            # do nothing
+          when :right
+            pos.x -= @font.calc_bounds(line)
+          when :center
+            pos.x -= @font.calc_bounds(line) / 2
+          end
+
           font.render(pos.x, pos.y + index * line_height, pos.z, line, @color)
+
         end
       end
     end
