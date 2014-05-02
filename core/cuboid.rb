@@ -87,6 +87,8 @@ module Moon
     ###
     def self.extract(obj)
       case obj
+      when Moon::Cuboid
+        return *obj
       when Array
         case obj.size
         when 2
