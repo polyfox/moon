@@ -50,6 +50,9 @@ namespace Moon {
 
   struct render_options {
     float opacity;
+    float ox;
+    float oy;
+    float angle;
     Color color;
     Color tone;
   };

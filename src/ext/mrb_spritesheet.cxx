@@ -7,6 +7,9 @@ namespace Moon {
   static mrb_sym id_opacity;
   static mrb_sym id_tone;
   static mrb_sym id_color;
+  static mrb_sym id_ox;
+  static mrb_sym id_oy;
+  static mrb_sym id_angle;
 
   static void moon_mrb_spritesheet_deallocate(mrb_state *mrb, void *p) {
     delete((Spritesheet*)p);
@@ -45,6 +48,9 @@ namespace Moon {
     render_op.color = { 1.0, 1.0, 1.0, 1.0 };
     render_op.tone = { 0.0, 0.0, 0.0, 1.0 };
     render_op.opacity = 1.0f;
+    render_op.angle = 0.0f;
+    render_op.ox = 0.0f;
+    render_op.oy = 0.0f;
 
     if (!mrb_nil_p(options)) {
       mrb_value keys = mrb_hash_keys(mrb, options);
@@ -55,20 +61,35 @@ namespace Moon {
         mrb_value key = keys_ary[i];
 
         if (mrb_symbol_p(key)) {
+          // :opacity
           if (mrb_symbol(key) == id_opacity) {
             render_op.opacity = mrb_to_flo(mrb, mrb_hash_get(mrb, options, key));
 
+          // :color
           } else if (mrb_symbol(key) == id_color) {
             std::shared_ptr<Color>* color_ptr;
             Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
                                  &color_data_type, color_ptr);
             render_op.color = **color_ptr;
 
+          // :tone
           } else if (mrb_symbol(key) == id_tone) {
             std::shared_ptr<Color>* color_ptr;
             Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
                                  &color_data_type, color_ptr);
             render_op.tone = **color_ptr;
+
+          // :ox
+          } else if (mrb_symbol(key) == id_ox) {
+            render_op.ox = mrb_to_flo(mrb, mrb_hash_get(mrb, options, key));
+
+          // :oy
+          } else if (mrb_symbol(key) == id_oy) {
+            render_op.oy = mrb_to_flo(mrb, mrb_hash_get(mrb, options, key));
+
+          // :angle
+          } else if (mrb_symbol(key) == id_angle) {
+            render_op.angle = mrb_to_flo(mrb, mrb_hash_get(mrb, options, key));
           }
         }
       }
@@ -114,6 +135,9 @@ namespace Moon {
     id_opacity = mrb_intern_cstr(mrb, "opacity");
     id_tone    = mrb_intern_cstr(mrb, "tone");
     id_color   = mrb_intern_cstr(mrb, "color");
+    id_ox      = mrb_intern_cstr(mrb, "ox");
+    id_oy      = mrb_intern_cstr(mrb, "oy");
+    id_angle   = mrb_intern_cstr(mrb, "angle");
 
     return spritesheet_class;
   };
