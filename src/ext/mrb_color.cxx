@@ -17,6 +17,11 @@ namespace Moon {
     mrb_float r, g, b, a;
     mrb_get_args(mrb, "ffff", &r, &g, &b, &a);
 
+    r = glm::clamp(r, 0.0, 1.0);
+    g = glm::clamp(g, 0.0, 1.0);
+    b = glm::clamp(b, 0.0, 1.0);
+    a = glm::clamp(a, 0.0, 1.0);
+
     auto color = new std::shared_ptr<Color>(new Color(r, g, b, a));
 
     DATA_TYPE(self) = &color_data_type;
