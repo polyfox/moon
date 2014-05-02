@@ -23,10 +23,19 @@ module Cache
       puts "[Cache:#{branch_name}] GET #{name.inspect}, #{args.join(", ")}"
       key = [name, *args]
       constructor = @constructor[branch_name]
-      if constructor.is_a?(Proc)
+      case constructor
+      when Proc
         (@cache[branch_name] ||= {})[key] ||= constructor.(name, *args)
+      when Hash
+        func = constructor[name]
+        unless func
+          raise RuntimeError,
+                "[Cache:#{branch_name}] ERR #{name.inspect}, #{args.join(", ")} (no loader)"
+        end
+        (@cache[branch_name] ||= {})[key] ||= func.(*args)
       else
-        (@cache[branch_name] ||= {})[key] ||= constructor[name].(*args)
+        raise IndexError,
+              "[Cache:#{branch_name}] ERR #{name.inspect}, #{args.join(", ")} (no constructor)"
       end
     end
     @constructor[branch_name] = yield
