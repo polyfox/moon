@@ -10,7 +10,7 @@ class Widget < Container
     @rx = rx
     @ry = ry
     super(0, 0, width, height)
-    @parent.widgets << self if @parent
+    @parent.widgets << self if @parent && @parent.respond_to?(:widgets)
   end
 
   def update
