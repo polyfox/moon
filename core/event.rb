@@ -1,14 +1,24 @@
 module Moon
   class Event
 
-    attr_reader :type, :key
+    attr_reader :type
     attr_accessor :id # TEMP, proper initialization later
 
-    def initialize(key, type, mods)
+    def initialize(type)
       @type = type
+    end
+
+  end
+  class InputEvent < Event
+
+    attr_reader :action, :key, :mods
+
+    def initialize(key, action, mods)
+      @action = action
       @key = key
 
       @mods = mods # TODO
+      super :input
     end
 
     def alt?

@@ -1,20 +1,33 @@
 module Moon
   module Input
 
-    class KeyboardEvent < Event
+    class KeyboardInputEvent < InputEvent
+    end
+
+    class MouseInputEvent < InputEvent
     end
 
     class MouseEvent < Event
+
+      attr_reader :action
+      attr_reader :position
+
+      def initialize(action, position)
+        @action = action
+        @position = Vector2[position]
+        super :mouse
+      end
+
     end
 
     def self.on_key key, scancode, action, mods
       state = State.states.last # delagator shim
-      state.input.trigger KeyboardEvent.new(key, action, mods)
+      state.input.trigger KeyboardInputEvent.new(key, action, mods)
     end
 
     def self.on_button button, action, mods
       state = State.states.last # delagator shim
-      state.input.trigger MouseEvent.new(button, action, mods)
+      state.input.trigger MouseInputEvent.new(button, action, mods)
     end
 
     class Observer
@@ -39,9 +52,9 @@ module Moon
           listener[:block].call(event)
         end
 
-        return unless @event_listeners[event.type]
+        return unless @event_listeners.key?(event.action)
 
-        @event_listeners[event.type].each do |listener|
+        @event_listeners[event.action].each do |listener|
           listener[:block].call(event) if listener[:keys].include? event.key
         end
       end
