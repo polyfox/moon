@@ -15,10 +15,15 @@ namespace Moon {
       NumFrames = Frames;
       Frames = 0;
     }
-    SpeedFactor = ((glfwGetTime() - LastTime) / 1.0f) * 32.0f; // 32 is number of pixels per second
+    Delta = glfwGetTime() - LastTime;
+    SpeedFactor = (Delta / 1.0f) * 32.0f; // 32 is number of pixels per second
     LastTime = glfwGetTime();
     Frames++;
   }
+
+  float FPS::getDelta() {
+    return Delta;
+  };
 
   int FPS::getFPS() {
     return NumFrames;

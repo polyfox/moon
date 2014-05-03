@@ -37,10 +37,9 @@ namespace Moon {
     glfwTerminate();
   };
 
-  void Window::update() {
-    fps.update();
+  void Window::update(FPS *fps) {
     char title[50];
-    sprintf(title, "FPS: %i", fps.getFPS());
+    sprintf(title, "FPS: %i", fps->getFPS());
     glfwSetWindowTitle(window, title);
 
     glfwSwapBuffers(window);

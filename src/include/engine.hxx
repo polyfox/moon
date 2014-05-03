@@ -6,6 +6,7 @@
 #include "window.hxx"
 #include "input.hxx"
 #include "audio.hxx"
+#include "fps.hxx"
 
 #include "mrb.hxx"
 
@@ -18,7 +19,7 @@ namespace Moon {
     
   private:
     mrb_state *mrb;
-
+    FPS fps;
     Window window;
 
     void load_mrb();

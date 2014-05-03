@@ -41,11 +41,12 @@ namespace Moon {
         break;
       };
 
-      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 0);
+      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 1, fps.getDelta());
       mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "render", 0);
       mrb_gc_arena_restore(mrb, ai);
 
-      window.update();
+      fps.update();
+      window.update(&fps);
     }
   }
 
@@ -58,7 +59,7 @@ namespace Moon {
     //Check for error
     GLenum error = glGetError();
     if(error != GL_NO_ERROR) {
-      printf( "Error initializing OpenGL! glGetError: %i\n", error);
+      printf("Error initializing OpenGL! glGetError: %i\n", error);
       throw;
     }
 
@@ -106,7 +107,7 @@ namespace Moon {
         return false;
       }
     } else {
-      std::cout << "file does not exist: " << path << std::endl;
+      printf("Error loading mrb file: file does not exist %s", path);
       return false;
     }
     return true;

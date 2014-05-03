@@ -68,9 +68,10 @@ class State
   # Gets called in each game loop iteration
   ###
   # Per frame update function, called by moon
+  # @param [float] delta
   # @return [void]
   ###
-  def update
+  def update(delta)
     @ticks += 1
   end
 

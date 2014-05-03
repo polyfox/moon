@@ -2,8 +2,8 @@
 #define MOON_WINDOW_H
 
 #include "moon.hxx"
-#include "fps.hxx"
 #include "shader.hxx" // window.resize()
+#include "fps.hxx" // for debugging FPS
 #include <GLFW/glfw3.h>
 
 namespace Moon {
@@ -13,13 +13,12 @@ namespace Moon {
     ~Window();
 
     GLFWwindow* glfw(); // TEMPORARY HACK
-    void update();
+    void update(FPS *fps);
     void resize(int width, int height);
     bool should_close();
     int width();
     int height();
   private:
-    FPS fps;
     GLFWwindow* window; // GLFW window
     int window_width;
     int window_height;
