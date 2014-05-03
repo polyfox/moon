@@ -2,7 +2,10 @@
 #include <clocale>
 
 namespace Moon {
-  Engine::Engine() : window(640, 480, "Hello World") {
+  Engine::Engine() :
+    window(640, 480, "Hello World"),
+    resource_path("resources")
+  {
     std::setlocale(LC_ALL, "en_US.UTF-8"); // set locale to UTF-8
 
     setup_opengl();
@@ -83,7 +86,7 @@ namespace Moon {
     mrb_mod_cv_set(mrb, moon_module, mrb_intern_cstr(mrb, "window"), window_val);
 
     load_mrb_file("./core/load.rb"); // load core classes
-    load_mrb_file("./scripts/load.rb"); // load user scripts
+    moon_load_user_scripts(this);
   }
 
   bool Engine::load_mrb_file(const char *path) {
@@ -112,5 +115,9 @@ namespace Moon {
     }
     return true;
   }
+
+  //void Engine::set_resource_path(const char *path) {
+  //  resource_path = std::string(path);
+  //}
 
 }

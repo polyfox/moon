@@ -16,19 +16,24 @@ namespace Moon {
     Engine();
     ~Engine();
     void run();
-    
+
+    bool load_mrb_file(const char *path);
+    //void set_resource_path(const char *path);
   private:
     mrb_state *mrb;
     FPS fps;
     Window window;
 
+    std::string resource_path;
+
     void load_mrb();
-    bool load_mrb_file(const char* path);
 
     void setup_opengl();
   };
 };
 
-int moon_main(Moon::Engine *engine); // user entry point
+void moon_load_user_scripts(Moon::Engine *engine);
+void moon_config(Moon::Engine *engine);
+void moon_main(Moon::Engine *engine); // user entry point
 
 #endif
