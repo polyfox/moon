@@ -51,6 +51,15 @@ texture_initialize(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
+texture_initialize_copy(mrb_state *mrb, mrb_value self)
+{
+  Moon::Texture *src_texture;
+  mrb_get_args(mrb, "d", &src_texture, &texture_data_type);
+  mrb_data_init(self, src_texture->dup(), &texture_data_type);
+  return self;
+}
+
+static mrb_value
 texture_width(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, mmrb_texture_ptr(mrb, self)->GetWidth());
@@ -81,9 +90,10 @@ mmrb_texture_init(mrb_state *mrb, struct RClass* mod)
   struct RClass *texture_class = mrb_define_class_under(mrb, mod, "Texture", mrb->object_class);
   MRB_SET_INSTANCE_TT(texture_class, MRB_TT_DATA);
 
-  mrb_define_method(mrb, texture_class, "initialize", texture_initialize, MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, texture_class, "w",          texture_width,      MRB_ARGS_NONE());
-  mrb_define_method(mrb, texture_class, "h",          texture_height,     MRB_ARGS_NONE());
-  mrb_define_method(mrb, texture_class, "id",         texture_id,         MRB_ARGS_NONE());
-  mrb_define_method(mrb, texture_class, "bind",       texture_bind,       MRB_ARGS_NONE());
+  mrb_define_method(mrb, texture_class, "initialize",      texture_initialize,      MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, texture_class, "initialize_copy", texture_initialize_copy, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, texture_class, "w",               texture_width,           MRB_ARGS_NONE());
+  mrb_define_method(mrb, texture_class, "h",               texture_height,          MRB_ARGS_NONE());
+  mrb_define_method(mrb, texture_class, "id",              texture_id,              MRB_ARGS_NONE());
+  mrb_define_method(mrb, texture_class, "bind",            texture_bind,            MRB_ARGS_NONE());
 }
