@@ -66,4 +66,4 @@ include_directories(vendor/freetype-gl)
 include_directories(src/include)
 
 add_subdirectory(src)
-add_subdirectory(game)
+add_subdirectory(modules/game)
