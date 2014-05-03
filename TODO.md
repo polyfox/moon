@@ -30,7 +30,7 @@ TODO
 * make Camera class, wrapping the view_matrix
 
 
-* State#update(delta)
+* ~~State#update(delta)~~
 
 
 * Register a callback with glfwSetWindowSizeCallback that triggers a window resize event in ruby.
