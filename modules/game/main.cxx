@@ -16,7 +16,6 @@ void moon_config(Moon::Engine *engine)
 {
   /* Affects default shader path */
   //engine->set_resource_path("media");
-  std::setlocale(LC_ALL, "en_US.UTF-8"); // set locale to UTF-8
 }
 
 int moon_main(Moon::Engine *engine)
