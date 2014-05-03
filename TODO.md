@@ -3,10 +3,10 @@ TODO
 
 ## Urgent
 
-* mousepos events, and clicking events need to be sorted out
-
-
 * 3.3 -- figure out how to handle retina (fonts not sharp)
+
+
+* mousepos events, and clicking events need to be sorted out
 
 
 
