@@ -18,7 +18,7 @@ class State::SpriteClipTest < State
     @sprite.render
   end
 
-  def update
+  def update(delta)
     if Mouse.held?(Mouse::Buttons::BUTTON_1)
       @sprite.clip_rect = Rect.new(0, 0, 48, 36)
     elsif Mouse.held?(Mouse::Buttons::BUTTON_3)
@@ -26,7 +26,7 @@ class State::SpriteClipTest < State
     else
       @sprite.clip_rect = nil
     end
-    super
+    super delta
   end
 
 end

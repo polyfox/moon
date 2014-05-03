@@ -10,7 +10,7 @@ class State::SpriteAngleTest < State
     @sprites[-1].clip_rect = Moon::Rect.new(@size.x*1, @size.y*2, @size.x, @size.y)
   end
 
-  def update
+  def update(delta)
     @sprites[0].x = (Moon::Screen.width - @size.x) / 2
     @sprites[0].y = (Moon::Screen.height - @size.y) / 2
     @sprites[0].angle += 1
@@ -21,7 +21,7 @@ class State::SpriteAngleTest < State
     @sprites[1].angle -= 1
     @sprites[1].ox = @size.x / 2
     @sprites[1].oy = @size.y / 2
-    super
+    super delta
   end
 
   def render

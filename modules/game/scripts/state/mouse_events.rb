@@ -24,10 +24,10 @@ class State::MouseEvents < State
     super
   end
 
-  def update
-    @observer.update
-    @window.update
-    super
+  def update(delta)
+    @observer.update delta
+    @window.update delta
+    super delta
   end
 
   def render

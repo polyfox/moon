@@ -140,8 +140,8 @@ class State::Snake < State
     @text_score.draw_text(0, @text_score.size, @points_s, @text_color)
   end
 
-  def update
-    super
+  def update(delta)
+    super delta
     if @ticks % @time == 0
       @snake.move_straight(@dir)
       @snake.x %= @width

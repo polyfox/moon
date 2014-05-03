@@ -57,7 +57,7 @@ class Observer
   end
 
   # LEFT CLICK HANDLING
-  def update
+  def update(delta)
     button = Moon::Input::Mouse::Buttons::LEFT
 
     if Moon::Input::Mouse.pressed?(button)

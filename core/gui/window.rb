@@ -20,8 +20,8 @@ class Window < Container
     @windowskin = Moon::Spritesheet.new("resources/window.png", 16, 16)
   end
 
-  def update
-    @widgets.each(&:update.to_proc)
+  def update(delta)
+    @widgets.each { |widget| widget.update delta }
   end
 
   def render

@@ -50,7 +50,7 @@ class State::KeyHoldTest < State
       end
     end
 
-    def update
+    def update(delta)
       p [@triggered = @device.triggered?(@key),
          @press     = @device.pressed?(@key),
          @release   = @device.released?(@key),
@@ -64,9 +64,9 @@ class State::KeyHoldTest < State
     super
   end
 
-  def update
-    @hud.update
-    super
+  def update(delta)
+    @hud.update delta
+    super delta
   end
 
   def render

@@ -42,8 +42,8 @@ class State::PullBlock < State
     end
   end
 
-  def update
-    super
+  def update(delta)
+    super delta
     unless @movement.empty?
       if @ticks % @time == 0
         dir = @movement[(@ticks / @time) % @movement.size]

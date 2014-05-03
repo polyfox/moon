@@ -203,7 +203,7 @@ class ContainerMoonPlayer < Container
     @text = Moon::Font.new("resources/fonts/ipaexg00201/ipaexg.ttf", 12)
   end
 
-  def update_seek
+  def update_seek(delta)
     l = Moon::Music.length.to_f
     l = 1.0 if l < 1
     sx = (@seekbar.width - @seek.width) * (Moon::Music.pos / l)
@@ -219,24 +219,24 @@ class ContainerMoonPlayer < Container
     @text.draw_text(@title.x, @title.y + @text.size, @music.basename)
   end
 
-  def update
+  def update(delta)
     # is the mouse inside the music player
     #   just a anti-lag thing: avoids useless logic
     if Moon::Input::Mouse.in_rect?(self)
-      @play.update
-      @stop.update
+      @play.update delta
+      @stop.update delta
     end
     if Moon::Input::Keyboard.triggered?(Moon::Input::Keyboard::Keys::ESCAPE)
       stop_music
     elsif Moon::Input::Keyboard.triggered?(Moon::Input::Keyboard::Keys::SPACE)
       play_music
     end
-    update_seek
+    update_seek delta
   end
 
   def on_move
     @widgets.each { |wid| wid.refresh_position(x, y) }
-    update_seek
+    update_seek 0.0
   end
 
 end
@@ -262,10 +262,10 @@ class State::MoonPlayer < State
     super
   end
 
-  def update
-    @player.update
+  def update(delta)
+    @player.update delta
     #puts Input::Mouse.pos if @ticks % 5 == 0
-    super
+    super delta
   end
 
   def render

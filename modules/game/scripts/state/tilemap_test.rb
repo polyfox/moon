@@ -73,9 +73,9 @@ class State::TilemapTest < State
     @tilemap.render(0, 0, 0)
   end
 
-  def update
+  def update(delta)
     # nothing to do here folks, move along
-    super
+    super delta
   end
 
 end

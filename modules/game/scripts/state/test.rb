@@ -26,11 +26,11 @@ class State::Test < State
 #=end
   end
 
-  def update
+  def update(delta)
     #p "SPACE is PRESSED!" if Input.pressed?(Input::Keys::SPACE)
     #p "Mouse is in area!" if Input::Mouse.in_area?(0, 0, 32, 32)
     #p Input::Mouse.pos
-    super
+    super delta
   end
 
   def render

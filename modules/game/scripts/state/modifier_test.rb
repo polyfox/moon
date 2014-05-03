@@ -33,7 +33,7 @@ class State::ModifierTest < State
     end
   end
 
-  def update
+  def update(delta)
     MODS.each_with_index do |mod, y|
       BUTTONS.each_with_index do |button, x|
         if mod != CNULL
@@ -53,7 +53,7 @@ class State::ModifierTest < State
     #puts "CTRL  | " + @data_table.row(2).join(", ")
     #puts "ALT   | " + @data_table.row(3).join(", ")
     #puts "SUPER | " + @data_table.row(4).join(", ")
-    super
+    super delta
   end
 
 end

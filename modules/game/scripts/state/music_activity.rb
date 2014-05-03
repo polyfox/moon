@@ -17,8 +17,8 @@ class State::MusicActivity < State
     @music_hud.render
   end
 
-  def update
-    super
+  def update(delta)
+    super delta
   end
 
 end

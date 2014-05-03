@@ -12,11 +12,11 @@ class State::SpriteTest < State
     super
   end
 
-  def update
+  def update(delta)
     if @ticks % 10 == 0
       @sprite.texture = [@texture1, @texture2][(@ticks / 10) % 2]
     end
-    super
+    super delta
   end
 
 end

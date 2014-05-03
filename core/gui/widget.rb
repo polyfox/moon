@@ -13,9 +13,10 @@ class Widget < Container
     @parent.widgets << self if @parent && @parent.respond_to?(:widgets)
   end
 
-  def update
+  def update(delta)
     self.x = @parent.x + rx
     self.y = @parent.y + ry
+    super delta
   end
 
   def render
