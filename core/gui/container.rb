@@ -124,4 +124,8 @@ class Container < Moon::Rect
     ry + width
   end
 
+  def update(delta)
+    #
+  end
+
 end
