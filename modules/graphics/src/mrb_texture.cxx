@@ -6,6 +6,7 @@
 #include "moon/mrb/texture.hxx"
 #include "moon/texture.hxx"
 #include "moon/api.h"
+#include "moon/mrb/helpers.h"
 
 static void
 texture_free(mrb_state *mrb, void *p)
