@@ -6,7 +6,7 @@ namespace Moon {
     window(640, 480, "Hello World"),
     resource_path("resources")
   {
-    std::setlocale(LC_ALL, "en_US.UTF-8"); // set locale to UTF-8
+    moon_config(this);
 
     setup_opengl();
 
