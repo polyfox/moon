@@ -44,7 +44,7 @@ namespace Moon {
         break;
       };
 
-      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 1, fps.getDelta());
+      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 1, mrb_float_value(mrb, fps.getDelta()));
       mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "render", 0);
       mrb_gc_arena_restore(mrb, ai);
 
