@@ -5,6 +5,7 @@ class Container < Moon::Rect
   include Eventable
   include ScreenElement
 
+  attr_accessor :visible
   attr_accessor :draggable
   attr_accessor :widgets
   attr_accessor :rx
@@ -13,6 +14,7 @@ class Container < Moon::Rect
   def initialize(x, y, width, height)
     super x, y, width, height
 
+    @visible = true
     @rx, @ry = 0, 0
 
     @widgets ||= []
