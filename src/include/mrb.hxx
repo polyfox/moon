@@ -15,7 +15,7 @@
 namespace Moon {
   extern const struct mrb_data_type color_data_type;
   extern const struct mrb_data_type font_data_type;
-  extern const struct mrb_data_type rectangle_data_type;
+  extern const struct mrb_data_type rect_data_type;
   extern const struct mrb_data_type sound_data_type;
   extern const struct mrb_data_type sprite_data_type;
   extern const struct mrb_data_type spritesheet_data_type;
@@ -49,7 +49,7 @@ namespace Moon {
   struct RClass* moon_mrb_spritesheet_init(mrb_state *mrb);
   struct RClass* moon_mrb_sound_init(mrb_state *mrb);
   struct RClass* moon_mrb_music_init(mrb_state *mrb);
-  struct RClass* moon_mrb_rectangle_init(mrb_state *mrb);
+  struct RClass* moon_mrb_rect_init(mrb_state *mrb);
   struct RClass* moon_mrb_texture_init(mrb_state *mrb);
   struct RClass* moon_mrb_tone_init(mrb_state *mrb);
   struct RClass* moon_mrb_screen_init(mrb_state *mrb);

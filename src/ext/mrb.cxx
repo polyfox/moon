@@ -33,7 +33,7 @@ void moon_init_mrb_core(mrb_state *mrb) {
   Moon::moon_cSpritesheet = Moon::moon_mrb_spritesheet_init(mrb);
   Moon::moon_cSound       = Moon::moon_mrb_sound_init(mrb);
   Moon::moon_cMusic       = Moon::moon_mrb_music_init(mrb);
-  Moon::moon_cRect        = Moon::moon_mrb_rectangle_init(mrb);
+  Moon::moon_cRect        = Moon::moon_mrb_rect_init(mrb);
   Moon::moon_cTexture     = Moon::moon_mrb_texture_init(mrb);
   Moon::moon_cScreen      = Moon::moon_mrb_screen_init(mrb);
   Moon::moon_cVector2     = Moon::moon_mrb_vector2_init(mrb);

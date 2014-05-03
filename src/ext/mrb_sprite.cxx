@@ -37,7 +37,7 @@ namespace Moon {
 
     auto clip_ptr = new std::shared_ptr<Rect>(sprite->getClip());
     if (*clip_ptr) { // if shared_ptr is not NULL internally
-      clip = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cRect, &rectangle_data_type, clip_ptr));
+      clip = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cRect, &rect_data_type, clip_ptr));
     } else {
       clip = mrb_nil_value();
     }
@@ -224,7 +224,7 @@ namespace Moon {
     if(!mrb_nil_p(new_clip)) {
       // Get the passed-in object's shared_ptr
       std::shared_ptr<Rect>* clip_ptr;
-      Data_Get_Struct(mrb, new_clip, &rectangle_data_type, clip_ptr);
+      Data_Get_Struct(mrb, new_clip, &rect_data_type, clip_ptr);
 
       // Create a new shared_ptr for this instance and overwrite the old one
       ((Sprite*)DATA_PTR(self))->setClip(*clip_ptr);
