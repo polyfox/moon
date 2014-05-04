@@ -31,14 +31,23 @@ namespace Moon {
 
   void Font::draw_text(const float &x, const float &y, const float &z,
                        const wchar_t *text, Color color) {
+    font_render_options options;
+    options.color = color;
+    draw_text(x, y, z, text, options);
+  }
+
+  void Font::draw_text(const float &x, const float &y, const float &z,
+                       const wchar_t *text, const font_render_options &options) {
     // outline
-    font->outline_type = 2;
-    font->outline_thickness = 1;
-    add_text(text, {0.0, 0.0, 0.0, 0.9});
+    if (options.outline > 0) {
+      font->outline_type = 2;
+      font->outline_thickness = options.outline;
+      add_text(text, options.outline_color);
+    }
 
     font->outline_type = 0;
     font->outline_thickness = 0;
-    add_text(text, color);
+    add_text(text, options.color);
 
     shader->use();
 

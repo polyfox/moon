@@ -3,6 +3,10 @@
 
 namespace Moon
 {
+
+  static mrb_sym id_outline;
+  static mrb_sym id_outline_color;
+
   static void moon_mrb_font_deallocate(mrb_state *mrb, void *p) {
     delete((Font*)p);
   };
@@ -38,8 +42,9 @@ namespace Moon
   moon_mrb_font_render(mrb_state *mrb, mrb_value self) {
     mrb_float x, y, z;
     mrb_value color = mrb_nil_value();
+    mrb_value options = mrb_nil_value();
     char* str;
-    mrb_get_args(mrb, "fffz|o", &x, &y, &z, &str, &color);
+    mrb_get_args(mrb, "fffz|oH", &x, &y, &z, &str, &color, &options);
 
     // convert to wide char (UTF-8)
     wchar_t *text = char_to_utf8(str);
@@ -47,12 +52,43 @@ namespace Moon
     Font *font;
     Data_Get_Struct(mrb, self, &font_data_type, font);
 
-    if(!mrb_nil_p(color)) {
-      std::shared_ptr<Color>* text_color;
-      Data_Get_Struct(mrb, color, &color_data_type, text_color);
-      font->draw_text(x, y, z, text, **text_color); //text_color needs to be dereferenced to shared_ptr first and then to value
+    if (!mrb_nil_p(options)) {
+      font_render_options render_op;
+
+      mrb_value keys = mrb_hash_keys(mrb, options);
+      int len = mrb_ary_len(mrb, keys);
+      mrb_value *keys_ary = RARRAY_PTR(keys);
+
+      for (int i=0; i < len; ++i) {
+        mrb_value key = keys_ary[i];
+
+        if (mrb_symbol_p(key)) {
+          // :opacity
+          if (mrb_symbol(key) == id_outline) {
+            render_op.outline = mrb_to_flo(mrb, mrb_hash_get(mrb, options, key));
+
+          } else if (mrb_symbol(key) == id_outline_color) {
+            std::shared_ptr<Color>* color_ptr;
+            Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
+                                 &color_data_type, color_ptr);
+            render_op.outline_color = **color_ptr;
+          }
+        }
+      }
+      if(!mrb_nil_p(color)) {
+        std::shared_ptr<Color>* text_color;
+        Data_Get_Struct(mrb, color, &color_data_type, text_color);
+        render_op.color = **text_color;
+      }
+      font->draw_text(x, y, z, text, render_op);
     } else {
-      font->draw_text(x, y, z, text);
+      if(!mrb_nil_p(color)) {
+        std::shared_ptr<Color>* text_color;
+        Data_Get_Struct(mrb, color, &color_data_type, text_color);
+        font->draw_text(x, y, z, text, **text_color); //text_color needs to be dereferenced to shared_ptr first and then to value
+      } else {
+        font->draw_text(x, y, z, text);
+      }
     }
     delete[] text;
 
@@ -91,9 +127,12 @@ namespace Moon
     MRB_SET_INSTANCE_TT(font_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, font_class, "initialize",  moon_mrb_font_initialize,  MRB_ARGS_REQ(2));
-    mrb_define_method(mrb, font_class, "render",      moon_mrb_font_render,      MRB_ARGS_ARG(4,1));
+    mrb_define_method(mrb, font_class, "render",      moon_mrb_font_render,      MRB_ARGS_ARG(4,2));
     mrb_define_method(mrb, font_class, "size",        moon_mrb_font_size,        MRB_ARGS_NONE());
     mrb_define_method(mrb, font_class, "calc_bounds", moon_mrb_font_calc_bounds, MRB_ARGS_REQ(1));
+
+    id_outline       = mrb_intern_cstr(mrb, "outline");
+    id_outline_color = mrb_intern_cstr(mrb, "outline_color");
 
     return font_class;
   }

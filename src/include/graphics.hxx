@@ -56,5 +56,17 @@ namespace Moon {
     Color color;
     Color tone;
   };
+
+  struct font_render_options {
+    float outline;
+    Color color;
+    Color outline_color;
+    font_render_options() :
+      outline(0.0),
+      color(1.0, 1.0, 1.0, 1.0),
+      outline_color(0.0, 0.0, 0.0, 0.9)
+    {
+    };
+  };
 }
 #endif

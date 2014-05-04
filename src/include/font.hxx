@@ -16,6 +16,8 @@ namespace Moon {
 
     void draw_text(const float &x, const float &y, const float &z, const wchar_t *text); /* white text */
     void draw_text(const float &x, const float &y, const float &z, const wchar_t *text, Color color);
+    void draw_text(const float &x, const float &y, const float &z, const wchar_t *text, const font_render_options &options);
+
     int size();
     glm::vec2 compute_string_bbox(const wchar_t *text);
   private:
