@@ -15,4 +15,5 @@ MRuby::Build.new do |conf|
   # so we can have nice things
   conf.gem :github => "AndrewBelt/mruby-yaml"
   conf.gem :github => "iij/mruby-io"
+  conf.gem :github => "iij/mruby-dir"
 end
