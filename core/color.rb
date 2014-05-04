@@ -31,8 +31,14 @@ module Moon
       Color.new r, g, b, 1.0
     end
 
+    def rgb=(other)
+      self.r, self.g, self.b, _ = *Color.extract(other)
+    end
+
     def self.extract(obj)
       case obj
+      when Moon::Vector3
+        return *obj, 1.0
       when Moon::Color
         return *obj
       when Array
@@ -46,6 +52,8 @@ module Moon
           raise ArgumentError,
                 "wrong Array size #{obj.size} (expected 3 or 4)"
         end
+      when Numeric
+        return obj, obj, obj, 1.0
       else
         raise TypeError,
               "wrong argument type #{obj.class.inspect} (expected Color or Array)"
