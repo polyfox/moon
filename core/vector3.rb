@@ -20,13 +20,14 @@ module Moon
     end
 
     def export
-      to_h.merge(class: self.class.to_s).stringify_keys
+      to_h.merge("&class" => self.class.to_s).stringify_keys
     end
 
     def import(data)
       self.x = data["x"]
       self.y = data["y"]
       self.z = data["z"]
+      self
     end
 
     def round(*a)
@@ -68,6 +69,10 @@ module Moon
 
     def self.zero
       new 0.0, 0.0, 0.0
+    end
+
+    def self.load(data)
+      new data["x"], data["y"], data["z"]
     end
 
   end

@@ -16,7 +16,7 @@ module System
 
   def to_h
     {
-      class: to_s
+      :"&class" => to_s
     }
   end
 
@@ -39,7 +39,7 @@ module System
   end
 
   def self.load(data)
-    Object.const_get(data["class"])
+    Object.const_get(data["&class"])
   end
 
 end
