@@ -100,10 +100,10 @@ module Moon
     end
 
     def layer(z)
-      layer_data = @data[z]
-      tab = Table.new(0, 0)
-      tab.change_data(layer_data, @xsize, @ysize)
-      return tab
+      layer_data = @data[z * @xsize * @ysize, @xsize * @ysize]
+      table = Table.new(0, 0)
+      table.change_data(layer_data, @xsize, @ysize)
+      table
     end
 
     def to_s
