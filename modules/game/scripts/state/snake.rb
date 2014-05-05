@@ -74,7 +74,7 @@ class State::Snake < State
 
   def init_texts
     @text_score = Cache.font("vera", 24)
-    @text_color = Color.new(255, 255, 255, 255)
+    @text_color = Vector4.one
   end
 
   def setup

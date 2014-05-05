@@ -7,7 +7,7 @@
 
 namespace Moon {
 
-  static RClass *vector3_class = NULL;
+  static struct RClass *vector3_class = NULL;
 
   typedef std::shared_ptr<glm::vec3> moon_vec3;
 
@@ -44,7 +44,7 @@ namespace Moon {
   };
 
   const struct mrb_data_type vector3_data_type = {
-    "vector3", moon_mrb_vector3_deallocate,
+    "Vector3", moon_mrb_vector3_deallocate,
   };
 
   /*
@@ -93,7 +93,7 @@ namespace Moon {
           result.z = (*vec3)->z;
         } else {
           mrb_raisef(mrb, E_TYPE_ERROR,
-                     "wrong type %S (expected Numeric, Array or vector3)",
+                     "wrong type %S (expected Numeric, Array or Vector3)",
                      mrb_obj_classname(mrb, val));
         }
         break;
@@ -337,6 +337,7 @@ namespace Moon {
     mrb_define_method(mrb, vector3_class, "x=",              moon_mrb_vector3_x_setter,        MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector3_class, "y=",              moon_mrb_vector3_y_setter,        MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector3_class, "z=",              moon_mrb_vector3_z_setter,        MRB_ARGS_REQ(1));
+
     mrb_define_method(mrb, vector3_class, "-@",              moon_mrb_vector3_negate,          MRB_ARGS_NONE());
     mrb_define_method(mrb, vector3_class, "+@",              moon_mrb_vector3_identity,        MRB_ARGS_NONE());
     mrb_define_method(mrb, vector3_class, "+",               moon_mrb_vector3_add,             MRB_ARGS_REQ(1));
@@ -350,6 +351,14 @@ namespace Moon {
 
     mrb_define_class_method(mrb, vector3_class, "[]",        moon_mrb_vector3_s_cast,          MRB_ARGS_ANY());
     mrb_define_class_method(mrb, vector3_class, "extract",   moon_mrb_vector3_s_extract,       MRB_ARGS_REQ(1));
+
+    mrb_alias_method(mrb, vector3_class, mrb_intern_cstr(mrb, "r"), mrb_intern_cstr(mrb, "x"));
+    mrb_alias_method(mrb, vector3_class, mrb_intern_cstr(mrb, "g"), mrb_intern_cstr(mrb, "y"));
+    mrb_alias_method(mrb, vector3_class, mrb_intern_cstr(mrb, "b"), mrb_intern_cstr(mrb, "z"));
+
+    mrb_alias_method(mrb, vector3_class, mrb_intern_cstr(mrb, "r="), mrb_intern_cstr(mrb, "x="));
+    mrb_alias_method(mrb, vector3_class, mrb_intern_cstr(mrb, "g="), mrb_intern_cstr(mrb, "y="));
+    mrb_alias_method(mrb, vector3_class, mrb_intern_cstr(mrb, "b="), mrb_intern_cstr(mrb, "z="));
     return vector3_class;
   };
 }

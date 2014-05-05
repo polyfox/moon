@@ -25,12 +25,12 @@ namespace Moon {
 
   void Font::draw_text(const float &x, const float &y, const float &z,
                        const wchar_t *text) {
-    Color color = { 1.0, 1.0, 1.0, 1.0 };
+    glm::vec4 color(1.0, 1.0, 1.0, 1.0);
     draw_text(x, y, z, text, color);
   }
 
   void Font::draw_text(const float &x, const float &y, const float &z,
-                       const wchar_t *text, Color color) {
+                       const wchar_t *text, glm::vec4 color) {
     font_render_options options;
     options.color = color;
     draw_text(x, y, z, text, options);
@@ -69,7 +69,7 @@ namespace Moon {
     buffer.clear();
   }
 
-  void Font::add_text(const wchar_t *text, Color c) {
+  void Font::add_text(const wchar_t *text, glm::vec4 c) {
     float cursor = 0; // position of the write cursor
 
     for(size_t i = 0; i < wcslen(text); ++i) {

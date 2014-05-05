@@ -5,7 +5,7 @@ class State::SpriteColorTest < State
   def init
     super
     @sprite = Sprite.new("resources/media_buttons_96x96.png")
-    @sprite.color = Color.new(0.6, 0.5, 0.3, 1.0)
+    @sprite.color = Vector4.new(0.6, 0.5, 0.3, 1.0)
   end
 
   def render

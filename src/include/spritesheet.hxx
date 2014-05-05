@@ -14,7 +14,7 @@ namespace Moon {
     Spritesheet(std::string filename, int tile_width, int tile_height);
     ~Spritesheet();
 
-    void render(const float &x, const float &y, const float &z, const int &index, const render_options &render_op);
+    void render(const float &x, const float &y, const float &z, const int &index, const ss_render_options &render_op);
   private:
     VertexBuffer VBO;
 

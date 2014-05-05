@@ -1,5 +1,6 @@
 #include "mrb.hxx"
 #include "font.hxx"
+#include <glm/glm.hpp>
 
 namespace Moon
 {
@@ -35,7 +36,7 @@ namespace Moon
    * @param [Numeric] y
    * @param [Numeric] z
    * @param [String] str
-   * @param [Color] color
+   * @param [Vector4] color
    *   @optional
    */
   static mrb_value
@@ -68,23 +69,23 @@ namespace Moon
             render_op.outline = mrb_to_flo(mrb, mrb_hash_get(mrb, options, key));
 
           } else if (mrb_symbol(key) == id_outline_color) {
-            std::shared_ptr<Color>* color_ptr;
+            std::shared_ptr<glm::vec4>* color_ptr;
             Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
-                                 &color_data_type, color_ptr);
+                                 &vector4_data_type, color_ptr);
             render_op.outline_color = **color_ptr;
           }
         }
       }
       if(!mrb_nil_p(color)) {
-        std::shared_ptr<Color>* text_color;
-        Data_Get_Struct(mrb, color, &color_data_type, text_color);
+        std::shared_ptr<glm::vec4>* text_color;
+        Data_Get_Struct(mrb, color, &vector4_data_type, text_color);
         render_op.color = **text_color;
       }
       font->draw_text(x, y, z, text, render_op);
     } else {
       if(!mrb_nil_p(color)) {
-        std::shared_ptr<Color>* text_color;
-        Data_Get_Struct(mrb, color, &color_data_type, text_color);
+        std::shared_ptr<glm::vec4>* text_color;
+        Data_Get_Struct(mrb, color, &vector4_data_type, text_color);
         font->draw_text(x, y, z, text, **text_color); //text_color needs to be dereferenced to shared_ptr first and then to value
       } else {
         font->draw_text(x, y, z, text);

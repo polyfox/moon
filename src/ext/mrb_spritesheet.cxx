@@ -1,6 +1,7 @@
 #include "mrb.hxx"
 #include "mrb_err.hxx"
 #include "spritesheet.hxx"
+#include <glm/glm.hpp>
 
 namespace Moon {
 
@@ -44,9 +45,9 @@ namespace Moon {
     Spritesheet *spritesheet;
     Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
 
-    render_options render_op;
-    render_op.color = { 1.0, 1.0, 1.0, 1.0 };
-    render_op.tone = { 0.0, 0.0, 0.0, 1.0 };
+    ss_render_options render_op;
+    render_op.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
+    render_op.tone = glm::vec4(0.0, 0.0, 0.0, 1.0);
     render_op.opacity = 1.0f;
     render_op.angle = 0.0f;
     render_op.ox = 0.0f;
@@ -67,16 +68,16 @@ namespace Moon {
 
           // :color
           } else if (mrb_symbol(key) == id_color) {
-            std::shared_ptr<Color>* color_ptr;
+            std::shared_ptr<glm::vec4>* color_ptr;
             Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
-                                 &color_data_type, color_ptr);
+                                 &vector4_data_type, color_ptr);
             render_op.color = **color_ptr;
 
           // :tone
           } else if (mrb_symbol(key) == id_tone) {
-            std::shared_ptr<Color>* color_ptr;
+            std::shared_ptr<glm::vec4>* color_ptr;
             Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
-                                 &color_data_type, color_ptr);
+                                 &vector4_data_type, color_ptr);
             render_op.tone = **color_ptr;
 
           // :ox

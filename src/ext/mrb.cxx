@@ -2,7 +2,6 @@
 
 namespace Moon {
   struct RClass *moon_module;
-  struct RClass *moon_cColor;
   struct RClass *moon_cFont;
   struct RClass *moon_mInput;
   struct RClass *moon_cSprite;
@@ -14,6 +13,7 @@ namespace Moon {
   struct RClass *moon_cScreen;
   struct RClass *moon_cVector2;
   struct RClass *moon_cVector3;
+  struct RClass *moon_cVector4;
 
   const struct mrb_data_type engine_data_type = {
     "Engine", NULL,
@@ -26,7 +26,6 @@ namespace Moon {
 
 void moon_init_mrb_core(mrb_state *mrb) {
   Moon::moon_module       = mrb_define_module(mrb, "Moon");
-  Moon::moon_cColor       = Moon::moon_mrb_color_init(mrb);
   Moon::moon_cFont        = Moon::moon_mrb_font_init(mrb);
   Moon::moon_mInput       = Moon::moon_mrb_input_init(mrb);
   Moon::moon_cSprite      = Moon::moon_mrb_sprite_init(mrb);
@@ -38,4 +37,5 @@ void moon_init_mrb_core(mrb_state *mrb) {
   Moon::moon_cScreen      = Moon::moon_mrb_screen_init(mrb);
   Moon::moon_cVector2     = Moon::moon_mrb_vector2_init(mrb);
   Moon::moon_cVector3     = Moon::moon_mrb_vector3_init(mrb);
+  Moon::moon_cVector4     = Moon::moon_mrb_vector4_init(mrb);
 };

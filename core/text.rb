@@ -1,7 +1,7 @@
 module Moon
   class Text
 
-    attr_accessor :color    # Moon::Color
+    attr_accessor :color    # Moon::Vector4
     attr_reader :font     # Moon::Font
     attr_accessor :position # Moon::Vector3
     attr_reader :string   # String
@@ -24,7 +24,7 @@ module Moon
       @string = string
       @font = font
       @position = Moon::Vector3.new(0, 0, 0)
-      @color = Moon::Color.new(255, 255, 255, 255)
+      @color = Moon::Vector4.one
       @align = align
       refresh_size
     end

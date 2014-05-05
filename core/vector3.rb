@@ -16,7 +16,8 @@ module Moon
     end
 
     def to_h
-      { x: x, y: y, z: z }
+      { x: x, y: y, z: z,
+        r: r, g: g, b: b }
     end
 
     def export
@@ -71,9 +72,16 @@ module Moon
       new 0.0, 0.0, 0.0
     end
 
+    def self.one
+      new 1.0, 1.0, 1.0
+    end
+
     def self.load(data)
       new data["x"], data["y"], data["z"]
     end
+
+    alias :rgb :xyz
+    alias :rgb= :xyz=
 
   end
 end

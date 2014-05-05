@@ -9,8 +9,8 @@ namespace Moon {
     angle = 0.0;
     ox = 0;
     oy = 0;
-    color = std::make_shared<Color>(1.0, 1.0, 1.0, 1.0);
-    tone = std::make_shared<Color>(0.0, 0.0, 0.0, 1.0);
+    color = std::make_shared<glm::vec4>(1.0, 1.0, 1.0, 1.0);
+    tone = std::make_shared<glm::vec4>(0.0, 0.0, 0.0, 1.0);
 
     if (SHADER_VERSION_120) {
       shader = Shader::load("resources/shaders/120/quad.vert", "resources/shaders/120/quad.frag");

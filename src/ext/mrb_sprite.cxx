@@ -1,6 +1,7 @@
 #include "mrb.hxx"
 #include "mrb_err.hxx"
 #include "sprite.hxx"
+#include <glm/glm.hpp>
 
 namespace Moon {
 
@@ -23,12 +24,12 @@ namespace Moon {
     DATA_TYPE(self) = &sprite_data_type;
     DATA_PTR(self) = sprite;
 
-    auto color_ptr = new std::shared_ptr<Color>(sprite->color);
-    color = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cColor, &color_data_type, color_ptr));
+    auto color_ptr = new std::shared_ptr<glm::vec4>(sprite->color);
+    color = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cVector4, &vector4_data_type, color_ptr));
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@color"), color);
 
-    auto tone_ptr = new std::shared_ptr<Color>(sprite->tone);
-    tone = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cColor, &color_data_type, tone_ptr));
+    auto tone_ptr = new std::shared_ptr<glm::vec4>(sprite->tone);
+    tone = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cVector4, &vector4_data_type, tone_ptr));
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), tone);
 
     auto texture_ptr = new std::shared_ptr<Texture>(sprite->getTexture());
@@ -136,18 +137,18 @@ namespace Moon {
     mrb_value new_color;
     mrb_get_args(mrb, "o", &new_color);
 
-    moon_mrb_check_class(mrb, new_color, moon_cColor, false);
+    moon_mrb_check_class(mrb, new_color, moon_cVector4, false);
 
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@color"), new_color);
 
     // Besides updating the ivar, we need to update the actual sprite->color:
 
     // Get the passed-in object's shared_ptr
-    std::shared_ptr<Color>* color_ptr;
-    Data_Get_Struct(mrb, new_color, &color_data_type, color_ptr);
+    std::shared_ptr<glm::vec4>* color_ptr;
+    Data_Get_Struct(mrb, new_color, &vector4_data_type, color_ptr);
 
     // Create a new shared_ptr for this instance and overwrite the old one
-    ((Sprite*)DATA_PTR(self))->color = std::shared_ptr<Color>(*color_ptr);
+    ((Sprite*)DATA_PTR(self))->color = std::shared_ptr<glm::vec4>(*color_ptr);
 
     return new_color;
   }
@@ -162,18 +163,18 @@ namespace Moon {
     mrb_value new_tone;
     mrb_get_args(mrb, "o", &new_tone);
 
-    moon_mrb_check_class(mrb, new_tone, moon_cColor, false);
+    moon_mrb_check_class(mrb, new_tone, moon_cVector4, false);
 
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), new_tone);
 
     // Besides updating the ivar, we need to update the actual sprite->tone:
 
     // Get the passed-in object's shared_ptr
-    std::shared_ptr<Color>* tone_ptr;
-    Data_Get_Struct(mrb, new_tone, &color_data_type, tone_ptr);
+    std::shared_ptr<glm::vec4>* tone_ptr;
+    Data_Get_Struct(mrb, new_tone, &vector4_data_type, tone_ptr);
 
     // Create a new shared_ptr for this instance and overwrite the old one
-    ((Sprite*)DATA_PTR(self))->tone = std::shared_ptr<Color>(*tone_ptr);
+    ((Sprite*)DATA_PTR(self))->tone = std::shared_ptr<glm::vec4>(*tone_ptr);
 
     return new_tone;
   }

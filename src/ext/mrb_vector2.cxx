@@ -7,7 +7,7 @@
 
 namespace Moon {
 
-  static RClass *vector2_class = NULL;
+  static struct RClass *vector2_class = NULL;
 
   typedef std::shared_ptr<glm::vec2> moon_vec2;
 
