@@ -117,9 +117,7 @@ module Moon
       #end
       @zsize.times do |z|
         @ysize.times do |y|
-          @xsize.times do |x|
-            result.concat(@data[x + y * @xsize + z * @xsize * @ysize].to_s)
-          end
+          result.concat(@data[y * @xsize + z * @xsize * @ysize, @xsize].join(", "))
           result.concat("\n")
         end
         result.concat("\n")
@@ -142,7 +140,12 @@ module Moon
     end
 
     def import(data)
-      # TODO
+      @default = data["default"]
+      @xsize = data["xsize"]
+      @ysize = data["ysize"]
+      @zsize = data["zsize"]
+      @data = data["data"]
+      self
     end
 
     #protected :data
