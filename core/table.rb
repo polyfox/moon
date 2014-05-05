@@ -107,11 +107,26 @@ module Moon
     end
 
     def row(y)
-      @data[y]
+      @data[y * @xsize, @xsize]
+      #@data[y]
     end
 
     def row_count
-      @data.size
+      @ysize
+    end
+
+    def resize(xsize, ysize)
+      oxsize, oysize = *size
+      @xsize, @ysize = xsize, ysize
+      old_data = @data
+      create_data
+      map_with_xy do |n, x, y|
+        if x < oxsize && y < oysize
+          old_data[x + y * oxsize]
+        else
+          @default
+        end
+      end
     end
 
     def to_s
