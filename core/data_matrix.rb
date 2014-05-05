@@ -86,8 +86,8 @@ module Moon
     def map_with_xyz
       each_with_xyz do |n, x, y, z|
         index = x + y * @xsize + z * @xsize * @ysize
-        #@data[z][y][x] = yield @data[z][y][x], x, y, z
-        @data[index] = yield @data[index], x, y, z
+        #@data[z][y][x] = yield n, x, y, z
+        @data[index] = yield n, x, y, z
       end
     end
 
