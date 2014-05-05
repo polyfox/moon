@@ -21,13 +21,15 @@ module Moon
     end
 
     def create_data
-      @data = Array.new(@zsize) { Array.new(@ysize) { Array.new(@xsize, @default) } }
+      @data = Array.new(@xsize * @ysize * @zsize, @default)
+      #@data = Array.new(@zsize) { Array.new(@ysize) { Array.new(@xsize, @default) } }
     end
 
     def initialize_copy(org)
       super org
       create_data
-      map_with_xyz { |_, x, y, z| org.data[z][y][x] }
+      #map_with_xyz { |_, x, y, z| org.data[z][y][x] }
+      map_with_xyz { |_, x, y, z| org.data[x + y * @xsize + z * @xsize * @ysize] }
     end
 
     def size
@@ -35,11 +37,11 @@ module Moon
     end
 
     def rect
-      Moon::Rect.new(0, 0, @xsize, @ysize)
+      Moon::Rect.new 0, 0, @xsize, @ysize
     end
 
     def cuboid
-      Cuboid.new(0, 0, 0, @xsize, @ysize, @zsize)
+      Cuboid.new 0, 0, 0, @xsize, @ysize, @zsize
     end
 
     def [](x, y, z)
@@ -47,7 +49,8 @@ module Moon
       return @default if ((x < 0) || (x >= @xsize)) ||
                          ((y < 0) || (y >= @ysize)) ||
                          ((z < 0) || (z >= @zsize))
-      @data[z][y][x]
+      @data[x + y * @xsize + z * @xsize * @ysize]
+      #@data[z][y][x]
     end
 
     def []=(x, y, z, n)
@@ -55,7 +58,8 @@ module Moon
       return if ((x < 0) || (x >= @xsize)) ||
                 ((y < 0) || (y >= @ysize)) ||
                 ((z < 0) || (z >= @zsize))
-      @data[z][y][x] = n
+      @data[x + y * @xsize + z * @xsize * @ysize] = n
+      #@data[z][y][x] = n
     end
 
     def each
@@ -72,7 +76,8 @@ module Moon
       @zsize.times do |z|
         @ysize.times do |y|
           @xsize.times do |x|
-            yield @data[z][y][x], x, y, z
+            #yield @data[z][y][x], x, y, z
+            yield @data[x + y * @xsize + z * @xsize * @ysize], x, y, z
           end
         end
       end
@@ -80,7 +85,9 @@ module Moon
 
     def map_with_xyz
       each_with_xyz do |n, x, y, z|
-        @data[z][y][x] = yield @data[z][y][x], x, y, z
+        index = x + y * @xsize + z * @xsize * @ysize
+        #@data[z][y][x] = yield @data[z][y][x], x, y, z
+        @data[index] = yield @data[index], x, y, z
       end
     end
 
@@ -101,9 +108,18 @@ module Moon
 
     def to_s
       result = ""
+      #@zsize.times do |z|
+      #  @ysize.times do |y|
+      #    result.concat(@data[z][y].join(", "))
+      #    result.concat("\n")
+      #  end
+      #  result.concat("\n")
+      #end
       @zsize.times do |z|
         @ysize.times do |y|
-          result.concat(@data[z][y].join(", "))
+          @xsize.times do |x|
+            result.concat(@data[x + y * @xsize + z * @xsize * @ysize].to_s)
+          end
           result.concat("\n")
         end
         result.concat("\n")
