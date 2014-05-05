@@ -106,6 +106,20 @@ module Moon
       table
     end
 
+    def resize(xsize, ysize, zsize)
+      oxsize, oysize, ozsize = *size
+      @xsize, @ysize, @zsize = xsize, ysize, zsize
+      old_data = @data
+      create_data
+      map_with_xyz do |n, x, y, z|
+        if x < oxsize && y < oysize && z < ozsize
+          old_data[x + y * oxsize + z * oxsize * oysize]
+        else
+          @default
+        end
+      end
+    end
+
     def to_s
       result = ""
       #@zsize.times do |z|
