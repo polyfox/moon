@@ -90,10 +90,6 @@ module Moon
       new 0.0, 0.0
     end
 
-    def self.one
-      new 1.0, 1.0
-    end
-
     def self.load(data)
       new data["x"], data["y"]
     end

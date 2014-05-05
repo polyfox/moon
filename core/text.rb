@@ -24,7 +24,7 @@ module Moon
       @string = string
       @font = font
       @position = Moon::Vector3.new(0, 0, 0)
-      @color = Moon::Vector4.one
+      @color = Moon::Vector4.new 1.0, 1.0, 1.0, 1.0
       @align = align
       refresh_size
     end
