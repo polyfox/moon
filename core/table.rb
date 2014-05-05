@@ -20,13 +20,15 @@ module Moon
     end
 
     def create_data
-      @data = Array.new(@ysize) { Array.new(@xsize, @default) }
+      @data = Array.new(@xsize * @ysize, @default)
+      #@data = Array.new(@ysize) { Array.new(@xsize, @default) }
     end
 
     def initialize_copy(org)
       super org
       create_data
-      map_with_xy { |_, x, y| org.data[y][x] }
+      #map_with_xy { |_, x, y| org.data[y][x] }
+      map_with_xy { |_, x, y| org.data[x + y * @xsize] }
     end
 
     def change_data(data_p, xsize, ysize)
@@ -40,25 +42,27 @@ module Moon
     end
 
     def rect
-      Moon::Rect.new(0, 0, @xsize, @ysize)
+      Moon::Rect.new 0, 0, @xsize, @ysize
     end
 
     def cuboid
-      Cuboid.new(0, 0, 0, @xsize, @ysize, 1)
+      Cuboid.new 0, 0, 0, @xsize, @ysize, 1
     end
 
     def [](x, y)
       x = x.to_i; y = y.to_i
       return @default if (x < 0 || x >= @xsize) ||
                          (y < 0 || y >= @ysize)
-      @data[y][x]
+      @data[x + y * @xsize]
+      #@data[y][x]
     end
 
     def []=(x, y, n)
       x = x.to_i; y = y.to_i; n = n.to_i
       return if (x < 0 || x >= @xsize) ||
                 (y < 0 || y >= @ysize)
-      @data[y][x] = n
+      @data[x + y * @xsize] = n
+      #@data[y][x] = n
     end
 
     ###
@@ -80,14 +84,17 @@ module Moon
     def each_with_xy
       @ysize.times do |y|
         @xsize.times do |x|
-          @data[y][x] = yield @data[y][x], x, y
+          yield @data[x + y * @xsize], x, y
+          #yield @data[y][x], x, y
         end
       end
     end
 
     def map_with_xy
       each_with_xy do |n, x, y|
-        @data[y][x] = yield @data[y][x], x, y
+        index = x + y * @xsize
+        @data[index] = yield @data[index], x, y
+        #@data[y][x] = yield @data[y][x], x, y
       end
     end
 
@@ -109,8 +116,12 @@ module Moon
 
     def to_s
       result = ""
-      for y in 0...@ysize
-        result.concat(@data[y].join(", "))
+      #@ysize.times do |y|
+      #  result.concat(@data[y].join(", "))
+      #  result.concat("\n")
+      #end
+      @ysize.times do |y|
+        result.concat(@data[y * @xsize, @xsize].join(", "))
         result.concat("\n")
       end
       return result
@@ -130,7 +141,11 @@ module Moon
     end
 
     def import(data)
-      # TODO
+      @default = data["default"]
+      @xsize = data["xsize"]
+      @ysize = data["ysize"]
+      @data = data["data"]
+      self
     end
 
     private :create_data
