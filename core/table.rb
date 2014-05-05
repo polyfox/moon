@@ -11,10 +11,10 @@ module Moon
 
     attr_accessor :default
 
-    def initialize(xsize, ysize)
+    def initialize(xsize, ysize, options={})
       @xsize = xsize.to_i
       @ysize = ysize.to_i
-      @default = 0
+      @default = options.fetch(:default, 0)
       create_data
       yield self if block_given?
     end
