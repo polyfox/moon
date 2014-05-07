@@ -359,25 +359,29 @@ namespace Moon {
 
     mrb_define_method(mrb, vector4_class, "coerce",          moon_mrb_vector4_coerce,          MRB_ARGS_REQ(1));
 
-    mrb_define_method(mrb, vector4_class, "x=",              moon_mrb_vector4_x_setter,        MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector4_class, "x",               moon_mrb_vector4_x_getter,        MRB_ARGS_NONE());
-    mrb_define_method(mrb, vector4_class, "y=",              moon_mrb_vector4_y_setter,        MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector4_class, "y",               moon_mrb_vector4_y_getter,        MRB_ARGS_NONE());
-    mrb_define_method(mrb, vector4_class, "z=",              moon_mrb_vector4_z_setter,        MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector4_class, "z",               moon_mrb_vector4_z_getter,        MRB_ARGS_NONE());
-    mrb_define_method(mrb, vector4_class, "w=",              moon_mrb_vector4_w_setter,        MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector4_class, "w",               moon_mrb_vector4_w_getter,        MRB_ARGS_NONE());
+    mrb_define_method(mrb, vector4_class, "x=",              moon_mrb_vector4_x_setter,        MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, vector4_class, "y=",              moon_mrb_vector4_y_setter,        MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, vector4_class, "z=",              moon_mrb_vector4_z_setter,        MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, vector4_class, "w=",              moon_mrb_vector4_w_setter,        MRB_ARGS_REQ(1));
 
     mrb_define_method(mrb, vector4_class, "-@",              moon_mrb_vector4_negate,          MRB_ARGS_NONE());
     mrb_define_method(mrb, vector4_class, "+@",              moon_mrb_vector4_identity,        MRB_ARGS_NONE());
+
     mrb_define_method(mrb, vector4_class, "+",               moon_mrb_vector4_add,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector4_class, "-",               moon_mrb_vector4_sub,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector4_class, "*",               moon_mrb_vector4_mul,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector4_class, "/",               moon_mrb_vector4_div,             MRB_ARGS_REQ(1));
     //mrb_define_method(mrb, vector4_class, "%",               moon_mrb_vector4_mod,             MRB_ARGS_REQ(1));
+
     mrb_define_method(mrb, vector4_class, "dot",             moon_mrb_vector4_dot,             MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, vector4_class, "set",             moon_mrb_vector4_set,             MRB_ARGS_ANY());
     //mrb_define_method(mrb, vector4_class, "cross",           moon_mrb_vector4_cross,           MRB_ARGS_REQ(1));
+
+    mrb_define_method(mrb, vector4_class, "set",             moon_mrb_vector4_set,             MRB_ARGS_ANY());
+
     mrb_define_method(mrb, vector4_class, "to_a",            moon_mrb_vector4_to_a,            MRB_ARGS_NONE());
 
     mrb_define_class_method(mrb, vector4_class, "[]",        moon_mrb_vector4_s_cast,          MRB_ARGS_ANY());

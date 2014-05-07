@@ -275,13 +275,16 @@ namespace Moon {
     return dest_vec;
   }
 
-  struct RClass* moon_mrb_vector2_init(mrb_state *mrb) {
+  struct RClass*
+  moon_mrb_vector2_init(mrb_state *mrb) {
     vector2_class = mrb_define_class_under(mrb, moon_module, "Vector2", mrb->object_class);
     MRB_SET_INSTANCE_TT(vector2_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, vector2_class, "initialize",      moon_mrb_vector2_initialize,      MRB_ARGS_OPT(2));
     mrb_define_method(mrb, vector2_class, "initialize_copy", moon_mrb_vector2_initialize_copy, MRB_ARGS_REQ(1));
+
     mrb_define_method(mrb, vector2_class, "coerce",          moon_mrb_vector2_coerce,          MRB_ARGS_REQ(1));
+
     mrb_define_method(mrb, vector2_class, "x",               moon_mrb_vector2_x_getter,        MRB_ARGS_NONE());
     mrb_define_method(mrb, vector2_class, "y",               moon_mrb_vector2_y_getter,        MRB_ARGS_NONE());
     mrb_define_method(mrb, vector2_class, "x=",              moon_mrb_vector2_x_setter,        MRB_ARGS_REQ(1));
@@ -289,18 +292,23 @@ namespace Moon {
 
     mrb_define_method(mrb, vector2_class, "-@",              moon_mrb_vector2_negate,          MRB_ARGS_NONE());
     mrb_define_method(mrb, vector2_class, "+@",              moon_mrb_vector2_identity,        MRB_ARGS_NONE());
+
     mrb_define_method(mrb, vector2_class, "+",               moon_mrb_vector2_add,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector2_class, "-",               moon_mrb_vector2_sub,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector2_class, "*",               moon_mrb_vector2_mul,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector2_class, "/",               moon_mrb_vector2_div,             MRB_ARGS_REQ(1));
     //mrb_define_method(mrb, vector2_class, "%",               moon_mrb_vector2_mod,             MRB_ARGS_REQ(1));
+
     mrb_define_method(mrb, vector2_class, "dot",             moon_mrb_vector2_dot,             MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, vector2_class, "set",             moon_mrb_vector2_set,             MRB_ARGS_ANY());
     //mrb_define_method(mrb, vector2_class, "cross",           moon_mrb_vector2_cross,           MRB_ARGS_REQ(1));
+
+    mrb_define_method(mrb, vector2_class, "set",             moon_mrb_vector2_set,             MRB_ARGS_ANY());
+
     mrb_define_method(mrb, vector2_class, "to_a",            moon_mrb_vector2_to_a,            MRB_ARGS_NONE());
 
     mrb_define_class_method(mrb, vector2_class, "[]",        moon_mrb_vector2_s_cast,          MRB_ARGS_ANY());
     mrb_define_class_method(mrb, vector2_class, "extract",   moon_mrb_vector2_s_extract,       MRB_ARGS_REQ(1));
+
     return vector2_class;
   };
 }

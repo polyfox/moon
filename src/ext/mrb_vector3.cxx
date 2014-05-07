@@ -329,13 +329,16 @@ namespace Moon {
     return dest_vec;
   }
 
-  struct RClass* moon_mrb_vector3_init(mrb_state *mrb) {
+  struct RClass*
+  moon_mrb_vector3_init(mrb_state *mrb) {
     vector3_class = mrb_define_class_under(mrb, moon_module, "Vector3", mrb->object_class);
     MRB_SET_INSTANCE_TT(vector3_class, MRB_TT_DATA);
 
     mrb_define_method(mrb, vector3_class, "initialize",      moon_mrb_vector3_initialize,      MRB_ARGS_OPT(3));
     mrb_define_method(mrb, vector3_class, "initialize_copy", moon_mrb_vector3_initialize_copy, MRB_ARGS_REQ(1));
+
     mrb_define_method(mrb, vector3_class, "coerce",          moon_mrb_vector3_coerce,          MRB_ARGS_REQ(1));
+
     mrb_define_method(mrb, vector3_class, "x",               moon_mrb_vector3_x_getter,        MRB_ARGS_NONE());
     mrb_define_method(mrb, vector3_class, "y",               moon_mrb_vector3_y_getter,        MRB_ARGS_NONE());
     mrb_define_method(mrb, vector3_class, "z",               moon_mrb_vector3_z_getter,        MRB_ARGS_NONE());
@@ -345,14 +348,18 @@ namespace Moon {
 
     mrb_define_method(mrb, vector3_class, "-@",              moon_mrb_vector3_negate,          MRB_ARGS_NONE());
     mrb_define_method(mrb, vector3_class, "+@",              moon_mrb_vector3_identity,        MRB_ARGS_NONE());
+
     mrb_define_method(mrb, vector3_class, "+",               moon_mrb_vector3_add,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector3_class, "-",               moon_mrb_vector3_sub,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector3_class, "*",               moon_mrb_vector3_mul,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector3_class, "/",               moon_mrb_vector3_div,             MRB_ARGS_REQ(1));
     //mrb_define_method(mrb, vector3_class, "%",               moon_mrb_vector3_mod,             MRB_ARGS_REQ(1));
+
     mrb_define_method(mrb, vector3_class, "dot",             moon_mrb_vector3_dot,             MRB_ARGS_REQ(1));
-    mrb_define_method(mrb, vector3_class, "set",             moon_mrb_vector3_set,             MRB_ARGS_ANY());
     mrb_define_method(mrb, vector3_class, "cross",           moon_mrb_vector3_cross,           MRB_ARGS_REQ(1));
+
+    mrb_define_method(mrb, vector3_class, "set",             moon_mrb_vector3_set,             MRB_ARGS_ANY());
+
     mrb_define_method(mrb, vector3_class, "to_a",            moon_mrb_vector3_to_a,            MRB_ARGS_NONE());
 
     mrb_define_class_method(mrb, vector3_class, "[]",        moon_mrb_vector3_s_cast,          MRB_ARGS_ANY());
