@@ -301,6 +301,34 @@ namespace Moon {
       return rtarget;
     }
 
+    def rotate(mrb_state *mrb, mrb_value self) {
+      mrb_value *vals;
+      int len;
+      mrb_get_args(mrb, "*", &vals, &len);
+
+      mrb_value rtarget = mrb_obj_dup(mrb, self);
+      moon_mat4 *target_mat4;
+      Data_Get_Struct(mrb, rtarget, &data_type, target_mat4);
+
+      if (len == 2) {
+        mrb_float angle = mrb_to_flo(mrb, vals[0]);
+        glm::vec3 rotate_v3 = moon_mrb_to_vec3(mrb, vals[1]);
+
+        **target_mat4 = glm::rotate(**target_mat4, (float)angle, rotate_v3);
+      } else if (len == 4) {
+        **target_mat4 = glm::rotate(**target_mat4,
+          (float)mrb_to_flo(mrb, vals[0]),
+          glm::vec3(mrb_to_flo(mrb, vals[1]),
+                    mrb_to_flo(mrb, vals[2]),
+                    mrb_to_flo(mrb, vals[3])));
+      } else {
+        mrb_raisef(mrb, E_ARGUMENT_ERROR,
+                   "wrong argument count %d (expected 2 or 4)",
+                   len);
+      }
+      return rtarget;
+    }
+
     def to_a16(mrb_state *mrb, mrb_value self) {
       moon_mat4 *mat4;
       Data_Get_Struct(mrb, self, &data_type, mat4);
@@ -399,6 +427,7 @@ namespace Moon {
       //mrb_define_method(mrb, rclass, "%",               op_mod,          MRB_ARGS_REQ(1));
 
       mrb_define_method(mrb, rclass, "translate",       translate,       MRB_ARGS_ANY());
+      mrb_define_method(mrb, rclass, "rotate",          rotate,          MRB_ARGS_ANY());
 
       mrb_define_method(mrb, rclass, "to_a16",          to_a16,          MRB_ARGS_NONE());
       mrb_define_method(mrb, rclass, "to_a",            to_a,            MRB_ARGS_NONE());
