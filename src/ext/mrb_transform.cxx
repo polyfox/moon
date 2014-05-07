@@ -49,10 +49,11 @@ namespace Moon {
       if (argc == 0){
         mat = new moon_mat4(new glm::mat4());
       } else if (argc == 1) {
-        if (mrb_type(args[0]) == MRB_TT_DATA) {
-          if (DATA_TYPE(args[0]) == &data_type) { /* Transform */
+        mrb_value val = args[0];
+        if (mrb_type(val) == MRB_TT_DATA) {
+          if (DATA_TYPE(val) == &data_type) { /* Transform */
             moon_mat4 *source_mat4;
-            Data_Get_Struct(mrb, args[0], &data_type, source_mat4);
+            Data_Get_Struct(mrb, val, &data_type, source_mat4);
             mat = new moon_mat4(new glm::mat4(**source_mat4));
           } else {
             mrb_raisef(mrb, E_TYPE_ERROR,
@@ -327,6 +328,18 @@ namespace Moon {
       return mrb_ary_new_from_values(mrb, 4, argv);
     }
 
+    def s_cast(mrb_state *mrb, mrb_value self) {
+      mrb_value *vals;
+      int len;
+      mrb_get_args(mrb, "*", &vals, &len);
+
+      return mrb_obj_new(mrb, rclass, len, vals);
+    }
+
+    //def s_extract(mrb_state *mrb, mrb_value self) {
+    //  return mrb_nil_value();
+    //}
+
     static struct RClass*
     Init(mrb_state *mrb) {
       rclass = mrb_define_class_under(mrb, moon_module, "Transform", mrb->object_class);
@@ -347,10 +360,13 @@ namespace Moon {
       mrb_define_method(mrb, rclass, "-",               op_sub,          MRB_ARGS_REQ(1));
       mrb_define_method(mrb, rclass, "*",               op_mul,          MRB_ARGS_REQ(1));
       mrb_define_method(mrb, rclass, "/",               op_div,          MRB_ARGS_REQ(1));
+      //mrb_define_method(mrb, rclass, "%",               op_mod,          MRB_ARGS_REQ(1));
 
       mrb_define_method(mrb, rclass, "to_a16",          to_a16,          MRB_ARGS_NONE());
       mrb_define_method(mrb, rclass, "to_a",            to_a,            MRB_ARGS_NONE());
-      //mrb_define_method(mrb, rclass, "%",               op_mod,          MRB_ARGS_REQ(1));
+
+      mrb_define_class_method(mrb, rclass, "[]",        s_cast,          MRB_ARGS_ANY());
+      //mrb_define_class_method(mrb, rclass, "extract",   s_extract,       MRB_ARGS_REQ(1));
 
       return rclass;
     };
