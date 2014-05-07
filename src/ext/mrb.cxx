@@ -1,6 +1,7 @@
 #include "mrb.hxx"
 
 namespace Moon {
+
   struct RClass *moon_module;
   struct RClass *moon_cFont;
   struct RClass *moon_mInput;
@@ -14,6 +15,7 @@ namespace Moon {
   struct RClass *moon_cVector2;
   struct RClass *moon_cVector3;
   struct RClass *moon_cVector4;
+  struct RClass *moon_cTransform;
 
   const struct mrb_data_type engine_data_type = {
     "Engine", NULL,
@@ -22,6 +24,7 @@ namespace Moon {
   const struct mrb_data_type window_data_type = {
     "Window", NULL,
   };
+
 }
 
 void moon_init_mrb_core(mrb_state *mrb) {
@@ -38,4 +41,5 @@ void moon_init_mrb_core(mrb_state *mrb) {
   Moon::moon_cVector2     = Moon::moon_mrb_vector2_init(mrb);
   Moon::moon_cVector3     = Moon::moon_mrb_vector3_init(mrb);
   Moon::moon_cVector4     = Moon::moon_mrb_vector4_init(mrb);
+  Moon::moon_cTransform   = Moon::moon_mrb_transform_init(mrb);
 };

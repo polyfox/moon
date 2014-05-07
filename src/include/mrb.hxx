@@ -13,6 +13,7 @@
 #include <mruby/variable.h>
 
 namespace Moon {
+
   extern const struct mrb_data_type font_data_type;
   extern const struct mrb_data_type rect_data_type;
   extern const struct mrb_data_type sound_data_type;
@@ -23,7 +24,7 @@ namespace Moon {
   extern const struct mrb_data_type vector2_data_type;
   extern const struct mrb_data_type vector3_data_type;
   extern const struct mrb_data_type vector4_data_type;
-
+  namespace mrb_Transform { extern const struct mrb_data_type data_type; }
   extern const struct mrb_data_type engine_data_type;
   extern const struct mrb_data_type window_data_type;
 
@@ -41,6 +42,7 @@ namespace Moon {
   extern struct RClass *moon_cVector2;
   extern struct RClass *moon_cVector3;
   extern struct RClass *moon_cVector4;
+  extern struct RClass *moon_cTransform;
 
   struct RClass* moon_mrb_font_init(mrb_state *mrb);
   struct RClass* moon_mrb_input_init(mrb_state *mrb);
@@ -55,8 +57,7 @@ namespace Moon {
   struct RClass* moon_mrb_vector2_init(mrb_state *mrb);
   struct RClass* moon_mrb_vector3_init(mrb_state *mrb);
   struct RClass* moon_mrb_vector4_init(mrb_state *mrb);
-
-
+  struct RClass* moon_mrb_transform_init(mrb_state *mrb);
 };
 
 void moon_init_mrb_core(mrb_state *mrb);
