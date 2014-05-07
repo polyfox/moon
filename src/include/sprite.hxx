@@ -5,6 +5,7 @@
 #include "texture.hxx"
 #include "vertex_buffer.hxx"
 #include "graphics.hxx"
+#include "shared_types.hxx"
 #include <glm/glm.hpp>
 
 namespace Moon {
@@ -17,8 +18,8 @@ namespace Moon {
     float angle;
     int ox;
     int oy;
-    std::shared_ptr<glm::vec4> color;
-    std::shared_ptr<glm::vec4> tone;
+    moon_vec4 color;
+    moon_vec4 tone;
 
     void render(const float &x, const float &y, const float &z);
     std::shared_ptr<Texture> getTexture();

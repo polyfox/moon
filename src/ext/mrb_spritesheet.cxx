@@ -2,6 +2,7 @@
 #include "mrb_err.hxx"
 #include "spritesheet.hxx"
 #include <glm/glm.hpp>
+#include "shared_types.hxx"
 
 namespace Moon {
 
@@ -68,14 +69,14 @@ namespace Moon {
 
           // :color
           } else if (mrb_symbol(key) == id_color) {
-            std::shared_ptr<glm::vec4>* color_ptr;
+            moon_vec4* color_ptr;
             Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
                                  &vector4_data_type, color_ptr);
             render_op.color = **color_ptr;
 
           // :tone
           } else if (mrb_symbol(key) == id_tone) {
-            std::shared_ptr<glm::vec4>* color_ptr;
+            moon_vec4* color_ptr;
             Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
                                  &vector4_data_type, color_ptr);
             render_op.tone = **color_ptr;

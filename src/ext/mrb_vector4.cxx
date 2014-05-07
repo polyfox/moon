@@ -4,23 +4,15 @@
 #include "mrb.hxx"
 #include <memory>
 #include <glm/glm.hpp>
+#include "mrb_shared_types.hxx"
 
 namespace Moon {
 
   static struct RClass *vector4_class = NULL;
 
-  typedef std::shared_ptr<glm::vec4> moon_vec4;
-
-  struct float4a {
-    mrb_float x;
-    mrb_float y;
-    mrb_float z;
-    mrb_float w;
-  };
-
   #define mrb_set_vector4_value_xyz(mrb, target, x, y, z, w)   \
     {                                                          \
-      auto vector4 = new moon_vec4(new glm::vec4(x, y, z, w)); \
+      moon_vec4 *vector4 = new moon_vec4(new glm::vec4(x, y, z, w)); \
       DATA_TYPE(target) = &vector4_data_type;                  \
       DATA_PTR(target) = vector4;                              \
     }
@@ -28,17 +20,14 @@ namespace Moon {
   #define vec4_math_head(_func_)                                            \
     moon_vec4* src_vec4;                                                    \
     Data_Get_Struct(mrb, self, &vector4_data_type, src_vec4);               \
-    float4a other_v4a = moon_vector4_extract_args(mrb);                     \
-    glm::vec4 oth_vec4(other_v4a.x, other_v4a.y, other_v4a.z, other_v4a.w); \
+    glm::vec4 oth_vec4 = moon_vector4_extract_mrb_args(mrb);                \
     _func_
 
-  #define vec4_math_op(_op_)                                           \
-    vec4_math_head({                                                   \
-      /*mrb_value dest_vec = mrb_obj_new(mrb, vector4_class, 0, {});*/ \
-      mrb_value dest_vec = mrb_obj_dup(mrb, self);                     \
-      **((moon_vec4*)DATA_PTR(dest_vec)) = **src_vec4 _op_ oth_vec4;   \
-      return dest_vec;                                                 \
-    })
+  #define vec4_math_op(_op_)                                 \
+    glm::vec4 oth_vec4 = moon_vector4_extract_mrb_args(mrb);   \
+    mrb_value dest_vec = mrb_obj_dup(mrb, self);           \
+    **((moon_vec4*)DATA_PTR(dest_vec)) _op_ ## = oth_vec4; \
+    return dest_vec;
 
   static void moon_mrb_vector4_deallocate(mrb_state *mrb, void *p) {
     delete((moon_vec4*)p);
@@ -51,33 +40,20 @@ namespace Moon {
   /*
    * Black Magic
    */
-  static float4a
-  moon_vector4_extract_args(mrb_state *mrb) {
-    mrb_value *vals;
-    int len;
+  glm::vec4
+  moon_vector4_extract_args(mrb_state *mrb, int argc, mrb_value *vals) {
+    glm::vec4 result;
 
-    float4a result = { 0.0f, 0.0f, 0.0f, 0.0f };
-
-    mrb_get_args(mrb, "*", &vals, &len);
-
-    switch (len) {
+    switch (argc) {
       case 1:
         mrb_value val;
-        mrb_get_args(mrb, "o", &val);
-        if (mrb_type(val) == MRB_TT_FIXNUM) {
-          mrb_int i;
-          mrb_get_args(mrb, "i", &i);
-          result.x = (mrb_float)i;
-          result.y = (mrb_float)i;
-          result.z = (mrb_float)i;
-          result.w = (mrb_float)i;
-        } else if (mrb_type(val) == MRB_TT_FLOAT) {
-          mrb_float f;
-          mrb_get_args(mrb, "f", &f);
-          result.x = (mrb_float)f;
-          result.y = (mrb_float)f;
-          result.z = (mrb_float)f;
-          result.w = (mrb_float)f;
+        val = vals[0];
+        if ((mrb_type(val) == MRB_TT_FIXNUM) || (mrb_type(val) == MRB_TT_FLOAT)) {
+          double i = mrb_to_flo(mrb, val);
+          result.x = i;
+          result.y = i;
+          result.z = i;
+          result.w = i;
         } else if (mrb_type(val) == MRB_TT_ARRAY) {
           int _ary_len = mrb_ary_len(mrb, val);
           if (_ary_len != 4) {
@@ -92,39 +68,76 @@ namespace Moon {
         } else if (mrb_type(val) == MRB_TT_DATA) {
           moon_vec4* vec4;
           Data_Get_Struct(mrb, val, &vector4_data_type, vec4);
-          result.x = (*vec4)->x;
-          result.y = (*vec4)->y;
-          result.z = (*vec4)->z;
-          result.w = (*vec4)->w;
+          result = **vec4;
         } else {
           mrb_raisef(mrb, E_TYPE_ERROR,
                      "wrong type %S (expected Numeric, Array or Vector4)",
                      mrb_obj_classname(mrb, val));
         }
         break;
+      case 2:
+      case 3:
+        int index;
+        index = 0;
+        for (int i=0; i < argc; ++i) {
+          mrb_value val = vals[i];
+
+          if (mrb_type(val) == MRB_TT_DATA) {
+            if (DATA_TYPE(val) == &vector2_data_type) {
+              moon_vec2* vec2;
+              Data_Get_Struct(mrb, val, &vector2_data_type, vec2);
+
+              result[index++] = (**vec2)[0]; if (index >= 4) break;
+              result[index++] = (**vec2)[1];
+            } else if (DATA_TYPE(val) == &vector3_data_type) {
+              moon_vec3* vec3;
+              Data_Get_Struct(mrb, val, &vector3_data_type, vec3);
+
+              result[index++] = (**vec3)[0]; if (index >= 4) break;
+              result[index++] = (**vec3)[1]; if (index >= 4) break;
+              result[index++] = (**vec3)[2];
+            } else {
+              mrb_raisef(mrb, E_TYPE_ERROR,
+                         "wrong type %S (expected Vector2 or Vector3)",
+                         mrb_obj_classname(mrb, val));
+            }
+          } else if ((mrb_type(val) == MRB_TT_FIXNUM) || (mrb_type(val) == MRB_TT_FLOAT)) {
+            result[index++] = mrb_to_flo(mrb, val);
+          }
+          if (index >= 4) break;
+        };
+        break;
       case 4:
-        mrb_float x;
-        mrb_float y;
-        mrb_float z;
-        mrb_float w;
-        mrb_get_args(mrb, "ffff", &x, &y, &z, &w);
-        result.x = x;
-        result.y = y;
-        result.z = z;
-        result.w = w;
+        result.x = mrb_to_flo(mrb, vals[0]);
+        result.y = mrb_to_flo(mrb, vals[1]);
+        result.z = mrb_to_flo(mrb, vals[2]);
+        result.w = mrb_to_flo(mrb, vals[3]);
         break;
       default:
         mrb_raisef(mrb, E_ARGUMENT_ERROR,
-                   "wrong number of arguments (%d for 1..4)", len);
+                   //"wrong number of arguments (%d for 1 or 4)", argc);
+                   "wrong number of arguments (%d for 1, 2, 3, or 4)", argc);
     }
 
     return result;
   }
 
+  static glm::vec4
+  moon_vector4_extract_mrb_args(mrb_state *mrb) {
+    mrb_value *vals;
+    int len;
+
+    mrb_get_args(mrb, "*", &vals, &len);
+    return moon_vector4_extract_args(mrb, len, vals);
+  }
+
   static mrb_value
   moon_mrb_vector4_initialize(mrb_state *mrb, mrb_value self) {
-    mrb_float x, y, z, w;
-    mrb_get_args(mrb, "ffff", &x, &y, &z, &w);
+    mrb_float x = 0.0;
+    mrb_float y = 0.0;
+    mrb_float z = 0.0;
+    mrb_float w = 0.0;
+    mrb_get_args(mrb, "|ffff", &x, &y, &z, &w);
 
     mrb_set_vector4_value_xyz(mrb, self, x, y, z, w)
 
@@ -134,13 +147,13 @@ namespace Moon {
   static mrb_value
   moon_mrb_vector4_initialize_copy(mrb_state *mrb, mrb_value self) {
     mrb_value other;
-    moon_vec4* src_vector4;
 
     mrb_get_args(mrb, "o", &other);
 
+    moon_vec4* src_vector4;
     Data_Get_Struct(mrb, other, &vector4_data_type, src_vector4);
 
-    auto vector4 = new moon_vec4(new glm::vec4((*src_vector4)->r, (*src_vector4)->g, (*src_vector4)->b, (*src_vector4)->a));
+    moon_vec4 *vector4 = new moon_vec4(new glm::vec4(**src_vector4));
     DATA_TYPE(self) = &vector4_data_type;
     DATA_PTR(self) = vector4;
 
@@ -156,6 +169,38 @@ namespace Moon {
   }
 
   static mrb_value
+  moon_mrb_vector4_x_getter(mrb_state *mrb, mrb_value self) {
+    moon_vec4* vector4;
+    Data_Get_Struct(mrb, self, &vector4_data_type, vector4);
+
+    return mrb_float_value(mrb, moon_vec4_p(vector4)->x);
+  }
+
+  static mrb_value
+  moon_mrb_vector4_y_getter(mrb_state *mrb, mrb_value self) {
+    moon_vec4* vector4;
+    Data_Get_Struct(mrb, self, &vector4_data_type, vector4);
+
+    return mrb_float_value(mrb, moon_vec4_p(vector4)->y);
+  }
+
+  static mrb_value
+  moon_mrb_vector4_z_getter(mrb_state *mrb, mrb_value self) {
+    moon_vec4* vector4;
+    Data_Get_Struct(mrb, self, &vector4_data_type, vector4);
+
+    return mrb_float_value(mrb, moon_vec4_p(vector4)->z);
+  }
+
+  static mrb_value
+  moon_mrb_vector4_w_getter(mrb_state *mrb, mrb_value self) {
+    moon_vec4* vector4;
+    Data_Get_Struct(mrb, self, &vector4_data_type, vector4);
+
+    return mrb_float_value(mrb, moon_vec4_p(vector4)->w);
+  }
+
+  static mrb_value
   moon_mrb_vector4_x_setter(mrb_state *mrb, mrb_value self) {
     mrb_float x;
     mrb_get_args(mrb, "f", &x);
@@ -163,17 +208,9 @@ namespace Moon {
     moon_vec4* vector4;
     Data_Get_Struct(mrb, self, &vector4_data_type, vector4);
 
-    (*vector4)->x = x;
+    moon_vec4_p(vector4)->x = x;
 
     return mrb_nil_value();
-  }
-
-  static mrb_value
-  moon_mrb_vector4_x_getter(mrb_state *mrb, mrb_value self) {
-    moon_vec4* vector4;
-    Data_Get_Struct(mrb, self, &vector4_data_type, vector4);
-
-    return mrb_float_value(mrb, (*vector4)->x);
   }
 
   static mrb_value
@@ -184,17 +221,9 @@ namespace Moon {
     moon_vec4* vector4;
     Data_Get_Struct(mrb, self, &vector4_data_type, vector4);
 
-    (*vector4)->y = y;
+    moon_vec4_p(vector4)->y = y;
 
     return mrb_nil_value();
-  }
-
-  static mrb_value
-  moon_mrb_vector4_y_getter(mrb_state *mrb, mrb_value self) {
-    moon_vec4* vector4;
-    Data_Get_Struct(mrb, self, &vector4_data_type, vector4);
-
-    return mrb_float_value(mrb, (*vector4)->y);
   }
 
   static mrb_value
@@ -205,17 +234,9 @@ namespace Moon {
     moon_vec4* vector4;
     Data_Get_Struct(mrb, self, &vector4_data_type, vector4);
 
-    (*vector4)->z = z;
+    moon_vec4_p(vector4)->z = z;
 
     return mrb_nil_value();
-  }
-
-  static mrb_value
-  moon_mrb_vector4_z_getter(mrb_state *mrb, mrb_value self) {
-    moon_vec4* vector4;
-    Data_Get_Struct(mrb, self, &vector4_data_type, vector4);
-
-    return mrb_float_value(mrb, (*vector4)->z);
   }
 
   static mrb_value
@@ -226,17 +247,9 @@ namespace Moon {
     moon_vec4* vector4;
     Data_Get_Struct(mrb, self, &vector4_data_type, vector4);
 
-    (*vector4)->w = w;
+    moon_vec4_p(vector4)->w = w;
 
-    return mrb_float_value(mrb, (*vector4)->w);
-  }
-
-  static mrb_value
-  moon_mrb_vector4_w_getter(mrb_state *mrb, mrb_value self) {
-    moon_vec4* vector4;
-    Data_Get_Struct(mrb, self, &vector4_data_type, vector4);
-
-    return mrb_float_value(mrb, (*vector4)->w);
+    return mrb_nil_value();
   }
 
   static mrb_value
@@ -250,10 +263,7 @@ namespace Moon {
     Data_Get_Struct(mrb, dest_vec, &vector4_data_type, dvec4);
     Data_Get_Struct(mrb, self, &vector4_data_type, svec4);
 
-    (*dvec4)->x = -(*svec4)->x;
-    (*dvec4)->y = -(*svec4)->y;
-    (*dvec4)->z = -(*svec4)->z;
-    (*dvec4)->w = -(*svec4)->w;
+    **dvec4 = -(**svec4);
 
     return dest_vec;
   }
@@ -283,6 +293,11 @@ namespace Moon {
     vec4_math_op(/)
   };
 
+  //static mrb_value
+  //moon_mrb_vector4_mod(mrb_state *mrb, mrb_value self) {
+  //  vec4_math_op(%)
+  //};
+
   static mrb_value
   moon_mrb_vector4_dot(mrb_state *mrb, mrb_value self) {
     vec4_math_head({
@@ -290,27 +305,12 @@ namespace Moon {
     })
   };
 
-  //static mrb_value
-  //moon_mrb_vector4_cross(mrb_state *mrb, mrb_value self) {
-  //  vec4_math_head({
-  //    //mrb_value dest_vec = mrb_obj_new(mrb, vector4_class, 0, {});
-  //    mrb_value dest_vec = mrb_obj_dup(mrb, self);
-  //    **((moon_vec4*)DATA_PTR(dest_vec)) = glm::cross(**src_vec4, oth_vec4);
-  //    return dest_vec;
-  //  })
-  //};
-
   static mrb_value
   moon_mrb_vector4_set(mrb_state *mrb, mrb_value self) {
-    float4a v4a = moon_vector4_extract_args(mrb);
-
     moon_vec4* mvec4;
     Data_Get_Struct(mrb, self, &vector4_data_type, mvec4);
 
-    (*mvec4)->x = v4a.x;
-    (*mvec4)->y = v4a.y;
-    (*mvec4)->z = v4a.z;
-    (*mvec4)->w = v4a.w;
+    **mvec4 = moon_vector4_extract_mrb_args(mrb);
 
     return self;
   };
@@ -319,16 +319,16 @@ namespace Moon {
   moon_mrb_vector4_to_a(mrb_state *mrb, mrb_value self) {
     moon_vec4* mvec4;
     Data_Get_Struct(mrb, self, &vector4_data_type, mvec4);
-    mrb_value argv[4] = { mrb_float_value(mrb, (*mvec4)->x),
-                          mrb_float_value(mrb, (*mvec4)->y),
-                          mrb_float_value(mrb, (*mvec4)->z),
-                          mrb_float_value(mrb, (*mvec4)->w) };
+    mrb_value argv[4] = { mrb_float_value(mrb, moon_vec4_p(mvec4)->x),
+                          mrb_float_value(mrb, moon_vec4_p(mvec4)->y),
+                          mrb_float_value(mrb, moon_vec4_p(mvec4)->z),
+                          mrb_float_value(mrb, moon_vec4_p(mvec4)->w) };
     return mrb_ary_new_from_values(mrb, 4, argv);
   };
 
   static mrb_value
   moon_mrb_vector4_s_extract(mrb_state *mrb, mrb_value self) {
-    float4a v4a = moon_vector4_extract_args(mrb);
+    glm::vec4 v4a = moon_vector4_extract_mrb_args(mrb);
 
     mrb_value argv[4] = { mrb_float_value(mrb, v4a.x),
                           mrb_float_value(mrb, v4a.y),
@@ -339,17 +339,12 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_vector4_s_cast(mrb_state *mrb, mrb_value klass) {
-    float4a v4a = moon_vector4_extract_args(mrb);
-
     mrb_value dest_vec = mrb_obj_new(mrb, vector4_class, 0, {});
 
     moon_vec4* _vec4;
     Data_Get_Struct(mrb, dest_vec, &vector4_data_type, _vec4);
 
-    (*_vec4)->x = v4a.x;
-    (*_vec4)->y = v4a.y;
-    (*_vec4)->z = v4a.z;
-    (*_vec4)->w = v4a.w;
+    **_vec4 = moon_vector4_extract_mrb_args(mrb);
 
     return dest_vec;
   }
@@ -359,9 +354,11 @@ namespace Moon {
     vector4_class = mrb_define_class_under(mrb, moon_module, "Vector4", mrb->object_class);
     MRB_SET_INSTANCE_TT(vector4_class, MRB_TT_DATA);
 
-    mrb_define_method(mrb, vector4_class, "initialize",      moon_mrb_vector4_initialize,      MRB_ARGS_REQ(4));
+    mrb_define_method(mrb, vector4_class, "initialize",      moon_mrb_vector4_initialize,      MRB_ARGS_OPT(4));
     mrb_define_method(mrb, vector4_class, "initialize_copy", moon_mrb_vector4_initialize_copy, MRB_ARGS_REQ(1));
+
     mrb_define_method(mrb, vector4_class, "coerce",          moon_mrb_vector4_coerce,          MRB_ARGS_REQ(1));
+
     mrb_define_method(mrb, vector4_class, "x=",              moon_mrb_vector4_x_setter,        MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector4_class, "x",               moon_mrb_vector4_x_getter,        MRB_ARGS_NONE());
     mrb_define_method(mrb, vector4_class, "y=",              moon_mrb_vector4_y_setter,        MRB_ARGS_REQ(1));
@@ -377,6 +374,7 @@ namespace Moon {
     mrb_define_method(mrb, vector4_class, "-",               moon_mrb_vector4_sub,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector4_class, "*",               moon_mrb_vector4_mul,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector4_class, "/",               moon_mrb_vector4_div,             MRB_ARGS_REQ(1));
+    //mrb_define_method(mrb, vector4_class, "%",               moon_mrb_vector4_mod,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector4_class, "dot",             moon_mrb_vector4_dot,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector4_class, "set",             moon_mrb_vector4_set,             MRB_ARGS_ANY());
     //mrb_define_method(mrb, vector4_class, "cross",           moon_mrb_vector4_cross,           MRB_ARGS_REQ(1));

@@ -4,22 +4,15 @@
 #include "mrb.hxx"
 #include <memory>
 #include <glm/glm.hpp>
+#include "mrb_shared_types.hxx"
 
 namespace Moon {
 
   static struct RClass *vector3_class = NULL;
 
-  typedef std::shared_ptr<glm::vec3> moon_vec3;
-
-  struct float3a {
-    mrb_float x;
-    mrb_float y;
-    mrb_float z;
-  };
-
   #define mrb_set_vector3_value_xyz(mrb, target, x, y, z)    \
     {                                                        \
-      auto vector3 = new moon_vec3(new glm::vec3(x, y, z));  \
+      moon_vec3 *vector3 = new moon_vec3(new glm::vec3(x, y, z));  \
       DATA_TYPE(target) = &vector3_data_type;                \
       DATA_PTR(target) = vector3;                            \
     }
@@ -27,17 +20,14 @@ namespace Moon {
   #define vec3_math_head(_func_)                               \
     moon_vec3* src_vec3;                                       \
     Data_Get_Struct(mrb, self, &vector3_data_type, src_vec3);  \
-    float3a other_v3a = moon_vector3_extract_args(mrb);        \
-    glm::vec3 oth_vec3(other_v3a.x, other_v3a.y, other_v3a.z); \
+    glm::vec3 oth_vec3 = moon_vector3_extract_mrb_args(mrb);       \
     _func_
 
-  #define vec3_math_op(_op_)                                           \
-    vec3_math_head({                                                   \
-      /*mrb_value dest_vec = mrb_obj_new(mrb, vector3_class, 0, {});*/ \
-      mrb_value dest_vec = mrb_obj_dup(mrb, self);                     \
-      **((moon_vec3*)DATA_PTR(dest_vec)) = **src_vec3 _op_ oth_vec3;   \
-      return dest_vec;                                                 \
-    })
+  #define vec3_math_op(_op_)                                         \
+    glm::vec3 oth_vec3 = moon_vector3_extract_mrb_args(mrb);             \
+    mrb_value dest_vec = mrb_obj_dup(mrb, self);                     \
+    **((moon_vec3*)DATA_PTR(dest_vec)) _op_ ## = oth_vec3;           \
+    return dest_vec;
 
   static void moon_mrb_vector3_deallocate(mrb_state *mrb, void *p) {
     delete((moon_vec3*)p);
@@ -50,31 +40,19 @@ namespace Moon {
   /*
    * Black Magic
    */
-  static float3a
-  moon_vector3_extract_args(mrb_state *mrb) {
-    mrb_value *vals;
-    int len;
+  glm::vec3
+  moon_vector3_extract_args(mrb_state *mrb, int argc, mrb_value *vals) {
+    glm::vec3 result;
 
-    float3a result = { 0.0f, 0.0f, 0.0f };
-
-    mrb_get_args(mrb, "*", &vals, &len);
-
-    switch (len) {
+    switch (argc) {
       case 1:
         mrb_value val;
-        mrb_get_args(mrb, "o", &val);
-        if (mrb_type(val) == MRB_TT_FIXNUM) {
-          mrb_int i;
-          mrb_get_args(mrb, "i", &i);
-          result.x = (mrb_float)i;
-          result.y = (mrb_float)i;
-          result.z = (mrb_float)i;
-        } else if (mrb_type(val) == MRB_TT_FLOAT) {
-          mrb_float f;
-          mrb_get_args(mrb, "f", &f);
-          result.x = (mrb_float)f;
-          result.y = (mrb_float)f;
-          result.z = (mrb_float)f;
+        val = vals[0];
+        if ((mrb_type(val) == MRB_TT_FIXNUM) || (mrb_type(val) == MRB_TT_FLOAT)) {
+          double i = mrb_to_flo(mrb, val);
+          result.x = i;
+          result.y = i;
+          result.z = i;
         } else if (mrb_type(val) == MRB_TT_ARRAY) {
           int _ary_len = mrb_ary_len(mrb, val);
           if (_ary_len != 3) {
@@ -88,37 +66,65 @@ namespace Moon {
         } else if (mrb_type(val) == MRB_TT_DATA) {
           moon_vec3* vec3;
           Data_Get_Struct(mrb, val, &vector3_data_type, vec3);
-          result.x = (*vec3)->x;
-          result.y = (*vec3)->y;
-          result.z = (*vec3)->z;
+          result = **vec3;
         } else {
           mrb_raisef(mrb, E_TYPE_ERROR,
                      "wrong type %S (expected Numeric, Array or Vector3)",
                      mrb_obj_classname(mrb, val));
         }
         break;
+      case 2:
+        int index;
+        index = 0;
+        for (int i=0; i < 2; ++i) {
+          mrb_value val = vals[i];
+
+          if (mrb_type(val) == MRB_TT_DATA) {
+            if (DATA_TYPE(val) == &vector2_data_type) {
+              moon_vec2* vec2;
+              Data_Get_Struct(mrb, val, &vector2_data_type, vec2);
+
+              result[index++] = (**vec2)[0]; if (index >= 3) break;
+              result[index++] = (**vec2)[1];
+            } else {
+              mrb_raisef(mrb, E_TYPE_ERROR,
+                         "wrong type %S (expected Vector2)",
+                         mrb_obj_classname(mrb, val));
+            }
+          } else if ((mrb_type(val) == MRB_TT_FIXNUM) || (mrb_type(val) == MRB_TT_FLOAT)) {
+            result[index++] = mrb_to_flo(mrb, val);
+          }
+          if (index >= 3) break;
+        };
+        break;
       case 3:
-        mrb_float x;
-        mrb_float y;
-        mrb_float z;
-        mrb_get_args(mrb, "fff", &x, &y, &z);
-        result.x = x;
-        result.y = y;
-        result.z = z;
+        result.x = mrb_to_flo(mrb, vals[0]);
+        result.y = mrb_to_flo(mrb, vals[1]);
+        result.z = mrb_to_flo(mrb, vals[2]);
         break;
       default:
         mrb_raisef(mrb, E_ARGUMENT_ERROR,
-                   "wrong number of arguments (%d for 1..3)", len);
+                   //"wrong number of arguments (%d for 1 or 3)", argc);
+                   "wrong number of arguments (%d for 1, 2, or 3)", argc);
     }
 
     return result;
   }
 
+  static glm::vec3
+  moon_vector3_extract_mrb_args(mrb_state *mrb) {
+    mrb_value *vals;
+    int len;
+
+    mrb_get_args(mrb, "*", &vals, &len);
+    return moon_vector3_extract_args(mrb, len, vals);
+  }
+
   static mrb_value
   moon_mrb_vector3_initialize(mrb_state *mrb, mrb_value self) {
-    mrb_float x = 0.0f;
-    mrb_float y = 0.0f;
-    mrb_float z = 0.0f;
+    mrb_float x = 0.0;
+    mrb_float y = 0.0;
+    mrb_float z = 0.0;
     mrb_get_args(mrb, "|fff", &x, &y, &z);
 
     mrb_set_vector3_value_xyz(mrb, self, x, y, z);
@@ -225,9 +231,7 @@ namespace Moon {
     Data_Get_Struct(mrb, dest_vec, &vector3_data_type, dvec3);
     Data_Get_Struct(mrb, self, &vector3_data_type, svec3);
 
-    (*dvec3)->x = -(*svec3)->x;
-    (*dvec3)->y = -(*svec3)->y;
-    (*dvec3)->z = -(*svec3)->z;
+    (**dvec3) = -(**svec3);
 
     return dest_vec;
   }
@@ -257,6 +261,11 @@ namespace Moon {
     vec3_math_op(/)
   };
 
+  //static mrb_value
+  //moon_mrb_vector3_mod(mrb_state *mrb, mrb_value self) {
+  //  vec3_math_op(%)
+  //};
+
   static mrb_value
   moon_mrb_vector3_dot(mrb_state *mrb, mrb_value self) {
     vec3_math_head({
@@ -276,14 +285,12 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_vector3_set(mrb_state *mrb, mrb_value self) {
-    float3a v3a = moon_vector3_extract_args(mrb);
+    glm::vec3 v3a = moon_vector3_extract_mrb_args(mrb);
 
     moon_vec3* mvec3;
     Data_Get_Struct(mrb, self, &vector3_data_type, mvec3);
 
-    (*mvec3)->x = v3a.x;
-    (*mvec3)->y = v3a.y;
-    (*mvec3)->z = v3a.z;
+    **mvec3 = v3a;
 
     return self;
   };
@@ -300,7 +307,7 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_vector3_s_extract(mrb_state *mrb, mrb_value self) {
-    float3a v3a = moon_vector3_extract_args(mrb);
+    glm::vec3 v3a = moon_vector3_extract_mrb_args(mrb);
 
     mrb_value argv[3] = { mrb_float_value(mrb, v3a.x),
                           mrb_float_value(mrb, v3a.y),
@@ -310,16 +317,14 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_vector3_s_cast(mrb_state *mrb, mrb_value klass) {
-    float3a v3a = moon_vector3_extract_args(mrb);
+    glm::vec3 v3a = moon_vector3_extract_mrb_args(mrb);
 
     mrb_value dest_vec = mrb_obj_new(mrb, vector3_class, 0, {});
 
     moon_vec3* _vec3;
     Data_Get_Struct(mrb, dest_vec, &vector3_data_type, _vec3);
 
-    (*_vec3)->x = v3a.x;
-    (*_vec3)->y = v3a.y;
-    (*_vec3)->z = v3a.z;
+    **_vec3 = v3a;
 
     return dest_vec;
   }
@@ -344,6 +349,7 @@ namespace Moon {
     mrb_define_method(mrb, vector3_class, "-",               moon_mrb_vector3_sub,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector3_class, "*",               moon_mrb_vector3_mul,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector3_class, "/",               moon_mrb_vector3_div,             MRB_ARGS_REQ(1));
+    //mrb_define_method(mrb, vector3_class, "%",               moon_mrb_vector3_mod,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector3_class, "dot",             moon_mrb_vector3_dot,             MRB_ARGS_REQ(1));
     mrb_define_method(mrb, vector3_class, "set",             moon_mrb_vector3_set,             MRB_ARGS_ANY());
     mrb_define_method(mrb, vector3_class, "cross",           moon_mrb_vector3_cross,           MRB_ARGS_REQ(1));

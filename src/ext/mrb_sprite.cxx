@@ -2,6 +2,7 @@
 #include "mrb_err.hxx"
 #include "sprite.hxx"
 #include <glm/glm.hpp>
+#include "shared_types.hxx"
 
 namespace Moon {
 
@@ -24,11 +25,11 @@ namespace Moon {
     DATA_TYPE(self) = &sprite_data_type;
     DATA_PTR(self) = sprite;
 
-    auto color_ptr = new std::shared_ptr<glm::vec4>(sprite->color);
+    moon_vec4 *color_ptr = new moon_vec4(sprite->color);
     color = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cVector4, &vector4_data_type, color_ptr));
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@color"), color);
 
-    auto tone_ptr = new std::shared_ptr<glm::vec4>(sprite->tone);
+    moon_vec4 *tone_ptr = new moon_vec4(sprite->tone);
     tone = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cVector4, &vector4_data_type, tone_ptr));
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), tone);
 
@@ -144,11 +145,11 @@ namespace Moon {
     // Besides updating the ivar, we need to update the actual sprite->color:
 
     // Get the passed-in object's shared_ptr
-    std::shared_ptr<glm::vec4>* color_ptr;
+    moon_vec4* color_ptr;
     Data_Get_Struct(mrb, new_color, &vector4_data_type, color_ptr);
 
     // Create a new shared_ptr for this instance and overwrite the old one
-    ((Sprite*)DATA_PTR(self))->color = std::shared_ptr<glm::vec4>(*color_ptr);
+    ((Sprite*)DATA_PTR(self))->color = moon_vec4(*color_ptr);
 
     return new_color;
   }
@@ -170,15 +171,14 @@ namespace Moon {
     // Besides updating the ivar, we need to update the actual sprite->tone:
 
     // Get the passed-in object's shared_ptr
-    std::shared_ptr<glm::vec4>* tone_ptr;
+    moon_vec4* tone_ptr;
     Data_Get_Struct(mrb, new_tone, &vector4_data_type, tone_ptr);
 
     // Create a new shared_ptr for this instance and overwrite the old one
-    ((Sprite*)DATA_PTR(self))->tone = std::shared_ptr<glm::vec4>(*tone_ptr);
+    ((Sprite*)DATA_PTR(self))->tone = moon_vec4(*tone_ptr);
 
     return new_tone;
   }
-
 
   static mrb_value
   moon_mrb_sprite_texture_getter(mrb_state *mrb, mrb_value self) {
