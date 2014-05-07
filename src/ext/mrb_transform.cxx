@@ -27,6 +27,13 @@ namespace Moon {
       Data_Get_Struct(mrb, rother, &vector4_data_type, source_vec4);          \
       **target_mat4 __op__ ## = **source_vec4;                                \
     }                                                                         \
+  } else if (mrb_type(rother) == MRB_TT_FIXNUM ||                             \
+             mrb_type(rother) == MRB_TT_FLOAT) {                              \
+    **target_mat4 __op__ ## = mrb_to_flo(mrb, rother);                        \
+  } else {                                                                    \
+    mrb_raisef(mrb, E_TYPE_ERROR,                                             \
+               "wrong argument type %S (expected Transform, Vector4 or Numeric)", \
+               mrb_obj_classname(mrb, rother));                               \
   }                                                                           \
   return rtarget;
 
