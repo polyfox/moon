@@ -226,6 +226,24 @@ namespace Moon {
       return mrb_nil_value();
     }
 
+    def op_negate(mrb_state *mrb, mrb_value self) {
+      mrb_value dest_mat4 = mrb_obj_dup(mrb, self);
+
+      moon_mat4* dmat4;
+      Data_Get_Struct(mrb, dest_mat4, &data_type, dmat4);
+
+      moon_mat4* smat4;
+      Data_Get_Struct(mrb, self, &data_type, smat4);
+
+      **dmat4 = -(**smat4);
+
+      return dest_mat4;
+    }
+
+    def op_identity(mrb_state *mrb, mrb_value self) {
+      return mrb_obj_dup(mrb, self);
+    }
+
     def op_add(mrb_state *mrb, mrb_value self) {
       math_op(+)
     }
@@ -321,6 +339,9 @@ namespace Moon {
 
       mrb_define_method(mrb, rclass, "[]",              entry_get,       MRB_ARGS_ARG(1,1));
       mrb_define_method(mrb, rclass, "[]=",             entry_set,       MRB_ARGS_ARG(2,1));
+
+      mrb_define_method(mrb, rclass, "-@",              op_negate,       MRB_ARGS_NONE());
+      mrb_define_method(mrb, rclass, "+@",              op_identity,     MRB_ARGS_NONE());
 
       mrb_define_method(mrb, rclass, "+",               op_add,          MRB_ARGS_REQ(1));
       mrb_define_method(mrb, rclass, "-",               op_sub,          MRB_ARGS_REQ(1));
