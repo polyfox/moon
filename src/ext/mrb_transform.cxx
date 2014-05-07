@@ -2,10 +2,13 @@
  * Moon Transform, a wrapper around glm::mat4
  */
 #include "mrb.hxx"
-#include <memory>
-#include <glm/glm.hpp>
 #include "shared_types.hxx"
 #include "mrb_shared_types.hxx"
+#include <memory>
+#include <glm/glm.hpp>
+//#include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Moon {
   namespace mrb_Transform {
@@ -272,6 +275,32 @@ namespace Moon {
     //  math_op(%)
     //}
 
+    def translate(mrb_state *mrb, mrb_value self) {
+      mrb_value *vals;
+      int len;
+      mrb_get_args(mrb, "*", &vals, &len);
+
+      mrb_value rtarget = mrb_obj_dup(mrb, self);
+      moon_mat4 *target_mat4;
+      Data_Get_Struct(mrb, rtarget, &data_type, target_mat4);
+
+      if (len == 1) {
+        glm::vec3 v3 = moon_mrb_to_vec3(mrb, vals[0]);
+
+        **target_mat4 = glm::translate(**target_mat4, v3);
+      } else if (len == 3) {
+        **target_mat4 = glm::translate(**target_mat4, glm::vec3(
+          mrb_to_flo(mrb, vals[0]),
+          mrb_to_flo(mrb, vals[1]),
+          mrb_to_flo(mrb, vals[2])));
+      } else {
+        mrb_raisef(mrb, E_ARGUMENT_ERROR,
+                   "wrong argument count %d (expected 1 or 3)",
+                   len);
+      }
+      return rtarget;
+    }
+
     def to_a16(mrb_state *mrb, mrb_value self) {
       moon_mat4 *mat4;
       Data_Get_Struct(mrb, self, &data_type, mat4);
@@ -368,6 +397,8 @@ namespace Moon {
       mrb_define_method(mrb, rclass, "*",               op_mul,          MRB_ARGS_REQ(1));
       mrb_define_method(mrb, rclass, "/",               op_div,          MRB_ARGS_REQ(1));
       //mrb_define_method(mrb, rclass, "%",               op_mod,          MRB_ARGS_REQ(1));
+
+      mrb_define_method(mrb, rclass, "translate",       translate,       MRB_ARGS_ANY());
 
       mrb_define_method(mrb, rclass, "to_a16",          to_a16,          MRB_ARGS_NONE());
       mrb_define_method(mrb, rclass, "to_a",            to_a,            MRB_ARGS_NONE());
