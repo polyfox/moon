@@ -15,7 +15,7 @@ namespace Moon {
     ~Font();
 
     void draw_text(const float &x, const float &y, const float &z, const wchar_t *text); /* white text */
-    void draw_text(const float &x, const float &y, const float &z, const wchar_t *text, glm::vec4 color);
+    void draw_text(const float &x, const float &y, const float &z, const wchar_t *text, const glm::vec4 &color);
     void draw_text(const float &x, const float &y, const float &z, const wchar_t *text, const font_render_options &options);
 
     int size();
@@ -25,7 +25,7 @@ namespace Moon {
     texture_atlas_t *atlas;
 
     VertexBuffer buffer;
-    void add_text(const wchar_t *text, glm::vec4 c); /* temp */
+    void add_text(const wchar_t *text, const glm::vec4 &c);
 
     std::shared_ptr<Shader> shader;
   };

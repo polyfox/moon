@@ -13,36 +13,37 @@
 namespace Moon {
   namespace mrb_Transform {
 
-#define def static mrb_value
-#define math_op(__op__)                                                       \
-  mrb_value rother;                                                           \
-  mrb_get_args(mrb, "o", &rother);                                            \
-  mrb_value rtarget = mrb_obj_dup(mrb, self);                                 \
-  moon_mat4 *target_mat4;                                                     \
-  Data_Get_Struct(mrb, rtarget, &data_type, target_mat4);                     \
+#   define def static mrb_value
+#   define math_op(__op__)                                                    \
+      mrb_value rother;                                                       \
+      mrb_get_args(mrb, "o", &rother);                                        \
+      mrb_value rtarget = mrb_obj_dup(mrb, self);                             \
+      moon_mat4 *target_mat4;                                                 \
+      Data_Get_Struct(mrb, rtarget, &data_type, target_mat4);                 \
                                                                               \
-  if (mrb_type(rother) == MRB_TT_DATA) {                                      \
-    if (DATA_TYPE(rother) == &data_type) { /* Transform */                    \
-      moon_mat4 *source_mat4;                                                 \
-      Data_Get_Struct(mrb, rother, &data_type, source_mat4);                  \
+      if (mrb_type(rother) == MRB_TT_DATA) {                                  \
+        if (DATA_TYPE(rother) == &data_type) { /* Transform */                \
+          moon_mat4 *source_mat4;                                             \
+          Data_Get_Struct(mrb, rother, &data_type, source_mat4);              \
                                                                               \
-      **target_mat4 __op__ ## = **source_mat4;                                \
-    } else if (DATA_TYPE(rother) == &vector4_data_type) { /* Vector4 */       \
-      moon_vec4 *source_vec4;                                                 \
-      Data_Get_Struct(mrb, rother, &vector4_data_type, source_vec4);          \
+          **target_mat4 __op__ ## = **source_mat4;                            \
+        } else if (DATA_TYPE(rother) == &vector4_data_type) { /* Vector4 */   \
+          moon_vec4 *source_vec4;                                             \
+          Data_Get_Struct(mrb, rother, &vector4_data_type, source_vec4);      \
                                                                               \
-      **target_mat4 __op__ ## = **source_vec4;                                \
-    }                                                                         \
-  } else if (mrb_type(rother) == MRB_TT_FIXNUM ||                             \
-             mrb_type(rother) == MRB_TT_FLOAT) { /* Scalar */                 \
+          **target_mat4 __op__ ## = **source_vec4;                            \
+        }                                                                     \
+      } else if (mrb_type(rother) == MRB_TT_FIXNUM ||                         \
+                 mrb_type(rother) == MRB_TT_FLOAT) { /* Scalar */             \
                                                                               \
-    **target_mat4 __op__ ## = mrb_to_flo(mrb, rother);                        \
-  } else {                                                                    \
-    mrb_raisef(mrb, E_TYPE_ERROR,                                             \
-               "wrong argument type %S (expected Transform, Vector4 or Numeric)", \
-               mrb_obj_classname(mrb, rother));                               \
-  }                                                                           \
-  return rtarget;
+        **target_mat4 __op__ ## = mrb_to_flo(mrb, rother);                    \
+      } else {                                                                \
+        mrb_raisef(mrb, E_TYPE_ERROR,                                         \
+                   "wrong argument type %S (expected Transform, Vector4 or Numeric)", \
+                   mrb_obj_classname(mrb, rother));                           \
+      }                                                                       \
+      return rtarget; /* */
+/* #define math_op */
 
     static struct RClass *rclass = NULL;
 
@@ -53,6 +54,13 @@ namespace Moon {
 
     const struct mrb_data_type data_type = { "Transform", deallocate };
 
+    /*
+     * @overload Transform#initialize()
+     * @overload Transform#initialize(Numeric)
+     * @overload Transform#initialize(Transform)
+     * @overload Transform#initialize(Vector4, Vector4, Vector4, Vector4)
+     * @overload Transform#initialize(n1, ..., n16)
+     */
     def initialize(mrb_state *mrb, mrb_value self) {
       mrb_value *args;
       int argc;
@@ -120,6 +128,10 @@ namespace Moon {
       return mrb_nil_value();
     };
 
+    /*
+     * @overload initialize_copy(Transform other)
+     * @return [nil]
+     */
     def initialize_copy(mrb_state *mrb, mrb_value self) {
       mrb_value other;
       mrb_get_args(mrb, "o", &other);
@@ -134,6 +146,9 @@ namespace Moon {
       return mrb_nil_value();
     };
 
+    /*
+     * @return [Array<Object>]
+     */
     def coerce(mrb_state *mrb, mrb_value self) {
       mrb_value other;
       mrb_get_args(mrb, "o", &other);
@@ -141,6 +156,12 @@ namespace Moon {
       return mrb_ary_new_from_values(mrb, 2, argv);
     };
 
+    /*
+     * @overload Transform#[int]
+     *   @return [Vector4]
+     * @overload Transform#[int, int]
+     *   @return [Numeric]
+     */
     def entry_get(mrb_state *mrb, mrb_value self) {
       mrb_value *vals;
       int len;
@@ -190,8 +211,12 @@ namespace Moon {
                    "wrong number of arguments (%d for 1, or 2)", len);
       }
       return mrb_nil_value();
-    }
+    };
 
+    /*
+     * @overload Transform#[num] = Vector4 value
+     * @overload Transform#[num, num] = Numeric value
+     */
     def entry_set(mrb_state *mrb, mrb_value self) {
       mrb_value *vals;
       int len;
@@ -239,8 +264,11 @@ namespace Moon {
                    "wrong number of arguments (%d for 2, or 3)", len);
       }
       return mrb_nil_value();
-    }
+    };
 
+    /*
+     * @return [Transform]
+     */
     def op_negate(mrb_state *mrb, mrb_value self) {
       mrb_value dest_mat4 = mrb_obj_dup(mrb, self);
 
@@ -253,32 +281,53 @@ namespace Moon {
       **dmat4 = -(**smat4);
 
       return dest_mat4;
-    }
+    };
 
+    /*
+     * @return [Transform]
+     */
     def op_identity(mrb_state *mrb, mrb_value self) {
       return mrb_obj_dup(mrb, self);
-    }
+    };
 
+    /*
+     * @return [Transform]
+     */
     def op_add(mrb_state *mrb, mrb_value self) {
       math_op(+)
-    }
+    };
 
+    /*
+     * @return [Transform]
+     */
     def op_sub(mrb_state *mrb, mrb_value self) {
       math_op(-)
-    }
+    };
 
+    /*
+     * @return [Transform]
+     */
     def op_mul(mrb_state *mrb, mrb_value self) {
       math_op(*)
-    }
+    };
 
+    /*
+     * @return [Transform]
+     */
     def op_div(mrb_state *mrb, mrb_value self) {
       math_op(/)
-    }
+    };
 
+    /*
+     * @return [Transform]
+     */
     //def op_mod(mrb_state *mrb, mrb_value self) {
     //  math_op(%)
-    //}
+    //};
 
+    /*
+     * @return [Transform]
+     */
     def translate(mrb_state *mrb, mrb_value self) {
       mrb_value *vals;
       int len;
@@ -303,8 +352,11 @@ namespace Moon {
                    len);
       }
       return rtarget;
-    }
+    };
 
+    /*
+     * @return [Transform]
+     */
     def rotate(mrb_state *mrb, mrb_value self) {
       mrb_value *vals;
       int len;
@@ -331,8 +383,11 @@ namespace Moon {
                    len);
       }
       return rtarget;
-    }
+    };
 
+    /*
+     * @return [Transform]
+     */
     def scale(mrb_state *mrb, mrb_value self) {
       mrb_value *vals;
       int len;
@@ -359,6 +414,9 @@ namespace Moon {
       return rtarget;
     }
 
+    /*
+     * @return [Array<Numeric>]
+     */
     def to_a16(mrb_state *mrb, mrb_value self) {
       moon_mat4 *mat4;
       Data_Get_Struct(mrb, self, &data_type, mat4);
@@ -391,8 +449,11 @@ namespace Moon {
       };
 
       return mrb_ary_new_from_values(mrb, 16, argv);
-    }
+    };
 
+    /*
+     * @return [Array<Vector4>]
+     */
     def to_a(mrb_state *mrb, mrb_value self) {
       moon_mat4 *mat4;
       Data_Get_Struct(mrb, self, &data_type, mat4);
@@ -420,19 +481,23 @@ namespace Moon {
       mrb_value argv[4] = { rrow1, rrow2, rrow3, rrow4 };
 
       return mrb_ary_new_from_values(mrb, 4, argv);
-    }
+    };
 
+    /*
+     * @overload Transform[obj]
+     * @return [Transform]
+     */
     def s_cast(mrb_state *mrb, mrb_value self) {
       mrb_value *vals;
       int len;
       mrb_get_args(mrb, "*", &vals, &len);
 
       return mrb_obj_new(mrb, rclass, len, vals);
-    }
+    };
 
     //def s_extract(mrb_state *mrb, mrb_value self) {
     //  return mrb_nil_value();
-    //}
+    //};
 
     static struct RClass*
     Init(mrb_state *mrb) {

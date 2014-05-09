@@ -142,12 +142,14 @@ namespace Moon {
     float angle;
     glm::vec4 color;
     glm::vec4 tone;
+    glm::mat4 transform;
   };
 
   struct font_render_options {
     float outline;
     glm::vec4 color;
     glm::vec4 outline_color;
+    glm::mat4 transform;
     font_render_options() :
       outline(0.0),
       color(1.0, 1.0, 1.0, 1.0),

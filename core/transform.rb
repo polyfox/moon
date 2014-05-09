@@ -21,7 +21,19 @@ module Moon
     end
 
     def self.load(data)
-      new *data["data"]
+      new(*data["data"])
+    end
+
+    def self.translate(*args)
+      new.translate(*args)
+    end
+
+    def self.rotate(*args)
+      new.rotate(*args)
+    end
+
+    def self.scale(*args)
+      new.scale(*args)
     end
 
   end

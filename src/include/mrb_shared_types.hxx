@@ -28,6 +28,6 @@ namespace Moon {
     return moon_vector4_extract_args(mrb, 1, argv);
   }
 
-}
+};
 
 #endif

@@ -30,24 +30,24 @@ namespace Moon {
   }
 
   void Font::draw_text(const float &x, const float &y, const float &z,
-                       const wchar_t *text, glm::vec4 color) {
-    font_render_options options;
-    options.color = color;
-    draw_text(x, y, z, text, options);
+                       const wchar_t *text, const glm::vec4 &color) {
+    font_render_options render_ops;
+    render_ops.color = color;
+    draw_text(x, y, z, text, render_ops);
   }
 
   void Font::draw_text(const float &x, const float &y, const float &z,
-                       const wchar_t *text, const font_render_options &options) {
+                       const wchar_t *text, const font_render_options &render_ops) {
     // outline
-    if (options.outline > 0) {
+    if (render_ops.outline > 0) {
       font->outline_type = 2;
-      font->outline_thickness = options.outline;
-      add_text(text, options.outline_color);
+      font->outline_thickness = render_ops.outline;
+      add_text(text, render_ops.outline_color);
     }
 
     font->outline_type = 0;
     font->outline_thickness = 0;
-    add_text(text, options.color);
+    add_text(text, render_ops.color);
 
     shader->use();
 
@@ -57,7 +57,7 @@ namespace Moon {
 
     //model matrix
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down
-      glm::translate(glm::mat4(1.0f), glm::vec3(x, y + font->ascender, z)), // move it to the correct position in the world
+      glm::translate(render_ops.transform, glm::vec3(x, y + font->ascender, z)), // move it to the correct position in the world
       180.0f,
       glm::vec3(1.0f, 0.0f, 0.0f)
     );
@@ -69,7 +69,7 @@ namespace Moon {
     buffer.clear();
   }
 
-  void Font::add_text(const wchar_t *text, glm::vec4 c) {
+  void Font::add_text(const wchar_t *text, const glm::vec4 &c) {
     float cursor = 0; // position of the write cursor
 
     for(size_t i = 0; i < wcslen(text); ++i) {

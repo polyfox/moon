@@ -8,6 +8,7 @@ namespace Moon
 
   static mrb_sym id_outline;
   static mrb_sym id_outline_color;
+  static mrb_sym id_transform;
 
   static void moon_mrb_font_deallocate(mrb_state *mrb, void *p) {
     delete((Font*)p);
@@ -74,6 +75,11 @@ namespace Moon
             Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
                                  &vector4_data_type, color_ptr);
             render_op.outline_color = **color_ptr;
+          } else if (mrb_symbol(key) == id_transform) {
+            moon_mat4* mat4_ptr;
+            Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
+                                 &mrb_Transform::data_type, mat4_ptr);
+            render_op.transform = **mat4_ptr;
           }
         }
       }
@@ -135,6 +141,7 @@ namespace Moon
 
     id_outline       = mrb_intern_cstr(mrb, "outline");
     id_outline_color = mrb_intern_cstr(mrb, "outline_color");
+    id_transform     = mrb_intern_cstr(mrb, "transform");
 
     return font_class;
   }

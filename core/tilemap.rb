@@ -53,7 +53,7 @@ module Moon
     #   (width), (height), (layers)
     #     is the number of cells to render, and the number of layers to be rendered
     ###
-    def render(x, y, z)
+    def render(x, y, z, options={})
       return unless @data
       return unless @tileset
 
@@ -69,7 +69,7 @@ module Moon
 
       dox, doy, doz, width, height, layers = *@view if @view
 
-      px, py, pz = *@position
+      px, py, pz = *(@position + [x, y, z])
 
       # we loop by layer
       layers.times do |l|
@@ -80,6 +80,9 @@ module Moon
         else
           next if dz < 0 || dz >= @data.zsize
         end
+
+        opacity = @layer_opacity ? @layer_opacity[dz] : 1.0
+        render_ops = { opacity: opacity }.merge(options)
 
         # and then by row
         height.times do |i|
@@ -109,7 +112,6 @@ module Moon
             zm = @data_zmap ? @data_zmap[dx, dy, dz] : 0
             flag = @flags ? @flags[dx, dy, dz] : 0
 
-            opacity = @layer_opacity ? @layer_opacity[dz] : 1.0
 
             if flag > 0
               rx, ry, rz = 0, 0, 0
@@ -135,15 +137,15 @@ module Moon
               elsif (flag.masked?(DataFlag::OFF_UP))
                 ry -= vy
               end
-              @tileset.render px + rx + x + j * cell_width,
-                              py + ry + y + i * cell_height,
-                              pz + rz + z + zm,
-                              tile_id, opacity: opacity
+              @tileset.render px + rx + j * cell_width,
+                              py + ry + i * cell_height,
+                              pz + rz + zm,
+                              tile_id, render_ops
             else
-              @tileset.render px + x + j * cell_width,
-                              py + y + i * cell_height,
-                              pz + z + zm,
-                              tile_id, opacity: opacity
+              @tileset.render px + j * cell_width,
+                              py + i * cell_height,
+                              pz + zm,
+                              tile_id, render_ops
             end
 
           end

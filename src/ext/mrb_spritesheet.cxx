@@ -12,6 +12,7 @@ namespace Moon {
   static mrb_sym id_ox;
   static mrb_sym id_oy;
   static mrb_sym id_angle;
+  static mrb_sym id_transform;
 
   static void moon_mrb_spritesheet_deallocate(mrb_state *mrb, void *p) {
     delete((Spritesheet*)p);
@@ -92,6 +93,13 @@ namespace Moon {
           // :angle
           } else if (mrb_symbol(key) == id_angle) {
             render_op.angle = mrb_to_flo(mrb, mrb_hash_get(mrb, options, key));
+
+          // :transform
+          } else if (mrb_symbol(key) == id_transform) {
+            moon_mat4* mat_ptr;
+            Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
+                                 &mrb_Transform::data_type, mat_ptr);
+            render_op.transform = **mat_ptr;
           }
         }
       }
@@ -134,12 +142,13 @@ namespace Moon {
     mrb_define_method(mrb, spritesheet_class, "cell_height", moon_mrb_spritesheet_cell_height,    MRB_ARGS_NONE());
     mrb_define_method(mrb, spritesheet_class, "cell_count",  moon_mrb_spritesheet_cell_count,     MRB_ARGS_NONE());
 
-    id_opacity = mrb_intern_cstr(mrb, "opacity");
-    id_tone    = mrb_intern_cstr(mrb, "tone");
-    id_color   = mrb_intern_cstr(mrb, "color");
-    id_ox      = mrb_intern_cstr(mrb, "ox");
-    id_oy      = mrb_intern_cstr(mrb, "oy");
-    id_angle   = mrb_intern_cstr(mrb, "angle");
+    id_opacity   = mrb_intern_cstr(mrb, "opacity");
+    id_tone      = mrb_intern_cstr(mrb, "tone");
+    id_color     = mrb_intern_cstr(mrb, "color");
+    id_ox        = mrb_intern_cstr(mrb, "ox");
+    id_oy        = mrb_intern_cstr(mrb, "oy");
+    id_angle     = mrb_intern_cstr(mrb, "angle");
+    id_transform = mrb_intern_cstr(mrb, "transform");
 
     return spritesheet_class;
   };
