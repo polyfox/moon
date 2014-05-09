@@ -15,7 +15,8 @@ require 'scripts/music_activity_hud'
 #State.push(State::Test)           # common testing state
 #State.push(State::SpriteTest)
 #State.push(State::SpriteClipTest)
- State.push(State::SpriteColorTest)
+#State.push(State::SpriteColorTest)
+ State.push(State::TestSpritesheet)
 #State.push(State::KeyHoldTest)    #
 #State.push(State::MouseEvents)
 #State.push(State::SpriteAngleTest)
