@@ -12,7 +12,7 @@ add_executable(game
 add_custom_target(copy_scripts ALL
   COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/scripts
   COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/core
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_HOME_DIRECTORY}/game/scripts/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/scripts
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_HOME_DIRECTORY}/modules/game/scripts/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/scripts
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_HOME_DIRECTORY}/core/ ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/core
 )
 
