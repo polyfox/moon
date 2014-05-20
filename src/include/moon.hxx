@@ -26,7 +26,7 @@
 #  define stat _stat
 #endif
 
-#define SHADER_VERSION_120 strcmp((char*)glGetString(GL_SHADING_LANGUAGE_VERSION), "1.20") == 0
+#define SHADER_VERSION_1x0 (strcmp((char*)glGetString(GL_SHADING_LANGUAGE_VERSION), "1.50") <= 0)
 
 inline bool exists(const std::string& name) {
   struct stat buffer;
