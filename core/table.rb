@@ -163,6 +163,12 @@ module Moon
       self
     end
 
+    def self.load(data)
+      instance = new data["xsize"], data["ysize"], default: data["default"]
+      instance.import data
+      instance
+    end
+
     private :create_data
 
   end
