@@ -1,11 +1,14 @@
 module Moon
   class Event
 
+    @@id = 0
+
     attr_reader :type
-    attr_accessor :id # TEMP, proper initialization later
+    attr_reader :id
 
     def initialize(type)
       @type = type
+      @id = @@id += 1
     end
 
   end
