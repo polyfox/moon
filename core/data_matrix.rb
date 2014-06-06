@@ -162,6 +162,13 @@ module Moon
       self
     end
 
+    def self.load(data)
+      instance = new data["xsize"], data["ysize"], data["zsize"],
+                     default: data["default"]
+      instance.import data
+      instance
+    end
+
     #protected :data
     private :create_data
 
