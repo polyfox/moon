@@ -19,7 +19,8 @@ module Cache
   end
 
   def branch(branch_name)
-    define_method(branch_name) do |name, *args|
+    define_method(branch_name) do |*args_org|
+      name, *args = *args_org
       puts "[Cache:#{branch_name}] GET #{name.inspect}, #{args.join(", ")}"
       key = [name, *args]
       constructor = @constructor[branch_name]
