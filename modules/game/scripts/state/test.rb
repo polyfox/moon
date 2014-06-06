@@ -29,7 +29,7 @@ class State::Test < State
   def update(delta)
     #p "SPACE is PRESSED!" if Input.pressed?(Input::Keys::SPACE)
     #p "Mouse is in area!" if Input::Mouse.in_area?(0, 0, 32, 32)
-    #p Input::Mouse.pos
+    #p Input::Mouse.position
     super delta
   end
 

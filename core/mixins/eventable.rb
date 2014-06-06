@@ -14,7 +14,7 @@ module Eventable
   # @param [Symbol] types The types to listen for..
   # @param [Proc] block The block we want to execute when we catch the type.
   ###
-  def on *types, &block
+  def on(*types, &block)
     types.each do |type|
       (@event_listeners[type] ||= []).push block
     end
@@ -23,12 +23,12 @@ module Eventable
   ###
   # @param [Event] event
   ###
-  def trigger event
+  def trigger(event)
     event = Moon::Event.new(event) unless event.is_a?(Moon::Event) # TEMP
 
     @event_listeners[:any].each {|block| block.call(event) }
 
-    return unless @event_listeners[event.type]
+    return unless @event_listeners.key?(event.type)
 
     @event_listeners[event.type].each do |block|
       block.call(event)

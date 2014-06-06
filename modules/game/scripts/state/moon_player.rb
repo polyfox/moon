@@ -264,7 +264,7 @@ class State::MoonPlayer < State
 
   def update(delta)
     @player.update delta
-    #puts Input::Mouse.pos if @ticks % 5 == 0
+    #puts Input::Mouse.position if @ticks % 5 == 0
     super delta
   end
 

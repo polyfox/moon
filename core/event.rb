@@ -20,24 +20,24 @@ module Moon
       @action = action
       @key = key
 
-      @mods = mods # TODO
+      @mods = mods
       super :input
     end
 
     def alt?
-      @mods.masked?(Moon::Input::MOD_ALT)
+      @mods.masked? Moon::Input::MOD_ALT
     end
 
     def ctrl?
-      @mods.masked?(Moon::Input::MOD_CONTROL)
+      @mods.masked? Moon::Input::MOD_CONTROL
     end
 
     def super?
-      @mods.masked?(Moon::Input::MOD_SUPER)
+      @mods.masked? Moon::Input::MOD_SUPER
     end
 
     def shift?
-      @mods.masked?(Moon::Input::MOD_SHIFT)
+      @mods.masked? Moon::Input::MOD_SHIFT
     end
 
   end

@@ -2,8 +2,8 @@ require 'core/gui/observer'
 
 class Container < Moon::Rect
 
-  include Eventable
   include ScreenElement
+  include Eventable
 
   attr_accessor :visible
   attr_accessor :draggable
