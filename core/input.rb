@@ -1,33 +1,29 @@
 module Moon
   module Input
 
-    class KeyboardInputEvent < InputEvent
+    class KeyboardEvent < InputEvent
     end
 
-    class MouseInputEvent < InputEvent
-    end
-
-    class MouseEvent < Event
+    class MouseEvent < InputEvent
 
       attr_reader :action
-      attr_reader :position
+      attr_accessor :position
 
-      def initialize(action, position)
-        @action = action
+      def initialize(button, action, mods, position)
         @position = Vector2[position]
-        super :mouse
+        super button, action, mods
       end
 
     end
 
     def self.on_key key, scancode, action, mods
       state = State.states.last # delagator shim
-      state.input.trigger KeyboardInputEvent.new(key, action, mods)
+      state.input.trigger KeyboardEvent.new(key, action, mods)
     end
 
     def self.on_button button, action, mods
       state = State.states.last # delagator shim
-      state.input.trigger MouseInputEvent.new(button, action, mods)
+      state.input.trigger MouseEvent.new(button, action, mods, Mouse.position)
     end
 
     class Observer
@@ -85,7 +81,7 @@ module Moon
         in_area?(rect.x, rect.y, rect.width, rect.height)
       end
 
-      def self.pos
+      def self.position
         Vector2.new x, y
       end
 

@@ -80,7 +80,7 @@ class Observer
     end
 
     # mousemove
-    current_pos = Moon::Input::Mouse.pos
+    current_pos = Moon::Input::Mouse.position
     if @last_pos != current_pos
       trigger :mousemove
       @last_pos = current_pos
