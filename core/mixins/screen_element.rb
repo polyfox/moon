@@ -49,4 +49,11 @@ module ScreenElement
     px.between?(0, width) && py.between?(0, height)
   end
 
+  ###
+  # @return [Rect] bounds
+  ###
+  def bounds
+    Moon::Rect.new x, y, width, height
+  end
+
 end
