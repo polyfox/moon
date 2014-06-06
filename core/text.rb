@@ -4,6 +4,7 @@ module Moon
     attr_accessor :color    # Moon::Vector4
     attr_reader :font     # Moon::Font
     attr_accessor :position # Moon::Vector3
+    attr_accessor :align    # Symbol [:left, :right, :center]
     attr_reader :string   # String
     attr_reader :width
     attr_reader :height
@@ -27,6 +28,15 @@ module Moon
       @color = Moon::Vector4.new 1.0, 1.0, 1.0, 1.0
       @align = align
       refresh_size
+    end
+
+    def set(options)
+      self.string = options.fetch :string
+      self.align = options.fetch :align, :left
+      if fon = options[:font]
+        self.font = fon
+      end
+      self
     end
 
     def x
