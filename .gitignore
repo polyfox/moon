@@ -4,6 +4,10 @@ bin/*/scripts
 bin/*/game
 lib/
 
+# yard doc
+.yard
+doc
+
 # Compiled Object files
 *.slo
 *.lo

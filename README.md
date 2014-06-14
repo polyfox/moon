@@ -1,3 +1,8 @@
+Moon
+====
+[![Coverage Status](https://coveralls.io/repos/archSeer/moon/badge.png)](https://coveralls.io/r/archSeer/moon)
+[![Code Climate](https://codeclimate.com/github/archSeer/moon.png)](https://codeclimate.com/github/archSeer/moon)
+
 # Moon and Lunar Howl
 
 Moon is the name of the engine (libmoon), running OpenGL, GLFW and mruby.
