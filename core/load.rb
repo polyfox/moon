@@ -3,6 +3,7 @@
 #   Entry script for Moon's mrb
 require 'core/core_ext'
 require 'core/modules'
+require 'core/cache_base'
 require 'core/mixins'
 require 'core/entity_system'
 require 'core/cuboid'
