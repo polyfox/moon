@@ -8,7 +8,7 @@ int main(void)
   moon_main(engine);
 
   engine->run();
-  if(engine) delete(engine); 
+  if(engine) delete(engine);
 
   return 0;
 }

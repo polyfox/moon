@@ -10,23 +10,23 @@ namespace Moon {
 
   static struct RClass *vector3_class = NULL;
 
-  #define mrb_set_vector3_value_xyz(mrb, target, x, y, z)    \
-    {                                                        \
-      moon_vec3 *vector3 = new moon_vec3(new glm::vec3(x, y, z));  \
-      DATA_TYPE(target) = &vector3_data_type;                \
-      DATA_PTR(target) = vector3;                            \
+  #define mrb_set_vector3_value_xyz(mrb, target, x, y, z)         \
+    {                                                             \
+      moon_vec3 *vector3 = new moon_vec3(new glm::vec3(x, y, z)); \
+      DATA_TYPE(target) = &vector3_data_type;                     \
+      DATA_PTR(target) = vector3;                                 \
     }
 
   #define vec3_math_head(_func_)                               \
     moon_vec3* src_vec3;                                       \
     Data_Get_Struct(mrb, self, &vector3_data_type, src_vec3);  \
-    glm::vec3 oth_vec3 = moon_vector3_extract_mrb_args(mrb);       \
+    glm::vec3 oth_vec3 = moon_vector3_extract_mrb_args(mrb);   \
     _func_
 
-  #define vec3_math_op(_op_)                                         \
-    glm::vec3 oth_vec3 = moon_vector3_extract_mrb_args(mrb);             \
-    mrb_value dest_vec = mrb_obj_dup(mrb, self);                     \
-    **((moon_vec3*)DATA_PTR(dest_vec)) _op_ ## = oth_vec3;           \
+  #define vec3_math_op(_op_)                                  \
+    glm::vec3 oth_vec3 = moon_vector3_extract_mrb_args(mrb);  \
+    mrb_value dest_vec = mrb_obj_dup(mrb, self);              \
+    **((moon_vec3*)DATA_PTR(dest_vec)) _op_ ## = oth_vec3;    \
     return dest_vec;
 
   static void moon_mrb_vector3_deallocate(mrb_state *mrb, void *p) {

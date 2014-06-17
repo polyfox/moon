@@ -10,21 +10,21 @@ namespace Moon {
 
   static struct RClass *vector2_class = NULL;
 
-  #define mrb_set_vector2_value_xy(mrb, target, x, y)    \
-    {                                                    \
+  #define mrb_set_vector2_value_xy(mrb, target, x, y)          \
+    {                                                          \
       moon_vec2 *vector2 = new moon_vec2(new glm::vec2(x, y)); \
-      DATA_TYPE(target) = &vector2_data_type;            \
-      DATA_PTR(target) = vector2;                        \
+      DATA_TYPE(target) = &vector2_data_type;                  \
+      DATA_PTR(target) = vector2;                              \
     }
 
   #define vec2_math_head(_func_)                               \
     moon_vec2* src_vec2;                                       \
     Data_Get_Struct(mrb, self, &vector2_data_type, src_vec2);  \
-    glm::vec2 oth_vec2 = moon_vector2_extract_mrb_args(mrb);       \
+    glm::vec2 oth_vec2 = moon_vector2_extract_mrb_args(mrb);   \
     _func_
 
   #define vec2_math_op(_op_)                                   \
-    glm::vec2 oth_vec2 = moon_vector2_extract_mrb_args(mrb);       \
+    glm::vec2 oth_vec2 = moon_vector2_extract_mrb_args(mrb);   \
     mrb_value dest_vec = mrb_obj_dup(mrb, self);               \
     **((moon_vec2*)DATA_PTR(dest_vec)) _op_ ## = oth_vec2;     \
     return dest_vec;
