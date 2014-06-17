@@ -39,7 +39,7 @@ namespace Moon {
         **target_mat4 __op__ ## = mrb_to_flo(mrb, rother);                    \
       } else {                                                                \
         mrb_raisef(mrb, E_TYPE_ERROR,                                         \
-                   "wrong argument type %S (expected Transform, Vector4 or Numeric)", \
+                   "wrong argument type %s (expected Transform, Vector4 or Numeric)", \
                    mrb_obj_classname(mrb, rother));                           \
       }                                                                       \
       return rtarget; /* */
@@ -79,7 +79,7 @@ namespace Moon {
             mat = new moon_mat4(new glm::mat4(**source_mat4));
           } else {
             mrb_raisef(mrb, E_TYPE_ERROR,
-                       "wrong argument type %S (expected Transform)",
+                       "wrong argument type %s (expected Transform)",
                        mrb_obj_classname(mrb, args[0]));
             return mrb_nil_value();
           }
