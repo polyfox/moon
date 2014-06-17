@@ -76,13 +76,16 @@ module Moon
       Vector3.new @width, @height, @depth
     end
 
+    ###
+    #
+    ###
     def whd=(other)
       @width, @height, @depth = *Vector3.extract(other)
     end
 
     ###
     # Converts a given Object to Cuboid array
-    # @param [Object]
+    # @param [Object] obj
     # @return [Array<Numeric>] (x, y, z, w, h, d)
     ###
     def self.extract(obj)
