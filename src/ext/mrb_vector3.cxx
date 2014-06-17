@@ -40,72 +40,108 @@ namespace Moon {
   /*
    * Black Magic
    */
+  static glm::vec3
+  moon_vector3_extract_mrb_vec3(mrb_state *mrb, mrb_value obj) {
+    moon_vec3* vec3;
+    Data_Get_Struct(mrb, obj, &vector3_data_type, vec3);
+    return **vec3;
+  }
+
+  static glm::vec3
+  moon_vector3_extract_mrb_num(mrb_state *mrb, mrb_value obj) {
+    double i = mrb_to_flo(mrb, obj);
+    return glm::vec3(i, i, i);
+  }
+
+  static glm::vec3
+  moon_vector3_extract_mrb_array(mrb_state *mrb, mrb_value obj) {
+    glm::vec3 result;
+    int _ary_len = mrb_ary_len(mrb, obj);
+    if (_ary_len != 3) {
+      mrb_raisef(mrb, E_ARGUMENT_ERROR,
+                 "wrong array size %d (expected 3)", _ary_len);
+    } else {
+      result.x = mrb_to_flo(mrb, RARRAY_PTR(obj)[0]);
+      result.y = mrb_to_flo(mrb, RARRAY_PTR(obj)[1]);
+      result.z = mrb_to_flo(mrb, RARRAY_PTR(obj)[2]);
+    }
+    return result;
+  }
+
+  static glm::vec3
+  moon_vector3_extract_mrb_to_vec3(mrb_state *mrb, mrb_value obj)
+  {
+    return moon_vector3_extract_mrb_vec3(mrb, mrb_funcall(mrb, obj, "to_vec3", 0));
+  }
+
   glm::vec3
   moon_vector3_extract_args(mrb_state *mrb, int argc, mrb_value *vals) {
     glm::vec3 result;
 
     switch (argc) {
-      case 1:
-        mrb_value val;
-        val = vals[0];
-        if ((mrb_type(val) == MRB_TT_FIXNUM) || (mrb_type(val) == MRB_TT_FLOAT)) {
-          double i = mrb_to_flo(mrb, val);
-          result.x = i;
-          result.y = i;
-          result.z = i;
-        } else if (mrb_type(val) == MRB_TT_ARRAY) {
-          int _ary_len = mrb_ary_len(mrb, val);
-          if (_ary_len != 3) {
-            mrb_raisef(mrb, E_ARGUMENT_ERROR,
-                       "wrong array size %d (expected 3)", _ary_len);
-          } else {
-            result.x = mrb_to_flo(mrb, RARRAY_PTR(val)[0]);
-            result.y = mrb_to_flo(mrb, RARRAY_PTR(val)[1]);
-            result.z = mrb_to_flo(mrb, RARRAY_PTR(val)[2]);
-          }
-        } else if (mrb_type(val) == MRB_TT_DATA) {
-          moon_vec3* vec3;
-          Data_Get_Struct(mrb, val, &vector3_data_type, vec3);
-          result = **vec3;
+    case 1:
+      mrb_value val;
+      val = vals[0];
+      switch (mrb_type(val)) {
+      case MRB_TT_FIXNUM:
+      case MRB_TT_FLOAT:
+        result = moon_vector3_extract_mrb_num(mrb, val);
+        break;
+      case MRB_TT_ARRAY:
+        result = moon_vector3_extract_mrb_array(mrb, val);
+        break;
+      case MRB_TT_DATA:
+        if (DATA_TYPE(val) == &vector3_data_type) {
+          result = moon_vector3_extract_mrb_vec3(mrb, val);
+          break;
+        }
+      default:
+        if (mrb_respond_to(mrb, val, mrb_intern_cstr(mrb, "to_vec3"))) {
+          result = moon_vector3_extract_mrb_to_vec3(mrb, val);
+          break;
         } else {
           mrb_raisef(mrb, E_TYPE_ERROR,
-                     "wrong type %S (expected Numeric, Array or Vector3)",
+                     "wrong type %s (expected Numeric, Array or Vector3)",
                      mrb_obj_classname(mrb, val));
         }
-        break;
-      case 2:
-        int index;
-        index = 0;
-        for (int i=0; i < 2; ++i) {
-          mrb_value val = vals[i];
+      }
+      break;
+    case 2:
+      int index;
+      index = 0;
+      for (int i=0; i < 2; ++i) {
+        mrb_value val = vals[i];
 
-          if (mrb_type(val) == MRB_TT_DATA) {
-            if (DATA_TYPE(val) == &vector2_data_type) {
-              moon_vec2* vec2;
-              Data_Get_Struct(mrb, val, &vector2_data_type, vec2);
+        if (mrb_type(val) == MRB_TT_DATA) {
+          if (DATA_TYPE(val) == &vector2_data_type) {
+            moon_vec2* vec2;
+            Data_Get_Struct(mrb, val, &vector2_data_type, vec2);
 
-              result[index++] = (**vec2)[0]; if (index >= 3) break;
-              result[index++] = (**vec2)[1];
-            } else {
-              mrb_raisef(mrb, E_TYPE_ERROR,
-                         "wrong type %S (expected Vector2)",
-                         mrb_obj_classname(mrb, val));
-            }
-          } else if ((mrb_type(val) == MRB_TT_FIXNUM) || (mrb_type(val) == MRB_TT_FLOAT)) {
-            result[index++] = mrb_to_flo(mrb, val);
+            result[index++] = (**vec2)[0]; if (index >= 3) break;
+            result[index++] = (**vec2)[1];
+          } else {
+            mrb_raisef(mrb, E_TYPE_ERROR,
+                       "wrong type %s (expected Vector2)",
+                       mrb_obj_classname(mrb, val));
           }
-          if (index >= 3) break;
-        };
-        break;
-      case 3:
-        result.x = mrb_to_flo(mrb, vals[0]);
-        result.y = mrb_to_flo(mrb, vals[1]);
-        result.z = mrb_to_flo(mrb, vals[2]);
-        break;
-      default:
-        mrb_raisef(mrb, E_ARGUMENT_ERROR,
-                   //"wrong number of arguments (%d for 1 or 3)", argc);
-                   "wrong number of arguments (%d for 1, 2, or 3)", argc);
+        } else if ((mrb_type(val) == MRB_TT_FIXNUM) || (mrb_type(val) == MRB_TT_FLOAT)) {
+          result[index++] = mrb_to_flo(mrb, val);
+        }
+        if (index >= 3) break;
+      };
+      if (index < 3) {
+        mrb_raisef(mrb, E_ARGUMENT_ERROR, "not enough parameters");
+      }
+      break;
+    case 3:
+      result.x = mrb_to_flo(mrb, vals[0]);
+      result.y = mrb_to_flo(mrb, vals[1]);
+      result.z = mrb_to_flo(mrb, vals[2]);
+      break;
+    default:
+      mrb_raisef(mrb, E_ARGUMENT_ERROR,
+                 //"wrong number of arguments (%d for 1 or 3)", argc);
+                 "wrong number of arguments (%d for 1, 2, or 3)", argc);
     }
 
     return result;

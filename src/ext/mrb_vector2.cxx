@@ -40,44 +40,81 @@ namespace Moon {
   /*
    * Black Magic
    */
+  static glm::vec2
+  moon_vector2_extract_mrb_vec2(mrb_state *mrb, mrb_value obj)
+  {
+    moon_vec2* _vec2;
+    Data_Get_Struct(mrb, obj, &vector2_data_type, _vec2);
+    return **_vec2;
+  }
+
+  static glm::vec2
+  moon_vector2_extract_mrb_num(mrb_state *mrb, mrb_value obj)
+  {
+    double i = mrb_to_flo(mrb, obj);
+    return glm::vec2(i, i);
+  }
+
+  static glm::vec2
+  moon_vector2_extract_mrb_array(mrb_state *mrb, mrb_value obj)
+  {
+    glm::vec2 result;
+    int _ary_len = mrb_ary_len(mrb, obj);
+    if (_ary_len != 2) {
+      mrb_raisef(mrb, E_ARGUMENT_ERROR,
+                 "wrong array size %d (expected 2)", _ary_len);
+    } else {
+      result.x = mrb_to_flo(mrb, RARRAY_PTR(obj)[0]);
+      result.y = mrb_to_flo(mrb, RARRAY_PTR(obj)[1]);
+    }
+    return result;
+  }
+
+  static glm::vec2
+  moon_vector2_extract_mrb_to_vec2(mrb_state *mrb, mrb_value obj)
+  {
+    return moon_vector2_extract_mrb_vec2(mrb, mrb_funcall(mrb, obj, "to_vec2", 0));
+  }
+
   glm::vec2
   moon_vector2_extract_args(mrb_state *mrb, int argc, mrb_value *vals) {
     glm::vec2 result;
 
     switch (argc) {
-      case 1:
-        mrb_value val;
-        val = vals[0];
-        if ((mrb_type(val) == MRB_TT_FIXNUM) || (mrb_type(val) == MRB_TT_FLOAT)) {
-          double i = mrb_to_flo(mrb, val);
-          result.x = i;
-          result.y = i;
-        } else if (mrb_type(val) == MRB_TT_ARRAY) {
-          int _ary_len = mrb_ary_len(mrb, val);
-          if (_ary_len != 2) {
-            mrb_raisef(mrb, E_ARGUMENT_ERROR,
-                       "wrong array size %d (expected 2)", _ary_len);
-          } else {
-            result.x = mrb_to_flo(mrb, RARRAY_PTR(val)[0]);
-            result.y = mrb_to_flo(mrb, RARRAY_PTR(val)[1]);
-          }
-        } else if (mrb_type(val) == MRB_TT_DATA) {
-          moon_vec2* _vec2;
-          Data_Get_Struct(mrb, val, &vector2_data_type, _vec2);
-          result = **_vec2;
+    case 1:
+      mrb_value val;
+      val = vals[0];
+      switch (mrb_type(val)) {
+      case MRB_TT_FIXNUM:
+      case MRB_TT_FLOAT:
+        result = moon_vector2_extract_mrb_num(mrb, val);
+        break;
+      case MRB_TT_ARRAY:
+        result = moon_vector2_extract_mrb_array(mrb, val);
+        break;
+      case MRB_TT_DATA:
+        if (DATA_TYPE(val) == &vector2_data_type) {
+          result = moon_vector2_extract_mrb_vec2(mrb, val);
+          break;
+        }
+      default:
+        if (mrb_respond_to(mrb, val, mrb_intern_cstr(mrb, "to_vec2"))) {
+          result = moon_vector2_extract_mrb_to_vec2(mrb, val);
+          break;
         } else {
           mrb_raisef(mrb, E_TYPE_ERROR,
                      "wrong type %S (expected Numeric, Array or Vector2)",
-                     mrb_obj_classname(mrb, val));
+                     mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, val)));
         }
-        break;
-      case 2:
-        result.x = mrb_to_flo(mrb, vals[0]);
-        result.y = mrb_to_flo(mrb, vals[1]);
-        break;
-      default:
-        mrb_raisef(mrb, E_ARGUMENT_ERROR,
-                   "wrong number of arguments (%d for 1..2)", argc);
+      }
+      break;
+    case 2:
+      result.x = mrb_to_flo(mrb, vals[0]);
+      result.y = mrb_to_flo(mrb, vals[1]);
+      break;
+    default:
+      mrb_raisef(mrb, E_ARGUMENT_ERROR,
+                 "wrong number of arguments (%d for 1..2)", argc);
     }
 
     return result;
