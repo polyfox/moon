@@ -35,45 +35,54 @@
 #  - type checking on variables
 #  - (AR style validations?)
 #+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
+module Moon
+  class Entity
+    attr_reader :id
 
-class Entity
-  attr_reader :id
+    def initialize(world)
+      @world = world
+      @id = @world.random.base64 16 # right within ruby's optimal string length
+    end
 
-  def initialize(world)
-    @world = world
-    @id = @world.random.base64 16 # right within ruby's optimal string length
+    def ==(obj)
+      self.id == obj.id
+    end
+
+    def add(component, options={})
+      case component
+      when Hash
+        component.map do |k, v|
+          @world.add_component(self, Component[k].new(v))
+        end
+      when Symbol
+        @world.add_component(self, Component[component].new(options))
+      else
+        @world.add_component(self, component)
+      end
+    end
+
+    def [](key)
+      @world.get_component(self, key)
+    end
+
+    def []=(key, component)
+      @world.set_component(self, key, component)
+    end
+
+    def to_h
+      {
+        id: @id
+      }
+    end
+
+    def export
+      to_h.stringify_keys
+    end
+
+    def import(data)
+      @id = data["id"]
+      self
+    end
+
   end
-
-  def ==(obj)
-    self.id == obj.id
-  end
-
-  def add(component)
-    @world.add_component(self, component)
-    component
-  end
-
-  def [](component)
-    @world.get_component(self, component)
-  end
-
-  def []=(key, component)
-    @world.set_component(self, key, component)
-  end
-
-  def to_h
-    {
-      id: @id
-    }
-  end
-
-  def export
-    to_h.stringify_keys
-  end
-
-  def import(data)
-    @id = data["id"]
-    self
-  end
-
 end

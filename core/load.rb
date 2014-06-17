@@ -4,7 +4,7 @@
 require 'core/core_ext'
 require 'core/modules'
 require 'core/mixins'
-require 'core/entitysystem'
+require 'core/entity_system'
 require 'core/cuboid'
 require 'core/data_matrix' # 3d Table
 require 'core/rect'
