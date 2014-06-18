@@ -55,7 +55,7 @@ module Moon
       @font.size * 1.2
     end
 
-    def render(x, y, z)
+    def render(x, y, z, options={})
       if @font && @string
         @string.split("\n").each_with_index do |line, index|
           pos = @position + [x, y, z]
@@ -69,8 +69,8 @@ module Moon
             pos.x -= @font.calc_bounds(line) / 2
           end
 
-          font.render(pos.x, pos.y + index * line_height, pos.z, line, @color)
-
+          font.render(pos.x, pos.y + index * line_height, pos.z,
+                      line, @color, options)
         end
       end
     end
