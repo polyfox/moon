@@ -6,6 +6,7 @@ require 'core/modules'
 require 'core/cache_base'
 require 'core/mixins'
 require 'core/entity_system'
+require 'core/data_model'
 require 'core/cuboid'
 require 'core/data_matrix' # 3d Table
 require 'core/rect'
