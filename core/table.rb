@@ -74,10 +74,14 @@ module Moon
     end
 
     def each
-      @data.each do |row|
-        row.each do |n|
-          yield n
-        end
+      @data.each do |x|
+        yield x
+      end
+    end
+
+    def each_row
+      @xsize.times do |x|
+        yield @data[x * @xsize, @xsize]
       end
     end
 
