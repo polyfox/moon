@@ -8,8 +8,8 @@ class Module
   ###
   def const_get(path)
     top = self
-    paths = path.split("::")
-    if path.start_with?("::")
+    paths = path.to_s.split("::")
+    if path.to_s.start_with?("::")
       top = Object
       paths.shift
     end
