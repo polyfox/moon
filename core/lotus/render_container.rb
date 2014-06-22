@@ -2,6 +2,7 @@ module Moon
   class RenderContainer
 
     include ScreenElement  # Moon::Core
+    include Transitionable
     include Eventable
 
     @@container_id = 0
