@@ -1,9 +1,8 @@
 module Moon
-  class Text
+  class Text < RenderContainer
 
     attr_accessor :color    # Moon::Vector4
     attr_reader   :font     # Moon::Font
-    attr_accessor :position # Moon::Vector3
     attr_accessor :align    # Symbol [:left, :right, :center]
     attr_reader   :string   # String
     attr_reader   :width
@@ -20,11 +19,9 @@ module Moon
     end
 
     def initialize(string=nil, font=nil, align=:left)
-      @width = 0
-      @height = 0
+      super()
       @string = string
       @font = font
-      @position = Moon::Vector3.new 0, 0, 0
       @color = Moon::Vector4.new 1.0, 1.0, 1.0, 1.0
       @align = align
       refresh_size
@@ -39,23 +36,11 @@ module Moon
       self
     end
 
-    def x
-      @position.x
-    end
-
-    def y
-      @position.y
-    end
-
-    def z
-      @position.z
-    end
-
     def line_height
       @font.size * 1.2
     end
 
-    def render(x, y, z, options={})
+    def render(x=0, y=0, z=0, options={})
       if @font && @string
         @string.split("\n").each_with_index do |line, index|
           pos = @position + [x, y, z]
@@ -73,6 +58,7 @@ module Moon
                       line, @color, options)
         end
       end
+      super x, y, z
     end
 
     def refresh_size
