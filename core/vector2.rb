@@ -86,6 +86,12 @@ module Moon
       self.x, self.y, _ = *Vector3.extract(other)
     end
 
+    def inspect
+      "<Moon::Vector2: x=#{x} y=#{y}>"
+    end
+
+    alias :to_s :inspect
+
     def self.zero
       new 0.0, 0.0
     end
