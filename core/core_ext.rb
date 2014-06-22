@@ -1,4 +1,6 @@
 require "core/core_ext/boolean"
+require "core/core_ext/fixnum"
+require "core/core_ext/float"
 require "core/core_ext/hash"
 require "core/core_ext/integer"
 require "core/core_ext/module"
