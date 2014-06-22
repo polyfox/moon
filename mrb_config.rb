@@ -16,4 +16,5 @@ MRuby::Build.new do |conf|
   conf.gem :github => "AndrewBelt/mruby-yaml"
   conf.gem :github => "iij/mruby-io"
   conf.gem :github => "iij/mruby-dir"
+  conf.gem :github => "iij/mruby-regexp-pcre"
 end
