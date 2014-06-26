@@ -76,10 +76,17 @@ module Moon
       self.w, self.h, _ = *Vector3.extract(other)
     end
 
+    ###
+    # Extracts Rect related arguments from the given Object (obj)
+    # @param [Object] obj
+    ###
     def self.extract(obj)
       case obj
       when Moon::Rect
         return *obj
+      when Hash
+        return obj.fetch(:x), obj.fetch(:y),
+               obj.fetch(:width), obj.fetch(:height)
       when Array
         case obj.size
         when 2
