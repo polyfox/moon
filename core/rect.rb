@@ -92,7 +92,6 @@ module Moon
                 "wrong Array size #{obj.size} (expected 1, 2 or 4)"
         end
       else
-        p obj
         raise TypeError,
               "wrong argument type #{obj.class.inspect} (expected Rect or Array)"
       end
