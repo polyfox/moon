@@ -76,12 +76,6 @@ module Moon
       self.w, self.h, _ = *Vector3.extract(other)
     end
 
-    ##
-    # we don't dup rects nicely...
-    def dup
-      Moon::Rect.new x, y, width, height
-    end
-
     def self.extract(obj)
       case obj
       when Moon::Rect
