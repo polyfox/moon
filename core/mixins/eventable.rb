@@ -25,14 +25,12 @@ module Moon
     # @param [Event] event
     ###
     def trigger(event)
-      event = Moon::Event.new(event) unless event.is_a?(Moon::Event) # TEMP
-
-      @event_listeners[:any].each {|block| block.call(event) }
+      @event_listeners[:any].each {|block| block.call(self, event) }
 
       return unless @event_listeners.key?(event.type)
 
       @event_listeners[event.type].each do |block|
-        block.call(event)
+        block.call(self, event)
       end
     end
 
