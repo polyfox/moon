@@ -1,6 +1,6 @@
-describe Moon::Aach do
+describe Moon::PaletteParser do
   it "should load a hex.RGB palette" do
-    Aach.load_palette(
+    PaletteParser.load_palette(
       "format" => "hex.RGB",
       "colors" => {
         "black" => "000",
@@ -13,7 +13,7 @@ describe Moon::Aach do
   end
 
   it "should load a hex.RRGGBB palette" do
-    Aach.load_palette(
+    PaletteParser.load_palette(
       "format" => "hex.RRGGBB",
       "colors" => {
         "black" => "000000",

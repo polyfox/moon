@@ -1,4 +1,4 @@
-module Aach
+module PaletteParser
 
   class FormatError < StandardError
   end
