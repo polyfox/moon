@@ -1,4 +1,4 @@
-# [(https://github.com/archSeer/moon/moon-logo.png)](https://github.com/archSeer/moon) Moon
+# [![Moon](https://raw.githubusercontent.com/archSeer/moon/master/moon-logo.png)](https://raw.githubusercontent.com/archSeer/moon/master/moon-logo.png) Moon
 
 [![Coverage Status](https://coveralls.io/repos/archSeer/moon/badge.png)](https://coveralls.io/r/archSeer/moon)
 [![Code Climate](https://codeclimate.com/github/archSeer/moon.png)](https://codeclimate.com/github/archSeer/moon)
