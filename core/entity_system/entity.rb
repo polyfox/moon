@@ -52,10 +52,10 @@ module Moon
       case component
       when Hash
         component.map do |k, v|
-          @world.add_component(self, Component[k].new(v))
+          @world.add_component(self, Component.fetch(k).new(v))
         end
       when Symbol
-        @world.add_component(self, Component[component].new(options))
+        @world.add_component(self, Component.fetch(component).new(options))
       else
         @world.add_component(self, component)
       end

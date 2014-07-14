@@ -8,6 +8,10 @@ module Moon
       @@component_list[key]
     end
 
+    def self.fetch(key)
+      @@component_list.fetch(key)
+    end
+
     def self.list
       @@component_list
     end
