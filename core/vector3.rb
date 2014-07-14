@@ -16,8 +16,7 @@ module Moon
     end
 
     def to_h
-      { x: x, y: y, z: z,
-        r: r, g: g, b: b }
+      { x: x, y: y, z: z }
     end
 
     def export
