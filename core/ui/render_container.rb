@@ -1,6 +1,8 @@
+# Inspired by
+# http://dev.chromium.org/developers/design-documents/aura
+#
 module Moon
   class RenderContainer
-
     include ScreenElement  # Moon::Core
     include Transitionable # Moon::Core
     include Eventable      # Moon::Core
@@ -9,6 +11,7 @@ module Moon
     @@container_id = 0
 
     attr_reader :id
+    attr_reader :elements
     attr_accessor :parent
     attr_accessor :position
     attr_accessor :visible
@@ -26,14 +29,27 @@ module Moon
     end
 
     def init_events
+      # generic event passing callback
+      # this callback will trigger the passed event in the children elements
+      # Input::MouseEvent are handled specially, since it requires adjusting
+      # the position of the event
       on :any do |_, event|
-        #puts "[#{self}] #{event}"
+        # GLORIOUS HAX AHEAD, PLEASE WEAR SAFETY GLASSES
         case event
         when Moon::Input::MouseEvent
+          next if elements.empty?
           subevent = event.dup
           subevent.position = screen_to_relative(subevent.position)
           each do |element|
             if element.pos_inside?(subevent.position)
+              # yet another event delegate, this time its a hack for mousedown/
+              # mouseup.
+              case subevent.action
+              when :press
+                element.trigger(subevent.dup.tap {|e| e.type = :mousedown })
+              when :release
+                element.trigger(subevent.dup.tap {|e| e.type = :mouseup })
+              end
               element.trigger subevent
             end
           end
@@ -42,6 +58,74 @@ module Moon
             element.trigger event
           end
         end
+      end
+
+      # click event generation
+      on :mousedown do |_, event|
+        @last_mousedown_id = event.id
+      end
+
+      on :mouseup do |_, event|
+        trigger :click if @last_mousedown_id == event.id
+      end
+
+      # double clicks (click distance was max 500ms)
+      on :click do |_, event|
+        now = Moon::Screen.uptime
+        if now - @last_click_at < 0.500
+          trigger :dblclick
+          # reset the distance, so we can't trigger
+          #consecutive double clicks with a single click
+          @last_click_at = 0.0
+        else
+          @last_click_at = now
+        end
+      end
+
+      # dragging support
+      @draggable = false
+
+      on :mousedown do |_, event|
+        # bonus: be able to specify a drag rectangle:
+        # the area where the user can click to drag
+        # the window (useful if we only want it to
+        # drag by the titlebar)
+
+        # initiate dragging if @draggable = true
+        if @draggable
+          @dragging = true
+
+          # store the relative offset of where the mouse
+          # was clicked on the object, so we can accurately
+          # set the new position
+          @offset_x = Moon::Input::Mouse.x - self.x
+          @offset_y = Moon::Input::Mouse.y - self.y
+        end
+      end
+
+      # TODO: implement mousemove
+      on :mousemove do |_, event|
+        # if draggable, and we are dragging (the mouse is pressed down)
+
+        # update the position, calculated off of
+        # the mouse position and the relative offset
+        # set on mousedown
+
+        # don't forget to update the widget positions
+        # too (refresh_position)
+        # NOTE: at the moment the widget position is
+        # updated in the update loop each cycle. Might
+        # not be the most efficient thing to do.
+
+        if @draggable && @dragging
+          self.x = Moon::Input::Mouse.x - @offset_x
+          self.y = Moon::Input::Mouse.y - @offset_y
+        end
+      end
+
+      on :mouseup do |_, event|
+        # disable dragging
+        @dragging = false if @draggable
       end
     end
 
@@ -148,5 +232,6 @@ module Moon
       self
     end
 
+    protected :elements
   end
 end
