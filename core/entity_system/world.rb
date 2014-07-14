@@ -1,5 +1,6 @@
 module Moon
   class World
+    attr_reader :entities
     attr_reader :random
 
     # @components = { ComponentClass => {entity_id => [component, ...], ...}, ...}
