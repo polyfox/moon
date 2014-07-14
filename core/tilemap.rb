@@ -53,7 +53,7 @@ module Moon
     #   (width), (height), (layers)
     #     is the number of cells to render, and the number of layers to be rendered
     ###
-    def render(x, y, z, options={})
+    def render(x=0, y=0, z=0, options={})
       return unless @data
       return unless @tileset
 
