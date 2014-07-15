@@ -21,6 +21,7 @@ class State
   def initialize(engine)
     @engine = engine
     @input = Moon::Input::Observer.new
+    @scheduler = Moon::Scheduler.new
 
     @input.on :press, Moon::Input::F8 do
       State.pop
@@ -72,6 +73,7 @@ class State
   # @return [void]
   ###
   def update(delta)
+    @scheduler.update(delta)
     @ticks += 1
   end
 

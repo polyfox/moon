@@ -1,7 +1,5 @@
 require 'core/mixins/eventable'
 require 'core/mixins/screen_element'
-require 'core/mixins/task_host'
 require 'core/mixins/transition_host'
 require 'core/mixins/transitionable'
-require 'core/mixins/interval_host'
 require 'core/mixins/handle_host'
