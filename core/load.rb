@@ -4,7 +4,7 @@
 require 'core/core_ext'
 require 'core/mixins'
 require 'core/event'
-require 'core/modules'
+require "core/input"
 require 'core/cache_base'
 require 'core/entity_system'
 require 'core/data_model'
