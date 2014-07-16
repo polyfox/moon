@@ -74,9 +74,9 @@ module Moon
     end
 
     ###
-    # add_interval(duration) { execute_every_duration }
+    # every(duration) { execute_every_duration }
     ###
-    def add_interval(duration, &block)
+    def every(duration, &block)
       duration = self.class.parse_duration(duration) if duration.is_a?(String)
       interval = Interval.new(duration, &block)
       @jobs.push interval
@@ -84,29 +84,15 @@ module Moon
     end
 
     ###
-    # add_task(duration) { to_execute_on_timeout }
+    # in(duration) { to_execute_on_timeout }
     # @param [Integer] duration
     # @return [Timeout]
     ###
-    def add_task(duration, &block)
+    def in(duration, &block)
       duration = self.class.parse_duration(duration) if duration.is_a?(String)
       timeout = Timeout.new(duration, &block)
       @jobs.push timeout
       timeout
-    end
-
-    ###
-    # same as add_interval
-    ###
-    def every(duration, &block)
-      add_interval(duration, &block)
-    end
-
-    ###
-    # same as add_task
-    ###
-    def in(duration, &block)
-      add_task(duration, &block)
     end
 
     ###
