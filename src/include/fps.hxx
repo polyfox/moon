@@ -11,18 +11,12 @@ namespace Moon {
     void  update();
     int   getFPS();
     float getDelta();
-    float getSpeedFactor();
   private:
-    float OldTime;
-    float LastTime;
-
-    float Delta; // time since last frame
-
-    float SpeedFactor;
-
-    int   NumFrames;
-    int   Frames;
-
+    float old_time;
+    float last_time;
+    float delta; // time since last frame
+    int   fps;
+    int   frames;
   };
 };
 

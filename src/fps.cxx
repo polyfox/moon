@@ -2,34 +2,30 @@
 
 namespace Moon {
   FPS::FPS() {
-    OldTime     = 0.0f;
-    LastTime    = 0.0f;
-    SpeedFactor = 0;
-    Frames      = 0;
-    NumFrames   = 0;
+    old_time  = 0.0;
+    last_time = 0.0;
+    delta     = 0.0;
+    frames    = 0;
+    fps       = 0;
   }
 
   void FPS::update() {
-    if(OldTime + 1.0f < glfwGetTime()) {
-      OldTime = glfwGetTime();
-      NumFrames = Frames;
-      Frames = 0;
+    float now = glfwGetTime();
+    if(old_time + 1.0f < now) {
+      old_time = now;
+      fps = frames;
+      frames = 0;
     }
-    Delta = glfwGetTime() - LastTime;
-    SpeedFactor = (Delta / 1.0f) * 32.0f; // 32 is number of pixels per second
-    LastTime = glfwGetTime();
-    Frames++;
+    delta = now - last_time;
+    last_time = now;
+    frames++;
   }
 
   float FPS::getDelta() {
-    return Delta;
+    return delta;
   };
 
   int FPS::getFPS() {
-    return NumFrames;
-  }
-
-  float FPS::getSpeedFactor() {
-    return SpeedFactor;
+    return fps;
   }
 }
