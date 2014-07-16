@@ -23,7 +23,6 @@ module Moon
       str.scan(/(\d+|\d+\.\d+)([smhdwMy])?/).each do |a|
         v = a[0].to_i
         letter = a[1].to_s
-        p [v, letter]
         case letter
         when ""
           value += v / 1000.0
