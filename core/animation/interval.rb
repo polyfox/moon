@@ -10,7 +10,7 @@ class Interval
   def initialize(duration, &block)
     @time = @duration = duration
     @trigger = block
-    @id = SeedRandom.random.base64(16)
+    @id = Random.random.base64(16)
   end
 
   ###

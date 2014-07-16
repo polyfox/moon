@@ -9,7 +9,7 @@ class Timeout
   # @param [Float] duration
   ###
   def initialize(duration, &block)
-    @id = SeedRandom.random.base64(16)
+    @id = Random.random.base64(16)
     @time = @duration = duration
     @trigger = block
     @active = true

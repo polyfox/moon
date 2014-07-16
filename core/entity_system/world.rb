@@ -5,7 +5,7 @@ module Moon
 
     # @components = { ComponentClass => {entity_id => [component, ...], ...}, ...}
     def initialize
-      @random = Moon::SeedRandom.new
+      @random = Random.new
       @components = Hash.new { |hash, key| hash[key] = {} } # subkeys always initialized to {}
       @entities = []
       @systems = []
@@ -87,7 +87,7 @@ module Moon
     end
 
     def import(data)
-      @random = Moon::SeedRandom.load(data["random"])
+      @random = Random.load(data["random"])
       entity_table = {}
       @entities = data["entities"].map do |d|
         Entity.new(self).import(d)
