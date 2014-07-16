@@ -1,5 +1,4 @@
 class Timeout
-
   ### instance attributes
   attr_reader :id
   attr_reader :time
@@ -17,6 +16,7 @@ class Timeout
   end
 
   ###
+  # Has this timeout reached its end?
   # @return [Boolean]
   ###
   def done?
@@ -37,11 +37,11 @@ class Timeout
   end
 
   ###
+  # Forces the Timeout to finish prematurely
   # @return [Void]
   ###
   def finish
     @time = 0.0
     @trigger.()
   end
-
 end

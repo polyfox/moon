@@ -1,6 +1,5 @@
 module Moon
   class Scheduler
-
     ### instance attribute
     attr_accessor :tasks
     attr_accessor :intervals
@@ -48,30 +47,40 @@ module Moon
     end
 
     def initialize
-      @tasks = []
-      @intervals = []
+      @jobs = []
+      @paused = false
+      @tick = 0.0
     end
 
+    ###
+    # @return [Float] uptime  in seconds
+    ###
+    def uptime
+      @tick
+    end
+
+    ###
+    # Pauses the Scheduler
+    ###
+    def pause
+      @paused = true
+    end
+
+    ###
+    # Unpauses the Scheduler
+    ###
+    def resume
+      @paused = false
+    end
+
+    ###
+    # add_interval(duration) { execute_every_duration }
+    ###
     def add_interval(duration, &block)
       duration = self.class.parse_duration(duration) if duration.is_a?(String)
       interval = Interval.new(duration, &block)
-      @intervals.push interval
+      @jobs.push interval
       interval
-    end
-
-    def clear_interval(interval)
-      @intervals.delete(interval)
-    end
-
-    def clear_interval_by_id(id)
-      @intervals.delete { |interval| interval.id == id }
-    end
-
-    def update_intervals(delta)
-      return if @intervals.empty?
-      @intervals.each do |interval|
-        interval.update delta
-      end
     end
 
     ###
@@ -82,60 +91,65 @@ module Moon
     def add_task(duration, &block)
       duration = self.class.parse_duration(duration) if duration.is_a?(String)
       timeout = Timeout.new(duration, &block)
-      @tasks.push timeout
+      @jobs.push timeout
       timeout
     end
 
     ###
-    # Clears all tasks
+    # same as add_interval
     ###
-    def clear_tasks
-      @tasks.clear
+    def every(duration, &block)
+      add_interval(duration, &block)
     end
 
     ###
-    # @param [Timeout] task
-    # @return [Timeout]
+    # same as add_task
     ###
-    def remove_task(task)
-      @tasks.delete task
+    def in(duration, &block)
+      add_task(duration, &block)
     end
 
     ###
-    # @param [Array<Timeout>] tasks
+    # Clears all running jobs, or clears a job
+    # @overload clear
+    # @overload clear(obj)
+    ###
+    def clear(obj=nil)
+      if obj
+        @jobs.delete(obj)
+      else
+        @jobs.clear
+      end
+    end
+
+    ###
+    # Clears a job by id
+    ###
+    def clear_by_id(id)
+      @jobs.delete { |job| job.id == id }
+    end
+
+    ###
+    # Force all jobs to finish.
     # @return [Void]
     ###
-    def remove_tasks(tasks)
-      @tasks -= tasks
+    def finish
+      return unless @jobs
+      @jobs.each(&:finish)
     end
 
     ###
-    # @param [Float] delta
-    # @return [Void]
+    # Frame update
     ###
-    def update_tasks(delta)
-      return if @tasks.empty?
+    def update(delta)
+      return if @paused
       dead = []
-      @tasks.each do |task|
+      @jobs.each do |task|
         task.update delta
         dead << task if task.done?
       end
-      remove_tasks(dead) unless dead.empty?
+      @jobs -= dead unless dead.empty?
+      @tick += delta
     end
-
-    ###
-    # Force all tasks to finish.
-    # @return [Void]
-    ###
-    def finish_tasks
-      return unless @tasks
-      @tasks.each(&:finish)
-    end
-
-    def update(delta)
-      update_intervals(delta)
-      update_tasks(delta)
-    end
-
   end
 end
