@@ -34,7 +34,7 @@ namespace Moon {
   static mrb_value
   moon_mrb_sound_play(mrb_state *mrb, mrb_value self) {
     mrb_float gain = 1.0;
-    mrb_float pitch = 0.0;
+    mrb_float pitch = 1.0;
     mrb_float pan = 0.0;
     int argc = mrb_get_args(mrb, "|fff", &gain, &pitch, &pan);
 
