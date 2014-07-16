@@ -5,16 +5,21 @@
 namespace Moon {
   class Music : public Audio {
   public:
-    static bool play(std::string filename, std::string format);
-    static void stop();
-    static bool is_playing();
-    static bool is_stopped();
-    static bool is_finished();
-    static bool seek(int offset);
-    static int pos();
-    static int length();
+    Music(std::string filename, std::string format);
+    ~Music();
+    bool setup_loop(int trigger, int target);
+    bool clear_loop();
+    bool play(float gain, float pitch, float pan);
+    void stop();
+    bool is_playing();
+    bool is_stopped();
+    bool is_finished();
+    bool seek(int offset);
+    int pos();
+    int length();
   private:
-    static ga_Handle* handle;
+    ga_Handle* handle;
+    gau_SampleSourceLoop* loopSrc;
   };
 };
 
