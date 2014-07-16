@@ -94,7 +94,7 @@ namespace Moon {
     // then translate back to original position
     glm::mat4 rotation_matrix = glm::translate(glm::rotate(
       glm::translate(glm::mat4(1.0f), glm::vec3(ox, oy, 0)),
-      angle,
+      glm::radians(angle),
       glm::vec3(0, 0, 1)
     ), glm::vec3(-ox, -oy, 0));
 

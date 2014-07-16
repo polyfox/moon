@@ -58,7 +58,7 @@ namespace Moon {
     //model matrix
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down
       glm::translate(render_ops.transform, glm::vec3(x, y + font->ascender, z)), // move it to the correct position in the world
-      180.0f,
+      glm::radians(180.0f),
       glm::vec3(1.0f, 0.0f, 0.0f)
     );
     // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
@@ -91,10 +91,10 @@ namespace Moon {
         float t1 = glyph->t1;
 
         GLuint indices[6] = {0,1,2, 0,2,3};
-        vertex vertices[4] = { {x0,y0,  s0,t0, c},
-                               {x0,y1,  s0,t1, c},
-                               {x1,y1,  s1,t1, c},
-                               {x1,y0,  s1,t0, c} };
+        vertex vertices[4] = { {{x0,y0},  {s0,t0}, c},
+                               {{x0,y1},  {s0,t1}, c},
+                               {{x1,y1},  {s1,t1}, c},
+                               {{x1,y0},  {s1,t0}, c} };
         buffer.push_back(vertices, 4, indices, 6);
         cursor += glyph->advance_x;
       }

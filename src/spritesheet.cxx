@@ -77,7 +77,7 @@ namespace Moon {
     glm::mat4 model_matrix = glm::translate(render_ops.transform, glm::vec3(x, y, z));
     glm::mat4 rotation_matrix = glm::translate(glm::rotate(
       glm::translate(glm::mat4(1.0f), glm::vec3(render_ops.ox, render_ops.oy, 0)),
-      render_ops.angle,
+      glm::radians(render_ops.angle),
       glm::vec3(0, 0, 1)
     ), glm::vec3(-render_ops.ox, -render_ops.oy, 0));
 
@@ -86,12 +86,8 @@ namespace Moon {
     glUniformMatrix4fv(shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
     glUniform1f(shader->get_uniform("opacity"), render_ops.opacity);
-
-    GLfloat rgbs[4] = { render_ops.tone.r, render_ops.tone.g, render_ops.tone.b, render_ops.tone.a };
-    glUniform4fv(shader->get_uniform("tone"), 1, rgbs);
-
-    GLfloat rgba[4] = { render_ops.color.r, render_ops.color.g, render_ops.color.b, render_ops.color.a };
-    glUniform4fv(shader->get_uniform("color"), 1, rgba);
+    glUniform4fv(shader->get_uniform("tone"), 1, glm::value_ptr(render_ops.tone));
+    glUniform4fv(shader->get_uniform("color"), 1, glm::value_ptr(render_ops.color));
 
     //Set texture ID
     glActiveTexture(GL_TEXTURE0);

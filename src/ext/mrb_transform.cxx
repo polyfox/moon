@@ -5,6 +5,7 @@
 #include "shared_types.hxx"
 #include "mrb_shared_types.hxx"
 #include <memory>
+#define GLM_FORCE_RADIANS
 #include <glm/glm.hpp>
 //#include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -370,10 +371,10 @@ namespace Moon {
         mrb_float angle = mrb_to_flo(mrb, vals[0]);
         glm::vec3 rotate_v3 = moon_mrb_to_vec3(mrb, vals[1]);
 
-        **target_mat4 = glm::rotate(**target_mat4, (float)angle, rotate_v3);
+        **target_mat4 = glm::rotate(**target_mat4, glm::radians((float)angle), rotate_v3);
       } else if (len == 4) {
         **target_mat4 = glm::rotate(**target_mat4,
-          (float)mrb_to_flo(mrb, vals[0]),
+          glm::radians((float)mrb_to_flo(mrb, vals[0])),
           glm::vec3(mrb_to_flo(mrb, vals[1]),
                     mrb_to_flo(mrb, vals[2]),
                     mrb_to_flo(mrb, vals[3])));
