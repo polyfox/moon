@@ -12,7 +12,7 @@ namespace Moon {
     color = moon_vec4(new glm::vec4(1.0, 1.0, 1.0, 1.0));
     tone = moon_vec4(new glm::vec4(0.0, 0.0, 0.0, 1.0));
 
-    if (!GLEW_VERSION_3_3) {
+    if (!glewIsSupported("GLEW_VERSION_3_3")) {
       shader = Shader::load("resources/shaders/120/quad.vert", "resources/shaders/120/quad.frag");
     } else {
       shader = Shader::load("resources/shaders/330/quad.vert", "resources/shaders/330/quad.frag");
