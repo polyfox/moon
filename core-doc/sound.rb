@@ -4,7 +4,7 @@ module Moon
     def initialize(filename, format)
     end
 
-    def play(gain, pitch, pan)
+    def play(gain=1.0, pitch=0.0, pan=0.0)
     end
 
   end
