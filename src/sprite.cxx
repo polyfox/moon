@@ -105,12 +105,8 @@ namespace Moon {
     glUniformMatrix4fv(shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
     glUniform1f(shader->get_uniform("opacity"), opacity);
-    // color
-    GLfloat rgba[4] = {color->r, color->g, color->b, color->a};
-    glUniform4fv(shader->get_uniform("color"), 1, rgba);
-    // tone
-    GLfloat rgbs[4] = {tone->r, tone->g, tone->b, tone->a};
-    glUniform4fv(shader->get_uniform("tone"), 1, rgbs);
+    glUniform4fv(shader->get_uniform("color"), 1, glm::value_ptr(*color));
+    glUniform4fv(shader->get_uniform("tone"), 1, glm::value_ptr(*tone));
 
     //Set texture ID
     glActiveTexture(GL_TEXTURE0);
