@@ -1,8 +1,5 @@
 class Timeout
 
-  ### class variables
-  @@id = 0
-
   ### instance attributes
   attr_reader :id
   attr_reader :time
@@ -13,7 +10,7 @@ class Timeout
   # @param [Float] duration
   ###
   def initialize(duration, &block)
-    @id = @@id += 1
+    @id = SeedRandom.random.base64(16)
     @time = @duration = duration
     @trigger = block
     @active = true

@@ -1,7 +1,5 @@
 class Interval
 
-  @@id = 0
-
   attr_reader :id
   attr_reader :time
   attr_reader :duration
@@ -9,7 +7,7 @@ class Interval
   def initialize(duration, &block)
     @time = @duration = duration
     @trigger = block
-    @id = @@id += 1
+    @id = SeedRandom.random.base64(16)
   end
 
   def done?
