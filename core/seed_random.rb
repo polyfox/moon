@@ -60,5 +60,12 @@ module Moon
       new data["seed"].to_i
     end
 
+    ###
+    # Per Session SeedRandom object
+    ###
+    def self.random
+      @random ||= SeedRandom.new
+    end
+
   end
 end
