@@ -1,10 +1,10 @@
 #include "mrb.hxx"
-#include "sound.hxx"
+#include "audio.hxx"
+
 
 namespace Moon {
-
   static void moon_mrb_sound_deallocate(mrb_state *mrb, void *p) {
-    delete((Sound*)p);
+    delete((ga_Sound*)p);
   };
 
   const struct mrb_data_type sound_data_type = {
@@ -17,13 +17,13 @@ namespace Moon {
     char* format;
 
     mrb_get_args(mrb, "zz", &filename, &format);
-    Sound *sound;
+    ga_Sound *sound;
 
-    try {
-      sound = new Sound(filename, format);
-    } catch (std::invalid_argument& e) {
+    if (exists(filename)) {
+      sound = gau_load_sound_file(filename, format);
+    } else {
       mrb_raisef(mrb, E_SCRIPT_ERROR, "cannot load such file -- %S", mrb_str_new_cstr(mrb, filename));
-    };
+    }
 
     DATA_TYPE(self) = &sound_data_type;
     DATA_PTR(self) = sound;
@@ -36,16 +36,19 @@ namespace Moon {
     mrb_float gain = 1.0;
     mrb_float pitch = 1.0;
     mrb_float pan = 0.0;
-    int argc = mrb_get_args(mrb, "|fff", &gain, &pitch, &pan);
+    mrb_get_args(mrb, "|fff", &gain, &pitch, &pan);
 
-    Sound *sound;
+    ga_Sound *sound;
     Data_Get_Struct(mrb, self, &sound_data_type, sound);
 
-    if(argc < 0) {
-      return mrb_bool_value(sound->play(gain, pitch, pan));
-    } else {
-      return mrb_bool_value(sound->play());
-    };
+    ga_Handle* handle;
+    handle = gau_create_handle_sound(Audio::get_mixer(), sound, &gau_on_finish_destroy, 0, 0);
+    ga_handle_setParamf(handle, GA_HANDLE_PARAM_GAIN, gain);
+    ga_handle_setParamf(handle, GA_HANDLE_PARAM_PITCH, pitch);
+    ga_handle_setParamf(handle, GA_HANDLE_PARAM_PAN, pan);
+    ga_handle_play(handle);
+
+    return mrb_nil_value();
   };
 
   struct RClass*
@@ -59,5 +62,4 @@ namespace Moon {
 
     return sound_class;
   };
-
 };
