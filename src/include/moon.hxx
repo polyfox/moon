@@ -22,6 +22,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+namespace Moon { extern bool LEGACY_GL; }
+
 // _WIN32 is set for both 32 and 64 bit
 #ifdef _WIN32
 #  define stat _stat

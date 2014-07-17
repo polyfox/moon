@@ -95,7 +95,7 @@ namespace Moon {
       glDeleteShader(shader);
     }
 
-    if (!glewIsSupported("GL_VERSION_3_3")) {
+    if (LEGACY_GL) {
       this->bind_attribute(0, "vertex_pos");
       this->bind_attribute(1, "texcoord");
       this->bind_attribute(2, "color");

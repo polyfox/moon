@@ -2,6 +2,8 @@
 #include <clocale>
 
 namespace Moon {
+  bool LEGACY_GL = false;
+
   Engine::Engine() :
     window(640, 480, "Hello World"),
     resource_path("resources")
