@@ -1,11 +1,13 @@
 module TransitionHost
-
   ###
-  # @param [] *args
+  # @param [Object] src
+  # @param [Object] dest
+  # @param [String] duration
   # @return [Transition]
   ###
-  def add_transition(*args, &block)
-    transition = Transition.new(*args, &block)
+  def add_transition(src, dest, duration, &block)
+    duration = Scheduler.parse_duration(duration) if duration.is_a?(String)
+    transition = Transition.new(src, dest, duration, &block)
     (@transitions ||= []).push transition
     transition
   end
@@ -51,5 +53,4 @@ module TransitionHost
     return unless @transitions
     @transitions.each(&:finish)
   end
-
 end
