@@ -23,5 +23,13 @@ namespace Moon {
     gau_manager_destroy(mgr);
     gc_shutdown();
   };
+
+  ga_Mixer* Audio::get_mixer() {
+    return mixer;
+  };
+
+  ga_StreamManager* Audio::get_stream_mgr() {
+    return streamMgr;
+  };
 }
 

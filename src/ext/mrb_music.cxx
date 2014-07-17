@@ -5,6 +5,7 @@
 
 namespace Moon {
   static void moon_mrb_music_deallocate(mrb_state *mrb, void *p) {
+    ga_handle_destroy(((Music*)p)->handle);
     delete((Music*)p);
   };
 
@@ -18,13 +19,15 @@ namespace Moon {
     char* format;
 
     mrb_get_args(mrb, "zz", &filename, &format);
-    Music *music;
+    Music *music = new Music();
 
-    try {
-      music = new Music(filename, format);
-    } catch (std::invalid_argument& e) {
+    if (exists(filename)) {
+      music->handle = gau_create_handle_buffered_file(Audio::get_mixer(), Audio::get_stream_mgr(),
+                                                      filename, format,
+                                                      NULL, 0, &(music->loopSrc));
+    } else {
       mrb_raisef(mrb, E_SCRIPT_ERROR, "cannot load such file -- %S", mrb_str_new_cstr(mrb, filename));
-    };
+    }
 
     DATA_TYPE(self) = &music_data_type;
     DATA_PTR(self) = music;
@@ -42,7 +45,11 @@ namespace Moon {
     Music *music;
     Data_Get_Struct(mrb, self, &music_data_type, music);
 
-    music->play(gain, pitch, pan);
+    ga_handle_setParamf(music->handle, GA_HANDLE_PARAM_GAIN, gain);
+    ga_handle_setParamf(music->handle, GA_HANDLE_PARAM_PITCH, pitch);
+    ga_handle_setParamf(music->handle, GA_HANDLE_PARAM_PAN, pan);
+    ga_handle_play(music->handle);
+
     return mrb_nil_value();
   };
 
@@ -51,7 +58,7 @@ namespace Moon {
     Music *music;
     Data_Get_Struct(mrb, self, &music_data_type, music);
 
-    music->stop();
+    ga_handle_stop(music->handle);
 
     return mrb_nil_value();
   };
@@ -60,21 +67,21 @@ namespace Moon {
   moon_mrb_music_is_playing(mrb_state *mrb, mrb_value self) {
     Music *music;
     Data_Get_Struct(mrb, self, &music_data_type, music);
-    return mrb_bool_value(music->is_playing());
+    return mrb_bool_value(ga_handle_playing(music->handle));
   }
 
   static mrb_value
   moon_mrb_music_is_stopped(mrb_state *mrb, mrb_value self) {
     Music *music;
     Data_Get_Struct(mrb, self, &music_data_type, music);
-    return mrb_bool_value(music->is_stopped());
+    return mrb_bool_value(ga_handle_stopped(music->handle));
   }
 
   static mrb_value
   moon_mrb_music_is_finished(mrb_state *mrb, mrb_value self) {
     Music *music;
     Data_Get_Struct(mrb, self, &music_data_type, music);
-    return mrb_bool_value(music->is_finished());
+    return mrb_bool_value(ga_handle_finished(music->handle));
   }
 
   static mrb_value
@@ -84,21 +91,21 @@ namespace Moon {
 
     Music *music;
     Data_Get_Struct(mrb, self, &music_data_type, music);
-    return mrb_bool_value(music->seek(offset));
+    return mrb_bool_value(ga_handle_seek(music->handle, offset));
   }
 
   static mrb_value
   moon_mrb_music_pos(mrb_state *mrb, mrb_value self) {
     Music *music;
     Data_Get_Struct(mrb, self, &music_data_type, music);
-    return mrb_fixnum_value(music->pos());
+    return mrb_fixnum_value(ga_handle_tell(music->handle, GA_TELL_PARAM_CURRENT));
   }
 
   static mrb_value
   moon_mrb_music_length(mrb_state *mrb, mrb_value self) {
     Music *music;
     Data_Get_Struct(mrb, self, &music_data_type, music);
-    return mrb_fixnum_value(music->length());
+    return mrb_fixnum_value(ga_handle_tell(music->handle, GA_TELL_PARAM_TOTAL));
   }
 
   static mrb_value
@@ -109,7 +116,7 @@ namespace Moon {
 
     Music *music;
     Data_Get_Struct(mrb, self, &music_data_type, music);
-    music->setup_loop(trigger, target);
+    gau_sample_source_loop_set(music->loopSrc, trigger, target);
     return mrb_nil_value();
   }
 
@@ -117,7 +124,8 @@ namespace Moon {
   moon_mrb_music_clear_loop(mrb_state *mrb, mrb_value self) {
     Music *music;
     Data_Get_Struct(mrb, self, &music_data_type, music);
-    return mrb_bool_value(music->clear_loop());
+    gau_sample_source_loop_clear(music->loopSrc);
+    return mrb_bool_value(true);
   }
 
   struct RClass*

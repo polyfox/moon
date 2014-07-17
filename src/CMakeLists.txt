@@ -46,7 +46,6 @@ add_library(moon STATIC
   font.cxx
   input.cxx
   main.cxx
-  music.cxx
   shader.cxx
   sound.cxx
   sprite.cxx
