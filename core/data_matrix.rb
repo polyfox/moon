@@ -99,6 +99,10 @@ module Moon
       fill(n)
     end
 
+    def pillar_a(x, y)
+      @zsize.times.map { |z| self[x, y, z] }
+    end
+
     def layer(z)
       layer_data = @data[z * @xsize * @ysize, @xsize * @ysize]
       table = Table.new(0, 0)
