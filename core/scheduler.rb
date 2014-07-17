@@ -21,7 +21,7 @@ module Moon
       # a few hours anyway...
       value = 0.0
       str.scan(/(\d+|\d+\.\d+)([smhdwMy])?/).each do |a|
-        v = a[0].to_i
+        v = a[0].to_f
         letter = a[1].to_s
         case letter
         when ""
