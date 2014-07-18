@@ -22,13 +22,6 @@ class State
     @engine = engine
     @input = Moon::Input::Observer.new
     @scheduler = Moon::Scheduler.new
-
-    @input.on :press, Moon::Input::F8 do
-      State.pop
-    end
-    @input.on :press, Moon::Input::F9 do
-      puts State.states.reverse.join(" >| ")
-    end
   end
 
   ###
