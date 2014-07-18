@@ -20,6 +20,7 @@ module Moon
       "n9" => N9,
       "semicolon" => SEMICOLON,
       "equal" => EQUAL,
+      "plus" => EQUAL,
       "a" => A,
       "b" => B,
       "c" => C,
@@ -160,14 +161,17 @@ module Moon
       state.input.trigger MouseEvent.new(button, action, mods, Mouse.position)
     end
 
-    class Observer
+    def self.on_type(char)
+      State.current.input.trigger KeyboardTypeEvent.new(char)
+    end
 
+    def self.convert_key(key)
+      (key.is_a?(Symbol)||key.is_a?(String)) ? STRING_TO_KEY.fetch(key.to_s) : key
+    end
+
+    class Observer
       def initialize
         @event_listeners = {any: [], press: [], release: [], repeat: []}
-      end
-
-      def convert_key(key)
-        (key.is_a?(Symbol)||key.is_a?(String)) ? STRING_TO_KEY[key.to_s] : key
       end
 
       ###
@@ -176,7 +180,7 @@ module Moon
       # @param [Proc] block The block we want to execute when we catch the type.
       ###
       def on(action, *keys, &block)
-        keys.map! { |k| convert_key(k) }
+        keys = keys.flatten.map! { |k| Input.convert_key(k) }
         @event_listeners[action].push(keys: keys, block: block)
       end
 
