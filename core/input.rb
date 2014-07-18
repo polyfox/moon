@@ -136,21 +136,6 @@ module Moon
       "mouse_middle" => MOUSE_MIDDLE,
     }
 
-    class KeyboardEvent < InputEvent
-    end
-
-    class MouseEvent < InputEvent
-
-      attr_reader :action
-      attr_accessor :position
-
-      def initialize(button, action, mods, position)
-        @position = Vector2[position]
-        super button, action, mods
-      end
-
-    end
-
     def self.on_key(key, scancode, action, mods)
       state = State.states.last # delagator shim
       state.input.trigger KeyboardEvent.new(key, action, mods)
@@ -171,7 +156,7 @@ module Moon
 
     class Observer
       def initialize
-        @event_listeners = {any: [], press: [], release: [], repeat: []}
+        clear
       end
 
       ###
@@ -181,7 +166,13 @@ module Moon
       ###
       def on(action, *keys, &block)
         keys = keys.flatten.map! { |k| Input.convert_key(k) }
-        @event_listeners[action].push(keys: keys, block: block)
+        listener = { block: block }
+        listener[:keys] = keys unless keys.empty?
+        @event_listeners[action].push(listener)
+      end
+
+      def typing(&block)
+        on(:type, &block)
       end
 
       ###
@@ -195,19 +186,23 @@ module Moon
         return unless @event_listeners.key?(event.action)
 
         @event_listeners[event.action].each do |listener|
-          listener[:block].call(event) if listener[:keys].include? event.key
+          if listener.key?(:keys)
+            listener[:block].call(event) if listener[:keys].include?(event.key)
+          else
+            listener[:block].call(event)
+          end
         end
       end
 
       def clear
-        @event_listeners = {any: [], press: [], release: [], repeat: []}
+        @event_listeners = {
+          any: [], press: [], release: [], repeat: [], type: []
+        }
       end
-
       private :convert_key
     end
 
     module Mouse
-
       BUTTONS = [ MOUSE_BUTTON_1,
                   MOUSE_BUTTON_2,
                   MOUSE_BUTTON_3,
@@ -230,7 +225,6 @@ module Moon
       def self.position
         Vector2.new x, y
       end
-
     end
   end
 end

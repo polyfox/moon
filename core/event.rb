@@ -1,6 +1,5 @@
 module Moon
   class Event
-
     @@id = 0
 
     attr_reader :type
@@ -10,10 +9,8 @@ module Moon
       @type = type
       @id = @@id += 1
     end
-
   end
   class InputEvent < Event
-
     attr_reader :action, :key, :mods
 
     def initialize(key, action, mods)
@@ -39,6 +36,26 @@ module Moon
     def shift?
       @mods.masked? Moon::Input::MOD_SHIFT
     end
+  end
+  class KeyboardTypeEvent < Event
+    attr_reader :char
+    attr_reader :action
 
+    def initialize(char)
+      @char = char
+      @action = :type
+      super :type
+    end
+  end
+  class KeyboardEvent < InputEvent
+  end
+  class MouseEvent < InputEvent
+    attr_reader :action
+    attr_accessor :position
+
+    def initialize(button, action, mods, position)
+      @position = Vector2[position]
+      super button, action, mods
+    end
   end
 end

@@ -10,6 +10,7 @@ namespace Moon {
     mrb = var_mrb;
     glfwSetKeyCallback(window, Input::update_key);
     glfwSetMouseButtonCallback(window, Input::update_button);
+    glfwSetCharCallback(window, Input::on_type);
   }
 
   /* Callbacks */
@@ -25,6 +26,15 @@ namespace Moon {
       return mrb_symbol_value(mrb_intern_cstr(mrb, "repeat"));
     }
     return mrb_nil_value();
+  }
+
+  void Input::on_type(GLFWwindow* window, unsigned int utf8_char) {
+    mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, moon_module, "Input"));
+    std::wstring ws;
+    ws += utf8_char;
+    /* TODO: convert int directly to a UTF8 mruby string */
+    mrb_funcall(mrb, klass, "on_type", 1,
+                mrb_funcall(mrb, mrb_fixnum_value(utf8_char), "chr", 0));
   }
 
   void Input::update_key(GLFWwindow* window, int key_id, int scancode, int action, int mods) {

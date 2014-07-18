@@ -78,6 +78,10 @@ class State
     @states
   end
 
+  def self.current
+    @states.last
+  end
+
   def self.change state
     last_state = nil
     if !@states.empty?
