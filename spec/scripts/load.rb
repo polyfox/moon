@@ -3,7 +3,7 @@ require "vector3_spec"
 require "vector4_spec"
 # core spec
 require "palette_parser_spec"
-require "base_model_spec"
+require "data_model_spec"
 
 run_specs
 
