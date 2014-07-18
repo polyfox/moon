@@ -101,8 +101,8 @@ namespace Moon {
           break;
         } else {
           mrb_raisef(mrb, E_TYPE_ERROR,
-                     "wrong type %s (expected Numeric, Array or Vector3)",
-                     mrb_obj_classname(mrb, val));
+                     "wrong type %S (expected Numeric, Array or Vector3)",
+                     mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, val)));
         }
       }
       break;
@@ -121,8 +121,8 @@ namespace Moon {
             result[index++] = (**vec2)[1];
           } else {
             mrb_raisef(mrb, E_TYPE_ERROR,
-                       "wrong type %s (expected Vector2)",
-                       mrb_obj_classname(mrb, val));
+                       "wrong type %S (expected Vector2)",
+                       mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, val)));
           }
         } else if ((mrb_type(val) == MRB_TT_FIXNUM) || (mrb_type(val) == MRB_TT_FLOAT)) {
           result[index++] = mrb_to_flo(mrb, val);
@@ -130,7 +130,7 @@ namespace Moon {
         if (index >= 3) break;
       };
       if (index < 3) {
-        mrb_raisef(mrb, E_ARGUMENT_ERROR, "not enough parameters");
+        mrb_raisef(mrb, E_ARGUMENT_ERROR, "not enough parameters (required 3)");
       }
       break;
     case 3:
