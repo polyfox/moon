@@ -1,7 +1,6 @@
 #include "mrb.hxx"
 #include "audio.hxx"
 
-
 namespace Moon {
   static void moon_mrb_sound_deallocate(mrb_state *mrb, void *p) {
     delete((ga_Sound*)p);

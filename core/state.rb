@@ -2,7 +2,6 @@
 # core/state/state.rb
 #   Base class for all States
 class State
-
   attr_reader :ticks, :input
 
   ###
@@ -59,7 +58,6 @@ class State
     #
   end
 
-  # Gets called in each game loop iteration
   ###
   # Per frame update function, called by moon
   # @param [float] delta
@@ -70,10 +68,16 @@ class State
     @ticks += 1
   end
 
+  ###
+  # Is the State in debug mode?
+  ###
   def self.debug?
     true
   end
 
+  ###
+  # List of all States on the stack
+  ###
   def self.states
     @states
   end
@@ -109,5 +113,4 @@ class State
     @states.push state.new(self)
     @states.last.init
   end
-
 end
