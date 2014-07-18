@@ -31,9 +31,7 @@ namespace Moon {
 
   void Engine::run() {
     // Get the ruby object containing the state manager
-    mrb_value states = mrb_iv_get(mrb,
-                                  mrb_obj_value(mrb_class_get(mrb, "State")),
-                                  mrb_intern_cstr(mrb, "@states"));
+    mrb_value state_class = mrb_obj_value(mrb_class_get(mrb, "State"));
 
     int ai = mrb_gc_arena_save(mrb);
 
@@ -48,8 +46,8 @@ namespace Moon {
         break;
       };
 
-      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "update", 1, mrb_float_value(mrb, fps.getDelta()));
-      mrb_funcall(mrb, mrb_funcall(mrb, states, "last", 0), "render", 0);
+      mrb_funcall(mrb, mrb_funcall(mrb, state_class, "current", 0), "update", 1, mrb_float_value(mrb, fps.getDelta()));
+      mrb_funcall(mrb, mrb_funcall(mrb, state_class, "current", 0), "render", 0);
       mrb_gc_arena_restore(mrb, ai);
 
       fps.update();
