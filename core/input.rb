@@ -137,13 +137,11 @@ module Moon
     }
 
     def self.on_key(key, scancode, action, mods)
-      state = State.states.last # delagator shim
-      state.input.trigger KeyboardEvent.new(key, action, mods)
+      State.current.input.trigger KeyboardEvent.new(key, action, mods)
     end
 
     def self.on_button(button, action, mods)
-      state = State.states.last # delagator shim
-      state.input.trigger MouseEvent.new(button, action, mods, Mouse.position)
+      State.current.input.trigger MouseEvent.new(button, action, mods, Mouse.position)
     end
 
     def self.on_type(char)
