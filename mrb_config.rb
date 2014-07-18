@@ -4,6 +4,8 @@ MRuby::Build.new do |conf|
   # include the default GEMs
   conf.gembox 'default'
 
+  conf.gem :core => 'mruby-string-utf8'
+
   # Temporary custom solution. If we end up
   # creating a custom gem, make a gem folder
   # in moon root and put it there.
