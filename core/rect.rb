@@ -1,8 +1,5 @@
-# small data requirement
-# eventually this will be implemented in C++
 module Moon
   class Rect
-
     alias :w :width
     alias :w= :width=
     alias :h :height
@@ -14,6 +11,18 @@ module Moon
       nx2 = x2 < other.x2 ? x2 : other.x2
       ny2 = y2 < other.y2 ? y2 : other.y2
       Rect.new nx, ny, nx2 - nx, ny2 - ny
+    end
+
+    def export
+      to_h.merge("&class" => self.class.to_s).stringify_keys
+    end
+
+    def import(data)
+      self.x = data["x"]
+      self.y = data["y"]
+      self.width = data["width"]
+      self.height = data["height"]
+      self
     end
 
     def set(*args)
@@ -109,8 +118,11 @@ module Moon
       new(*extract(obj))
     end
 
+    def self.import(data)
+      new(0,0,0,0).import(data)
+    end
+
     alias :position :xy
     alias :size :wh
-
   end
 end
