@@ -110,6 +110,7 @@ module Moon
         self.class.all_fields.each_key do |k|
           hsh[k] = export_obj(send(k))
         end
+        hsh["&class"] = self.class.to_s
         hsh.stringify_keys
       end
 
