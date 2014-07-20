@@ -226,7 +226,7 @@ module Moon
       end
     end
 
-    def render(x=0, y=0, z=0)
+    def render(x=0, y=0, z=0, options={})
       px, py, pz = *(@position + [x, y, z])
       render_elements(px, py, pz)
       self
