@@ -95,22 +95,24 @@ module Moon
     end
 
     ###
-    # Clears all running jobs, or clears a job
-    # @overload clear
-    # @overload clear(obj)
+    # Clears all jobs
     ###
-    def clear(obj=nil)
-      if obj
-        @jobs.delete(obj)
-      else
-        @jobs.clear
-      end
+    def clear
+      @jobs.clear
     end
 
     ###
-    # Clears a job by id
+    # Removes a job
+    # @overload remove(obj)
     ###
-    def clear_by_id(id)
+    def remove(obj=nil)
+      @jobs.delete(obj)
+    end
+
+    ###
+    # Removes a job by id
+    ###
+    def remove_by_id(id)
       @jobs.delete { |job| job.id == id }
     end
 
