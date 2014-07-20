@@ -14,13 +14,11 @@ namespace Moon {
   }
 
   static mrb_value
-  moon_mrb_mouse_pos(mrb_state *mrb, mrb_value self) {
-    auto pos = Input::Mouse::pos();
+  moon_mrb_mouse_position(mrb_state *mrb, mrb_value self) {
+    auto pos = Input::Mouse::get_position();
 
-    mrb_value ary = mrb_ary_new(mrb);
-    mrb_ary_push(mrb, ary, mrb_fixnum_value(pos[0]));
-    mrb_ary_push(mrb, ary, mrb_fixnum_value(pos[1]));
-    return ary;
+    mrb_value argv[2] = { mrb_fixnum_value(pos[0]), mrb_fixnum_value(pos[1]) };
+    return mrb_obj_new(mrb, moon_cVector2, 2, argv);
   }
 
   struct RClass*
@@ -32,9 +30,9 @@ namespace Moon {
     mouse_module = mrb_define_module_under(mrb, input_module, "Mouse");
 
     // mouse functions
-    mrb_define_class_method(mrb, mouse_module, "x",   moon_mrb_mouse_x,   MRB_ARGS_NONE());
-    mrb_define_class_method(mrb, mouse_module, "y",   moon_mrb_mouse_y,   MRB_ARGS_NONE());
-    mrb_define_class_method(mrb, mouse_module, "pos", moon_mrb_mouse_pos, MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, mouse_module, "x",        moon_mrb_mouse_x,        MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, mouse_module, "y",        moon_mrb_mouse_y,        MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, mouse_module, "position", moon_mrb_mouse_position, MRB_ARGS_NONE());
 
     // input constants
     mrb_define_const(mrb, input_module, "SPACE",   mrb_fixnum_value(GLFW_KEY_SPACE));

@@ -21,7 +21,7 @@ namespace Moon {
     public:
       static int x();
       static int y();
-      static std::array<int, 2> pos();
+      static std::array<int, 2> get_position();
     };
     // class Joystick { }; // if we ever do this
     // class Gamepad { }; // if we ever do this

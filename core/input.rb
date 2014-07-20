@@ -219,10 +219,6 @@ module Moon
       def self.in_rect?(rect)
         in_area?(rect.x, rect.y, rect.width, rect.height)
       end
-
-      def self.position
-        Vector2.new x, y
-      end
     end
   end
 end

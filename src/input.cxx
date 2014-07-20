@@ -68,7 +68,7 @@ namespace Moon {
     return floor(y);
   }
 
-  std::array<int, 2> Input::Mouse::pos() {
+  std::array<int, 2> Input::Mouse::get_position() {
     double x, y;
     glfwGetCursorPos(window, &x, &y);
     return {(int)floor(x), (int)floor(y)};
