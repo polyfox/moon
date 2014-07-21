@@ -30,8 +30,6 @@ namespace Moon {
 
   void Input::on_type(GLFWwindow* window, unsigned int utf8_char) {
     mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, moon_module, "Input"));
-    std::wstring ws;
-    ws += utf8_char;
     /* TODO: convert int directly to a UTF8 mruby string */
     mrb_funcall(mrb, klass, "on_type", 1,
                 mrb_funcall(mrb, mrb_fixnum_value(utf8_char), "chr", 0));
