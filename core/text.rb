@@ -7,6 +7,7 @@ module Moon
     attr_reader   :string   # String
     attr_reader   :width
     attr_reader   :height
+    attr_accessor :line_height
 
     def font=(new_font)
       @font = new_font
@@ -24,6 +25,7 @@ module Moon
       @font = font
       @color = Moon::Vector4.new 1.0, 1.0, 1.0, 1.0
       @align = align
+      @line_height = 1.2
       refresh_size
     end
 
@@ -37,7 +39,7 @@ module Moon
     end
 
     def line_height
-      @font.size * 1.2
+      @font.size * @line_height
     end
 
     def render(x=0, y=0, z=0, options={})
