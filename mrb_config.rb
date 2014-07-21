@@ -5,6 +5,7 @@ MRuby::Build.new do |conf|
   conf.gembox 'default'
 
   conf.gem :core => 'mruby-string-utf8'
+  conf.gem :core => 'mruby-eval'
 
   # Temporary custom solution. If we end up
   # creating a custom gem, make a gem folder
