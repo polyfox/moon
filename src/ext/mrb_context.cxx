@@ -30,7 +30,12 @@ namespace Moon {
     mrbc_context* cxt;
     Data_Get_Struct(mrb, self, &context_data_type, cxt);
 
-    return mrb_load_string_cxt(mrb, str, cxt);
+    auto v = mrb_load_string_cxt(mrb, str, cxt);
+    
+    if (mrb->exc) {
+      mrb_print_error(mrb);
+    }
+    return v;
   }
 
   struct RClass*
