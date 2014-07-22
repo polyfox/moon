@@ -16,6 +16,7 @@ namespace Moon {
   struct RClass *moon_cVector3;
   struct RClass *moon_cVector4;
   struct RClass *moon_cTransform;
+  struct RClass *moon_cContext;
 
   const struct mrb_data_type engine_data_type = {
     "Engine", NULL,
@@ -42,4 +43,5 @@ void moon_init_mrb_core(mrb_state *mrb) {
   Moon::moon_cVector3     = Moon::moon_mrb_vector3_init(mrb);
   Moon::moon_cVector4     = Moon::moon_mrb_vector4_init(mrb);
   Moon::moon_cTransform   = Moon::moon_mrb_transform_init(mrb);
+  Moon::moon_cContext     = Moon::moon_mrb_context_init(mrb);
 };
