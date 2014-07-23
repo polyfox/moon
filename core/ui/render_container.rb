@@ -38,7 +38,7 @@ module Moon
       # this callback will trigger the passed event in the children elements
       # Input::MouseEvent are handled specially, since it requires adjusting
       # the position of the event
-      on :any do |_, event|
+      on :any do |event|
         # GLORIOUS HAX AHEAD, PLEASE WEAR SAFETY GLASSES
         case event
         when Moon::Input::MouseEvent
@@ -66,16 +66,16 @@ module Moon
       end
 
       # click event generation
-      on :mousedown do |_, event|
+      on :mousedown do |event|
         @last_mousedown_id = event.id
       end
 
-      on :mouseup do |_, event|
+      on :mouseup do |event|
         trigger :click if @last_mousedown_id == event.id
       end
 
       # double clicks (click distance was max 500ms)
-      on :click do |_, event|
+      on :click do |event|
         now = Moon::Screen.uptime
         if now - @last_click_at < 0.500
           trigger :dblclick
@@ -90,7 +90,7 @@ module Moon
       # dragging support
       @draggable = false
 
-      on :mousedown do |_, event|
+      on :mousedown do |event|
         # bonus: be able to specify a drag rectangle:
         # the area where the user can click to drag
         # the window (useful if we only want it to
@@ -109,7 +109,7 @@ module Moon
       end
 
       # TODO: implement mousemove
-      on :mousemove do |_, event|
+      on :mousemove do |event|
         # if draggable, and we are dragging (the mouse is pressed down)
 
         # update the position, calculated off of
@@ -128,7 +128,7 @@ module Moon
         end
       end
 
-      on :mouseup do |_, event|
+      on :mouseup do |event, _|
         # disable dragging
         @dragging = false if @draggable
       end
