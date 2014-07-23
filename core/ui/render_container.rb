@@ -238,5 +238,8 @@ module Moon
     end
 
     protected :elements
+    private :init_elements
+    private :init_events
+    private :init_eventable
   end
 end
