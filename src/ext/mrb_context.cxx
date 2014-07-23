@@ -38,6 +38,18 @@ namespace Moon {
     return v;
   }
 
+  static mrb_value
+  moon_mrb_context_symbols(mrb_state * mrb, mrb_value self) {
+    mrbc_context * cxt;
+    Data_Get_Struct(mrb, self, &context_data_type, cxt);
+
+    mrb_value ary = mrb_ary_new_capa(mrb, cxt->slen);
+    for (int i=0; i < cxt->slen; i++) {
+      mrb_ary_push(mrb, ary, mrb_symbol_value(cxt->syms[i]));
+    }
+    return ary;
+  }
+
   struct RClass*
   moon_mrb_context_init(mrb_state *mrb) {
     struct RClass *context_class;
@@ -46,6 +58,7 @@ namespace Moon {
 
     mrb_define_method(mrb, context_class, "initialize", moon_mrb_context_initialize, MRB_ARGS_NONE());
     mrb_define_method(mrb, context_class, "eval",       moon_mrb_context_eval,       MRB_ARGS_REQ(1));
+    mrb_define_method(mrb, context_class, "symbols",    moon_mrb_context_symbols,    MRB_ARGS_NONE());
 
     return context_class;
   };
