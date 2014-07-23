@@ -20,12 +20,12 @@ module Moon
     end
 
     def initialize(string=nil, font=nil, align=:left)
-      super()
       @string = string
       @font = font
-      @color = Vector4.new 1.0, 1.0, 1.0, 1.0
       @align = align
+      @color = Vector4.new 1.0, 1.0, 1.0, 1.0
       @line_height = 1.2
+      super()
       refresh_size
     end
 
