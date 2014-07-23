@@ -51,9 +51,9 @@ module Moon
           when :left
             # do nothing
           when :right
-            pos.x -= @font.calc_bounds(line)
+            pos.x -= @font.calc_bounds(line)[0]
           when :center
-            pos.x -= @font.calc_bounds(line) / 2
+            pos.x -= @font.calc_bounds(line)[0] / 2
           end
 
           font.render(pos.x, pos.y + index * line_height, pos.z,
