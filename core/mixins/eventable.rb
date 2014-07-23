@@ -53,6 +53,7 @@ module Moon
     # @param [Event] event
     ###
     def trigger(event)
+      event = Event.new(event) unless event.is_a?(Event)
       trigger_any(event)
       trigger_event(event.type, event)
       trigger_aliases(event.type, event)
