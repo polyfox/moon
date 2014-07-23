@@ -1,3 +1,8 @@
 require "core/ui/render_container"
 require "core/ui/skin_slice3"
 require "core/ui/skin_slice9"
+require "core/ui/widget"
+require "core/ui/textbox"
+require "core/ui/button"
+require "core/ui/label"
+require "core/ui/window"
