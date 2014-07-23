@@ -15,8 +15,6 @@ module Moon
     attr_accessor :parent
     attr_accessor :position
     attr_accessor :visible
-    attr_writer :width
-    attr_writer :height
 
     def initialize
       @id = @@container_id += 1
@@ -27,6 +25,8 @@ module Moon
       init_elements
       init_eventable
       init_events
+
+      trigger :resize
     end
 
     def init_elements
@@ -168,6 +168,11 @@ module Moon
       end
     end
 
+    def width=(width)
+      @width = width
+      trigger :resize
+    end
+
     def height
       @height ||= begin
         y = 0
@@ -180,6 +185,11 @@ module Moon
         end
         y2 - y
       end
+    end
+
+    def height=(height)
+      @height = height
+      trigger :resize
     end
 
     def x2
