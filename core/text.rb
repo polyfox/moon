@@ -23,7 +23,7 @@ module Moon
       super()
       @string = string
       @font = font
-      @color = Moon::Vector4.new 1.0, 1.0, 1.0, 1.0
+      @color = Vector4.new 1.0, 1.0, 1.0, 1.0
       @align = align
       @line_height = 1.2
       refresh_size
