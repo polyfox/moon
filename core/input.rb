@@ -145,76 +145,15 @@ module Moon
     end
 
     def self.on_type(char)
-      State.current.input.trigger KeyboardTypeEvent.new(char)
+      State.current.input.trigger KeyboardTypingEvent.new(char)
+    end
+
+    def self.on_mousemove(x, y)
+      State.current.input.trigger MouseMove.new(x, y)
     end
 
     def self.convert_key(key)
       (key.is_a?(Symbol)||key.is_a?(String)) ? STRING_TO_KEY.fetch(key.to_s) : key
-    end
-
-    class Observer
-      def initialize
-        clear
-      end
-
-      ###
-      # Adds a new event listener.
-      # @param [Symbol] keys The keys to listen for..
-      # @param [Proc] block The block we want to execute when we catch the type.
-      ###
-      def on(action, *keys, &block)
-        keys = keys.flatten.map! { |k| Input.convert_key(k) }
-        listener = { block: block }
-        listener[:keys] = keys unless keys.empty?
-        @event_listeners[action].push(listener)
-      end
-
-      def typing(&block)
-        on(:type, &block)
-      end
-
-      def alias_event(newname, key)
-        (@aliases[key] ||= []).push(newname)
-      end
-
-      def trigger_event(name, event)
-        @event_listeners[name].each do |listener|
-          if listener.key?(:keys)
-            listener[:block].call(event) if listener[:keys].include?(event.key)
-          else
-            listener[:block].call(event)
-          end
-        end
-      end
-
-      def trigger_aliases(name, event)
-        @aliases[name].try(:each) do |aliasname|
-          trigger_event(aliasname, event)
-        end
-      end
-
-      def trigger_any(event)
-        trigger_event(:any, event)
-      end
-
-      ###
-      # @param [Event] event
-      ###
-      def trigger(event)
-        trigger_any(event)
-        trigger_event(event.action, event)
-        trigger_aliases(event.action, event)
-      end
-
-      def clear
-        @event_listeners = {
-          any: [], press: [], release: [], repeat: [], type: []
-        }
-        @aliases = {}
-      end
-      private :convert_key
-      private :trigger_event
-      private :trigger_aliases
     end
 
     module Mouse

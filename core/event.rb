@@ -18,7 +18,7 @@ module Moon
       @key = key
 
       @mods = mods
-      super :input
+      super @action
     end
 
     def alt?
@@ -37,14 +37,14 @@ module Moon
       @mods.masked? Moon::Input::MOD_SHIFT
     end
   end
-  class KeyboardTypeEvent < Event
+  class KeyboardTypingEvent < Event
     attr_reader :char
     attr_reader :action
 
     def initialize(char)
       @char = char
-      @action = :type
-      super :type
+      @action = :typing
+      super @action
     end
   end
   class KeyboardEvent < InputEvent
@@ -56,6 +56,17 @@ module Moon
     def initialize(button, action, mods, position)
       @position = Vector2[position]
       super button, action, mods
+    end
+  end
+  class MouseMove < Event
+    attr_reader :x, :y
+    attr_reader :position
+
+    def initialize(x, y)
+      @x = x
+      @y = y
+      @position = Vector2.new(x, y)
+      super :mousemove
     end
   end
 end
