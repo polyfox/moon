@@ -24,8 +24,13 @@ module Moon
       @elements = []
       @visible = true
       @position = Vector3.new
+      init_elements
       init_eventable
       init_events
+    end
+
+    def init_elements
+      #
     end
 
     def init_events
