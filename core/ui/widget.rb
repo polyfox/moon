@@ -13,6 +13,14 @@ module Moon
       create_background
     end
 
+    def init_events
+      super
+      on :resize do
+        @background.width = width
+        @background.height = height
+      end
+    end
+
     def create_background
       @background = SkinSlice9.new
       add(@background)
