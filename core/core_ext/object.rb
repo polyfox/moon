@@ -1,11 +1,9 @@
 class Object
-
   def try(meth=nil, *args, &block)
-    if block_given?
-      yield self
-    else
+    if meth
       self.send(meth, *args, &block)
+    else
+      yield self
     end
   end
-
 end
