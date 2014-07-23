@@ -15,6 +15,10 @@ module Moon
 
     def init_events
       super
+      on :typing do |e|
+        @text.string += e.char
+      end
+
       on :submit do
         @submit_func.try :call, self
       end
