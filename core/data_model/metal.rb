@@ -153,7 +153,7 @@ module Moon
       ###
       def validate
         self.class.all_fields.each do |key, field|
-          field.check_type(key, self[k])
+          field.check_type(key, self[key])
         end
         self
       end
@@ -164,11 +164,11 @@ module Moon
       def force_types
         self.class.all_fields.each do |k, field|
           value = self[k]
-          type = field.type
+          type = field.exact_type
           next if value.nil? && field.allow_nil?
           next if value.is_a?(type)
           self[k] =
-          if type == Array   then value.to_a
+          if type == Array      then value.to_a
           elsif type == Float   then value.to_f
           elsif type == Hash    then value.to_h
           elsif type == Integer then value.to_i

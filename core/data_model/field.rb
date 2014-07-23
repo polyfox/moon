@@ -12,6 +12,16 @@ module Moon
         @allow_nil = !!options[:allow_nil]
       end
 
+      def exact_type
+        if type.is_a?(Hash)
+          Hash
+        elsif type.is_a?(Array)
+          Array
+        else
+          type
+        end
+      end
+
       def make_default(selfie)
         @default.is_a?(Proc) ? @default.call(@type, selfie) : @default
       end
