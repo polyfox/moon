@@ -39,29 +39,8 @@ module Moon
       # Input::MouseEvent are handled specially, since it requires adjusting
       # the position of the event
       on :any do |event|
-        # GLORIOUS HAX AHEAD, PLEASE WEAR SAFETY GLASSES
-        case event
-        when Moon::Input::MouseEvent
-          next if elements.empty?
-          subevent = event.dup
-          subevent.position = screen_to_relative(subevent.position)
-          each do |element|
-            if element.pos_inside?(subevent.position)
-              # yet another event delegate, this time its a hack for mousedown/
-              # mouseup.
-              case subevent.action
-              when :press
-                element.trigger(subevent.dup.tap {|e| e.type = :mousedown })
-              when :release
-                element.trigger(subevent.dup.tap {|e| e.type = :mouseup })
-              end
-              element.trigger subevent
-            end
-          end
-        else
-          each do |element|
-            element.trigger event
-          end
+        each do |element|
+          element.trigger event
         end
       end
 
