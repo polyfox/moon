@@ -16,6 +16,7 @@ namespace Moon {
     static void update_key(GLFWwindow* window, int key_id, int scancode, int action, int mods);
     // Mouse
     static void update_button(GLFWwindow* window, int button_id, int action, int mods);
+    static void update_cursor_pos(GLFWwindow* window, double x, double y);
 
     class Mouse {
     public:

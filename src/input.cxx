@@ -11,6 +11,7 @@ namespace Moon {
     glfwSetKeyCallback(window, Input::update_key);
     glfwSetMouseButtonCallback(window, Input::update_button);
     glfwSetCharCallback(window, Input::on_type);
+    glfwSetCursorPosCallback(window, Input::update_cursor_pos);
   }
 
   /* Callbacks */
@@ -52,8 +53,14 @@ namespace Moon {
       mrb_fixnum_value(mods));
   }
 
-  /* Mouse functions */
+  void Input::update_cursor_pos(GLFWwindow* window, double x, double y) {
+    mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, moon_module, "Input"));
+    mrb_funcall(mrb, klass, "on_mousemove", 2,
+      mrb_float_value(mrb, x),
+      mrb_float_value(mrb, y));
+  }
 
+  /* Mouse functions */
   int Input::Mouse::x() {
     double x;
     glfwGetCursorPos(window, &x, NULL);
