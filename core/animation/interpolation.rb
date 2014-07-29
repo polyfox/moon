@@ -33,7 +33,7 @@ module Moon
     Linear = lambda do |v, k|
       m = v.length - 1
       f = m * k
-      i = Math.floor( f )
+      i = f.floor
       fn = LinearUtil
 
       if ( k < 0 )
@@ -47,11 +47,10 @@ module Moon
     Bezier = lambda do |v, k|
       b = 0
       n = v.length - 1
-      pw = Math.pow
       bn = BernsteinUtil
 
       n.times do |i|
-        b += Math.pow( 1 - k, n - i ) * Math.pow( k, i ) * v[ i ] * bn( n, i )
+        b += ((1 - k) ** (n - i)) * (k ** i) * v[i] * bn(n, i)
       end
 
       b
@@ -60,12 +59,12 @@ module Moon
     CatmullRom = lambda do |v, k|
       m = v.length - 1
       f = m * k
-      i = Math.floor( f )
+      i = f.floor
       fn = CatmullRomUtil
 
       if ( v[ 0 ] === v[ m ] )
         if ( k < 0 )
-          i = Math.floor( f = m * ( 1 + k ) )
+          i = (f = m * (1 + k)).floor
         end
         fn.call( v[ ( i - 1 + m ) % m ], v[ i ], v[ ( i + 1 ) % m ], v[ ( i + 2 ) % m ], f - i )
       else
