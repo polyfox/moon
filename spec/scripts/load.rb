@@ -5,6 +5,7 @@ require "vector4_spec"
 require "palette_parser_spec"
 require "data_model_spec"
 require "easing_spec"
+require "interpolation_spec"
 
 run_specs
 
