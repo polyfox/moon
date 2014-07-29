@@ -1,5 +1,4 @@
 class Transition
-
   ### class variables
   @@id = 0
 
@@ -26,7 +25,7 @@ class Transition
     @dest = dest
     @time = 0.0
     @duration = duration
-    @easer = Easer::Linear
+    @easer = Easing::Linear
     @callback = block
   end
 
@@ -41,7 +40,7 @@ class Transition
   # @return [Void]
   ###
   def refresh
-    @callback.(@easer.ease(@src, @dest, @time / @duration))
+    @callback.call(@src + @easer.call(@dest - @src) * @time / @duration)
   end
 
   ###
@@ -62,5 +61,4 @@ class Transition
     @time = @duration
     refresh
   end
-
 end
