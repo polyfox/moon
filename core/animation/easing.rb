@@ -82,11 +82,11 @@ module Moon
     end
 
     ExponentialIn = lambda do |k|
-      k == 0 ? 0 : Math.pow( 1024, k - 1 )
+      k == 0 ? 0 : 1024 ** (k - 1)
     end
 
     ExponentialOut = lambda do |k|
-      k == 1 ? 1 : 1 - Math.pow( 2, - 10 * k )
+      k == 1 ? 1 : 1 - 2 ** (-10 * k)
     end
 
     ExponentialInOut = lambda do |k|
@@ -95,9 +95,9 @@ module Moon
       elsif ( k == 1 )
         1
       elsif ( ( k *= 2 ) < 1 )
-        0.5 * Math.pow( 1024, k - 1 )
+        0.5 * 1024 ** (k - 1)
       else
-        0.5 * ( - Math.pow( 2, - 10 * ( k - 1 ) ) + 2 )
+        0.5 * (-(2 ** (-10 * (k - 1))) + 2)
       end
     end
 
@@ -132,7 +132,7 @@ module Moon
       else
         s = p * Math.asin( 1 / a ) / ( 2 * Math::PI )
       end
-      -( a * Math.pow( 2, 10 * ( k -= 1 ) ) * Math.sin( ( k - s ) * ( 2 * Math::PI ) / p ) )
+      -( a * (2 ** (10 * (k -= 1))) * Math.sin( ( k - s ) * ( 2 * Math::PI ) / p ) )
     end
 
     ElasticOut = lambda do |k|
@@ -151,7 +151,7 @@ module Moon
       else
         s = p * Math.asin( 1 / a ) / ( 2 * Math::PI )
       end
-      ( a * Math.pow( 2, - 10 * k) * Math.sin( ( k - s ) * ( 2 * Math::PI ) / p ) + 1 )
+      ( a * (2 ** (-10 * k)) * Math.sin( ( k - s ) * ( 2 * Math::PI ) / p ) + 1 )
     end
 
     ElasticInOut = lambda do |k|
@@ -171,9 +171,9 @@ module Moon
         s = p * Math.asin( 1 / a ) / ( 2 * Math::PI )
       end
       if ( ( k *= 2 ) < 1 )
-        -0.5 * ( a * Math.pow( 2, 10 * ( k -= 1 ) ) * Math.sin( ( k - s ) * ( 2 * Math::PI ) / p ) )
+        -0.5 * ( a * (2 ** (10 * ( k -= 1 ))) * Math.sin( ( k - s ) * ( 2 * Math::PI ) / p ) )
       else
-        a * Math.pow( 2, -10 * ( k -= 1 ) ) * Math.sin( ( k - s ) * ( 2 * Math::PI ) / p ) * 0.5 + 1
+        a * (2 ** (-10 * ( k -= 1 )) ) * Math.sin( ( k - s ) * ( 2 * Math::PI ) / p ) * 0.5 + 1
       end
     end
 
