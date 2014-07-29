@@ -4,6 +4,7 @@ require "vector4_spec"
 # core spec
 require "palette_parser_spec"
 require "data_model_spec"
+require "easing_spec"
 
 run_specs
 
