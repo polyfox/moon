@@ -99,7 +99,7 @@ module Moon
       when Array
         case obj.size
         when 2
-          return [*obj[0], *obj[1]]
+          return [*Vector2.extract(obj[0]), *Vector2.extract(obj[1])]
         # x, y, w, h
         when 4 then
           return *obj

@@ -95,8 +95,8 @@ module Moon
         case obj.size
         when 2
           pos, size = *obj
-          x, y, z = *pos
-          w, h, d = *size
+          x, y, z = Vector3.extract(pos)
+          w, h, d = Vector3.extract(size)
           return x, y, z, w, h, d
         when 6
           return *obj
