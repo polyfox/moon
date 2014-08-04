@@ -15,15 +15,17 @@ module Moon
         cw, ch = @windowskin.cell_width, @windowskin.cell_height
 
         if @horz
-          (width/cw).to_i.times do |w|
-            @windowskin.render x+w*cw, y, z, 1
-            @windowskin.render x+w*cw, y+height-ch, z, 7
+          @windowskin.render x, y, z, 0
+          ((width/cw).to_i-2).times do |w|
+            @windowskin.render x+(w+1)*cw, y, z, 1
           end
+          @windowskin.render x+width-cw, y, z, 2
         else
-          (height/ch).to_i.times do |h|
-            @windowskin.render x, y+h*ch, z, 3
-            @windowskin.render x+width-cw, y+h*ch, z, 5
+          @windowskin.render x, y, z, 0
+          ((height/ch).to_i-2).times do |h|
+            @windowskin.render x, y+(h+1)*ch, z, 1
           end
+          @windowskin.render x, y+height-ch, z, 2
         end
       end
       super
