@@ -41,7 +41,7 @@ module Moon
     # @return [Void]
     ###
     def refresh
-      @callback.call(@src + @easer.call(@dest - @src) * @time / @duration)
+      @callback.call(@src + (@dest - @src) * @easer.call(@time / @duration))
     end
 
     ###
