@@ -214,7 +214,7 @@ module Moon
       update_transitions(delta)
     end
 
-    def render_elements(x, y, z)
+    def render_elements(x, y, z, options={})
       @elements.each do |e|
         e.render x, y, z if e.visible
       end
@@ -222,7 +222,7 @@ module Moon
 
     def render(x=0, y=0, z=0, options={})
       px, py, pz = *(@position + [x, y, z])
-      render_elements(px, py, pz)
+      render_elements(px, py, pz, options)
       self
     end
 
