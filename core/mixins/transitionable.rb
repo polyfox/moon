@@ -11,16 +11,18 @@ module Moon
     # @param [Object] value  target value
     # @param [Numeric] duration  in seconds
     ###
-    def transition(attribute, value, duration=0.20)
+    def transition(attribute, value, duration=0.20, easer=Easing::Linear)
       rolling = attribute.to_s.split(".")
       if rolling.size > 1
         src = rolling.inject(self) { |obj, param| obj.send(param) }
         setter = "#{rolling.pop}="
-        add_transition(src, value, duration) do |v|
+        add_transition(src, value, duration, easer) do |v|
           rolling.inject(self) { |obj, param| obj.send(param) }.send(setter, v)
         end
       else
-        add_transition(send(attribute), value, duration) { |v| send("#{attribute}=", v) }
+        add_transition(send(attribute), value, duration, easer) do |v|
+          send("#{attribute}=", v)
+        end
       end
     end
 

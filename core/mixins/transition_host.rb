@@ -6,9 +6,9 @@ module Moon
     # @param [String] duration
     # @return [Transition]
     ###
-    def add_transition(src, dest, duration, &block)
+    def add_transition(src, dest, duration, easer=Easing::Linear, &block)
       duration = Scheduler.parse_duration(duration) if duration.is_a?(String)
-      transition = Transition.new(src, dest, duration, &block)
+      transition = Transition.new(src, dest, duration, easer, &block)
       (@transitions ||= []).push transition
       transition
     end

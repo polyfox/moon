@@ -19,14 +19,14 @@ module Moon
     # @param [Float] duration  in seconds
     # @return [Void]
     ###
-    def initialize(src, dest, duration, &block)
+    def initialize(src, dest, duration, easer=Easing::Linear, &block)
       @id = @@id += 1
       @key = nil
       @src = src
       @dest = dest
       @time = 0.0
       @duration = duration
-      @easer = Easing::Linear
+      @easer = easer
       @callback = block
     end
 
