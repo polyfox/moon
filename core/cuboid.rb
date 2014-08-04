@@ -1,6 +1,5 @@
 module Moon
   class Cuboid
-
     attr_accessor :x
     attr_accessor :y
     attr_accessor :z
@@ -34,7 +33,7 @@ module Moon
     end
 
     def set(*args)
-      @x, @y, @z, @width, @height, @depth = *Cube.extract(args.size > 1 ? args : args.first)
+      @x, @y, @z, @width, @height, @depth = *self.class.extract(args.size > 1 ? args : args.first)
       self
     end
 
@@ -119,6 +118,5 @@ module Moon
 
     alias :position :xyz
     alias :size :whd
-
   end
 end
