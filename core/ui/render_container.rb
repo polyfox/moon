@@ -6,6 +6,7 @@ module Moon
     include ScreenElement  # Moon::Core
     include Transitionable # Moon::Core
     include Eventable      # Moon::Core
+    include Renderable     # Moon::Core
     include Enumerable
 
     @@container_id = 0
@@ -223,7 +224,7 @@ module Moon
     def render(x=0, y=0, z=0, options={})
       px, py, pz = *(@position + [x, y, z])
       render_elements(px, py, pz, options)
-      self
+      super
     end
 
     protected :elements
