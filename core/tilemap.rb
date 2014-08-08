@@ -4,9 +4,7 @@
 # This may need to be rewritten in C/++
 module Moon
   class Tilemap
-
     module DataFlag
-
       NONE            = 0        # 0000 0000 # no flag
       # up and down offsets will conflict, left and right offsets will conflict
       OFF_UP          = 16       # 0001 0000 # enable offset up
@@ -18,7 +16,6 @@ module Moon
       HALF_OFF_TILE   = 1|2      # 0000 0011 # enable half offset
       TQUART_OFF_TILE = 1|2|4    # 0000 0111 # enable 3/4 offset
       FULL_OFF_TILE   = 1|2|4|8  # 0000 1111 # enable full offset
-
     end
 
     attr_accessor :tileset       # Spritesheet
@@ -27,7 +24,8 @@ module Moon
     attr_accessor :data_zmap     # DataMatrix
     attr_accessor :layer_opacity # Array
     attr_accessor :repeat_map    # Boolean
-    attr_accessor :view          # Cuboid
+    attr_accessor :view          # Rect     # restricts rendering inside view
+    attr_accessor :selection     # Cuboid   # selects a section of the map_data to render
     attr_accessor :position      # Vector3
 
     ##
@@ -40,8 +38,13 @@ module Moon
       @layer_opacity = nil
       @repeat_map    = false
       @view          = nil
+      @selection     = nil
       @position      = Vector3.new(0, 0, 0)
       yield self if block_given?
+    end
+
+    def update(delta)
+      #
     end
 
     ###
@@ -67,7 +70,18 @@ module Moon
       height = @data.ysize
       layers = @data.zsize
 
-      dox, doy, doz, width, height, layers = *@view if @view
+      vx  = nil
+      vx2 = nil
+      vy  = nil
+      vy2 = nil
+
+      dox, doy, doz, width, height, layers = *@selection if @selection
+      if @view
+        vx = @view.x
+        vx2 = @view.x2
+        vy = @view.y
+        vy2 = @view.y2
+      end
 
       px, py, pz = *(@position + [x, y, z])
 
@@ -84,6 +98,8 @@ module Moon
         opacity = @layer_opacity ? @layer_opacity[dz] : 1.0
         render_ops = { opacity: opacity }.merge(options)
 
+        rnz = pz
+
         # and then by row
         height.times do |i|
 
@@ -93,6 +109,9 @@ module Moon
           else
             next if dy < 0 || dy >= @data.ysize
           end
+
+          rny = py + i * cell_height
+          next if rny < vy || rny > vy2 if vy
 
           # and then render by cell
           width.times do |j|
@@ -108,6 +127,9 @@ module Moon
             # if -1 or less, then its a negative tile
             # and therefore should not be rendered
             next if tile_id < 0
+
+            rnx = px + j * cell_width
+            next if rnx < vx || rnx > vx2 if vx
 
             zm = @data_zmap ? @data_zmap[dx, dy, dz] : 0
             flag = @flags ? @flags[dx, dy, dz] : 0
@@ -137,14 +159,14 @@ module Moon
               elsif (flag.masked?(DataFlag::OFF_UP))
                 ry -= vy
               end
-              @tileset.render px + rx + j * cell_width,
-                              py + ry + i * cell_height,
-                              pz + rz + zm,
+              @tileset.render rnx + rx,
+                              rny + ry,
+                              rnz + rz + zm,
                               tile_id, render_ops
             else
-              @tileset.render px + j * cell_width,
-                              py + i * cell_height,
-                              pz + zm,
+              @tileset.render rnx,
+                              rny,
+                              rnz + zm,
                               tile_id, render_ops
             end
 
@@ -152,6 +174,5 @@ module Moon
         end
       end
     end
-
   end
 end
