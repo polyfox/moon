@@ -224,6 +224,16 @@ module Moon
       # @return [Symbol]
       ###
       def self.field(sym, options)
+        # if the default value is set to nil, and allow_nil hasn't already
+        # been set, then assign it as true
+        if options.key?(:default) && options[:default].nil?
+          options[:allow_nil] = true unless options.key?(:allow_nil)
+        end
+        # if default value does not exist, but the field allows nil
+        # set the default as nil
+        if !options.key?(:default) && options[:allow_nil]
+          options[:default] = nil
+        end
         field = fields[sym.to_sym] = Field.new(options)
 
         setter = "_#{sym}_set"
