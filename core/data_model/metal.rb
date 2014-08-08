@@ -6,7 +6,6 @@
 module Moon
   module DataModel
     class Metal
-
       @@dmid = 0
 
       attr_reader :dmid          # DataModel ID
@@ -16,6 +15,11 @@ module Moon
         initialize_fields(opts.keys)
         @dmid = @@dmid += 1
         yield self if block_given?
+        post_init
+      end
+
+      def post_init
+        #
       end
 
       def initialize_fields(dont_init=[])
@@ -249,6 +253,7 @@ module Moon
       private :initialize_fields
       private :export_obj
       private :import_obj
+      private :post_init
     end
   end
 end
