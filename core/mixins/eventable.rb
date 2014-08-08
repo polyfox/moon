@@ -22,7 +22,6 @@ module Moon
     # @param [Proc] block The block we want to execute when we catch the type.
     ###
     def on(action, *keys, &block)
-      init_eventable unless @event_listeners && @aliases
       keys = keys.flatten.map! { |k| Input.convert_key(k) }
       listener = { block: block }
       listener[:keys] = keys unless keys.empty?
@@ -38,7 +37,6 @@ module Moon
     end
 
     def trigger_event(name, event)
-      return unless @event_listeners
       @event_listeners[name].try(:each) do |listener|
         if listener.key?(:keys)
           listener[:block].call(event, self) if listener[:keys].include?(event.key)
@@ -49,7 +47,6 @@ module Moon
     end
 
     def trigger_aliases(name, event)
-      return unless @aliases
       @aliases[name].try(:each) do |aliasname|
         trigger_event(aliasname, event)
       end
