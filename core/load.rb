@@ -17,6 +17,7 @@ require 'core/table'       # 2d Table
 require 'core/tilemap'
 require 'core/sprite'
 require 'core/aabb'
+require 'core/aabbcc'
 require 'core/vector2'
 require 'core/vector3'
 require 'core/vector4'
