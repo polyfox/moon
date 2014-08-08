@@ -24,12 +24,18 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_spritesheet_initialize(mrb_state *mrb, mrb_value self) {
-    mrb_value filename;
+    char* filename;
     mrb_int tile_width, tile_height;
-    mrb_get_args(mrb, "Sii", &filename, &tile_width, &tile_height);
+    mrb_get_args(mrb, "zii", &filename, &tile_width, &tile_height);
 
-    Spritesheet *spritesheet = new Spritesheet(mrb_string_value_ptr(mrb, filename),
-                                               tile_width, tile_height);
+    Spritesheet *spritesheet;
+
+    if (exists(filename)) {
+      spritesheet = new Spritesheet(filename,
+                                                 tile_width, tile_height);
+    } else {
+      mrb_raisef(mrb, E_SCRIPT_ERROR, "cannot load such file -- %S", mrb_str_new_cstr(mrb, filename));
+    }
 
     DATA_TYPE(self) = &spritesheet_data_type;
     DATA_PTR(self) = spritesheet;

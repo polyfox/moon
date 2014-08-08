@@ -20,7 +20,13 @@ namespace Moon {
     mrb_get_args(mrb, "z", &filename);
 
     mrb_value color, tone, texture, clip;
-    Sprite *sprite = new Sprite(filename);
+    Sprite *sprite;
+
+    if (exists(filename)) {
+      sprite = new Sprite(filename);
+    } else {
+      mrb_raisef(mrb, E_SCRIPT_ERROR, "cannot load such file -- %S", mrb_str_new_cstr(mrb, filename));
+    }
 
     DATA_TYPE(self) = &sprite_data_type;
     DATA_PTR(self) = sprite;
