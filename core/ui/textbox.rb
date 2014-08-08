@@ -1,16 +1,11 @@
 module Moon
   class Textbox < Widget
-    attr_accessor :submit_func
     attr_reader :text
-
-    def initialize
-      @submit_func = nil
-      super
-    end
 
     def init_elements
       super
       @text = Text.new
+      add(@text)
     end
 
     def init_events
@@ -19,16 +14,16 @@ module Moon
         @text.string += e.char
       end
 
-      on :submit do
-        @submit_func.try :call, self
-      end
-
       on :clear do
         @text.string.clear
       end
 
-      on :delete_char do
+      on :press, :backspace do
         @text.string = @text.string.chop
+      end
+
+      on :resize do
+        @text.position.y = (height - @text.line_height) / 2
       end
     end
   end
