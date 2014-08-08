@@ -1,3 +1,4 @@
+require "core/core_ext/array"
 require "core/core_ext/boolean"
 require "core/core_ext/fixnum"
 require "core/core_ext/float"
