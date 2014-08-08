@@ -23,8 +23,8 @@ module Moon
       @elements = []
       @visible = true
       @position = Vector3.new
-      init_elements
       init_eventable
+      init_elements
       init_events
 
       trigger :resize
