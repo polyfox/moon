@@ -10,6 +10,13 @@ module Moon
     end
 
     ###
+    # @return [Boolean]
+    ###
+    def allow_event?(event)
+      true
+    end
+
+    ###
     # Adds a new event listener.
     # @param [Symbol] keys The keys to listen for..
     # @param [Proc] block The block we want to execute when we catch the type.
@@ -54,6 +61,9 @@ module Moon
     ###
     def trigger(event)
       event = Event.new(event) unless event.is_a?(Event)
+
+      return unless allow_event?(event)
+
       trigger_any(event)
       trigger_event(event.type, event)
       trigger_aliases(event.type, event)
