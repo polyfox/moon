@@ -43,6 +43,10 @@ module Moon
       Vector4.new x.ceil, y.ceil, z.ceil, w.ceil
     end
 
+    def abs
+      Vector3.new x.abs, y.abs, z.abs, w.abs
+    end
+
     def normalize
       m = [x, y, z, w].max.to_f
       return Vector4.zero if m == 0

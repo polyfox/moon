@@ -42,6 +42,10 @@ module Moon
       Vector3.new x.ceil, y.ceil, z.ceil
     end
 
+    def abs
+      Vector3.new x.abs, y.abs, z.abs
+    end
+
     def normalize
       m = [x, y, z].max.to_f
       Vector3.new x / m, y / m, z / m
