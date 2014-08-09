@@ -22,6 +22,11 @@ module Moon
         #
       end
 
+      def initialize_field(key)
+        field = self.class.all_fields.fetch(key)
+        self[key] = field.make_default(self)
+      end
+
       def initialize_fields(dont_init=[])
         self.class.all_fields.each do |k, field|
           next if dont_init.include?(k)
