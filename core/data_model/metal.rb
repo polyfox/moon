@@ -168,7 +168,7 @@ module Moon
       def force_types
         self.class.all_fields.each do |k, field|
           value = self[k]
-          type = field.exact_type
+          type = field.type_class
           next if value.nil? && field.allow_nil?
           next if value.is_a?(type)
           self[k] =
@@ -247,6 +247,14 @@ module Moon
         end
 
         sym.to_sym
+      end
+
+      ###
+      # defines a new Array field
+      # @return [Symbol]
+      ###
+      def self.array(sym, options)
+        field sym, options.merge(type: [options.fetch(:type)])
       end
 
       ###

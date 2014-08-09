@@ -4,6 +4,6 @@ describe Moon::DataModel::Base do
   end
 
   it "should accept correctly typed objects" do
-    Moon::DataModel::Base.new(id: 1)
+    Moon::DataModel::Base.new(id: "acb635672cdea")
   end
 end
