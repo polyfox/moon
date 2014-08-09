@@ -6,6 +6,9 @@
 module Moon
   module DataModel
     class Metal
+      # DataModels behave like a Hash
+      include Enumerable
+
       @@dmid = 0
 
       attr_reader :dmid          # DataModel ID
@@ -18,6 +21,18 @@ module Moon
         post_init
       end
 
+      def each
+        self.class.all_fields.each do |k, field|
+          yield k, self[k]
+        end
+      end
+
+      def each_field
+        self.class.all_fields.each do |k, field|
+          yield k, field
+        end
+      end
+
       def post_init
         #
       end
@@ -28,7 +43,7 @@ module Moon
       end
 
       def initialize_fields(dont_init=[])
-        self.class.all_fields.each do |k, field|
+        each_field do |k, field|
           next if dont_init.include?(k)
           self[k] = field.make_default(self)
         end
@@ -161,7 +176,7 @@ module Moon
       # @return [self]
       ###
       def validate
-        self.class.all_fields.each do |key, field|
+        each_field do |key, field|
           field.check_type(key, self[key])
         end
         self
@@ -171,7 +186,7 @@ module Moon
       # @return [self]
       ###
       def force_types
-        self.class.all_fields.each do |k, field|
+        each_field do |k, field|
           value = self[k]
           type = field.type_class
           next if value.nil? && field.allow_nil?
