@@ -3,7 +3,6 @@
 #
 module Moon
   class Table
-
     include Enumerable
 
     attr_reader :xsize
@@ -47,6 +46,18 @@ module Moon
 
     def cuboid
       Cuboid.new 0, 0, 0, @xsize, @ysize, 1
+    end
+
+    def subsample(*args)
+      rx, ry, rw, rh = *Rect.extract(args.size > 1 ? args : args.first)
+      result = self.class.new(rw, rh, default: @default)
+      result.ysize.times do |y|
+        dy = y + ry
+        result.xsize.times do |x|
+          result[x, y] = self[x + rx, dy]
+        end
+      end
+      result
     end
 
     def [](x, y)
@@ -174,6 +185,5 @@ module Moon
     end
 
     private :create_data
-
   end
 end

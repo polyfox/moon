@@ -2,7 +2,6 @@
 #   aka. 3d table
 module Moon
   class DataMatrix
-
     include Enumerable
 
     attr_reader :xsize
@@ -42,6 +41,21 @@ module Moon
 
     def cuboid
       Cuboid.new 0, 0, 0, @xsize, @ysize, @zsize
+    end
+
+    def subsample(*args)
+      cx, cy, cz, cw, ch, cd = *Cuboid.extract(args.size > 1 ? args : args.first)
+      result = self.class.new(cw, ch, cd, default: @default)
+      result.zsize.times do |z|
+        dz = cz + z
+        result.ysize.times do |y|
+          dy = cy + y
+          result.xsize.times do |x|
+            result[x, y, z] = self[x + cx, dy, dz]
+          end
+        end
+      end
+      result
     end
 
     def [](x, y, z)
