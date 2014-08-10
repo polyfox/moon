@@ -274,7 +274,8 @@ module Moon
       # @return [Symbol]
       ###
       def self.array(sym, options)
-        field sym, options.merge(type: [options.fetch(:type)])
+        field sym, options.merge(type: [options.fetch(:type)],
+                                 default: (options[:default] || proc{[]}))
       end
 
       ###
