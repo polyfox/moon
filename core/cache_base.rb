@@ -37,7 +37,10 @@ module Moon
       @cache[branch_name] || {}
     end
 
-    def load(branch_name, *args_org, &block)
+    ###
+    # @deprecated
+    ###
+    def __cache_load__(branch_name, *args_org, &block)
       name, *args = *args_org
       key = [name, *args]
 
@@ -62,20 +65,32 @@ module Moon
     ###
     # @param [Symbol] branch_name
     # @return [Symbol]  branch_name
+    # @deprecated
     ###
     def self.branch(branch_name)
+      STDERR.puts "warning: CacheBase.branch is deprecated, use .cache instead"
+
       (@loader ||= {})[branch_name] = yield
 
       define_method(branch_name) do |*args_org, &block|
-        load(branch_name, *args_org, &block)
+        __cache_load__(branch_name, *args_org, &block)
       end
 
       branch_name
     end
 
+    def self.cache(symbol)
+      alias_method "load_#{symbol}", symbol
+
+      define_method(symbol) do |*args|
+        (@cache[symbol] ||= {})[args] ||= send("load_#{symbol}", *args)
+      end
+    end
+
     class << self
       attr_reader :loader
       private :branch
+      private :cache
     end
   end
 end
