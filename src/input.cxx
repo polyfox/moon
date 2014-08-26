@@ -145,10 +145,6 @@ namespace Moon {
     glfw_key_map[GLFW_KEY_RIGHT_ALT] = mrb_symbol_value(mrb_intern_cstr(mrb, "right_alt"));
     glfw_key_map[GLFW_KEY_RIGHT_SUPER] = mrb_symbol_value(mrb_intern_cstr(mrb, "right_super"));
     glfw_key_map[GLFW_KEY_MENU] = mrb_symbol_value(mrb_intern_cstr(mrb, "menu"));
-    glfw_key_map[GLFW_MOD_SHIFT] = mrb_symbol_value(mrb_intern_cstr(mrb, "mod_shift"));
-    glfw_key_map[GLFW_MOD_CONTROL] = mrb_symbol_value(mrb_intern_cstr(mrb, "mod_control"));
-    glfw_key_map[GLFW_MOD_ALT] = mrb_symbol_value(mrb_intern_cstr(mrb, "mod_alt"));
-    glfw_key_map[GLFW_MOD_SUPER] = mrb_symbol_value(mrb_intern_cstr(mrb, "mod_super"));
     /*glfw_key_map[GLFW_MOUSE_BUTTON_1] = mrb_symbol_value(mrb_intern_cstr(mrb, "mouse_button_1"));*/
     /*glfw_key_map[GLFW_MOUSE_BUTTON_2] = mrb_symbol_value(mrb_intern_cstr(mrb, "mouse_button_2"));*/
     /*glfw_key_map[GLFW_MOUSE_BUTTON_3] = mrb_symbol_value(mrb_intern_cstr(mrb, "mouse_button_3"));*/

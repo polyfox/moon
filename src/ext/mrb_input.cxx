@@ -32,6 +32,12 @@ namespace Moon {
     mrb_define_class_method(mrb, mouse_module, "x",        moon_mrb_mouse_x,        MRB_ARGS_NONE());
     mrb_define_class_method(mrb, mouse_module, "y",        moon_mrb_mouse_y,        MRB_ARGS_NONE());
     mrb_define_class_method(mrb, mouse_module, "position", moon_mrb_mouse_position, MRB_ARGS_NONE());
+
+    mrb_define_const(mrb, input_module, "MOD_SHIFT",   mrb_fixnum_value(GLFW_MOD_SHIFT));
+    mrb_define_const(mrb, input_module, "MOD_CONTROL", mrb_fixnum_value(GLFW_MOD_CONTROL));
+    mrb_define_const(mrb, input_module, "MOD_ALT",     mrb_fixnum_value(GLFW_MOD_ALT));
+    mrb_define_const(mrb, input_module, "MOD_SUPER",   mrb_fixnum_value(GLFW_MOD_SUPER));
+
     return input_module;
   }
 }
