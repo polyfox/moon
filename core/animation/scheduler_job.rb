@@ -12,6 +12,10 @@ module Moon
       @active = true
     end
 
+    def rate
+      @time / @duration
+    end
+
     def done?
       false
     end
