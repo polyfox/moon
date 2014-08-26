@@ -68,5 +68,9 @@ module Moon
       @position = Vector2.new(x, y)
       super :mousemove
     end
+
+    def normalize_position
+      @position / [Screen.width, Screen.height]
+    end
   end
 end
