@@ -4,10 +4,12 @@
 #include <GLFW/glfw3.h>
 #include <cmath>
 #include <array>
+#include <map>
 
 #include "mrb.hxx"
 
 namespace Moon {
+  typedef std::map<int, mrb_value> int__mrb_value_map_t;
 
   class Input {
   public:
@@ -28,10 +30,15 @@ namespace Moon {
     // class Gamepad { }; // if we ever do this
 
     static void initialize(GLFWwindow* window,  mrb_state *mrb);
+    static void initialize_maps();
 
+    static mrb_value glfw_state_to_mrb_symbol(int state);
+    static mrb_value glfw_key_to_mrb_symbol(int key_id);
   protected:
     static mrb_state* mrb;
     static GLFWwindow* window; // the main engine window
+    static int__mrb_value_map_t glfw_state_map;
+    static int__mrb_value_map_t glfw_key_map;
   };
 };
 
