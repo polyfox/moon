@@ -1,6 +1,5 @@
 module Moon
   class Text < RenderContainer
-
     attr_accessor :color    # Moon::Vector4
     attr_reader   :font     # Moon::Font
     attr_accessor :align    # Symbol [:left, :right, :center]
@@ -64,7 +63,7 @@ module Moon
     end
 
     def refresh_size
-      if @string
+      if @font && @string
         vec2 = @string.split("\n").inject(Vector2.new(0, 0)) do |vec2, line|
           bounds = @font.calc_bounds(line)
           vec2.x = bounds[0] if vec2.x < bounds[0]
@@ -77,6 +76,5 @@ module Moon
         @width, @height = 0, 0
       end
     end
-
   end
 end
