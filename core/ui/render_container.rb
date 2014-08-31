@@ -206,6 +206,10 @@ module Moon
       element
     end
 
+    def clear_elements
+      @elements.clear
+    end
+
     def update_elements(delta)
       @elements.each { |element| element.update(delta) }
     end
