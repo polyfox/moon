@@ -280,8 +280,10 @@ module Moon
       # @return [Symbol]
       ###
       def self.array(sym, options)
+        size = options.delete(:size) || 0
+        default = (options[:default] || proc{Array.new(size)})
         field sym, options.merge(type: [options.fetch(:type)],
-                                 default: (options[:default] || proc{[]}))
+                                 default: default)
       end
 
       ###
