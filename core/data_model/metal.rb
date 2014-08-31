@@ -33,6 +33,12 @@ module Moon
         end
       end
 
+      def each_field_with_value
+        self.class.all_fields.each do |k, field|
+          yield k, field, self[k]
+        end
+      end
+
       def post_init
         #
       end
