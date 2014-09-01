@@ -219,6 +219,13 @@ module Moon
       end
 
       ###
+      # @return [Boolean]
+      ###
+      def validate_fields?
+        true
+      end
+
+      ###
       # @param [Hash] data
       ###
       def self.load(data)
@@ -268,7 +275,7 @@ module Moon
         alias_method setter, "#{sym}="
 
         define_method "#{sym}=" do |obj|
-          field.check_type(sym, obj)
+          field.check_type(sym, obj) if validate_fields?
           send(setter, obj)
         end
 
