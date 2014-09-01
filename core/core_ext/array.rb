@@ -1,4 +1,8 @@
 class Array
+  def presence
+    empty? ? nil : self
+  end
+
   def to_linked_list
     node = nil
     each do |e|

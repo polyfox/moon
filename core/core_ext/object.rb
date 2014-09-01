@@ -1,4 +1,8 @@
 class Object
+  def presence
+    self || nil
+  end
+
   def to_link_node
     LinkNode.new(self)
   end

@@ -1,4 +1,8 @@
 class String
+  def presence
+    empty? ? nil : self
+  end
+
   def demodulize
     path = self.to_s
     if i = path.rindex('::')
