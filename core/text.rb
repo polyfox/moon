@@ -14,18 +14,19 @@ module Moon
     end
 
     def string=(new_string)
-      @string = new_string != nil ? new_string.to_s : nil
+      @string = new_string.presence
+      @lines = @string ? @string.split("\n") : []
       refresh_size
     end
 
     def initialize(string=nil, font=nil, align=:left)
-      @string = string
+      @lines = []
       @font = font
       @align = align
       @color = Vector4.new 1.0, 1.0, 1.0, 1.0
       @line_height = 1.2
       super()
-      refresh_size
+      self.string = string
     end
 
     def set(options)
@@ -43,7 +44,7 @@ module Moon
 
     def render(x=0, y=0, z=0, options={})
       if @font && @string
-        @string.split("\n").each_with_index do |line, index|
+        @lines.each_with_index do |line, index|
           pos = @position + [x, y, z]
 
           case @align
@@ -64,7 +65,8 @@ module Moon
 
     def refresh_size
       if @font && @string
-        vec2 = @string.split("\n").inject(Vector2.new(0, 0)) do |vec2, line|
+        vec2 = Vector2.new(0, 0)
+        @lines.each do |line|
           bounds = @font.calc_bounds(line)
           vec2.x = bounds[0] if vec2.x < bounds[0]
           vec2.y += line_height
