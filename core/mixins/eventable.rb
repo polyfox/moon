@@ -26,6 +26,7 @@ module Moon
       listener = { block: block }
       listener[:keys] = keys unless keys.empty?
       (@event_listeners[action] ||= []).push(listener)
+      listener
     end
 
     def typing(&block)
