@@ -3,6 +3,7 @@
 
 #include "moon.hxx"
 #include "texture.hxx"
+#include "shared_types.hxx"
 
 namespace Moon {
   class Spritesheet {
@@ -11,15 +12,17 @@ namespace Moon {
     GLfloat tile_height;
     int total_sprites;
 
-    Spritesheet(std::string filename, int tile_width, int tile_height);
+    Spritesheet();
     ~Spritesheet();
 
+    void load_file(std::string filename, int tile_width, int tile_height);
+    void load_texture(moon_texture texture, int tile_width, int tile_height);
     void render(const float &x, const float &y, const float &z, const int &index, const ss_render_options &render_op);
   private:
     VertexBuffer VBO;
 
-    std::shared_ptr<Texture> texture;
-    std::shared_ptr<Shader>  shader;
+    std::shared_ptr<Texture> m_texture;
+    std::shared_ptr<Shader>  m_shader;
 
     bool generate_buffers(); // use only in constructor
   };

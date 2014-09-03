@@ -1,6 +1,7 @@
 require "vector2_spec"
 require "vector3_spec"
 require "vector4_spec"
+require "spritesheet_spec"
 # core spec
 require "aabb_spec"
 require "aabbcc_spec"

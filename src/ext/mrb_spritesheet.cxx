@@ -3,9 +3,9 @@
 #include "spritesheet.hxx"
 #include <glm/glm.hpp>
 #include "shared_types.hxx"
+#include "mrb_shared_types.hxx"
 
 namespace Moon {
-
   static mrb_sym id_opacity;
   static mrb_sym id_tone;
   static mrb_sym id_color;
@@ -22,19 +22,51 @@ namespace Moon {
     "Spritesheet", moon_mrb_spritesheet_deallocate,
   };
 
+  /*
+   * @overload Spritesheet#initialize(texture: Texture, cell_width: int, cell_height: int)
+   * @overload Spritesheet#initialize(filename: str, cell_width: int, cell_height: int)
+   */
   static mrb_value
   moon_mrb_spritesheet_initialize(mrb_state *mrb, mrb_value self) {
-    char* filename;
+    mrb_value obj;
     mrb_int tile_width, tile_height;
-    mrb_get_args(mrb, "zii", &filename, &tile_width, &tile_height);
+    mrb_get_args(mrb, "oii", &obj, &tile_width, &tile_height);
 
-    Spritesheet *spritesheet;
+    Spritesheet *spritesheet = new Spritesheet();
 
-    if (exists(filename)) {
-      spritesheet = new Spritesheet(filename,
-                                                 tile_width, tile_height);
-    } else {
-      mrb_raisef(mrb, E_SCRIPT_ERROR, "cannot load such file -- %S", mrb_str_new_cstr(mrb, filename));
+    switch (mrb_type(obj)) {
+      case MRB_TT_STRING: {
+        char* filename = RSTRING_PTR(obj);
+        if (exists(filename)) {
+          spritesheet->load_file(filename, tile_width, tile_height);
+        } else {
+          mrb_raisef(mrb, E_SCRIPT_ERROR,
+                     "cannot load such file -- %S",
+                     mrb_str_new_cstr(mrb, filename));
+        }
+        break;
+      }
+      case MRB_TT_DATA: {
+        if (DATA_TYPE(obj) == &texture_data_type) {
+          moon_texture *texture;
+          Data_Get_Struct(mrb, obj, &texture_data_type, texture);
+          spritesheet->load_texture(moon_texture_p(texture), tile_width, tile_height);
+        } else {
+          mrb_raisef(mrb, E_TYPE_ERROR,
+                     "wrong argument DATA type %S (expected Moon::Texture)",
+                     mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, obj)));
+        }
+        break;
+      }
+      default: {
+        mrb_raisef(mrb, E_TYPE_ERROR,
+                   "wrong argument type %S (expected Moon::Texture or String)",
+                   mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, obj)));
+      }
+    }
+
+    if (!spritesheet) {
+      return mrb_nil_value();
     }
 
     DATA_TYPE(self) = &spritesheet_data_type;
@@ -43,6 +75,10 @@ namespace Moon {
     return mrb_nil_value();
   };
 
+  /*
+   * @overload Spritesheet#render(x: float, y: float, z: float, index: int)
+   * @overload Spritesheet#render(x: float, y: float, z: float, index: int, options: Hash<Symbol, Object>)
+   */
   static mrb_value
   moon_mrb_spritesheet_render(mrb_state *mrb, mrb_value self) {
     mrb_int index;
@@ -115,6 +151,9 @@ namespace Moon {
     return mrb_nil_value();
   };
 
+  /*
+   * @return [Integer]
+   */
   static mrb_value
   moon_mrb_spritesheet_cell_width(mrb_state *mrb, mrb_value self) {
     Spritesheet *spritesheet;
@@ -122,6 +161,9 @@ namespace Moon {
     return mrb_fixnum_value((int)spritesheet->tile_width);
   }
 
+  /*
+   * @return [Integer]
+   */
   static mrb_value
   moon_mrb_spritesheet_cell_height(mrb_state *mrb, mrb_value self) {
     Spritesheet *spritesheet;
@@ -129,6 +171,9 @@ namespace Moon {
     return mrb_fixnum_value((int)spritesheet->tile_height);
   }
 
+  /*
+   * @return [Integer]
+   */
   static mrb_value
   moon_mrb_spritesheet_cell_count(mrb_state *mrb, mrb_value self) {
     Spritesheet *spritesheet;

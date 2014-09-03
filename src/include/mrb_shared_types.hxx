@@ -5,7 +5,6 @@
 #include "shared_types.hxx"
 
 namespace Moon {
-
   glm::vec2 moon_vector2_extract_args(mrb_state *mrb, int argc, mrb_value *args);
   glm::vec3 moon_vector3_extract_args(mrb_state *mrb, int argc, mrb_value *args);
   glm::vec4 moon_vector4_extract_args(mrb_state *mrb, int argc, mrb_value *args);
@@ -27,7 +26,5 @@ namespace Moon {
     mrb_value argv[1] = { obj };
     return moon_vector4_extract_args(mrb, 1, argv);
   }
-
 };
-
 #endif

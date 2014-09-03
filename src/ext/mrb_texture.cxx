@@ -1,10 +1,10 @@
 #include "mrb.hxx"
 #include "texture.hxx"
+#include "mrb_shared_types.hxx"
 
 namespace Moon {
-
   static void moon_mrb_texture_deallocate(mrb_state *mrb, void *p) {
-    delete((std::shared_ptr<Texture>*)p);
+    delete((moon_texture*)p);
   };
 
   const struct mrb_data_type texture_data_type = {
@@ -17,7 +17,7 @@ namespace Moon {
     mrb_get_args(mrb, "z", &filename);
 
     // ugly hack to make a pointer to shared_ptr
-    auto texture = new std::shared_ptr<Texture>(Texture::load(filename));
+    auto texture = new moon_texture(Texture::load(filename));
 
     DATA_TYPE(self) = &texture_data_type;
     DATA_PTR(self) = texture;
@@ -27,7 +27,7 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_texture_width(mrb_state *mrb, mrb_value self) {
-    std::shared_ptr<Texture>* texture;
+    moon_texture* texture;
     Data_Get_Struct(mrb, self, &texture_data_type, texture);
 
     return mrb_float_value(mrb, (*texture)->width());
@@ -35,7 +35,7 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_texture_height(mrb_state *mrb, mrb_value self) {
-    std::shared_ptr<Texture>* texture;
+    moon_texture* texture;
     Data_Get_Struct(mrb, self, &texture_data_type, texture);
 
     return mrb_float_value(mrb, (*texture)->height());
@@ -53,5 +53,4 @@ namespace Moon {
 
     return texture_class;
   };
-
 }
