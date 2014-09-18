@@ -11,7 +11,7 @@ namespace Moon {
       shader = Shader::load("resources/shaders/330/text.vert", "resources/shaders/330/text.frag");
     }
     atlas = texture_atlas_new(512, 512, 1);
-    font = texture_font_new(atlas, filename.c_str(), font_size);
+    font = texture_font_new_from_file(atlas, font_size, filename.c_str());
 
     texture_font_load_glyphs(font, L" !\"#$%&'()*+,-./0123456789:;<=>?"
                                    L"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
@@ -102,11 +102,11 @@ namespace Moon {
   }
 
   glm::vec2 Font::compute_string_bbox(const wchar_t *text) {
-    bbox_t bbox;
+    glm::vec4 bbox;
 
     /* initialize string bbox to "empty" values */
-    bbox.xMin = bbox.yMin =  32000;
-    bbox.xMax = bbox.yMax = -32000;
+    bbox.x = bbox.y =  32000;
+    bbox.z = bbox.w = -32000;
 
     float cursor = 0; // position of the write cursor
 
@@ -123,36 +123,35 @@ namespace Moon {
         cursor += kerning;
         float x0 = (cursor + glyph->offset_x);
         float y0 = glyph->offset_y;
+        float x1  = x0 + glyph->width;
+        float y1  = y0 - glyph->height;
 
-        if (glyph->bbox.xMin + x0 < bbox.xMin)
-          bbox.xMin = glyph->bbox.xMin + x0;
+        if (x0 < bbox.x)
+          bbox.x = x0;
 
-        if (glyph->bbox.yMin + y0 < bbox.yMin)
-          bbox.yMin = glyph->bbox.yMin + y0;
+        if (y0 < bbox.y)
+          bbox.y = y0;
 
-        if (glyph->bbox.xMax + x0 > bbox.xMax)
-          bbox.xMax = glyph->bbox.xMax + x0;
+        if (x1 > bbox.z)
+          bbox.z = x1;
 
-        if (glyph->bbox.yMax + y0 > bbox.yMax)
-          bbox.yMax = glyph->bbox.yMax + y0;
+        if (y1 > bbox.w)
+          bbox.w = y1;
 
         cursor += glyph->advance_x;
       }
     }
 
     /* check that we really grew the string bbox */
-    if (bbox.xMin > bbox.xMax) {
-      bbox.xMin = 0;
-      bbox.yMin = 0;
-      bbox.xMax = 0;
-      bbox.yMax = 0;
+    if (bbox.x > bbox.z) {
+      bbox.x = 0;
+      bbox.y = 0;
+      bbox.z = 0;
+      bbox.w = 0;
     }
 
     /* return string bbox */
-    int width  = bbox.xMax - bbox.xMin;
-    int height = bbox.yMax - bbox.yMin;
-
-    return glm::vec2(width, height);
+    return glm::vec2(bbox.z - bbox.x, bbox.w - bbox.y);
   }
 
   int Font::size() {
