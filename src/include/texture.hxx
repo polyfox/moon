@@ -26,8 +26,7 @@ namespace Moon {
 
     GLint texture_width;
     GLint texture_height;
-    GLuint texture_id;
-
+    GLuint gl_texture_id;
   friend class Cache<Texture>;
   };
 

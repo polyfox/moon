@@ -12,7 +12,7 @@ namespace Moon {
     std::ifstream fileStream;
     fileStream.open(filePath, std::ios_base::in);
 
-    if(fileStream) {     
+    if(fileStream) {
       std::string buffer(std::istreambuf_iterator<char>(fileStream), (std::istreambuf_iterator<char>()));
       return buffer;
     } else {
@@ -149,7 +149,7 @@ namespace Moon {
       return uniform;
     }
   }
-  
+
   void Shader::bind_attribute(GLuint location, const char *name) {
     glBindAttribLocation(_program, location, name);
   }

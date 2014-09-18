@@ -32,7 +32,6 @@ namespace Moon {
     GLuint  _program;
     std::unordered_map<const char *,GLuint> _attributeList;
     std::unordered_map<const char *,GLuint> _uniformLocationList;
-
   friend class Cache<Shader, std::pair<const char*, const char*>>;
   };
 };

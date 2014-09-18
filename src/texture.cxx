@@ -9,9 +9,9 @@ namespace Moon {
     float border_color[4] = { 0.0, 0.0, 0.0, 0.0 };
 
     pixels = SOIL_load_image(filename.c_str(), &texture_width, &texture_height, &channels, SOIL_LOAD_AUTO);
-    texture_id = SOIL_create_OGL_texture(pixels, texture_width, texture_height, channels, SOIL_CREATE_NEW_ID, SOIL_FLAG_MULTIPLY_ALPHA);
+    gl_texture_id = SOIL_create_OGL_texture(pixels, texture_width, texture_height, channels, SOIL_CREATE_NEW_ID, SOIL_FLAG_MULTIPLY_ALPHA);
 
-    glBindTexture(GL_TEXTURE_2D, texture_id);
+    glBindTexture(GL_TEXTURE_2D, gl_texture_id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -22,8 +22,8 @@ namespace Moon {
 
   Texture::~Texture() {
     //Delete texture
-    if(texture_id != 0) {
-      glDeleteTextures(1, &texture_id);
+    if(gl_texture_id != 0) {
+      glDeleteTextures(1, &gl_texture_id);
     }
   };
 
@@ -36,11 +36,11 @@ namespace Moon {
   };
 
   GLuint Texture::id() {
-    return texture_id;
+    return gl_texture_id;
   };
 
   void Texture::bind() {
-    glBindTexture(GL_TEXTURE_2D, texture_id);
+    glBindTexture(GL_TEXTURE_2D, gl_texture_id);
   };
 
 }

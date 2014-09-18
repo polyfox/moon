@@ -7,7 +7,6 @@
 #include "mrb_shared_types.hxx"
 
 namespace Moon {
-
   static struct RClass *vector3_class = NULL;
 
   #define mrb_set_vector3_value_xyz(mrb, target, x, y, z)         \

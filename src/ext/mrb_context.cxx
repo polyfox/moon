@@ -31,7 +31,7 @@ namespace Moon {
     Data_Get_Struct(mrb, self, &context_data_type, cxt);
 
     auto v = mrb_load_string_cxt(mrb, str, cxt);
-    
+
     if (mrb->exc) {
       mrb_print_error(mrb);
     }

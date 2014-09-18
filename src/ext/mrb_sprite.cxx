@@ -5,7 +5,6 @@
 #include "shared_types.hxx"
 
 namespace Moon {
-
   static void moon_mrb_sprite_deallocate(mrb_state *mrb, void *p) {
     delete((Sprite*)p);
   };
