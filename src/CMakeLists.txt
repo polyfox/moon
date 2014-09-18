@@ -19,7 +19,7 @@ set(moonLibraries ${moonLibraries} ${MRUBY_LIBRARIES})
 # gorilla audio
 set(moonLibraries ${moonLibraries} gorilla)
 # freetype2
-#set(moonLibraries ${moonLibraries} ${FREETYPE_LIBRARY})
+set(moonLibraries ${moonLibraries} ${FREETYPE_LIBRARY})
 # freetype2
 set(moonLibraries ${moonLibraries} freetype-gl)
 
