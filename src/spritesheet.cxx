@@ -1,33 +1,42 @@
 #include "spritesheet.hxx"
 
 namespace Moon {
-  Spritesheet::Spritesheet(std::string filename, int tile_width, int tile_height)
+  Spritesheet::Spritesheet()
   : VBO(GL_STATIC_DRAW)
   {
     if (LEGACY_GL) {
-      shader = Shader::load("resources/shaders/120/quad.vert", "resources/shaders/120/quad.frag");
+      m_shader = Shader::load("resources/shaders/120/quad.vert", "resources/shaders/120/quad.frag");
     } else {
-      shader = Shader::load("resources/shaders/330/quad.vert", "resources/shaders/330/quad.frag");
+      m_shader = Shader::load("resources/shaders/330/quad.vert", "resources/shaders/330/quad.frag");
     }
-    texture = Texture::load(filename);
-
-    this->tile_height = tile_height;
-    this->tile_width = tile_width;
-    total_sprites = 0;
-    generate_buffers();
-  };
+  }
 
   Spritesheet::~Spritesheet() {
 
   };
 
+  void Spritesheet::load_texture(moon_texture texture, int tile_width, int tile_height) {
+    m_texture = texture;
+
+    this->tile_height = tile_height;
+    this->tile_width = tile_width;
+
+    total_sprites = 0;
+
+    generate_buffers();
+  }
+
+  void Spritesheet::load_file(std::string filename, int tile_width, int tile_height) {
+    load_texture(Texture::load(filename), tile_width, tile_height);
+  }
+
   bool Spritesheet::generate_buffers() {
     // If there is a texture loaded and clips to make vertex data from
-    if(texture->id() != 0) {
+    if(m_texture->id() != 0) {
       GLfloat tiles_per_row, tiles_per_column;
 
-      tiles_per_row = texture->width() / tile_width;
-      tiles_per_column = texture->height() / tile_height;
+      tiles_per_row = m_texture->width() / tile_width;
+      tiles_per_column = m_texture->height() / tile_height;
 
       total_sprites = tiles_per_row * tiles_per_column;
 
@@ -66,11 +75,11 @@ namespace Moon {
 
     // if you somehow managed to go out-of-bounds
     if ((index < 0) || (index >= (int)total_sprites)) return;
-    if (texture->id() == 0) return;
+    if (m_texture->id() == 0) return;
 
     int offset = index*4;
 
-    shader->use();
+    m_shader->use();
 
     //model matrix - move it to the correct position in the world
     glm::mat4 model_matrix = glm::translate(render_ops.transform, glm::vec3(x, y, z));
@@ -82,18 +91,17 @@ namespace Moon {
 
     // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
     glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix * rotation_matrix;
-    glUniformMatrix4fv(shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+    glUniformMatrix4fv(m_shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
-    glUniform1f(shader->get_uniform("opacity"), render_ops.opacity);
-    glUniform4fv(shader->get_uniform("tone"), 1, glm::value_ptr(render_ops.tone));
-    glUniform4fv(shader->get_uniform("color"), 1, glm::value_ptr(render_ops.color));
+    glUniform1f(m_shader->get_uniform("opacity"), render_ops.opacity);
+    glUniform4fv(m_shader->get_uniform("tone"), 1, glm::value_ptr(render_ops.tone));
+    glUniform4fv(m_shader->get_uniform("color"), 1, glm::value_ptr(render_ops.color));
 
     //Set texture ID
     glActiveTexture(GL_TEXTURE0);
-    texture->bind();
-    glUniform1i(shader->get_uniform("tex"), /*GL_TEXTURE*/0);
+    m_texture->bind();
+    glUniform1i(m_shader->get_uniform("tex"), /*GL_TEXTURE*/0);
 
     VBO.render_with_offset(GL_TRIANGLE_STRIP, offset);
   };
-
 };
