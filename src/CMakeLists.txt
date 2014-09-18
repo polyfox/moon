@@ -5,23 +5,23 @@ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR) # Make sure the user is 
 endif()
 
 # YAML
-set(moonLibraries ${moonLibraries} yaml)
+set(MOON_LIBRARIES ${MOON_LIBRARIES} yaml)
 # OpenGL
-set(moonLibraries ${moonLibraries} ${OPENGL_LIBRARIES})
+set(MOON_LIBRARIES ${MOON_LIBRARIES} ${OPENGL_LIBRARIES})
 # GLFW
-set(moonLibraries ${moonLibraries} ${GLFW_LIBRARY})
+set(MOON_LIBRARIES ${MOON_LIBRARIES} ${GLFW_LIBRARY})
 # GLEW
-set(moonLibraries ${moonLibraries} ${GLEW_LIBRARY})
+set(MOON_LIBRARIES ${MOON_LIBRARIES} ${GLEW_LIBRARY})
 # SOIL
-set(moonLibraries ${moonLibraries} SOIL)
+set(MOON_LIBRARIES ${MOON_LIBRARIES} SOIL)
 # mruby
-set(moonLibraries ${moonLibraries} ${MRUBY_LIBRARIES})
+set(MOON_LIBRARIES ${MOON_LIBRARIES} ${MRUBY_LIBRARIES})
 # gorilla audio
-set(moonLibraries ${moonLibraries} gorilla)
+set(MOON_LIBRARIES ${MOON_LIBRARIES} gorilla)
 # freetype2
-set(moonLibraries ${moonLibraries} ${FREETYPE_LIBRARY})
+set(MOON_LIBRARIES ${MOON_LIBRARIES} ${FREETYPE_LIBRARY})
 # freetype2
-set(moonLibraries ${moonLibraries} freetype-gl)
+set(MOON_LIBRARIES ${MOON_LIBRARIES} freetype-gl)
 
 add_library(moon STATIC
   ext/mrb.cxx
@@ -58,4 +58,4 @@ add_library(moon STATIC
 # mruby
 add_dependencies(moon mruby)
 
-target_link_libraries(moon ${moonLibraries})
+target_link_libraries(moon ${MOON_LIBRARIES})
