@@ -1,7 +1,0 @@
-require 'core/animation/easing'
-require 'core/animation/interpolation'
-require 'core/animation/tween'
-require 'core/animation/scheduler_job'
-require 'core/animation/interval'
-require 'core/animation/timeout'
-require 'core/animation/transition'
