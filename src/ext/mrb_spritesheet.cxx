@@ -100,7 +100,7 @@ namespace Moon {
     if (!mrb_nil_p(options)) {
       mrb_value keys = mrb_hash_keys(mrb, options);
       int len = mrb_ary_len(mrb, keys);
-      mrb_value *keys_ary = RARRAY_PTR(keys);
+      const mrb_value *keys_ary = RARRAY_PTR(keys);
 
       for (int i=0; i < len; ++i) {
         mrb_value key = keys_ary[i];
