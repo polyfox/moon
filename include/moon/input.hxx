@@ -6,7 +6,7 @@
 #include <array>
 #include <map>
 
-#include "mrb.hxx"
+#include "moon/mrb.hxx"
 
 namespace Moon {
   typedef std::map<int, mrb_value> int__mrb_value_map_t;

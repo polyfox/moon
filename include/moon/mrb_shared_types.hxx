@@ -1,8 +1,8 @@
 #ifndef MOON_MRB_SHARED_TYPES_H
 #define MOON_MRB_SHARED_TYPES_H
 
-#include <mrb.hxx>
-#include "shared_types.hxx"
+#include "moon/mrb.hxx"
+#include "moon/shared_types.hxx"
 
 namespace Moon {
   glm::vec2 moon_vector2_extract_args(mrb_state *mrb, int argc, mrb_value *args);

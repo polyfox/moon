@@ -1,9 +1,9 @@
-#include "mrb.hxx"
-#include "mrb_err.hxx"
-#include "spritesheet.hxx"
+#include "moon/mrb.hxx"
+#include "moon/mrb_err.hxx"
+#include "moon/spritesheet.hxx"
 #include <glm/glm.hpp>
-#include "shared_types.hxx"
-#include "mrb_shared_types.hxx"
+#include "moon/shared_types.hxx"
+#include "moon/mrb_shared_types.hxx"
 
 namespace Moon {
   static mrb_sym id_opacity;

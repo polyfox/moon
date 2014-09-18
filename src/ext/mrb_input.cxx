@@ -1,5 +1,5 @@
-#include "mrb.hxx"
-#include "input.hxx"
+#include "moon/mrb.hxx"
+#include "moon/input.hxx"
 
 namespace Moon {
   static mrb_value

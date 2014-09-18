@@ -1,14 +1,14 @@
 #ifndef MOON_TEXTURE_H
 #define MOON_TEXTURE_H
 
-#include "moon.hxx"
+#include "moon/stdh.hxx"
 //#include "graphics.hxx"
-#include "cache.hxx"
-#include "shader.hxx"
+#include "moon/cache.hxx"
+#include "moon/shader.hxx"
 #include <memory>
 #include <SOIL.h>
 
-#include "vertex_buffer.hxx"
+#include "moon/vertex_buffer.hxx"
 
 namespace Moon {
 

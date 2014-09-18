@@ -1,6 +1,6 @@
-#include "mrb.hxx"
-#include "texture.hxx"
-#include "mrb_shared_types.hxx"
+#include "moon/mrb.hxx"
+#include "moon/texture.hxx"
+#include "moon/mrb_shared_types.hxx"
 
 namespace Moon {
   static void moon_mrb_texture_deallocate(mrb_state *mrb, void *p) {

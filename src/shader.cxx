@@ -1,4 +1,4 @@
-#include "shader.hxx"
+#include "moon/shader.hxx"
 
 namespace Moon {
   glm::mat4 Shader::projection_matrix = glm::mat4(1.0f);

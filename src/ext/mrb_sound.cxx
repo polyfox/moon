@@ -1,5 +1,5 @@
-#include "mrb.hxx"
-#include "audio.hxx"
+#include "moon/mrb.hxx"
+#include "moon/audio.hxx"
 
 namespace Moon {
   static void moon_mrb_sound_deallocate(mrb_state *mrb, void *p) {

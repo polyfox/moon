@@ -1,10 +1,10 @@
 #ifndef MOON_SHADER_H
 #define MOON_SHADER_H
 
-#include "moon.hxx"
+#include "moon/stdh.hxx"
 //#include <utility> // std::pair
 #include <fstream>
-#include "cache.hxx"
+#include "moon/cache.hxx"
 
 namespace Moon {
 

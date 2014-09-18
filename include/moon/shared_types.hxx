@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <glm/glm.hpp>
-#include "texture.hxx"
+#include "moon/texture.hxx"
 
 typedef std::shared_ptr<glm::vec2> moon_vec2;
 typedef std::shared_ptr<glm::vec3> moon_vec3;

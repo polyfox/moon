@@ -1,4 +1,4 @@
-#include "vertex_buffer.hxx"
+#include "moon/vertex_buffer.hxx"
 
 namespace Moon {
   VertexBuffer::VertexBuffer(GLenum usage) {

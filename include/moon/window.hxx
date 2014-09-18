@@ -1,9 +1,9 @@
 #ifndef MOON_WINDOW_H
 #define MOON_WINDOW_H
 
-#include "moon.hxx"
-#include "shader.hxx" // window.resize()
-#include "fps.hxx" // for debugging FPS
+#include "moon/stdh.hxx"
+#include "moon/shader.hxx" // window.resize()
+#include "moon/fps.hxx" // for debugging FPS
 #include <GLFW/glfw3.h>
 
 namespace Moon {

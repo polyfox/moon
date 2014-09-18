@@ -1,5 +1,5 @@
-#ifndef MOON_H
-#define MOON_H
+#ifndef MOON_STD_H
+#define MOON_STD_H
 
 #include <stdlib.h>
 #include <stdio.h>

@@ -1,7 +1,7 @@
-#include "mrb.hxx"
-#include "font.hxx"
+#include "moon/mrb.hxx"
+#include "moon/font.hxx"
 #include <glm/glm.hpp>
-#include "shared_types.hxx"
+#include "moon/shared_types.hxx"
 
 namespace Moon
 {

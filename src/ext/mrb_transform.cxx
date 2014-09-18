@@ -1,11 +1,12 @@
 /*
  * Moon Transform, a wrapper around glm::mat4
  */
-#include "mrb.hxx"
-#include "shared_types.hxx"
-#include "mrb_shared_types.hxx"
-#include <memory>
 #define GLM_FORCE_RADIANS
+
+#include "moon/mrb.hxx"
+#include "moon/shared_types.hxx"
+#include "moon/mrb_shared_types.hxx"
+#include <memory>
 #include <glm/glm.hpp>
 //#include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>

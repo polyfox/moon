@@ -1,4 +1,4 @@
-#include "texture.hxx"
+#include "moon/texture.hxx"
 
 namespace Moon {
   Texture::Texture(std::string filename)

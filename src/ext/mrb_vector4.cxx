@@ -1,10 +1,10 @@
 /*
  * Moon Vector4, a wrapper around glm::vec4
  */
-#include "mrb.hxx"
+#include "moon/mrb.hxx"
 #include <memory>
 #include <glm/glm.hpp>
-#include "mrb_shared_types.hxx"
+#include "moon/mrb_shared_types.hxx"
 
 namespace Moon {
 

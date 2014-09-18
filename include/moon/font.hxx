@@ -1,8 +1,8 @@
 #ifndef MOON_FONT_H
 #define MOON_FONT_H
 
-#include "moon.hxx"
-#include "shader.hxx"
+#include "moon/stdh.hxx"
+#include "moon/shader.hxx"
 #include "freetype-gl.h"
 #include "vertex_buffer.hxx"
 

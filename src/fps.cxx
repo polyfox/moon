@@ -1,4 +1,4 @@
-#include "fps.hxx"
+#include "moon/fps.hxx"
 
 namespace Moon {
   FPS::FPS() {

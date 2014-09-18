@@ -1,4 +1,4 @@
-#include "input.hxx"
+#include "moon/input.hxx"
 
 namespace Moon {
   GLFWwindow* Input::window = NULL;

@@ -1,8 +1,8 @@
-#include "mrb.hxx"
-#include "mrb_err.hxx"
-#include "sprite.hxx"
+#include "moon/mrb.hxx"
+#include "moon/mrb_err.hxx"
+#include "moon/sprite.hxx"
 #include <glm/glm.hpp>
-#include "shared_types.hxx"
+#include "moon/shared_types.hxx"
 
 namespace Moon {
   static void moon_mrb_sprite_deallocate(mrb_state *mrb, void *p) {

@@ -1,4 +1,4 @@
-#include "spritesheet.hxx"
+#include "moon/spritesheet.hxx"
 
 namespace Moon {
   Spritesheet::Spritesheet()

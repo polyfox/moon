@@ -1,14 +1,14 @@
 #ifndef MOON_ENGINE_H
 #define MOON_ENGINE_H
 
-#include "moon.hxx"
+#include "moon/stdh.hxx"
 
-#include "window.hxx"
-#include "input.hxx"
-#include "audio.hxx"
-#include "fps.hxx"
+#include "moon/window.hxx"
+#include "moon/input.hxx"
+#include "moon/audio.hxx"
+#include "moon/fps.hxx"
 
-#include "mrb.hxx"
+#include "moon/mrb.hxx"
 
 namespace Moon {
   class Engine {

@@ -1,5 +1,5 @@
-#include "mrb.hxx"
-#include "music.hxx"
+#include "moon/mrb.hxx"
+#include "moon/music.hxx"
 
 #define def static mrb_value
 

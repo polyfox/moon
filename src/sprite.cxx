@@ -1,4 +1,4 @@
-#include "sprite.hxx"
+#include "moon/sprite.hxx"
 
 namespace Moon {
   Sprite::Sprite(std::string filename)

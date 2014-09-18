@@ -1,8 +1,8 @@
 #ifndef MOON_VERTBUFFER_H
 #define MOON_VERTBUFFER_H
 
-#include "moon.hxx"
-#include "graphics.hxx"
+#include "moon/stdh.hxx"
+#include "moon/graphics.hxx"
 #include <vector>
 #include <algorithm>
 

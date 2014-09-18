@@ -1,4 +1,4 @@
-#include "font.hxx"
+#include "moon/font.hxx"
 #include "SOIL.h"
 
 namespace Moon {

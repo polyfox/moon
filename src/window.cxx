@@ -1,4 +1,4 @@
-#include "window.hxx"
+#include "moon/window.hxx"
 
 namespace Moon {
   Window::Window(int width, int height, const char* title) {

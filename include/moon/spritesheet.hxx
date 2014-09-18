@@ -1,9 +1,9 @@
 #ifndef MOON_SPRITESHEET_H
 #define MOON_SPRITESHEET_H
 
-#include "moon.hxx"
-#include "texture.hxx"
-#include "shared_types.hxx"
+#include "moon/stdh.hxx"
+#include "moon/texture.hxx"
+#include "moon/shared_types.hxx"
 
 namespace Moon {
   class Spritesheet {
