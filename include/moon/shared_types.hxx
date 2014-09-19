@@ -11,6 +11,7 @@ typedef std::shared_ptr<glm::vec4> moon_vec4;
 
 typedef std::shared_ptr<glm::mat4> moon_mat4;
 
+typedef std::shared_ptr<Moon::Rect> moon_rect;
 typedef std::shared_ptr<Moon::Texture> moon_texture;
 
 #define moon_vec2_p(mvec2) (*mvec2)
@@ -19,5 +20,7 @@ typedef std::shared_ptr<Moon::Texture> moon_texture;
 
 #define moon_mat4_p(mmat4) (*mmat4)
 
+#define moon_shader_p(mshader) (*mshader)
+#define moon_rect_p(mrect) (*mrect)
 #define moon_texture_p(mtexture) (*mtexture)
 #endif

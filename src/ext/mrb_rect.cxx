@@ -1,11 +1,11 @@
 #include "moon/mrb.hxx"
 #include <memory>
 #include "moon/graphics.hxx"
+#include "moon/mrb_shared_types.hxx"
 
 namespace Moon {
-
   static void moon_mrb_rect_deallocate(mrb_state *mrb, void *p) {
-    delete((std::shared_ptr<Rect>*)p);
+    delete((moon_rect*)p);
   };
 
   const struct mrb_data_type rect_data_type = {
@@ -17,7 +17,7 @@ namespace Moon {
     mrb_int x, y, w, h;
     mrb_get_args(mrb, "iiii", &x, &y, &w, &h);
 
-    auto rect = new std::shared_ptr<Rect>(new Rect(x, y, w, h));
+    auto rect = new moon_rect(new Rect(x, y, w, h));
 
     DATA_TYPE(self) = &rect_data_type;
     DATA_PTR(self) = rect;
@@ -28,13 +28,13 @@ namespace Moon {
   static mrb_value
   moon_mrb_rect_initialize_copy(mrb_state *mrb, mrb_value self) {
     mrb_value other;
-    std::shared_ptr<Rect>* src_rect;
+    moon_rect* src_rect;
 
     mrb_get_args(mrb, "o", &other);
 
     Data_Get_Struct(mrb, other, &rect_data_type, src_rect);
 
-    auto rect = new std::shared_ptr<Rect>(new Rect((*src_rect)->x, (*src_rect)->y, (*src_rect)->w, (*src_rect)->h));
+    auto rect = new moon_rect(new Rect((*src_rect)->x, (*src_rect)->y, (*src_rect)->w, (*src_rect)->h));
     DATA_TYPE(self) = &rect_data_type;
     DATA_PTR(self) = rect;
 
@@ -46,7 +46,7 @@ namespace Moon {
     mrb_int x;
     mrb_get_args(mrb, "i", &x);
 
-    std::shared_ptr<Rect>* rect;
+    moon_rect* rect;
     Data_Get_Struct(mrb, self, &rect_data_type, rect);
 
     (*rect)->x = x;
@@ -56,7 +56,7 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_rect_x_getter(mrb_state *mrb, mrb_value self) {
-    std::shared_ptr<Rect>* rect;
+    moon_rect* rect;
     Data_Get_Struct(mrb, self, &rect_data_type, rect);
 
     //return mrb_fixnum_value((int)(*rect)->x);
@@ -68,7 +68,7 @@ namespace Moon {
     mrb_int y;
     mrb_get_args(mrb, "i", &y);
 
-    std::shared_ptr<Rect>* rect;
+    moon_rect* rect;
     Data_Get_Struct(mrb, self, &rect_data_type, rect);
 
     (*rect)->y = y;
@@ -78,7 +78,7 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_rect_y_getter(mrb_state *mrb, mrb_value self) {
-    std::shared_ptr<Rect>* rect;
+    moon_rect* rect;
     Data_Get_Struct(mrb, self, &rect_data_type, rect);
 
     return mrb_float_value(mrb, (*rect)->y);
@@ -89,7 +89,7 @@ namespace Moon {
     mrb_int width;
     mrb_get_args(mrb, "i", &width);
 
-    std::shared_ptr<Rect>* rect;
+    moon_rect* rect;
     Data_Get_Struct(mrb, self, &rect_data_type, rect);
 
     (*rect)->w = width;
@@ -99,7 +99,7 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_rect_width_getter(mrb_state *mrb, mrb_value self) {
-    std::shared_ptr<Rect>* rect;
+    moon_rect* rect;
     Data_Get_Struct(mrb, self, &rect_data_type, rect);
 
     return mrb_float_value(mrb, (*rect)->w);
@@ -110,7 +110,7 @@ namespace Moon {
     mrb_int height;
     mrb_get_args(mrb, "i", &height);
 
-    std::shared_ptr<Rect>* rect;
+    moon_rect* rect;
     Data_Get_Struct(mrb, self, &rect_data_type, rect);
 
     (*rect)->h = height;
@@ -120,7 +120,7 @@ namespace Moon {
 
   static mrb_value
   moon_mrb_rect_height_getter(mrb_state *mrb, mrb_value self) {
-    std::shared_ptr<Rect>* rect;
+    moon_rect* rect;
     Data_Get_Struct(mrb, self, &rect_data_type, rect);
 
     return mrb_float_value(mrb, (*rect)->h);
@@ -145,5 +145,16 @@ namespace Moon {
 
     return rect_class;
   };
-
+  namespace mmrb {
+    namespace Rect {
+      mrb_value create(mrb_state *mrb, GLint x, GLint y, GLint w, GLint h) {
+        return wrap(mrb, new Moon::Rect(x, y, w, h));
+      }
+      mrb_value wrap(mrb_state *mrb, Moon::Rect *ptr) {
+        moon_rect *rect_ptr = new moon_rect(ptr);
+        mrb_value rect = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cRect, &rect_data_type, rect_ptr));
+        return rect;
+      }
+    }
+  }
 }

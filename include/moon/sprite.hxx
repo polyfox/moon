@@ -11,7 +11,7 @@
 namespace Moon {
   class Sprite {
   public:
-    Sprite(std::string filename);
+    Sprite();
     ~Sprite();
 
     float opacity;
@@ -21,19 +21,22 @@ namespace Moon {
     moon_vec4 color;
     moon_vec4 tone;
 
+    void load_file(std::string filename);
+    void load_texture(moon_texture texture);
+
     void render(const float &x, const float &y, const float &z);
     std::shared_ptr<Texture> getTexture();
-    void setTexture(std::shared_ptr<Texture> tex);
+    void setTexture(moon_texture tex);
 
     std::shared_ptr<Rect> getClip();
-    void setClip(std::shared_ptr<Rect> clip);
+    void setClip(moon_rect clip);
   private:
     bool generate_buffers();
 
-    std::shared_ptr<Rect> clip_rect; // default constructor nullptr
-    std::shared_ptr<Shader>  shader;
-    std::shared_ptr<Texture> texture;
-    VertexBuffer VBO;
+    moon_rect m_clip_rect; // default constructor nullptr
+    moon_shader m_shader;
+    moon_texture m_texture;
+    VertexBuffer m_VBO;
   };
 };
 

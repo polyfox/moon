@@ -409,4 +409,21 @@ namespace Moon {
     mrb_alias_method(mrb, vector3_class, mrb_intern_cstr(mrb, "b="), mrb_intern_cstr(mrb, "z="));
     return vector3_class;
   };
+  namespace mmrb {
+    namespace Vector3 {
+      mrb_value create(mrb_state *mrb, double x, double y, double z) {
+        return wrap(mrb, new glm::vec3(x, y, z));
+      }
+      mrb_value wrap(mrb_state *mrb, glm::vec3 *ptr) {
+        moon_vec3 *vec3_ptr = new moon_vec3(ptr);
+        mrb_value rvec3 = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cVector3, &vector3_data_type, vec3_ptr));
+        return rvec3;
+      }
+      mrb_value wrap(mrb_state *mrb, moon_vec3 moonv) {
+        moon_vec3 *vec3_ptr = new moon_vec3(moonv);
+        mrb_value rvec3 = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cVector3, &vector3_data_type, vec3_ptr));
+        return rvec3;
+      }
+    }
+  }
 }

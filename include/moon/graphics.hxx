@@ -5,7 +5,6 @@
 #include <glm/glm.hpp>
 
 namespace Moon {
-
   struct vertex {
     glm::vec2 pos;
     glm::vec2 tex_coord;

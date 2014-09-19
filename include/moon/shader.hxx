@@ -7,7 +7,6 @@
 #include "moon/cache.hxx"
 
 namespace Moon {
-
   class Shader: public Cache<Shader, std::pair<const char*, const char*>> {
   public:
     ~Shader();
@@ -36,4 +35,5 @@ namespace Moon {
   };
 };
 
+typedef std::shared_ptr<Moon::Shader> moon_shader;
 #endif

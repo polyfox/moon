@@ -2,7 +2,7 @@
 #include "moon/mrb_err.hxx"
 #include "moon/sprite.hxx"
 #include <glm/glm.hpp>
-#include "moon/shared_types.hxx"
+#include "moon/mrb_shared_types.hxx"
 
 namespace Moon {
   static void moon_mrb_sprite_deallocate(mrb_state *mrb, void *p) {
@@ -13,36 +13,66 @@ namespace Moon {
     "Sprite", moon_mrb_sprite_deallocate,
   };
 
+  /*
+   * @overload Sprite#initialize(texture: Texture)
+   * @overload Sprite#initialize(filename: str)
+   */
   static mrb_value
   moon_mrb_sprite_initialize(mrb_state *mrb, mrb_value self) {
-    char* filename;
-    mrb_get_args(mrb, "z", &filename);
+    mrb_value obj, texture, color, tone, clip;
+    mrb_get_args(mrb, "o", &obj);
 
-    mrb_value color, tone, texture, clip;
-    Sprite *sprite;
+    Sprite *sprite = new Sprite();
 
-    if (exists(filename)) {
-      sprite = new Sprite(filename);
-    } else {
-      mrb_raisef(mrb, E_SCRIPT_ERROR, "cannot load such file -- %S", mrb_str_new_cstr(mrb, filename));
+    switch (mrb_type(obj)) {
+      case MRB_TT_STRING: {
+        char* filename = RSTRING_PTR(obj);
+        if (exists(filename)) {
+          sprite->load_file(filename);
+        } else {
+          mrb_raisef(mrb, E_SCRIPT_ERROR,
+                     "cannot load such file -- %S",
+                     mrb_str_new_cstr(mrb, filename));
+        }
+        break;
+      }
+      case MRB_TT_DATA: {
+        if (DATA_TYPE(obj) == &texture_data_type) {
+          moon_texture *texture;
+          Data_Get_Struct(mrb, obj, &texture_data_type, texture);
+          sprite->load_texture(moon_texture_p(texture));
+        } else {
+          mrb_raisef(mrb, E_TYPE_ERROR,
+                     "wrong argument DATA type %S (expected Moon::Texture)",
+                     mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, obj)));
+        }
+        break;
+      }
+      default: {
+        mrb_raisef(mrb, E_TYPE_ERROR,
+                   "wrong argument type %S (expected Moon::Texture or String)",
+                   mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, obj)));
+      }
+    }
+
+    if (!sprite) {
+      return mrb_nil_value();
     }
 
     DATA_TYPE(self) = &sprite_data_type;
     DATA_PTR(self) = sprite;
 
-    moon_vec4 *color_ptr = new moon_vec4(sprite->color);
-    color = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cVector4, &vector4_data_type, color_ptr));
+    color = mmrb::Vector4::wrap(mrb, sprite->color);
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@color"), color);
 
-    moon_vec4 *tone_ptr = new moon_vec4(sprite->tone);
-    tone = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cVector4, &vector4_data_type, tone_ptr));
+    tone = mmrb::Vector4::wrap(mrb, sprite->tone);
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@tone"), tone);
 
-    auto texture_ptr = new std::shared_ptr<Texture>(sprite->getTexture());
+    auto texture_ptr = new moon_texture(sprite->getTexture());
     texture = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cTexture, &texture_data_type, texture_ptr));
     mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@texture"), texture);
 
-    auto clip_ptr = new std::shared_ptr<Rect>(sprite->getClip());
+    auto clip_ptr = new moon_rect(sprite->getClip());
     if (*clip_ptr) { // if shared_ptr is not NULL internally
       clip = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cRect, &rect_data_type, clip_ptr));
     } else {
@@ -202,7 +232,7 @@ namespace Moon {
     // Besides updating the ivar, we need to update the actual sprite->texture:
 
     // Get the passed-in object's shared_ptr
-    std::shared_ptr<Texture>* texture_ptr;
+    moon_texture* texture_ptr;
     Data_Get_Struct(mrb, new_texture, &texture_data_type, texture_ptr);
 
     // Create a new shared_ptr for this instance and overwrite the old one
@@ -229,13 +259,13 @@ namespace Moon {
     // Besides updating the ivar, we need to update the actual sprite->clip:
     if(!mrb_nil_p(new_clip)) {
       // Get the passed-in object's shared_ptr
-      std::shared_ptr<Rect>* clip_ptr;
+      moon_rect* clip_ptr;
       Data_Get_Struct(mrb, new_clip, &rect_data_type, clip_ptr);
 
       // Create a new shared_ptr for this instance and overwrite the old one
       ((Sprite*)DATA_PTR(self))->setClip(*clip_ptr);
     } else {
-      std::shared_ptr<Rect> nilrect;
+      moon_rect nilrect;
       ((Sprite*)DATA_PTR(self))->setClip(nilrect);
     }
 

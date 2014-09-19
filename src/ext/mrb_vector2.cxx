@@ -7,7 +7,6 @@
 #include "moon/mrb_shared_types.hxx"
 
 namespace Moon {
-
   static struct RClass *vector2_class = NULL;
 
   #define mrb_set_vector2_value_xy(mrb, target, x, y)          \
@@ -348,4 +347,21 @@ namespace Moon {
 
     return vector2_class;
   };
+  namespace mmrb {
+    namespace Vector2 {
+      mrb_value create(mrb_state *mrb, double x, double y) {
+        return wrap(mrb, new glm::vec2(x, y));
+      }
+      mrb_value wrap(mrb_state *mrb, glm::vec2 *ptr) {
+        moon_vec2 *vec2_ptr = new moon_vec2(ptr);
+        mrb_value rvec2 = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cVector2, &vector2_data_type, vec2_ptr));
+        return rvec2;
+      }
+      mrb_value wrap(mrb_state *mrb, moon_vec2 moonv) {
+        moon_vec2 *vec2_ptr = new moon_vec2(moonv);
+        mrb_value rvec2 = mrb_obj_value(Data_Wrap_Struct(mrb, moon_cVector4, &vector4_data_type, vec2_ptr));
+        return rvec2;
+      }
+    }
+  }
 }
