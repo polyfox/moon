@@ -1,6 +1,7 @@
 #ifndef MOON_INPUT_H
 #define MOON_INPUT_H
 
+#include "moon/stdh.hxx"
 #include <GLFW/glfw3.h>
 #include <cmath>
 #include <array>

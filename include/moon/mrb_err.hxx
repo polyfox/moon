@@ -3,9 +3,6 @@
 
 #include "moon/mrb.hxx"
 
-namespace Moon {
-  bool moon_mrb_check_class(mrb_state *mrb, mrb_value obj,
-                            struct RClass *klass, bool quiet);
-}
+extern bool mmrb_check_class(mrb_state *mrb, mrb_value obj, struct RClass *klass, bool quiet);
 
 #endif

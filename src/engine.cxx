@@ -1,11 +1,13 @@
 #include "moon/engine.hxx"
+#include "moon/mrb/engine.hxx"
+#include "moon/mrb/window.hxx"
 #include <clocale>
 
 namespace Moon {
   bool LEGACY_GL = false;
 
   Engine::Engine() :
-    window(640, 480, "Hello World"),
+    window(800, 600, "Hello World"),
     resource_path("resources")
   {
     std::setlocale(LC_ALL, "en_US.UTF-8"); // set locale to UTF-8
@@ -78,14 +80,13 @@ namespace Moon {
   void Engine::load_mrb() {
     mrb = mrb_open();
 
-    moon_init_mrb_core(mrb);
-    moon_init_mrb_ext(mrb);
+    mmrb_init(mrb);
 
     mrb_value engine_val = mrb_obj_value(Data_Wrap_Struct(mrb, mrb->object_class, &engine_data_type, (void*)this));
-    mrb_mod_cv_set(mrb, moon_module, mrb_intern_cstr(mrb, "engine"), engine_val);
+    mrb_mod_cv_set(mrb, mmrb_Moon, mrb_intern_cstr(mrb, "engine"), engine_val);
 
     mrb_value window_val = mrb_obj_value(Data_Wrap_Struct(mrb, mrb->object_class, &window_data_type, (void*)(&window)));
-    mrb_mod_cv_set(mrb, moon_module, mrb_intern_cstr(mrb, "window"), window_val);
+    mrb_mod_cv_set(mrb, mmrb_Moon, mrb_intern_cstr(mrb, "window"), window_val);
 
     load_mrb_file("./core/load.rb"); // load core classes
     moon_load_user_scripts(this);

@@ -6,9 +6,20 @@
 #include "freetype-gl.h"
 #include "vertex_buffer.hxx"
 
-// FT_Get_Kerning( face, prev_index, glyph_index, FT_KERNING_UNFITTED, &kerning );
-
 namespace Moon {
+  struct font_render_options {
+    float outline;
+    glm::vec4 color;
+    glm::vec4 outline_color;
+    glm::mat4 transform;
+    font_render_options() :
+      outline(0.0),
+      color(1.0, 1.0, 1.0, 1.0),
+      outline_color(0.0, 0.0, 0.0, 0.9)
+    {
+    };
+  };
+
   class Font {
   public:
     Font(std::string name, int font_size);

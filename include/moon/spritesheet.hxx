@@ -6,6 +6,16 @@
 #include "moon/shared_types.hxx"
 
 namespace Moon {
+  struct ss_render_options {
+    float opacity;
+    float ox;
+    float oy;
+    float angle;
+    glm::vec4 color;
+    glm::vec4 tone;
+    glm::mat4 transform;
+  };
+
   class Spritesheet {
   public:
     GLfloat tile_width;

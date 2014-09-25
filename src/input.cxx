@@ -1,4 +1,5 @@
 #include "moon/input.hxx"
+#include "moon/mrb/input.hxx"
 
 namespace Moon {
   GLFWwindow* Input::window = NULL;
@@ -179,15 +180,13 @@ namespace Moon {
   }
 
   void Input::on_type(GLFWwindow* window, unsigned int utf8_char) {
-    mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, moon_module, "Input"));
     /* TODO: convert int directly to a UTF8 mruby string */
-    mrb_funcall(mrb, klass, "on_type", 1,
+    mrb_funcall(mrb, mrb_obj_value(mmrb_Input), "on_type", 1,
                 mrb_funcall(mrb, mrb_fixnum_value(utf8_char), "chr", 0));
   }
 
   void Input::update_key(GLFWwindow* window, int key_id, int scancode, int action, int mods) {
-    mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, moon_module, "Input"));
-    mrb_funcall(mrb, klass, "on_key", 4,
+    mrb_funcall(mrb, mrb_obj_value(mmrb_Input), "on_key", 4,
       glfw_key_to_mrb_symbol(key_id),
       mrb_fixnum_value(scancode),
       glfw_state_to_mrb_symbol(action),
@@ -195,16 +194,14 @@ namespace Moon {
   }
 
   void Input::update_button(GLFWwindow* window, int button_id, int action, int mods) {
-    mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, moon_module, "Input"));
-    mrb_funcall(mrb, klass, "on_button", 3,
+    mrb_funcall(mrb, mrb_obj_value(mmrb_Input), "on_button", 3,
       glfw_key_to_mrb_symbol(button_id),
       glfw_state_to_mrb_symbol(action),
       mrb_fixnum_value(mods));
   }
 
   void Input::update_cursor_pos(GLFWwindow* window, double x, double y) {
-    mrb_value klass = mrb_obj_value(mrb_module_get_under(mrb, moon_module, "Input"));
-    mrb_funcall(mrb, klass, "on_mousemove", 2,
+    mrb_funcall(mrb, mrb_obj_value(mmrb_Input), "on_mousemove", 2,
       mrb_float_value(mrb, x),
       mrb_float_value(mrb, y));
   }

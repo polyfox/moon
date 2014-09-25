@@ -11,7 +11,6 @@
 #include "moon/vertex_buffer.hxx"
 
 namespace Moon {
-
   class Texture: public Cache<Texture> {
   public:
     ~Texture();
@@ -29,7 +28,9 @@ namespace Moon {
     GLuint gl_texture_id;
   friend class Cache<Texture>;
   };
-
 };
+
+typedef std::shared_ptr<Moon::Texture> moon_texture;
+#define moon_texture_p(mtexture) (*mtexture)
 
 #endif

@@ -1,26 +1,13 @@
 #ifndef MOON_SHARED_TYPES_H
 #define MOON_SHARED_TYPES_H
 
-#include <memory>
 #include <glm/glm.hpp>
+#include "moon/rect.hxx"
 #include "moon/texture.hxx"
-
-typedef std::shared_ptr<glm::vec2> moon_vec2;
-typedef std::shared_ptr<glm::vec3> moon_vec3;
-typedef std::shared_ptr<glm::vec4> moon_vec4;
-
-typedef std::shared_ptr<glm::mat4> moon_mat4;
-
-typedef std::shared_ptr<Moon::Rect> moon_rect;
-typedef std::shared_ptr<Moon::Texture> moon_texture;
-
-#define moon_vec2_p(mvec2) (*mvec2)
-#define moon_vec3_p(mvec3) (*mvec3)
-#define moon_vec4_p(mvec4) (*mvec4)
-
-#define moon_mat4_p(mmat4) (*mmat4)
+#include "moon/vector2.hxx"
+#include "moon/vector3.hxx"
+#include "moon/vector4.hxx"
 
 #define moon_shader_p(mshader) (*mshader)
-#define moon_rect_p(mrect) (*mrect)
-#define moon_texture_p(mtexture) (*mtexture)
+
 #endif
