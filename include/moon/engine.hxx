@@ -34,6 +34,7 @@ namespace Moon {
 
 void moon_load_user_scripts(Moon::Engine *engine);
 void moon_config(Moon::Engine *engine);
+void moon_step(mrb_state *mrb, double delta);
 int moon_main(Moon::Engine *engine); // user entry point
 
 #endif
