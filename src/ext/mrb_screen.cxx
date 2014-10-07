@@ -5,7 +5,9 @@
 using Moon::Window;
 
 /* Where the glfw screen is currently, is a bit complicated to access */
-static mrb_value screen_get_width(mrb_state *mrb, mrb_value self) {
+static mrb_value
+screen_get_width(mrb_state *mrb, mrb_value self)
+{
   Window *window;
 
   mrb_value window_val = mrb_mod_cv_get(mrb, mmrb_Moon, mrb_intern_cstr(mrb, "window"));
@@ -13,7 +15,9 @@ static mrb_value screen_get_width(mrb_state *mrb, mrb_value self) {
   return mrb_fixnum_value(window->width());
 }
 
-static mrb_value screen_get_height(mrb_state *mrb, mrb_value self) {
+static mrb_value
+screen_get_height(mrb_state *mrb, mrb_value self)
+{
   Window *window;
 
   mrb_value window_val = mrb_mod_cv_get(mrb, mmrb_Moon, mrb_intern_cstr(mrb, "window"));
@@ -21,7 +25,9 @@ static mrb_value screen_get_height(mrb_state *mrb, mrb_value self) {
   return mrb_fixnum_value(window->height());
 }
 
-static mrb_value screen_resize(mrb_state *mrb, mrb_value self) {
+static mrb_value
+screen_resize(mrb_state *mrb, mrb_value self)
+{
   mrb_int w, h;
   mrb_get_args(mrb, "ii", &w, &h);
 
@@ -35,11 +41,15 @@ static mrb_value screen_resize(mrb_state *mrb, mrb_value self) {
   return mrb_nil_value();
 }
 
-static mrb_value screen_uptime(mrb_state *mrb, mrb_value self) {
+static mrb_value
+screen_uptime(mrb_state *mrb, mrb_value self)
+{
   return mrb_float_value(mrb, glfwGetTime());
 }
 
-struct RClass* mmrb_screen_init(mrb_state *mrb) {
+struct RClass*
+mmrb_screen_init(mrb_state *mrb)
+{
   struct RClass *screen_class;
   screen_class = mrb_define_class_under(mrb, mmrb_Moon, "Screen", mrb->object_class);
   mrb_define_class_method(mrb, screen_class, "width",  screen_get_width,  MRB_ARGS_NONE());

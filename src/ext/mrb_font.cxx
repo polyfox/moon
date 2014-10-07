@@ -13,15 +13,20 @@ static mrb_sym id_outline;
 static mrb_sym id_outline_color;
 static mrb_sym id_transform;
 
-static void font_deallocate(mrb_state *mrb, void *p) {
-  delete((Font*)p);
-};
+static void
+font_free(mrb_state *mrb, void *p)
+{
+  Font *font = (Font*)p;
+  if (font) {
+    delete(font);
+  }
+}
 
-struct mrb_data_type font_data_type = {
-  "Font", font_deallocate,
-};
+struct mrb_data_type font_data_type = { "Font", font_free };
 
-static mrb_value font_initialize(mrb_state *mrb, mrb_value self) {
+static mrb_value
+font_initialize(mrb_state *mrb, mrb_value self)
+{
   char* filename;
   mrb_int font_size;
   mrb_get_args(mrb, "zi", &filename, &font_size);
@@ -31,8 +36,8 @@ static mrb_value font_initialize(mrb_state *mrb, mrb_value self) {
   DATA_TYPE(self) = &font_data_type;
   DATA_PTR(self) = font;
 
-  return mrb_nil_value();
-};
+  return self;
+}
 
 /*
  * Font#draw_text(x, y, z, str[, color])
@@ -43,7 +48,9 @@ static mrb_value font_initialize(mrb_state *mrb, mrb_value self) {
  * @param [Vector4] color
  *   @optional
  */
-static mrb_value font_render(mrb_state *mrb, mrb_value self) {
+static mrb_value
+font_render(mrb_state *mrb, mrb_value self)
+{
   mrb_float x, y, z;
   mrb_value color = mrb_nil_value();
   mrb_value options = mrb_nil_value();
@@ -94,7 +101,8 @@ static mrb_value font_render(mrb_state *mrb, mrb_value self) {
     if(!mrb_nil_p(color)) {
       moon_vec4* text_color;
       Data_Get_Struct(mrb, color, &vector4_data_type, text_color);
-      font->draw_text(x, y, z, text, **text_color); //text_color needs to be dereferenced to shared_ptr first and then to value
+      //text_color needs to be dereferenced to shared_ptr first and then to value
+      font->draw_text(x, y, z, text, **text_color);
     } else {
       font->draw_text(x, y, z, text);
     }
@@ -102,15 +110,19 @@ static mrb_value font_render(mrb_state *mrb, mrb_value self) {
   delete[] text;
 
   return mrb_nil_value();
-};
+}
 
-static mrb_value font_size(mrb_state *mrb, mrb_value self) {
+static mrb_value
+font_size(mrb_state *mrb, mrb_value self)
+{
   Font *font;
   Data_Get_Struct(mrb, self, &font_data_type, font);
   return mrb_fixnum_value(font->size());
 }
 
-static mrb_value font_calc_bounds(mrb_state *mrb, mrb_value self) {
+static mrb_value
+font_calc_bounds(mrb_state *mrb, mrb_value self)
+{
   char* str;
   mrb_get_args(mrb, "z", &str);
 
@@ -127,7 +139,9 @@ static mrb_value font_calc_bounds(mrb_state *mrb, mrb_value self) {
   return mrb_ary_new_from_values(mrb, 2, argv);
 }
 
-struct RClass* mmrb_font_init(mrb_state *mrb) {
+struct RClass*
+mmrb_font_init(mrb_state *mrb)
+{
   struct RClass *font_class;
   font_class = mrb_define_class_under(mrb, mmrb_Moon, "Font", mrb->object_class);
   MRB_SET_INSTANCE_TT(font_class, MRB_TT_DATA);

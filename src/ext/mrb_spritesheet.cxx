@@ -20,19 +20,24 @@ static mrb_sym id_oy;
 static mrb_sym id_angle;
 static mrb_sym id_transform;
 
-static void spritesheet_deallocate(mrb_state *mrb, void *p) {
-  delete((Spritesheet*)p);
-};
+static void
+spritesheet_free(mrb_state *mrb, void *p)
+{
+  Spritesheet *spritesheet = (Spritesheet*)p;
+  if (spritesheet) {
+    delete(spritesheet);
+  }
+}
 
-struct mrb_data_type spritesheet_data_type = {
-  "Spritesheet", spritesheet_deallocate,
-};
+struct mrb_data_type spritesheet_data_type = { "Spritesheet", spritesheet_free };
 
 /*
  * @overload Spritesheet#initialize(texture: Texture, cell_width: int, cell_height: int)
  * @overload Spritesheet#initialize(filename: str, cell_width: int, cell_height: int)
  */
-static mrb_value spritesheet_initialize(mrb_state *mrb, mrb_value self) {
+static mrb_value
+spritesheet_initialize(mrb_state *mrb, mrb_value self)
+{
   mrb_value obj;
   mrb_int tile_width, tile_height;
   mrb_get_args(mrb, "oii", &obj, &tile_width, &tile_height);
@@ -77,14 +82,16 @@ static mrb_value spritesheet_initialize(mrb_state *mrb, mrb_value self) {
   DATA_TYPE(self) = &spritesheet_data_type;
   DATA_PTR(self) = spritesheet;
 
-  return mrb_nil_value();
-};
+  return self;
+}
 
 /*
  * @overload Spritesheet#render(x: float, y: float, z: float, index: int)
  * @overload Spritesheet#render(x: float, y: float, z: float, index: int, options: Hash<Symbol, Object>)
  */
-static mrb_value spritesheet_render(mrb_state *mrb, mrb_value self) {
+static mrb_value
+spritesheet_render(mrb_state *mrb, mrb_value self)
+{
   mrb_int index;
   mrb_float x, y, z;
   mrb_value options = mrb_nil_value();
@@ -153,12 +160,14 @@ static mrb_value spritesheet_render(mrb_state *mrb, mrb_value self) {
 
   spritesheet->render(x, y, z, index, render_op);
   return mrb_nil_value();
-};
+}
 
 /*
  * @return [Integer]
  */
-static mrb_value spritesheet_cell_width(mrb_state *mrb, mrb_value self) {
+static mrb_value
+spritesheet_cell_width(mrb_state *mrb, mrb_value self)
+{
   Spritesheet *spritesheet;
   Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
   return mrb_fixnum_value((int)spritesheet->tile_width);
@@ -167,7 +176,9 @@ static mrb_value spritesheet_cell_width(mrb_state *mrb, mrb_value self) {
 /*
  * @return [Integer]
  */
-static mrb_value spritesheet_cell_height(mrb_state *mrb, mrb_value self) {
+static mrb_value
+spritesheet_cell_height(mrb_state *mrb, mrb_value self)
+{
   Spritesheet *spritesheet;
   Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
   return mrb_fixnum_value((int)spritesheet->tile_height);
@@ -176,13 +187,17 @@ static mrb_value spritesheet_cell_height(mrb_state *mrb, mrb_value self) {
 /*
  * @return [Integer]
  */
-static mrb_value spritesheet_cell_count(mrb_state *mrb, mrb_value self) {
+static mrb_value
+spritesheet_cell_count(mrb_state *mrb, mrb_value self)
+{
   Spritesheet *spritesheet;
   Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
   return mrb_fixnum_value((int)spritesheet->total_sprites);
 }
 
-struct RClass* mmrb_spritesheet_init(mrb_state *mrb) {
+struct RClass*
+mmrb_spritesheet_init(mrb_state *mrb)
+{
   struct RClass *spritesheet_class;
   spritesheet_class = mrb_define_class_under(mrb, mmrb_Moon, "Spritesheet", mrb->object_class);
   MRB_SET_INSTANCE_TT(spritesheet_class, MRB_TT_DATA);
@@ -194,6 +209,9 @@ struct RClass* mmrb_spritesheet_init(mrb_state *mrb) {
   mrb_define_method(mrb, spritesheet_class, "cell_height", spritesheet_cell_height,    MRB_ARGS_NONE());
   mrb_define_method(mrb, spritesheet_class, "cell_count",  spritesheet_cell_count,     MRB_ARGS_NONE());
 
+  mrb_define_method(mrb, spritesheet_class, "width",       spritesheet_cell_width,     MRB_ARGS_NONE());
+  mrb_define_method(mrb, spritesheet_class, "height",      spritesheet_cell_height,    MRB_ARGS_NONE());
+
   id_opacity   = mrb_intern_cstr(mrb, "opacity");
   id_tone      = mrb_intern_cstr(mrb, "tone");
   id_color     = mrb_intern_cstr(mrb, "color");
@@ -203,4 +221,4 @@ struct RClass* mmrb_spritesheet_init(mrb_state *mrb) {
   id_transform = mrb_intern_cstr(mrb, "transform");
 
   return spritesheet_class;
-};
+}

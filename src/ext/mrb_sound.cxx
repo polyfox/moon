@@ -3,15 +3,19 @@
 
 using Moon::Audio;
 
-static void sound_deallocate(mrb_state *mrb, void *p) {
-  delete((ga_Sound*)p);
-};
+static void sound_free(mrb_state *mrb, void *p)
+{
+  ga_Sound *sound = (ga_Sound*)p;
+  if (sound) {
+    delete(sound);
+  }
+}
 
-struct mrb_data_type sound_data_type = {
-  "Sound", sound_deallocate,
-};
+struct mrb_data_type sound_data_type = { "Sound", sound_free };
 
-static mrb_value sound_initialize(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sound_initialize(mrb_state *mrb, mrb_value self)
+{
   char* filename;
   char* format;
 
@@ -27,10 +31,12 @@ static mrb_value sound_initialize(mrb_state *mrb, mrb_value self) {
   DATA_TYPE(self) = &sound_data_type;
   DATA_PTR(self) = sound;
 
-  return mrb_nil_value();
-};
+  return self;
+}
 
-static mrb_value sound_play(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sound_play(mrb_state *mrb, mrb_value self)
+{
   mrb_float gain = 1.0;
   mrb_float pitch = 1.0;
   mrb_float pan = 0.0;
@@ -47,9 +53,11 @@ static mrb_value sound_play(mrb_state *mrb, mrb_value self) {
   ga_handle_play(handle);
 
   return mrb_nil_value();
-};
+}
 
-struct RClass* mmrb_sound_init(mrb_state *mrb) {
+struct RClass*
+mmrb_sound_init(mrb_state *mrb)
+{
   struct RClass *sound_class;
   sound_class = mrb_define_class_under(mrb, mmrb_Moon, "Sound", mrb->object_class);
   MRB_SET_INSTANCE_TT(sound_class, MRB_TT_DATA);
@@ -58,5 +66,5 @@ struct RClass* mmrb_sound_init(mrb_state *mrb) {
   mrb_define_method(mrb, sound_class, "play", sound_play,             MRB_ARGS_OPT(3));
 
   return sound_class;
-};
+}
 

@@ -6,15 +6,20 @@ using Moon::Rect;
 
 static struct RClass *rect_class;
 
-static void rect_deallocate(mrb_state *mrb, void *p) {
-  delete((moon_rect*)p);
-};
+static void
+rect_free(mrb_state *mrb, void *p)
+{
+  moon_rect *rect = (moon_rect*)p;
+  if (rect) {
+    delete(rect);
+  }
+}
 
-struct mrb_data_type rect_data_type = {
-  "Rect", rect_deallocate,
-};
+struct mrb_data_type rect_data_type = { "Rect", rect_free };
 
-static mrb_value rect_initialize(mrb_state *mrb, mrb_value self) {
+static mrb_value
+rect_initialize(mrb_state *mrb, mrb_value self)
+{
   mrb_int x, y, w, h;
   mrb_get_args(mrb, "iiii", &x, &y, &w, &h);
 
@@ -23,10 +28,12 @@ static mrb_value rect_initialize(mrb_state *mrb, mrb_value self) {
   DATA_TYPE(self) = &rect_data_type;
   DATA_PTR(self) = rect;
 
-  return mrb_nil_value();
-};
+  return self;
+}
 
-static mrb_value rect_initialize_copy(mrb_state *mrb, mrb_value self) {
+static mrb_value
+rect_initialize_copy(mrb_state *mrb, mrb_value self)
+{
   mrb_value other;
   moon_rect* src_rect;
 
@@ -38,10 +45,12 @@ static mrb_value rect_initialize_copy(mrb_state *mrb, mrb_value self) {
   DATA_TYPE(self) = &rect_data_type;
   DATA_PTR(self) = rect;
 
-  return mrb_nil_value();
+  return self;
 }
 
-static mrb_value rect_x_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+rect_x_setter(mrb_state *mrb, mrb_value self)
+{
   mrb_int x;
   mrb_get_args(mrb, "i", &x);
 
@@ -53,7 +62,9 @@ static mrb_value rect_x_setter(mrb_state *mrb, mrb_value self) {
   return mrb_nil_value();
 }
 
-static mrb_value rect_x_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+rect_x_getter(mrb_state *mrb, mrb_value self)
+{
   moon_rect* rect;
   Data_Get_Struct(mrb, self, &rect_data_type, rect);
 
@@ -61,7 +72,9 @@ static mrb_value rect_x_getter(mrb_state *mrb, mrb_value self) {
   return mrb_float_value(mrb, (*rect)->x);
 }
 
-static mrb_value rect_y_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+rect_y_setter(mrb_state *mrb, mrb_value self)
+{
   mrb_int y;
   mrb_get_args(mrb, "i", &y);
 
@@ -73,14 +86,18 @@ static mrb_value rect_y_setter(mrb_state *mrb, mrb_value self) {
   return mrb_nil_value();
 }
 
-static mrb_value rect_y_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+rect_y_getter(mrb_state *mrb, mrb_value self)
+{
   moon_rect* rect;
   Data_Get_Struct(mrb, self, &rect_data_type, rect);
 
   return mrb_float_value(mrb, (*rect)->y);
 }
 
-static mrb_value rect_width_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+rect_width_setter(mrb_state *mrb, mrb_value self)
+{
   mrb_int width;
   mrb_get_args(mrb, "i", &width);
 
@@ -92,14 +109,18 @@ static mrb_value rect_width_setter(mrb_state *mrb, mrb_value self) {
   return mrb_nil_value();
 }
 
-static mrb_value rect_width_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+rect_width_getter(mrb_state *mrb, mrb_value self)
+{
   moon_rect* rect;
   Data_Get_Struct(mrb, self, &rect_data_type, rect);
 
   return mrb_float_value(mrb, (*rect)->w);
 }
 
-static mrb_value rect_height_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+rect_height_setter(mrb_state *mrb, mrb_value self)
+{
   mrb_int height;
   mrb_get_args(mrb, "i", &height);
 
@@ -111,14 +132,18 @@ static mrb_value rect_height_setter(mrb_state *mrb, mrb_value self) {
   return mrb_nil_value();
 }
 
-static mrb_value rect_height_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+rect_height_getter(mrb_state *mrb, mrb_value self)
+{
   moon_rect* rect;
   Data_Get_Struct(mrb, self, &rect_data_type, rect);
 
   return mrb_float_value(mrb, (*rect)->h);
 }
 
-struct RClass* mmrb_rect_init(mrb_state *mrb) {
+struct RClass*
+mmrb_rect_init(mrb_state *mrb)
+{
   rect_class = mrb_define_class_under(mrb, mmrb_Moon, "Rect", mrb->object_class);
   MRB_SET_INSTANCE_TT(rect_class, MRB_TT_DATA);
 
@@ -134,14 +159,18 @@ struct RClass* mmrb_rect_init(mrb_state *mrb) {
   mrb_define_method(mrb, rect_class, "height",          rect_height_getter,   MRB_ARGS_NONE());
 
   return rect_class;
-};
+}
 
-mrb_value mmrb_rect_wrap(mrb_state *mrb, Moon::Rect *ptr) {
+mrb_value
+mmrb_rect_wrap(mrb_state *mrb, Moon::Rect *ptr)
+{
   moon_rect *rect_ptr = new moon_rect(ptr);
   mrb_value rect = mrb_obj_value(Data_Wrap_Struct(mrb, rect_class, &rect_data_type, rect_ptr));
   return rect;
 }
 
-mrb_value mmrb_rect_create(mrb_state *mrb, GLint x, GLint y, GLint w, GLint h) {
+mrb_value
+mmrb_rect_create(mrb_state *mrb, GLint x, GLint y, GLint w, GLint h)
+{
   return mmrb_rect_wrap(mrb, new Moon::Rect(x, y, w, h));
 }

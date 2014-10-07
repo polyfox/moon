@@ -4,22 +4,30 @@
 
 using Moon::Input;
 
-static mrb_value mouse_x(mrb_state *mrb, mrb_value self) {
+static mrb_value
+mouse_x(mrb_state *mrb, mrb_value self)
+{
   return mrb_fixnum_value(Input::Mouse::x());
 }
 
-static mrb_value mouse_y(mrb_state *mrb, mrb_value self) {
+static mrb_value
+mouse_y(mrb_state *mrb, mrb_value self)
+{
   return mrb_fixnum_value(Input::Mouse::y());
 }
 
-static mrb_value mouse_position(mrb_state *mrb, mrb_value self) {
+static mrb_value
+mouse_position(mrb_state *mrb, mrb_value self)
+{
   auto pos = Input::Mouse::get_position();
 
   mrb_value argv[2] = { mrb_fixnum_value(pos[0]), mrb_fixnum_value(pos[1]) };
   return mrb_obj_new(mrb, mmrb_Vector2, 2, argv);
 }
 
-struct RClass* mmrb_input_init(mrb_state *mrb) {
+struct RClass*
+mmrb_input_init(mrb_state *mrb)
+{
   struct RClass *input_module;
   struct RClass *mouse_module;
 

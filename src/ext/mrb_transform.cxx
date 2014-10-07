@@ -42,13 +42,18 @@
   }                                                                       \
   return rtarget; /* */
 
-static struct RClass *rclass = NULL;
+static struct RClass *transform_class = NULL;
 
-static void deallocate(mrb_state *mrb, void *p) {
-  delete((moon_mat4*)p);
-};
+static void
+transform_free(mrb_state *mrb, void *p)
+{
+  moon_mat4 *transform = (moon_mat4*)p;
+  if (transform) {
+    delete(transform);
+  }
+}
 
-struct mrb_data_type transform_data_type = { "Transform", deallocate };
+struct mrb_data_type transform_data_type = { "Transform", transform_free };
 
 /*
  * @overload Transform#initialize()
@@ -57,7 +62,9 @@ struct mrb_data_type transform_data_type = { "Transform", deallocate };
  * @overload Transform#initialize(Vector4, Vector4, Vector4, Vector4)
  * @overload Transform#initialize(n1, ..., n16)
  */
-static mrb_value initialize(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_initialize(mrb_state *mrb, mrb_value self)
+{
   mrb_value *args;
   int argc;
   mrb_get_args(mrb, "*", &args, &argc);
@@ -121,14 +128,16 @@ static mrb_value initialize(mrb_state *mrb, mrb_value self) {
   DATA_TYPE(self) = &transform_data_type;
   DATA_PTR(self) = mat;
 
-  return mrb_nil_value();
-};
+  return self;
+}
 
 /*
  * @overload initialize_copy(Transform other)
  * @return [nil]
  */
-static mrb_value initialize_copy(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_initialize_copy(mrb_state *mrb, mrb_value self)
+{
   mrb_value other;
   mrb_get_args(mrb, "o", &other);
 
@@ -139,18 +148,20 @@ static mrb_value initialize_copy(mrb_state *mrb, mrb_value self) {
   DATA_TYPE(self) = &transform_data_type;
   DATA_PTR(self) = mat;
 
-  return mrb_nil_value();
-};
+  return self;
+}
 
 /*
  * @return [Array<Object>]
  */
-static mrb_value coerce(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_coerce(mrb_state *mrb, mrb_value self)
+{
   mrb_value other;
   mrb_get_args(mrb, "o", &other);
   mrb_value argv[2] = { self, other };
   return mrb_ary_new_from_values(mrb, 2, argv);
-};
+}
 
 /*
  * @overload Transform#[int]
@@ -158,7 +169,9 @@ static mrb_value coerce(mrb_state *mrb, mrb_value self) {
  * @overload Transform#[int, int]
  *   @return [Numeric]
  */
-static mrb_value entry_get(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_entry_get(mrb_state *mrb, mrb_value self)
+{
   mrb_value *vals;
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
@@ -207,13 +220,15 @@ static mrb_value entry_get(mrb_state *mrb, mrb_value self) {
                "wrong number of arguments (%d for 1, or 2)", len);
   }
   return mrb_nil_value();
-};
+}
 
 /*
  * @overload Transform#[num] = Vector4 value
  * @overload Transform#[num, num] = Numeric value
  */
-static mrb_value entry_set(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_entry_set(mrb_state *mrb, mrb_value self)
+{
   mrb_value *vals;
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
@@ -260,12 +275,14 @@ static mrb_value entry_set(mrb_state *mrb, mrb_value self) {
                "wrong number of arguments (%d for 2, or 3)", len);
   }
   return mrb_nil_value();
-};
+}
 
 /*
  * @return [Transform]
  */
-static mrb_value op_negate(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_op_negate(mrb_state *mrb, mrb_value self)
+{
   mrb_value dest_mat4 = mrb_obj_dup(mrb, self);
 
   moon_mat4* dmat4;
@@ -277,54 +294,68 @@ static mrb_value op_negate(mrb_state *mrb, mrb_value self) {
   **dmat4 = -(**smat4);
 
   return dest_mat4;
-};
+}
 
 /*
  * @return [Transform]
  */
-static mrb_value op_identity(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_op_identity(mrb_state *mrb, mrb_value self)
+{
   return mrb_obj_dup(mrb, self);
-};
+}
 
 /*
  * @return [Transform]
  */
-static mrb_value op_add(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_op_add(mrb_state *mrb, mrb_value self)
+{
   math_op(+)
-};
+}
 
 /*
  * @return [Transform]
  */
-static mrb_value op_sub(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_op_sub(mrb_state *mrb, mrb_value self)
+{
   math_op(-)
-};
+}
 
 /*
  * @return [Transform]
  */
-static mrb_value op_mul(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_op_mul(mrb_state *mrb, mrb_value self)
+{
   math_op(*)
-};
+}
 
 /*
  * @return [Transform]
  */
-static mrb_value op_div(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_op_div(mrb_state *mrb, mrb_value self)
+{
   math_op(/)
 };
 
 /*
  * @return [Transform]
  */
-//static mrb_value op_mod(mrb_state *mrb, mrb_value self) {
+//static mrb_value
+//transform_op_mod(mrb_state *mrb, mrb_value self)
+//{
 //  math_op(%)
-//};
+//}
 
 /*
  * @return [Transform]
  */
-static mrb_value translate(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_translate(mrb_state *mrb, mrb_value self)
+{
   mrb_value *vals;
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
@@ -353,7 +384,9 @@ static mrb_value translate(mrb_state *mrb, mrb_value self) {
 /*
  * @return [Transform]
  */
-static mrb_value rotate(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_rotate(mrb_state *mrb, mrb_value self)
+{
   mrb_value *vals;
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
@@ -379,12 +412,14 @@ static mrb_value rotate(mrb_state *mrb, mrb_value self) {
                len);
   }
   return rtarget;
-};
+}
 
 /*
  * @return [Transform]
  */
-static mrb_value scale(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_scale(mrb_state *mrb, mrb_value self)
+{
   mrb_value *vals;
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
@@ -413,7 +448,9 @@ static mrb_value scale(mrb_state *mrb, mrb_value self) {
 /*
  * @return [Array<Numeric>]
  */
-static mrb_value to_a16(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_to_a16(mrb_state *mrb, mrb_value self)
+{
   moon_mat4 *mat4;
   Data_Get_Struct(mrb, self, &transform_data_type, mat4);
 
@@ -445,12 +482,14 @@ static mrb_value to_a16(mrb_state *mrb, mrb_value self) {
   };
 
   return mrb_ary_new_from_values(mrb, 16, argv);
-};
+}
 
 /*
  * @return [Array<Vector4>]
  */
-static mrb_value to_a(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_to_a(mrb_state *mrb, mrb_value self)
+{
   moon_mat4 *mat4;
   Data_Get_Struct(mrb, self, &transform_data_type, mat4);
 
@@ -477,61 +516,59 @@ static mrb_value to_a(mrb_state *mrb, mrb_value self) {
   mrb_value argv[4] = { rrow1, rrow2, rrow3, rrow4 };
 
   return mrb_ary_new_from_values(mrb, 4, argv);
-};
+}
 
 /*
  * @overload Transform[obj]
  * @return [Transform]
  */
-static mrb_value s_cast(mrb_state *mrb, mrb_value self) {
+static mrb_value
+transform_s_cast(mrb_state *mrb, mrb_value self)
+{
   mrb_value *vals;
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
 
-  return mrb_obj_new(mrb, rclass, len, vals);
-};
+  return mrb_obj_new(mrb, transform_class, len, vals);
+}
 
 //static mrb_value s_extract(mrb_state *mrb, mrb_value self) {
 //  return mrb_nil_value();
 //};
 
-static struct RClass*
-Init(mrb_state *mrb) {
-  rclass = mrb_define_class_under(mrb, mmrb_Moon, "Transform", mrb->object_class);
-  MRB_SET_INSTANCE_TT(rclass, MRB_TT_DATA);
-
-  mrb_define_method(mrb, rclass, "initialize",      initialize,      MRB_ARGS_ANY());
-  mrb_define_method(mrb, rclass, "initialize_copy", initialize_copy, MRB_ARGS_REQ(1));
-
-  mrb_define_method(mrb, rclass, "coerce",          coerce,          MRB_ARGS_REQ(1));
-
-  mrb_define_method(mrb, rclass, "[]",              entry_get,       MRB_ARGS_ARG(1,1));
-  mrb_define_method(mrb, rclass, "[]=",             entry_set,       MRB_ARGS_ARG(2,1));
-
-  mrb_define_method(mrb, rclass, "-@",              op_negate,       MRB_ARGS_NONE());
-  mrb_define_method(mrb, rclass, "+@",              op_identity,     MRB_ARGS_NONE());
-
-  mrb_define_method(mrb, rclass, "+",               op_add,          MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, rclass, "-",               op_sub,          MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, rclass, "*",               op_mul,          MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, rclass, "/",               op_div,          MRB_ARGS_REQ(1));
-  //mrb_define_method(mrb, rclass, "%",               op_mod,          MRB_ARGS_REQ(1));
-
-  mrb_define_method(mrb, rclass, "translate",       translate,       MRB_ARGS_ANY());
-  mrb_define_method(mrb, rclass, "rotate",          rotate,          MRB_ARGS_ANY());
-  mrb_define_method(mrb, rclass, "scale",           scale,           MRB_ARGS_ANY());
-
-  mrb_define_method(mrb, rclass, "to_a16",          to_a16,          MRB_ARGS_NONE());
-  mrb_define_method(mrb, rclass, "to_a",            to_a,            MRB_ARGS_NONE());
-
-  mrb_define_class_method(mrb, rclass, "[]",        s_cast,          MRB_ARGS_ANY());
-  //mrb_define_class_method(mrb, rclass, "extract",   s_extract,       MRB_ARGS_REQ(1));
-
-  return rclass;
-};
-
 struct RClass*
-mmrb_transform_init(mrb_state *mrb) {
-  return Init(mrb);
-};
+mmrb_transform_init(mrb_state *mrb)
+{
+  transform_class = mrb_define_class_under(mrb, mmrb_Moon, "Transform", mrb->object_class);
+  MRB_SET_INSTANCE_TT(transform_class, MRB_TT_DATA);
+
+  mrb_define_method(mrb, transform_class, "initialize",      transform_initialize,      MRB_ARGS_ANY());
+  mrb_define_method(mrb, transform_class, "initialize_copy", transform_initialize_copy, MRB_ARGS_REQ(1));
+
+  mrb_define_method(mrb, transform_class, "coerce",          transform_coerce,          MRB_ARGS_REQ(1));
+
+  mrb_define_method(mrb, transform_class, "[]",              transform_entry_get,       MRB_ARGS_ARG(1,1));
+  mrb_define_method(mrb, transform_class, "[]=",             transform_entry_set,       MRB_ARGS_ARG(2,1));
+
+  mrb_define_method(mrb, transform_class, "-@",              transform_op_negate,       MRB_ARGS_NONE());
+  mrb_define_method(mrb, transform_class, "+@",              transform_op_identity,     MRB_ARGS_NONE());
+
+  mrb_define_method(mrb, transform_class, "+",               transform_op_add,          MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, transform_class, "-",               transform_op_sub,          MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, transform_class, "*",               transform_op_mul,          MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, transform_class, "/",               transform_op_div,          MRB_ARGS_REQ(1));
+  //mrb_define_method(mrb, transform_class, "%",               op_mod,          MRB_ARGS_REQ(1));
+
+  mrb_define_method(mrb, transform_class, "translate",       transform_translate,       MRB_ARGS_ANY());
+  mrb_define_method(mrb, transform_class, "rotate",          transform_rotate,          MRB_ARGS_ANY());
+  mrb_define_method(mrb, transform_class, "scale",           transform_scale,           MRB_ARGS_ANY());
+
+  mrb_define_method(mrb, transform_class, "to_a16",          transform_to_a16,          MRB_ARGS_NONE());
+  mrb_define_method(mrb, transform_class, "to_a",            transform_to_a,            MRB_ARGS_NONE());
+
+  mrb_define_class_method(mrb, transform_class, "[]",        transform_s_cast,          MRB_ARGS_ANY());
+  //mrb_define_class_method(mrb, transform_class, "extract",   transform_s_extract,       MRB_ARGS_REQ(1));
+
+  return transform_class;
+}
 

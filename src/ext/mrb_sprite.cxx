@@ -10,19 +10,24 @@
 
 using Moon::Sprite;
 
-static void sprite_deallocate(mrb_state *mrb, void *p) {
-  delete((Sprite*)p);
-};
+static void
+sprite_free(mrb_state *mrb, void *p)
+{
+  Sprite *sprite = (Sprite*)p;
+  if (sprite) {
+    delete(sprite);
+  }
+}
 
-struct mrb_data_type sprite_data_type = {
-  "Sprite", sprite_deallocate,
-};
+struct mrb_data_type sprite_data_type = { "Sprite", sprite_free };
 
 /*
  * @overload Sprite#initialize(texture: Texture)
  * @overload Sprite#initialize(filename: str)
  */
-static mrb_value sprite_initialize(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_initialize(mrb_state *mrb, mrb_value self)
+{
   mrb_value obj, texture, color, tone, clip;
   mrb_get_args(mrb, "o", &obj);
 
@@ -84,10 +89,12 @@ static mrb_value sprite_initialize(mrb_state *mrb, mrb_value self) {
   }
   mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@clip"), clip);
 
-  return mrb_nil_value();
-};
+  return self;
+}
 
-static mrb_value sprite_render(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_render(mrb_state *mrb, mrb_value self)
+{
   mrb_float x, y, z;
   mrb_get_args(mrb, "fff", &x, &y, &z);
 
@@ -96,73 +103,93 @@ static mrb_value sprite_render(mrb_state *mrb, mrb_value self) {
 
   sprite->render(x, y, z);
   return mrb_nil_value();
-};
+}
 
-static mrb_value sprite_opacity_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_opacity_getter(mrb_state *mrb, mrb_value self)
+{
   Sprite *sprite;
   Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
   return mrb_float_value(mrb, sprite->opacity);
-};
+}
 
-static mrb_value sprite_opacity_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_opacity_setter(mrb_state *mrb, mrb_value self)
+{
   Sprite *sprite;
   Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
   mrb_float f;
   mrb_get_args(mrb, "f", &f);
   sprite->opacity = glm::clamp(f, 0.0, 1.0);
   return mrb_float_value(mrb, f);
-};
+}
 
-static mrb_value sprite_angle_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_angle_getter(mrb_state *mrb, mrb_value self)
+{
   Sprite *sprite;
   Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
   return mrb_float_value(mrb, sprite->angle);
-};
+}
 
-static mrb_value sprite_angle_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_angle_setter(mrb_state *mrb, mrb_value self)
+{
   Sprite *sprite;
   Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
   mrb_float f;
   mrb_get_args(mrb, "f", &f);
   sprite->angle = f;
   return mrb_float_value(mrb, f);
-};
+}
 
-static mrb_value sprite_ox_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_ox_getter(mrb_state *mrb, mrb_value self)
+{
   Sprite *sprite;
   Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
   return mrb_fixnum_value(sprite->ox);
-};
+}
 
-static mrb_value sprite_ox_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_ox_setter(mrb_state *mrb, mrb_value self)
+{
   Sprite *sprite;
   Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
   mrb_int i;
   mrb_get_args(mrb, "i", &i);
   sprite->ox = i;
   return mrb_fixnum_value(i);
-};
+}
 
-static mrb_value sprite_oy_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_oy_getter(mrb_state *mrb, mrb_value self)
+{
   Sprite *sprite;
   Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
   return mrb_fixnum_value(sprite->oy);
-};
+}
 
-static mrb_value sprite_oy_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_oy_setter(mrb_state *mrb, mrb_value self)
+{
   Sprite *sprite;
   Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
   mrb_int i;
   mrb_get_args(mrb, "i", &i);
   sprite->oy = i;
   return mrb_fixnum_value(i);
-};
+}
 
-static mrb_value sprite_color_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_color_getter(mrb_state *mrb, mrb_value self)
+{
   return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@color"));
 }
 
-static mrb_value sprite_color_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_color_setter(mrb_state *mrb, mrb_value self)
+{
   mrb_value new_color;
   mrb_get_args(mrb, "o", &new_color);
 
@@ -182,11 +209,15 @@ static mrb_value sprite_color_setter(mrb_state *mrb, mrb_value self) {
   return new_color;
 }
 
-static mrb_value sprite_tone_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_tone_getter(mrb_state *mrb, mrb_value self)
+{
   return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@tone"));
 }
 
-static mrb_value sprite_tone_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_tone_setter(mrb_state *mrb, mrb_value self)
+{
   mrb_value new_tone;
   mrb_get_args(mrb, "o", &new_tone);
 
@@ -206,11 +237,15 @@ static mrb_value sprite_tone_setter(mrb_state *mrb, mrb_value self) {
   return new_tone;
 }
 
-static mrb_value sprite_texture_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_texture_getter(mrb_state *mrb, mrb_value self)
+{
   return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@texture"));
 }
 
-static mrb_value sprite_texture_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_texture_setter(mrb_state *mrb, mrb_value self)
+{
   mrb_value new_texture;
   mrb_get_args(mrb, "o", &new_texture);
 
@@ -230,11 +265,15 @@ static mrb_value sprite_texture_setter(mrb_state *mrb, mrb_value self) {
   return new_texture;
 }
 
-static mrb_value sprite_clip_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_clip_getter(mrb_state *mrb, mrb_value self)
+{
   return mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, "@clip"));
 }
 
-static mrb_value sprite_clip_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+sprite_clip_setter(mrb_state *mrb, mrb_value self)
+{
   mrb_value new_clip;
   mrb_get_args(mrb, "o", &new_clip);
 
@@ -256,12 +295,12 @@ static mrb_value sprite_clip_setter(mrb_state *mrb, mrb_value self) {
     ((Sprite*)DATA_PTR(self))->setClip(nilrect);
   }
 
-
   return new_clip;
 }
 
-
-struct RClass* mmrb_sprite_init(mrb_state *mrb) {
+struct RClass*
+mmrb_sprite_init(mrb_state *mrb)
+{
   struct RClass *sprite_class;
   sprite_class = mrb_define_class_under(mrb, mmrb_Moon, "Sprite", mrb->object_class);
   MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
@@ -291,4 +330,4 @@ struct RClass* mmrb_sprite_init(mrb_state *mrb) {
   mrb_define_method(mrb, sprite_class, "clip_rect=", sprite_clip_setter,    MRB_ARGS_REQ(1));
 
   return sprite_class;
-};
+}

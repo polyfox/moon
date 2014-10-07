@@ -27,30 +27,38 @@ static struct RClass *vector3_class = NULL;
   **((moon_vec3*)DATA_PTR(dest_vec)) _op_ ## = oth_vec3;    \
   return dest_vec;
 
-static void vector3_deallocate(mrb_state *mrb, void *p) {
-  delete((moon_vec3*)p);
-};
+static void
+vector3_free(mrb_state *mrb, void *p)
+{
+  moon_vec3 *vec3 = (moon_vec3*)p;
+  if (vec3) {
+    delete(vec3);
+  }
+}
 
-struct mrb_data_type vector3_data_type = { "Vector3", vector3_deallocate };
+struct mrb_data_type vector3_data_type = { "Vector3", vector3_free };
 
 /*
  * Black Magic
  */
 static glm::vec3
-mmrb_vector3_extract_mrb_vec3(mrb_state *mrb, mrb_value obj) {
+mmrb_vector3_extract_mrb_vec3(mrb_state *mrb, mrb_value obj)
+{
   moon_vec3* vec3;
   Data_Get_Struct(mrb, obj, &vector3_data_type, vec3);
   return **vec3;
 }
 
 static glm::vec3
-mmrb_vector3_extract_mrb_num(mrb_state *mrb, mrb_value obj) {
+mmrb_vector3_extract_mrb_num(mrb_state *mrb, mrb_value obj)
+{
   double i = mrb_to_flo(mrb, obj);
   return glm::vec3(i, i, i);
 }
 
 static glm::vec3
-mmrb_vector3_extract_mrb_array(mrb_state *mrb, mrb_value obj) {
+mmrb_vector3_extract_mrb_array(mrb_state *mrb, mrb_value obj)
+{
   glm::vec3 result;
   int _ary_len = mrb_ary_len(mrb, obj);
   if (_ary_len != 3) {
@@ -71,7 +79,8 @@ mmrb_vector3_extract_mrb_to_vec3(mrb_state *mrb, mrb_value obj)
 }
 
 glm::vec3
-mmrb_vector3_extract_args(mrb_state *mrb, int argc, mrb_value *vals) {
+mmrb_vector3_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
+{
   glm::vec3 result;
 
   switch (argc) {
@@ -144,7 +153,8 @@ mmrb_vector3_extract_args(mrb_state *mrb, int argc, mrb_value *vals) {
 }
 
 static glm::vec3
-mmrb_vector3_extract_mrb_args(mrb_state *mrb) {
+mmrb_vector3_extract_mrb_args(mrb_state *mrb)
+{
   mrb_value *vals;
   int len;
 
@@ -152,7 +162,9 @@ mmrb_vector3_extract_mrb_args(mrb_state *mrb) {
   return mmrb_vector3_extract_args(mrb, len, vals);
 }
 
-static mrb_value vector3_initialize(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_initialize(mrb_state *mrb, mrb_value self)
+{
   mrb_float x = 0.0;
   mrb_float y = 0.0;
   mrb_float z = 0.0;
@@ -160,10 +172,12 @@ static mrb_value vector3_initialize(mrb_state *mrb, mrb_value self) {
 
   mrb_set_vector3_value_xyz(mrb, self, x, y, z);
 
-  return mrb_nil_value();
+  return self;
 };
 
-static mrb_value vector3_initialize_copy(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_initialize_copy(mrb_state *mrb, mrb_value self)
+{
   mrb_value other;
   moon_vec3* src_vec3;
 
@@ -179,35 +193,45 @@ static mrb_value vector3_initialize_copy(mrb_state *mrb, mrb_value self) {
   return self;
 }
 
-static mrb_value vector3_coerce(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_coerce(mrb_state *mrb, mrb_value self)
+{
   mrb_value other;
   mrb_get_args(mrb, "o", &other);
   mrb_value argv[2] = { self, other };
   return mrb_ary_new_from_values(mrb, 2, argv);
 }
 
-static mrb_value vector3_x_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_x_getter(mrb_state *mrb, mrb_value self)
+{
   moon_vec3* vec3;
   Data_Get_Struct(mrb, self, &vector3_data_type, vec3);
 
   return mrb_float_value(mrb, (*vec3)->x);
-};
+}
 
-static mrb_value vector3_y_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_y_getter(mrb_state *mrb, mrb_value self)
+{
   moon_vec3* vec3;
   Data_Get_Struct(mrb, self, &vector3_data_type, vec3);
 
   return mrb_float_value(mrb, (*vec3)->y);
-};
+}
 
-static mrb_value vector3_z_getter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_z_getter(mrb_state *mrb, mrb_value self)
+{
   moon_vec3* vec3;
   Data_Get_Struct(mrb, self, &vector3_data_type, vec3);
 
   return mrb_float_value(mrb, (*vec3)->z);
-};
+}
 
-static mrb_value vector3_x_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_x_setter(mrb_state *mrb, mrb_value self)
+{
   moon_vec3* vec3;
   Data_Get_Struct(mrb, self, &vector3_data_type, vec3);
 
@@ -217,9 +241,11 @@ static mrb_value vector3_x_setter(mrb_state *mrb, mrb_value self) {
   (*vec3)->x = x;
 
   return mrb_nil_value();
-};
+}
 
-static mrb_value vector3_y_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_y_setter(mrb_state *mrb, mrb_value self)
+{
   moon_vec3* vec3;
   Data_Get_Struct(mrb, self, &vector3_data_type, vec3);
 
@@ -229,9 +255,11 @@ static mrb_value vector3_y_setter(mrb_state *mrb, mrb_value self) {
   (*vec3)->y = y;
 
   return mrb_nil_value();
-};
+}
 
-static mrb_value vector3_z_setter(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_z_setter(mrb_state *mrb, mrb_value self)
+{
   moon_vec3* vec3;
   Data_Get_Struct(mrb, self, &vector3_data_type, vec3);
 
@@ -241,9 +269,11 @@ static mrb_value vector3_z_setter(mrb_state *mrb, mrb_value self) {
   (*vec3)->z = z;
 
   return mrb_nil_value();
-};
+}
 
-static mrb_value vector3_negate(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_negate(mrb_state *mrb, mrb_value self)
+{
   moon_vec3* dvec3;
   moon_vec3* svec3;
 
@@ -258,46 +288,62 @@ static mrb_value vector3_negate(mrb_state *mrb, mrb_value self) {
   return dest_vec;
 }
 
-static mrb_value vector3_identity(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_identity(mrb_state *mrb, mrb_value self)
+{
   return mrb_obj_dup(mrb, self);
 }
 
-static mrb_value vector3_add(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_add(mrb_state *mrb, mrb_value self)
+{
   vec3_math_op(+)
-};
+}
 
-static mrb_value vector3_sub(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_sub(mrb_state *mrb, mrb_value self)
+{
   vec3_math_op(-)
-};
+}
 
-static mrb_value vector3_mul(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_mul(mrb_state *mrb, mrb_value self)
+{
   vec3_math_op(*)
-};
+}
 
-static mrb_value vector3_div(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_div(mrb_state *mrb, mrb_value self)
+{
   vec3_math_op(/)
-};
+}
 
 //static mrb_value //vector3_mod(mrb_state *mrb, mrb_value self) {
 //  vec3_math_op(%)
 //};
 
-static mrb_value vector3_dot(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_dot(mrb_state *mrb, mrb_value self)
+{
   vec3_math_head({
     return mrb_float_value(mrb, glm::dot(**src_vec3, oth_vec3));
   })
-};
+}
 
-static mrb_value vector3_cross(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_cross(mrb_state *mrb, mrb_value self)
+{
   vec3_math_head({
     //mrb_value dest_vec = mrb_obj_new(mrb, vector3_class, 0, {});
     mrb_value dest_vec = mrb_obj_dup(mrb, self);
     **((moon_vec3*)DATA_PTR(dest_vec)) = glm::cross(**src_vec3, oth_vec3);
     return dest_vec;
   })
-};
+}
 
-static mrb_value vector3_set(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_set(mrb_state *mrb, mrb_value self)
+{
   glm::vec3 v3a = mmrb_vector3_extract_mrb_args(mrb);
 
   moon_vec3* mvec3;
@@ -306,18 +352,22 @@ static mrb_value vector3_set(mrb_state *mrb, mrb_value self) {
   **mvec3 = v3a;
 
   return self;
-};
+}
 
-static mrb_value vector3_to_a(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_to_a(mrb_state *mrb, mrb_value self)
+{
   moon_vec3* mvec3;
   Data_Get_Struct(mrb, self, &vector3_data_type, mvec3);
   mrb_value argv[3] = { mrb_float_value(mrb, (*mvec3)->x),
                         mrb_float_value(mrb, (*mvec3)->y),
                         mrb_float_value(mrb, (*mvec3)->z) };
   return mrb_ary_new_from_values(mrb, 3, argv);
-};
+}
 
-static mrb_value vector3_s_extract(mrb_state *mrb, mrb_value self) {
+static mrb_value
+vector3_s_extract(mrb_state *mrb, mrb_value self)
+{
   glm::vec3 v3a = mmrb_vector3_extract_mrb_args(mrb);
 
   mrb_value argv[3] = { mrb_float_value(mrb, v3a.x),
@@ -326,7 +376,9 @@ static mrb_value vector3_s_extract(mrb_state *mrb, mrb_value self) {
   return mrb_ary_new_from_values(mrb, 3, argv);
 }
 
-static mrb_value vector3_s_cast(mrb_state *mrb, mrb_value klass) {
+static mrb_value
+vector3_s_cast(mrb_state *mrb, mrb_value klass)
+{
   glm::vec3 v3a = mmrb_vector3_extract_mrb_args(mrb);
 
   mrb_value dest_vec = mrb_obj_new(mrb, vector3_class, 0, {});
@@ -340,7 +392,8 @@ static mrb_value vector3_s_cast(mrb_state *mrb, mrb_value klass) {
 }
 
 struct RClass*
-mmrb_vector3_init(mrb_state *mrb) {
+mmrb_vector3_init(mrb_state *mrb)
+{
   vector3_class = mrb_define_class_under(mrb, mmrb_Moon, "Vector3", mrb->object_class);
   MRB_SET_INSTANCE_TT(vector3_class, MRB_TT_DATA);
 
@@ -383,20 +436,26 @@ mmrb_vector3_init(mrb_state *mrb) {
   mrb_alias_method(mrb, vector3_class, mrb_intern_cstr(mrb, "g="), mrb_intern_cstr(mrb, "y="));
   mrb_alias_method(mrb, vector3_class, mrb_intern_cstr(mrb, "b="), mrb_intern_cstr(mrb, "z="));
   return vector3_class;
-};
+}
 
-mrb_value mmrb_vector3_wrap(mrb_state *mrb, glm::vec3 *ptr) {
+mrb_value
+mmrb_vector3_wrap(mrb_state *mrb, glm::vec3 *ptr)
+{
   moon_vec3 *vec3_ptr = new moon_vec3(ptr);
   mrb_value rvec3 = mrb_obj_value(Data_Wrap_Struct(mrb, vector3_class, &vector3_data_type, vec3_ptr));
   return rvec3;
 }
 
-mrb_value mmrb_vector3_wrap(mrb_state *mrb, moon_vec3 moonv) {
+mrb_value
+mmrb_vector3_wrap(mrb_state *mrb, moon_vec3 moonv)
+{
   moon_vec3 *vec3_ptr = new moon_vec3(moonv);
   mrb_value rvec3 = mrb_obj_value(Data_Wrap_Struct(mrb, vector3_class, &vector3_data_type, vec3_ptr));
   return rvec3;
 }
 
-mrb_value mmrb_vector3_create(mrb_state *mrb, double x, double y, double z) {
+mrb_value
+mmrb_vector3_create(mrb_state *mrb, double x, double y, double z)
+{
   return mmrb_vector3_wrap(mrb, new glm::vec3(x, y, z));
 }

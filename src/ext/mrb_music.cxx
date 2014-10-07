@@ -4,16 +4,23 @@
 using Moon::Audio;
 using Moon::Music;
 
-static void music_deallocate(mrb_state *mrb, void *p) {
-  ga_handle_destroy(((Music*)p)->handle);
-  delete((Music*)p);
-};
+static void
+music_free(mrb_state *mrb, void *p)
+{
+  Music* music = (Music*)p;
+  if (music) {
+    if (music->handle) {
+      ga_handle_destroy(music->handle);
+    }
+    delete(music);
+  }
+}
 
-struct mrb_data_type music_data_type = {
-  "Music", music_deallocate,
-};
+struct mrb_data_type music_data_type = { "Music", music_free };
 
-static mrb_value music_initialize(mrb_state *mrb, mrb_value self) {
+static mrb_value
+music_initialize(mrb_state *mrb, mrb_value self)
+{
   char* filename;
   char* format;
 
@@ -31,10 +38,12 @@ static mrb_value music_initialize(mrb_state *mrb, mrb_value self) {
   DATA_TYPE(self) = &music_data_type;
   DATA_PTR(self) = music;
 
-  return mrb_nil_value();
+  return self;
 }
 
-static mrb_value music_play(mrb_state *mrb, mrb_value self) {
+static mrb_value
+music_play(mrb_state *mrb, mrb_value self)
+{
   mrb_float gain = 1.0;
   mrb_float pitch = 1.0;
   mrb_float pan = 0.0;
@@ -51,7 +60,9 @@ static mrb_value music_play(mrb_state *mrb, mrb_value self) {
   return mrb_nil_value();
 };
 
-static mrb_value music_stop(mrb_state *mrb, mrb_value self) {
+static mrb_value
+music_stop(mrb_state *mrb, mrb_value self)
+{
   Music *music;
   Data_Get_Struct(mrb, self, &music_data_type, music);
 
@@ -60,25 +71,33 @@ static mrb_value music_stop(mrb_state *mrb, mrb_value self) {
   return mrb_nil_value();
 };
 
-static mrb_value music_is_playing(mrb_state *mrb, mrb_value self) {
+static mrb_value
+music_is_playing(mrb_state *mrb, mrb_value self)
+{
   Music *music;
   Data_Get_Struct(mrb, self, &music_data_type, music);
   return mrb_bool_value(ga_handle_playing(music->handle));
 }
 
-static mrb_value music_is_stopped(mrb_state *mrb, mrb_value self) {
+static mrb_value
+music_is_stopped(mrb_state *mrb, mrb_value self)
+{
   Music *music;
   Data_Get_Struct(mrb, self, &music_data_type, music);
   return mrb_bool_value(ga_handle_stopped(music->handle));
 }
 
-static mrb_value music_is_finished(mrb_state *mrb, mrb_value self) {
+static mrb_value
+music_is_finished(mrb_state *mrb, mrb_value self)
+{
   Music *music;
   Data_Get_Struct(mrb, self, &music_data_type, music);
   return mrb_bool_value(ga_handle_finished(music->handle));
 }
 
-static mrb_value music_seek(mrb_state *mrb, mrb_value self) {
+static mrb_value
+music_seek(mrb_state *mrb, mrb_value self)
+{
   mrb_int offset;
   mrb_get_args(mrb, "i", &offset);
 
@@ -87,19 +106,25 @@ static mrb_value music_seek(mrb_state *mrb, mrb_value self) {
   return mrb_bool_value(ga_handle_seek(music->handle, offset));
 }
 
-static mrb_value music_pos(mrb_state *mrb, mrb_value self) {
+static mrb_value
+music_pos(mrb_state *mrb, mrb_value self)
+{
   Music *music;
   Data_Get_Struct(mrb, self, &music_data_type, music);
   return mrb_fixnum_value(ga_handle_tell(music->handle, GA_TELL_PARAM_CURRENT));
 }
 
-static mrb_value music_length(mrb_state *mrb, mrb_value self) {
+static mrb_value
+music_length(mrb_state *mrb, mrb_value self)
+{
   Music *music;
   Data_Get_Struct(mrb, self, &music_data_type, music);
   return mrb_fixnum_value(ga_handle_tell(music->handle, GA_TELL_PARAM_TOTAL));
 }
 
-static mrb_value music_loop(mrb_state *mrb, mrb_value self) {
+static mrb_value
+music_loop(mrb_state *mrb, mrb_value self)
+{
   mrb_int trigger = -1;
   mrb_int target = 0;
   mrb_get_args(mrb, "|ii", &trigger, &target);
@@ -110,14 +135,18 @@ static mrb_value music_loop(mrb_state *mrb, mrb_value self) {
   return mrb_nil_value();
 }
 
-static mrb_value music_clear_loop(mrb_state *mrb, mrb_value self) {
+static mrb_value
+music_clear_loop(mrb_state *mrb, mrb_value self)
+{
   Music *music;
   Data_Get_Struct(mrb, self, &music_data_type, music);
   gau_sample_source_loop_clear(music->loopSrc);
   return mrb_bool_value(true);
 }
 
-struct RClass* mmrb_music_init(mrb_state *mrb) {
+struct RClass*
+mmrb_music_init(mrb_state *mrb)
+{
   struct RClass *music_class;
   music_class = mrb_define_class_under(mrb, mmrb_Moon, "Music", mrb->object_class);
   MRB_SET_INSTANCE_TT(music_class, MRB_TT_DATA);
