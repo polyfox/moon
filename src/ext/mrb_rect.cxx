@@ -21,9 +21,15 @@ static mrb_value
 rect_initialize(mrb_state *mrb, mrb_value self)
 {
   mrb_int x, y, w, h;
+  moon_rect *rect;
   mrb_get_args(mrb, "iiii", &x, &y, &w, &h);
 
-  auto rect = new moon_rect(new Rect(x, y, w, h));
+  rect = (moon_rect*)DATA_PTR(self);
+  if (rect) {
+    rect_free(mrb, (void*)rect);
+  }
+
+  rect = new moon_rect(new Rect(x, y, w, h));
 
   DATA_TYPE(self) = &rect_data_type;
   DATA_PTR(self) = rect;

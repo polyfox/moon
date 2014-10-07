@@ -29,9 +29,14 @@ static mrb_value
 sprite_initialize(mrb_state *mrb, mrb_value self)
 {
   mrb_value obj, texture, color, tone, clip;
+  Sprite *sprite;
   mrb_get_args(mrb, "o", &obj);
 
-  Sprite *sprite = new Sprite();
+  sprite = (Sprite*)DATA_PTR(self);
+  if (sprite) {
+    sprite_free(mrb, (void*)sprite);
+  }
+  sprite = new Sprite();
 
   switch (mrb_type(obj)) {
     case MRB_TT_STRING: {

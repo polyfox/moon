@@ -15,7 +15,13 @@ struct mrb_data_type context_data_type = { "Context", context_free };
 static mrb_value
 context_initialize(mrb_state *mrb, mrb_value self)
 {
-  auto cxt = mrbc_context_new(mrb);
+  mrbc_context *cxt;
+
+  cxt = (mrbc_context*)DATA_PTR(self);
+  if (cxt) {
+    context_free(mrb, (void*)cxt);
+  }
+  cxt = mrbc_context_new(mrb);
 
   DATA_TYPE(self) = &context_data_type;
   DATA_PTR(self) = cxt;

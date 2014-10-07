@@ -3,7 +3,8 @@
 
 using Moon::Audio;
 
-static void sound_free(mrb_state *mrb, void *p)
+static void
+sound_free(mrb_state *mrb, void *p)
 {
   ga_Sound *sound = (ga_Sound*)p;
   if (sound) {
@@ -18,9 +19,15 @@ sound_initialize(mrb_state *mrb, mrb_value self)
 {
   char* filename;
   char* format;
+  ga_Sound *sound;
 
   mrb_get_args(mrb, "zz", &filename, &format);
-  ga_Sound *sound;
+
+  sound = (ga_Sound*)DATA_PTR(self);
+  if (sound) {
+    sound_free(mrb, (void*)sound);
+  }
+  DATA_PTR(self) = NULL;
 
   if (exists(filename)) {
     sound = gau_load_sound_file(filename, format);

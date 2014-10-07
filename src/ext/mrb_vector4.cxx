@@ -180,7 +180,13 @@ vector4_initialize(mrb_state *mrb, mrb_value self)
   mrb_float y = 0.0;
   mrb_float z = 0.0;
   mrb_float w = 0.0;
+  moon_vec4 *vec4;
   mrb_get_args(mrb, "|ffff", &x, &y, &z, &w);
+
+  vec4 = (moon_vec4*)DATA_PTR(self);
+  if (vec4) {
+    vector4_free(mrb, (void*)vec4);
+  }
 
   mrb_set_vector4_value_xyz(mrb, self, x, y, z, w)
 

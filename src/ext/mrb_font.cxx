@@ -29,9 +29,15 @@ font_initialize(mrb_state *mrb, mrb_value self)
 {
   char* filename;
   mrb_int font_size;
+  Font *font;
   mrb_get_args(mrb, "zi", &filename, &font_size);
 
-  Font *font = new Font(filename, font_size);
+  font = (Font*)DATA_PTR(self);
+  if (font) {
+    font_free(mrb, (void*)font);
+  }
+
+  font = new Font(filename, font_size);
 
   DATA_TYPE(self) = &font_data_type;
   DATA_PTR(self) = font;

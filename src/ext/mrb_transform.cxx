@@ -69,7 +69,12 @@ transform_initialize(mrb_state *mrb, mrb_value self)
   int argc;
   mrb_get_args(mrb, "*", &args, &argc);
 
-  moon_mat4 *mat = NULL;
+  moon_mat4 *mat;
+
+  mat = (moon_mat4*)DATA_PTR(self);
+  if (mat) {
+    transform_free(mrb, (void*)mat);
+  }
 
   if (argc == 0){
     mat = new moon_mat4(new glm::mat4());

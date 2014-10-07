@@ -136,7 +136,13 @@ vector2_initialize(mrb_state *mrb, mrb_value self)
 {
   mrb_float x = 0.0;
   mrb_float y = 0.0;
+  moon_vec2 *vec2;
   mrb_get_args(mrb, "|ff", &x, &y);
+
+  vec2 = (moon_vec2*)DATA_PTR(self);
+  if (vec2) {
+    vector2_free(mrb, (void*)vec2);
+  }
 
   mrb_set_vector2_value_xy(mrb, self, x, y);
 

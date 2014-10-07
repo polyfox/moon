@@ -168,7 +168,13 @@ vector3_initialize(mrb_state *mrb, mrb_value self)
   mrb_float x = 0.0;
   mrb_float y = 0.0;
   mrb_float z = 0.0;
+  moon_vec3 *vec3;
   mrb_get_args(mrb, "|fff", &x, &y, &z);
+
+  vec3 = (moon_vec3*)DATA_PTR(self);
+  if (vec3) {
+    vector3_free(mrb, (void*)vec3);
+  }
 
   mrb_set_vector3_value_xyz(mrb, self, x, y, z);
 

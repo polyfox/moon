@@ -23,9 +23,15 @@ music_initialize(mrb_state *mrb, mrb_value self)
 {
   char* filename;
   char* format;
+  Music *music;
 
   mrb_get_args(mrb, "zz", &filename, &format);
-  Music *music = new Music();
+
+  music = (Music*)DATA_PTR(self);
+  if (music) {
+    music_free(mrb, (void*)music);
+  }
+  music = new Music();
 
   if (exists(filename)) {
     music->handle = gau_create_handle_buffered_file(Audio::get_mixer(), Audio::get_stream_mgr(),

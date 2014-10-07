@@ -19,10 +19,23 @@ static mrb_value
 texture_initialize(mrb_state *mrb, mrb_value self)
 {
   char* filename;
+  moon_texture *texture;
   mrb_get_args(mrb, "z", &filename);
 
-  // ugly hack to make a pointer to shared_ptr
-  auto texture = new moon_texture(Texture::load(filename));
+  texture = (moon_texture*)DATA_PTR(self);
+  if (texture) {
+    texture_free(mrb, (void*)texture);
+    texture = NULL;
+  }
+  DATA_PTR(self) = NULL;
+
+  if (exists(filename)) {
+    texture = new moon_texture(Texture::load(filename));
+  } else {
+    mrb_raisef(mrb, E_SCRIPT_ERROR,
+               "cannot load such file -- %S",
+               mrb_str_new_cstr(mrb, filename));
+  }
 
   DATA_TYPE(self) = &texture_data_type;
   DATA_PTR(self) = texture;

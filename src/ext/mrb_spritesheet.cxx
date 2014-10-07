@@ -40,9 +40,14 @@ spritesheet_initialize(mrb_state *mrb, mrb_value self)
 {
   mrb_value obj;
   mrb_int tile_width, tile_height;
+  Spritesheet *spritesheet;
   mrb_get_args(mrb, "oii", &obj, &tile_width, &tile_height);
 
-  Spritesheet *spritesheet = new Spritesheet();
+  spritesheet = (Spritesheet*)DATA_PTR(self);
+  if (spritesheet) {
+    spritesheet_free(mrb, (void*)spritesheet);
+  }
+  spritesheet = new Spritesheet();
 
   switch (mrb_type(obj)) {
     case MRB_TT_STRING: {
