@@ -31,8 +31,7 @@ rect_initialize(mrb_state *mrb, mrb_value self)
 
   rect = new moon_rect(new Rect(x, y, w, h));
 
-  DATA_TYPE(self) = &rect_data_type;
-  DATA_PTR(self) = rect;
+  mrb_data_init(self, rect, &rect_data_type);
 
   return self;
 }
@@ -41,11 +40,11 @@ static mrb_value
 rect_initialize_copy(mrb_state *mrb, mrb_value self)
 {
   mrb_value other;
-  moon_rect* src_rect;
+  moon_rect *src_rect;
 
   mrb_get_args(mrb, "o", &other);
 
-  Data_Get_Struct(mrb, other, &rect_data_type, src_rect);
+  src_rect = (moon_rect*)mrb_data_get_ptr(mrb, other, &rect_data_type);
 
   auto rect = new moon_rect(new Rect((*src_rect)->x, (*src_rect)->y, (*src_rect)->w, (*src_rect)->h));
   DATA_TYPE(self) = &rect_data_type;
@@ -61,7 +60,7 @@ rect_x_setter(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "i", &x);
 
   moon_rect* rect;
-  Data_Get_Struct(mrb, self, &rect_data_type, rect);
+  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
 
   (*rect)->x = x;
 
@@ -72,7 +71,7 @@ static mrb_value
 rect_x_getter(mrb_state *mrb, mrb_value self)
 {
   moon_rect* rect;
-  Data_Get_Struct(mrb, self, &rect_data_type, rect);
+  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
 
   //return mrb_fixnum_value((int)(*rect)->x);
   return mrb_float_value(mrb, (*rect)->x);
@@ -85,7 +84,7 @@ rect_y_setter(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "i", &y);
 
   moon_rect* rect;
-  Data_Get_Struct(mrb, self, &rect_data_type, rect);
+  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
 
   (*rect)->y = y;
 
@@ -96,7 +95,7 @@ static mrb_value
 rect_y_getter(mrb_state *mrb, mrb_value self)
 {
   moon_rect* rect;
-  Data_Get_Struct(mrb, self, &rect_data_type, rect);
+  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
 
   return mrb_float_value(mrb, (*rect)->y);
 }
@@ -108,7 +107,7 @@ rect_width_setter(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "i", &width);
 
   moon_rect* rect;
-  Data_Get_Struct(mrb, self, &rect_data_type, rect);
+  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
 
   (*rect)->w = width;
 
@@ -119,7 +118,7 @@ static mrb_value
 rect_width_getter(mrb_state *mrb, mrb_value self)
 {
   moon_rect* rect;
-  Data_Get_Struct(mrb, self, &rect_data_type, rect);
+  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
 
   return mrb_float_value(mrb, (*rect)->w);
 }
@@ -131,7 +130,7 @@ rect_height_setter(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "i", &height);
 
   moon_rect* rect;
-  Data_Get_Struct(mrb, self, &rect_data_type, rect);
+  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
 
   (*rect)->h = height;
 
@@ -142,7 +141,7 @@ static mrb_value
 rect_height_getter(mrb_state *mrb, mrb_value self)
 {
   moon_rect* rect;
-  Data_Get_Struct(mrb, self, &rect_data_type, rect);
+  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
 
   return mrb_float_value(mrb, (*rect)->h);
 }

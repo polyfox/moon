@@ -35,8 +35,7 @@ sound_initialize(mrb_state *mrb, mrb_value self)
     mrb_raisef(mrb, E_SCRIPT_ERROR, "cannot load such file -- %S", mrb_str_new_cstr(mrb, filename));
   }
 
-  DATA_TYPE(self) = &sound_data_type;
-  DATA_PTR(self) = sound;
+  mrb_data_init(self, sound, &sound_data_type);
 
   return self;
 }
@@ -47,12 +46,12 @@ sound_play(mrb_state *mrb, mrb_value self)
   mrb_float gain = 1.0;
   mrb_float pitch = 1.0;
   mrb_float pan = 0.0;
+  ga_Sound *sound;
+  ga_Handle* handle;
   mrb_get_args(mrb, "|fff", &gain, &pitch, &pan);
 
-  ga_Sound *sound;
-  Data_Get_Struct(mrb, self, &sound_data_type, sound);
+  sound = (ga_Sound*)mrb_data_get_ptr(mrb, self, &sound_data_type);
 
-  ga_Handle* handle;
   handle = gau_create_handle_sound(Audio::get_mixer(), sound, &gau_on_finish_destroy, 0, 0);
   ga_handle_setParamf(handle, GA_HANDLE_PARAM_GAIN, gain);
   ga_handle_setParamf(handle, GA_HANDLE_PARAM_PITCH, pitch);

@@ -23,8 +23,7 @@ context_initialize(mrb_state *mrb, mrb_value self)
   }
   cxt = mrbc_context_new(mrb);
 
-  DATA_TYPE(self) = &context_data_type;
-  DATA_PTR(self) = cxt;
+  mrb_data_init(self, cxt, &context_data_type);
 
   return self;
 }
@@ -35,8 +34,8 @@ context_eval(mrb_state *mrb, mrb_value self)
   char* str;
   mrb_get_args(mrb, "z", &str);
 
-  mrbc_context* cxt;
-  Data_Get_Struct(mrb, self, &context_data_type, cxt);
+  mrbc_context *cxt;
+  cxt = (mrbc_context*)mrb_data_get_ptr(mrb, self, &context_data_type);
 
   auto v = mrb_load_string_cxt(mrb, str, cxt);
 
@@ -47,13 +46,14 @@ context_eval(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-context_symbols(mrb_state * mrb, mrb_value self)
+context_symbols(mrb_state *mrb, mrb_value self)
 {
-  mrbc_context * cxt;
-  Data_Get_Struct(mrb, self, &context_data_type, cxt);
+  mrbc_context *cxt;
+  mrb_value ary;
+  cxt = (mrbc_context*)mrb_data_get_ptr(mrb, self, &context_data_type);
 
-  mrb_value ary = mrb_ary_new_capa(mrb, cxt->slen);
-  for (int i=0; i < cxt->slen; i++) {
+  ary = mrb_ary_new_capa(mrb, cxt->slen);
+  for (int i = 0; i < cxt->slen; ++i) {
     mrb_ary_push(mrb, ary, mrb_symbol_value(cxt->syms[i]));
   }
   return ary;

@@ -41,8 +41,7 @@ music_initialize(mrb_state *mrb, mrb_value self)
     mrb_raisef(mrb, E_SCRIPT_ERROR, "cannot load such file -- %S", mrb_str_new_cstr(mrb, filename));
   }
 
-  DATA_TYPE(self) = &music_data_type;
-  DATA_PTR(self) = music;
+  mrb_data_init(self, music, &music_data_type);
 
   return self;
 }
@@ -56,7 +55,7 @@ music_play(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "|fff", &gain, &pitch, &pan);
 
   Music *music;
-  Data_Get_Struct(mrb, self, &music_data_type, music);
+  music = (Music*)mrb_data_get_ptr(mrb, self, &music_data_type);
 
   ga_handle_setParamf(music->handle, GA_HANDLE_PARAM_GAIN, gain);
   ga_handle_setParamf(music->handle, GA_HANDLE_PARAM_PITCH, pitch);
@@ -70,7 +69,7 @@ static mrb_value
 music_stop(mrb_state *mrb, mrb_value self)
 {
   Music *music;
-  Data_Get_Struct(mrb, self, &music_data_type, music);
+  music = (Music*)mrb_data_get_ptr(mrb, self, &music_data_type);
 
   ga_handle_stop(music->handle);
 
@@ -81,7 +80,7 @@ static mrb_value
 music_is_playing(mrb_state *mrb, mrb_value self)
 {
   Music *music;
-  Data_Get_Struct(mrb, self, &music_data_type, music);
+  music = (Music*)mrb_data_get_ptr(mrb, self, &music_data_type);
   return mrb_bool_value(ga_handle_playing(music->handle));
 }
 
@@ -89,7 +88,7 @@ static mrb_value
 music_is_stopped(mrb_state *mrb, mrb_value self)
 {
   Music *music;
-  Data_Get_Struct(mrb, self, &music_data_type, music);
+  music = (Music*)mrb_data_get_ptr(mrb, self, &music_data_type);
   return mrb_bool_value(ga_handle_stopped(music->handle));
 }
 
@@ -97,7 +96,7 @@ static mrb_value
 music_is_finished(mrb_state *mrb, mrb_value self)
 {
   Music *music;
-  Data_Get_Struct(mrb, self, &music_data_type, music);
+  music = (Music*)mrb_data_get_ptr(mrb, self, &music_data_type);
   return mrb_bool_value(ga_handle_finished(music->handle));
 }
 
@@ -105,10 +104,10 @@ static mrb_value
 music_seek(mrb_state *mrb, mrb_value self)
 {
   mrb_int offset;
+  Music *music;
   mrb_get_args(mrb, "i", &offset);
 
-  Music *music;
-  Data_Get_Struct(mrb, self, &music_data_type, music);
+  music = (Music*)mrb_data_get_ptr(mrb, self, &music_data_type);
   return mrb_bool_value(ga_handle_seek(music->handle, offset));
 }
 
@@ -116,7 +115,7 @@ static mrb_value
 music_pos(mrb_state *mrb, mrb_value self)
 {
   Music *music;
-  Data_Get_Struct(mrb, self, &music_data_type, music);
+  music = (Music*)mrb_data_get_ptr(mrb, self, &music_data_type);
   return mrb_fixnum_value(ga_handle_tell(music->handle, GA_TELL_PARAM_CURRENT));
 }
 
@@ -124,7 +123,7 @@ static mrb_value
 music_length(mrb_state *mrb, mrb_value self)
 {
   Music *music;
-  Data_Get_Struct(mrb, self, &music_data_type, music);
+  music = (Music*)mrb_data_get_ptr(mrb, self, &music_data_type);
   return mrb_fixnum_value(ga_handle_tell(music->handle, GA_TELL_PARAM_TOTAL));
 }
 
@@ -133,10 +132,10 @@ music_loop(mrb_state *mrb, mrb_value self)
 {
   mrb_int trigger = -1;
   mrb_int target = 0;
+  Music *music;
   mrb_get_args(mrb, "|ii", &trigger, &target);
 
-  Music *music;
-  Data_Get_Struct(mrb, self, &music_data_type, music);
+  music = (Music*)mrb_data_get_ptr(mrb, self, &music_data_type);
   gau_sample_source_loop_set(music->loopSrc, trigger, target);
   return mrb_nil_value();
 }
@@ -145,7 +144,7 @@ static mrb_value
 music_clear_loop(mrb_state *mrb, mrb_value self)
 {
   Music *music;
-  Data_Get_Struct(mrb, self, &music_data_type, music);
+  music = (Music*)mrb_data_get_ptr(mrb, self, &music_data_type);
   gau_sample_source_loop_clear(music->loopSrc);
   return mrb_bool_value(true);
 }

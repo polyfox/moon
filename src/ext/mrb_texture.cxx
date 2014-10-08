@@ -37,8 +37,7 @@ texture_initialize(mrb_state *mrb, mrb_value self)
                mrb_str_new_cstr(mrb, filename));
   }
 
-  DATA_TYPE(self) = &texture_data_type;
-  DATA_PTR(self) = texture;
+  mrb_data_init(self, texture, &texture_data_type);
 
   return self;
 }
@@ -46,8 +45,8 @@ texture_initialize(mrb_state *mrb, mrb_value self)
 static mrb_value
 texture_width(mrb_state *mrb, mrb_value self)
 {
-  moon_texture* texture;
-  Data_Get_Struct(mrb, self, &texture_data_type, texture);
+  moon_texture *texture;
+  texture = (moon_texture*)mrb_data_get_ptr(mrb, self, &texture_data_type);
 
   return mrb_float_value(mrb, (*texture)->width());
 }
@@ -55,8 +54,8 @@ texture_width(mrb_state *mrb, mrb_value self)
 static mrb_value
 texture_height(mrb_state *mrb, mrb_value self)
 {
-  moon_texture* texture;
-  Data_Get_Struct(mrb, self, &texture_data_type, texture);
+  moon_texture *texture;
+  texture = (moon_texture*)mrb_data_get_ptr(mrb, self, &texture_data_type);
 
   return mrb_float_value(mrb, (*texture)->height());
 }

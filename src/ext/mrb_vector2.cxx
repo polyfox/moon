@@ -10,13 +10,12 @@ static struct RClass *vector2_class = NULL;
 #define mrb_set_vector2_value_xy(mrb, target, x, y)          \
   {                                                          \
     moon_vec2 *vector2 = new moon_vec2(new glm::vec2(x, y)); \
-    DATA_TYPE(target) = &vector2_data_type;                  \
-    DATA_PTR(target) = vector2;                              \
+    mrb_data_init(self, vector2, &vector2_data_type);        \
   }
 
 #define vec2_math_head(_func_)                               \
   moon_vec2* src_vec2;                                       \
-  Data_Get_Struct(mrb, self, &vector2_data_type, src_vec2);  \
+  src_vec2 = (moon_vec2*)mrb_data_get_ptr(mrb, self, &vector2_data_type);  \
   glm::vec2 oth_vec2 = mmrb_vector2_extract_mrb_args(mrb);   \
   _func_
 
@@ -44,7 +43,7 @@ static glm::vec2
 mmrb_vector2_extract_mrb_vec2(mrb_state *mrb, mrb_value obj)
 {
   moon_vec2* _vec2;
-  Data_Get_Struct(mrb, obj, &vector2_data_type, _vec2);
+  _vec2 = (moon_vec2*)mrb_data_get_ptr(mrb, obj, &vector2_data_type);
   return **_vec2;
 }
 
@@ -157,7 +156,7 @@ vector2_initialize_copy(mrb_state *mrb, mrb_value self)
 
   mrb_get_args(mrb, "o", &other);
 
-  Data_Get_Struct(mrb, other, &vector2_data_type, src_vec2);
+  src_vec2 = (moon_vec2*)mrb_data_get_ptr(mrb, other, &vector2_data_type);
 
   mrb_set_vector2_value_xy(mrb, self, (*src_vec2)->x, (*src_vec2)->y);
 
@@ -177,7 +176,7 @@ static mrb_value
 vector2_x_getter(mrb_state *mrb, mrb_value self)
 {
   moon_vec2* vec2;
-  Data_Get_Struct(mrb, self, &vector2_data_type, vec2);
+  vec2 = (moon_vec2*)mrb_data_get_ptr(mrb, self, &vector2_data_type);
 
   return mrb_float_value(mrb, (*vec2)->x);
 }
@@ -186,7 +185,7 @@ static mrb_value
 vector2_y_getter(mrb_state *mrb, mrb_value self)
 {
   moon_vec2* vec2;
-  Data_Get_Struct(mrb, self, &vector2_data_type, vec2);
+  vec2 = (moon_vec2*)mrb_data_get_ptr(mrb, self, &vector2_data_type);
 
   return mrb_float_value(mrb, (*vec2)->y);
 }
@@ -195,7 +194,7 @@ static mrb_value
 vector2_x_setter(mrb_state *mrb, mrb_value self)
 {
   moon_vec2* vec2;
-  Data_Get_Struct(mrb, self, &vector2_data_type, vec2);
+  vec2 = (moon_vec2*)mrb_data_get_ptr(mrb, self, &vector2_data_type);
 
   mrb_float x;
   mrb_get_args(mrb, "f", &x);
@@ -209,7 +208,7 @@ static mrb_value
 vector2_y_setter(mrb_state *mrb, mrb_value self)
 {
   moon_vec2* vec2;
-  Data_Get_Struct(mrb, self, &vector2_data_type, vec2);
+  vec2 = (moon_vec2*)mrb_data_get_ptr(mrb, self, &vector2_data_type);
 
   mrb_float y;
   mrb_get_args(mrb, "f", &y);
@@ -228,8 +227,8 @@ vector2_negate(mrb_state *mrb, mrb_value self)
   //mrb_value dest_vec = mrb_obj_new(mrb, vector2_class, 0, {});
   mrb_value dest_vec = mrb_obj_dup(mrb, self);
 
-  Data_Get_Struct(mrb, dest_vec, &vector2_data_type, dvec2);
-  Data_Get_Struct(mrb, self, &vector2_data_type, svec2);
+  dvec2 = (moon_vec2*)mrb_data_get_ptr(mrb, dest_vec, &vector2_data_type);
+  svec2 = (moon_vec2*)mrb_data_get_ptr(mrb, self, &vector2_data_type);
 
   (**dvec2) = -(**svec2);
 
@@ -292,7 +291,7 @@ static mrb_value vector2_set(mrb_state *mrb, mrb_value self)
   glm::vec2 v2a = mmrb_vector2_extract_mrb_args(mrb);
 
   moon_vec2* mvec2;
-  Data_Get_Struct(mrb, self, &vector2_data_type, mvec2);
+  mvec2 = (moon_vec2*)mrb_data_get_ptr(mrb, self, &vector2_data_type);
 
   (*mvec2)->x = v2a.x;
   (*mvec2)->y = v2a.y;
@@ -304,7 +303,7 @@ static mrb_value
 vector2_to_a(mrb_state *mrb, mrb_value self)
 {
   moon_vec2* mvec2;
-  Data_Get_Struct(mrb, self, &vector2_data_type, mvec2);
+  mvec2 = (moon_vec2*)mrb_data_get_ptr(mrb, self, &vector2_data_type);
   mrb_value argv[2] = { mrb_float_value(mrb, (*mvec2)->x),
                         mrb_float_value(mrb, (*mvec2)->y) };
   return mrb_ary_new_from_values(mrb, 2, argv);
@@ -328,7 +327,7 @@ vector2_s_cast(mrb_state *mrb, mrb_value klass)
   mrb_value dest_vec = mrb_obj_new(mrb, vector2_class, 0, {});
 
   moon_vec2* _vec2;
-  Data_Get_Struct(mrb, dest_vec, &vector2_data_type, _vec2);
+  _vec2 = (moon_vec2*)mrb_data_get_ptr(mrb, dest_vec, &vector2_data_type);
 
   (*_vec2)->x = v2a.x;
   (*_vec2)->y = v2a.y;

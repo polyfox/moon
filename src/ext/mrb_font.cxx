@@ -39,8 +39,7 @@ font_initialize(mrb_state *mrb, mrb_value self)
 
   font = new Font(filename, font_size);
 
-  DATA_TYPE(self) = &font_data_type;
-  DATA_PTR(self) = font;
+  mrb_data_init(self, font, &font_data_type);
 
   return self;
 }
@@ -67,7 +66,7 @@ font_render(mrb_state *mrb, mrb_value self)
   wchar_t *text = char_to_utf8(str);
 
   Font *font;
-  Data_Get_Struct(mrb, self, &font_data_type, font);
+  font = (Font*)mrb_data_get_ptr(mrb, self, &font_data_type);
 
   if (!mrb_nil_p(options)) {
     font_render_options render_op;
@@ -81,32 +80,31 @@ font_render(mrb_state *mrb, mrb_value self)
 
       if (mrb_symbol_p(key)) {
         // :opacity
+        mrb_value val = mrb_hash_get(mrb, options, key);
         if (mrb_symbol(key) == id_outline) {
-          render_op.outline = mrb_to_flo(mrb, mrb_hash_get(mrb, options, key));
+          render_op.outline = mrb_to_flo(mrb, val);
 
         } else if (mrb_symbol(key) == id_outline_color) {
-          moon_vec4* color_ptr;
-          Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
-                               &vector4_data_type, color_ptr);
+          moon_vec4 *color_ptr;
+          color_ptr = (moon_vec4*)mrb_data_get_ptr(mrb, val, &vector4_data_type);
           render_op.outline_color = **color_ptr;
         } else if (mrb_symbol(key) == id_transform) {
-          moon_mat4* mat4_ptr;
-          Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
-                               &transform_data_type, mat4_ptr);
+          moon_mat4 *mat4_ptr;
+          mat4_ptr = (moon_mat4*)mrb_data_get_ptr(mrb, val, &transform_data_type);
           render_op.transform = **mat4_ptr;
         }
       }
     }
     if(!mrb_nil_p(color)) {
-      moon_vec4* text_color;
-      Data_Get_Struct(mrb, color, &vector4_data_type, text_color);
+      moon_vec4 *text_color;
+      text_color = (moon_vec4*)mrb_data_get_ptr(mrb, color, &vector4_data_type);
       render_op.color = **text_color;
     }
     font->draw_text(x, y, z, text, render_op);
   } else {
     if(!mrb_nil_p(color)) {
-      moon_vec4* text_color;
-      Data_Get_Struct(mrb, color, &vector4_data_type, text_color);
+      moon_vec4 *text_color;
+      text_color = (moon_vec4*)mrb_data_get_ptr(mrb, color, &vector4_data_type);
       //text_color needs to be dereferenced to shared_ptr first and then to value
       font->draw_text(x, y, z, text, **text_color);
     } else {
@@ -122,25 +120,24 @@ static mrb_value
 font_size(mrb_state *mrb, mrb_value self)
 {
   Font *font;
-  Data_Get_Struct(mrb, self, &font_data_type, font);
+  font = (Font*)mrb_data_get_ptr(mrb, self, &font_data_type);
   return mrb_fixnum_value(font->size());
 }
 
 static mrb_value
 font_calc_bounds(mrb_state *mrb, mrb_value self)
 {
-  char* str;
+  char *str;
   mrb_get_args(mrb, "z", &str);
 
   // convert to wide char (UTF-8)
   wchar_t *text = char_to_utf8(str);
 
-  Font* font;
-  Data_Get_Struct(mrb, self, &font_data_type, font);
+  Font *font;
+  font = (Font*)mrb_data_get_ptr(mrb, self, &font_data_type);
   glm::vec2 bounds = font->compute_string_bbox(text);
   delete[] text;
   mrb_value argv[2] = { mrb_fixnum_value(bounds.x), mrb_fixnum_value(bounds.y) };
-
 
   return mrb_ary_new_from_values(mrb, 2, argv);
 }

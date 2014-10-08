@@ -17,17 +17,17 @@
   mrb_get_args(mrb, "o", &rother);                                        \
   mrb_value rtarget = mrb_obj_dup(mrb, self);                             \
   moon_mat4 *target_mat4;                                                 \
-  Data_Get_Struct(mrb, rtarget, &transform_data_type, target_mat4);                 \
+  target_mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, rtarget, &transform_data_type);                 \
                                                                           \
   if (mrb_type(rother) == MRB_TT_DATA) {                                  \
     if (DATA_TYPE(rother) == &transform_data_type) { /* Transform */                \
       moon_mat4 *source_mat4;                                             \
-      Data_Get_Struct(mrb, rother, &transform_data_type, source_mat4);              \
+      source_mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, rother, &transform_data_type);              \
                                                                           \
       **target_mat4 __op__ ## = **source_mat4;                            \
     } else if (DATA_TYPE(rother) == &vector4_data_type) { /* Vector4 */   \
       moon_vec4 *source_vec4;                                             \
-      Data_Get_Struct(mrb, rother, &vector4_data_type, source_vec4);      \
+      source_vec4 = (moon_vec4*)mrb_data_get_ptr(mrb, rother, &vector4_data_type);      \
                                                                           \
       **target_mat4 __op__ ## = **source_vec4;                            \
     }                                                                     \
@@ -83,7 +83,7 @@ transform_initialize(mrb_state *mrb, mrb_value self)
     if (mrb_type(val) == MRB_TT_DATA) {
       if (DATA_TYPE(val) == &transform_data_type) { /* Transform */
         moon_mat4 *source_mat4;
-        Data_Get_Struct(mrb, val, &transform_data_type, source_mat4);
+        source_mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, val, &transform_data_type);
         mat = new moon_mat4(new glm::mat4(**source_mat4));
       } else {
         mrb_raisef(mrb, E_TYPE_ERROR,
@@ -130,8 +130,7 @@ transform_initialize(mrb_state *mrb, mrb_value self)
                argc);
   }
 
-  DATA_TYPE(self) = &transform_data_type;
-  DATA_PTR(self) = mat;
+  mrb_data_init(self, mat, &transform_data_type);
 
   return self;
 }
@@ -147,11 +146,10 @@ transform_initialize_copy(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "o", &other);
 
   moon_mat4 *source_mat;
-  Data_Get_Struct(mrb, other, &transform_data_type, source_mat);
+  source_mat = (moon_mat4*)mrb_data_get_ptr(mrb, other, &transform_data_type);
 
   auto mat = new moon_mat4(new glm::mat4(**source_mat));
-  DATA_TYPE(self) = &transform_data_type;
-  DATA_PTR(self) = mat;
+  mrb_data_init(self, mat, &transform_data_type);
 
   return self;
 }
@@ -182,7 +180,7 @@ transform_entry_get(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "*", &vals, &len);
 
   moon_mat4 *mat4;
-  Data_Get_Struct(mrb, self, &transform_data_type, mat4);
+  mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, self, &transform_data_type);
 
   if (len == 1) {
     mrb_int x;
@@ -198,7 +196,7 @@ transform_entry_get(mrb_state *mrb, mrb_value self)
     mrb_value rvec4 = mrb_obj_new(mrb, mmrb_Vector4, 0, {});
 
     moon_vec4 *vec4;
-    Data_Get_Struct(mrb, rvec4, &vector4_data_type, vec4);
+    vec4 = (moon_vec4*)mrb_data_get_ptr(mrb, rvec4, &vector4_data_type);
 
     **vec4 = (**mat4)[x];
 
@@ -239,7 +237,7 @@ transform_entry_set(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "*", &vals, &len);
 
   moon_mat4 *mat4;
-  Data_Get_Struct(mrb, self, &transform_data_type, mat4);
+  mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, self, &transform_data_type);
 
   if (len == 2) {
     mrb_int x;
@@ -254,7 +252,7 @@ transform_entry_set(mrb_state *mrb, mrb_value self)
     }
 
     moon_vec4 *vec4;
-    Data_Get_Struct(mrb, rvec4, &vector4_data_type, vec4);
+    vec4 = (moon_vec4*)mrb_data_get_ptr(mrb, rvec4, &vector4_data_type);
 
     (**mat4)[x] = **vec4;
   } else if (len == 3) {
@@ -291,10 +289,10 @@ transform_op_negate(mrb_state *mrb, mrb_value self)
   mrb_value dest_mat4 = mrb_obj_dup(mrb, self);
 
   moon_mat4* dmat4;
-  Data_Get_Struct(mrb, dest_mat4, &transform_data_type, dmat4);
+  dmat4 = (moon_mat4*)mrb_data_get_ptr(mrb, dest_mat4, &transform_data_type);
 
   moon_mat4* smat4;
-  Data_Get_Struct(mrb, self, &transform_data_type, smat4);
+  smat4 = (moon_mat4*)mrb_data_get_ptr(mrb, self, &transform_data_type);
 
   **dmat4 = -(**smat4);
 
@@ -367,7 +365,7 @@ transform_translate(mrb_state *mrb, mrb_value self)
 
   mrb_value rtarget = mrb_obj_dup(mrb, self);
   moon_mat4 *target_mat4;
-  Data_Get_Struct(mrb, rtarget, &transform_data_type, target_mat4);
+  target_mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, rtarget, &transform_data_type);
 
   if (len == 1) {
     glm::vec3 v3 = mmrb_obj_to_vec3(mrb, vals[0]);
@@ -398,7 +396,7 @@ transform_rotate(mrb_state *mrb, mrb_value self)
 
   mrb_value rtarget = mrb_obj_dup(mrb, self);
   moon_mat4 *target_mat4;
-  Data_Get_Struct(mrb, rtarget, &transform_data_type, target_mat4);
+  target_mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, rtarget, &transform_data_type);
 
   if (len == 2) {
     mrb_float angle = mrb_to_flo(mrb, vals[0]);
@@ -431,7 +429,7 @@ transform_scale(mrb_state *mrb, mrb_value self)
 
   mrb_value rtarget = mrb_obj_dup(mrb, self);
   moon_mat4 *target_mat4;
-  Data_Get_Struct(mrb, rtarget, &transform_data_type, target_mat4);
+  target_mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, rtarget, &transform_data_type);
 
   if (len == 1) {
     glm::vec3 v3 = mmrb_obj_to_vec3(mrb, vals[0]);
@@ -457,7 +455,7 @@ static mrb_value
 transform_to_a16(mrb_state *mrb, mrb_value self)
 {
   moon_mat4 *mat4;
-  Data_Get_Struct(mrb, self, &transform_data_type, mat4);
+  mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, self, &transform_data_type);
 
   glm::vec4 row1 = (**mat4)[0];
   glm::vec4 row2 = (**mat4)[1];
@@ -496,26 +494,26 @@ static mrb_value
 transform_to_a(mrb_state *mrb, mrb_value self)
 {
   moon_mat4 *mat4;
-  Data_Get_Struct(mrb, self, &transform_data_type, mat4);
+  mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, self, &transform_data_type);
 
   mrb_value rrow1 = mrb_obj_new(mrb, mmrb_Vector4, 0, {});
   moon_vec4 *row1;
-  Data_Get_Struct(mrb, rrow1, &vector4_data_type, row1);
+  row1 = (moon_vec4*)mrb_data_get_ptr(mrb, rrow1, &vector4_data_type);
   **row1 = (**mat4)[0];
 
   mrb_value rrow2 = mrb_obj_new(mrb, mmrb_Vector4, 0, {});
   moon_vec4 *row2;
-  Data_Get_Struct(mrb, rrow2, &vector4_data_type, row2);
+  row2 = (moon_vec4*)mrb_data_get_ptr(mrb, rrow2, &vector4_data_type);
   **row2 = (**mat4)[1];
 
   mrb_value rrow3 = mrb_obj_new(mrb, mmrb_Vector4, 0, {});
   moon_vec4 *row3;
-  Data_Get_Struct(mrb, rrow3, &vector4_data_type, row3);
+  row3 = (moon_vec4*)mrb_data_get_ptr(mrb, rrow3, &vector4_data_type);
   **row3 = (**mat4)[2];
 
   mrb_value rrow4 = mrb_obj_new(mrb, mmrb_Vector4, 0, {});
   moon_vec4 *row4;
-  Data_Get_Struct(mrb, rrow4, &vector4_data_type, row4);
+  row4 = (moon_vec4*)mrb_data_get_ptr(mrb, rrow4, &vector4_data_type);
   **row4 = (**mat4)[3];
 
   mrb_value argv[4] = { rrow1, rrow2, rrow3, rrow4 };

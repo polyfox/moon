@@ -11,7 +11,7 @@ screen_get_width(mrb_state *mrb, mrb_value self)
   Window *window;
 
   mrb_value window_val = mrb_mod_cv_get(mrb, mmrb_Moon, mrb_intern_cstr(mrb, "window"));
-  Data_Get_Struct(mrb, window_val, &window_data_type, window);
+  window = (Window*)mrb_data_get_ptr(mrb, window_val, &window_data_type);
   return mrb_fixnum_value(window->width());
 }
 
@@ -21,7 +21,7 @@ screen_get_height(mrb_state *mrb, mrb_value self)
   Window *window;
 
   mrb_value window_val = mrb_mod_cv_get(mrb, mmrb_Moon, mrb_intern_cstr(mrb, "window"));
-  Data_Get_Struct(mrb, window_val, &window_data_type, window);
+  window = (Window*)mrb_data_get_ptr(mrb, window_val, &window_data_type);
   return mrb_fixnum_value(window->height());
 }
 
@@ -34,7 +34,7 @@ screen_resize(mrb_state *mrb, mrb_value self)
   Window *window;
 
   mrb_value window_val = mrb_mod_cv_get(mrb, mmrb_Moon, mrb_intern_cstr(mrb, "window"));
-  Data_Get_Struct(mrb, window_val, &window_data_type, window);
+  window = (Window*)mrb_data_get_ptr(mrb, window_val, &window_data_type);
 
   window->resize(w, h);
 

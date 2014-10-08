@@ -64,7 +64,7 @@ spritesheet_initialize(mrb_state *mrb, mrb_value self)
     case MRB_TT_DATA: {
       if (DATA_TYPE(obj) == &texture_data_type) {
         moon_texture *texture;
-        Data_Get_Struct(mrb, obj, &texture_data_type, texture);
+        texture = (moon_texture*)mrb_data_get_ptr(mrb, obj, &texture_data_type);
         spritesheet->load_texture(moon_texture_p(texture), tile_width, tile_height);
       } else {
         mrb_raisef(mrb, E_TYPE_ERROR,
@@ -84,8 +84,7 @@ spritesheet_initialize(mrb_state *mrb, mrb_value self)
     return mrb_nil_value();
   }
 
-  DATA_TYPE(self) = &spritesheet_data_type;
-  DATA_PTR(self) = spritesheet;
+  mrb_data_init(self, spritesheet, &spritesheet_data_type);
 
   return self;
 }
@@ -103,7 +102,7 @@ spritesheet_render(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "fffi|H", &x, &y, &z, &index, &options);
 
   Spritesheet *spritesheet;
-  Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
+  spritesheet = (Spritesheet*)mrb_data_get_ptr(mrb, self, &spritesheet_data_type);
 
   ss_render_options render_op;
   render_op.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
@@ -122,41 +121,39 @@ spritesheet_render(mrb_state *mrb, mrb_value self)
       mrb_value key = keys_ary[i];
 
       if (mrb_symbol_p(key)) {
+        mrb_value val = mrb_hash_get(mrb, options, key);
         // :opacity
         if (mrb_symbol(key) == id_opacity) {
-          render_op.opacity = mrb_to_flo(mrb, mrb_hash_get(mrb, options, key));
+          render_op.opacity = mrb_to_flo(mrb, val);
 
         // :color
         } else if (mrb_symbol(key) == id_color) {
-          moon_vec4* color_ptr;
-          Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
-                               &vector4_data_type, color_ptr);
+          moon_vec4 *color_ptr;
+          color_ptr = (moon_vec4*)mrb_data_get_ptr(mrb, val, &vector4_data_type);
           render_op.color = **color_ptr;
 
         // :tone
         } else if (mrb_symbol(key) == id_tone) {
-          moon_vec4* color_ptr;
-          Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
-                               &vector4_data_type, color_ptr);
+          moon_vec4 *color_ptr;
+          color_ptr = (moon_vec4*)mrb_data_get_ptr(mrb, val, &vector4_data_type);
           render_op.tone = **color_ptr;
 
         // :ox
         } else if (mrb_symbol(key) == id_ox) {
-          render_op.ox = mrb_to_flo(mrb, mrb_hash_get(mrb, options, key));
+          render_op.ox = mrb_to_flo(mrb, val);
 
         // :oy
         } else if (mrb_symbol(key) == id_oy) {
-          render_op.oy = mrb_to_flo(mrb, mrb_hash_get(mrb, options, key));
+          render_op.oy = mrb_to_flo(mrb, val);
 
         // :angle
         } else if (mrb_symbol(key) == id_angle) {
-          render_op.angle = mrb_to_flo(mrb, mrb_hash_get(mrb, options, key));
+          render_op.angle = mrb_to_flo(mrb, val);
 
         // :transform
         } else if (mrb_symbol(key) == id_transform) {
-          moon_mat4* mat_ptr;
-          Data_Get_Struct(mrb, mrb_hash_get(mrb, options, key),
-                               &transform_data_type, mat_ptr);
+          moon_mat4 *mat_ptr;
+          mat_ptr = (moon_mat4*)mrb_data_get_ptr(mrb, val, &transform_data_type);
           render_op.transform = **mat_ptr;
         }
       }
@@ -174,7 +171,7 @@ static mrb_value
 spritesheet_cell_width(mrb_state *mrb, mrb_value self)
 {
   Spritesheet *spritesheet;
-  Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
+  spritesheet = (Spritesheet*)mrb_data_get_ptr(mrb, self, &spritesheet_data_type);
   return mrb_fixnum_value((int)spritesheet->tile_width);
 }
 
@@ -185,7 +182,7 @@ static mrb_value
 spritesheet_cell_height(mrb_state *mrb, mrb_value self)
 {
   Spritesheet *spritesheet;
-  Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
+  spritesheet = (Spritesheet*)mrb_data_get_ptr(mrb, self, &spritesheet_data_type);
   return mrb_fixnum_value((int)spritesheet->tile_height);
 }
 
@@ -196,7 +193,7 @@ static mrb_value
 spritesheet_cell_count(mrb_state *mrb, mrb_value self)
 {
   Spritesheet *spritesheet;
-  Data_Get_Struct(mrb, self, &spritesheet_data_type, spritesheet);
+  spritesheet = (Spritesheet*)mrb_data_get_ptr(mrb, self, &spritesheet_data_type);
   return mrb_fixnum_value((int)spritesheet->total_sprites);
 }
 

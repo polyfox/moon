@@ -53,7 +53,7 @@ sprite_initialize(mrb_state *mrb, mrb_value self)
     case MRB_TT_DATA: {
       if (DATA_TYPE(obj) == &texture_data_type) {
         moon_texture *texture;
-        Data_Get_Struct(mrb, obj, &texture_data_type, texture);
+        texture = (moon_texture*)mrb_data_get_ptr(mrb, obj, &texture_data_type);
         sprite->load_texture(moon_texture_p(texture));
       } else {
         mrb_raisef(mrb, E_TYPE_ERROR,
@@ -73,8 +73,7 @@ sprite_initialize(mrb_state *mrb, mrb_value self)
     return mrb_nil_value();
   }
 
-  DATA_TYPE(self) = &sprite_data_type;
-  DATA_PTR(self) = sprite;
+  mrb_data_init(self, sprite, &sprite_data_type);
 
   color = mmrb_vector4_wrap(mrb, sprite->color);
   mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, "@color"), color);
@@ -104,7 +103,7 @@ sprite_render(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "fff", &x, &y, &z);
 
   Sprite *sprite;
-  Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+  sprite = (Sprite*)mrb_data_get_ptr(mrb, self, &sprite_data_type);
 
   sprite->render(x, y, z);
   return mrb_nil_value();
@@ -114,7 +113,7 @@ static mrb_value
 sprite_opacity_getter(mrb_state *mrb, mrb_value self)
 {
   Sprite *sprite;
-  Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+  sprite = (Sprite*)mrb_data_get_ptr(mrb, self, &sprite_data_type);
   return mrb_float_value(mrb, sprite->opacity);
 }
 
@@ -122,7 +121,7 @@ static mrb_value
 sprite_opacity_setter(mrb_state *mrb, mrb_value self)
 {
   Sprite *sprite;
-  Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+  sprite = (Sprite*)mrb_data_get_ptr(mrb, self, &sprite_data_type);
   mrb_float f;
   mrb_get_args(mrb, "f", &f);
   sprite->opacity = glm::clamp(f, 0.0, 1.0);
@@ -133,7 +132,7 @@ static mrb_value
 sprite_angle_getter(mrb_state *mrb, mrb_value self)
 {
   Sprite *sprite;
-  Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+  sprite = (Sprite*)mrb_data_get_ptr(mrb, self, &sprite_data_type);
   return mrb_float_value(mrb, sprite->angle);
 }
 
@@ -141,7 +140,7 @@ static mrb_value
 sprite_angle_setter(mrb_state *mrb, mrb_value self)
 {
   Sprite *sprite;
-  Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+  sprite = (Sprite*)mrb_data_get_ptr(mrb, self, &sprite_data_type);
   mrb_float f;
   mrb_get_args(mrb, "f", &f);
   sprite->angle = f;
@@ -152,7 +151,7 @@ static mrb_value
 sprite_ox_getter(mrb_state *mrb, mrb_value self)
 {
   Sprite *sprite;
-  Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+  sprite = (Sprite*)mrb_data_get_ptr(mrb, self, &sprite_data_type);
   return mrb_fixnum_value(sprite->ox);
 }
 
@@ -160,7 +159,7 @@ static mrb_value
 sprite_ox_setter(mrb_state *mrb, mrb_value self)
 {
   Sprite *sprite;
-  Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+  sprite = (Sprite*)mrb_data_get_ptr(mrb, self, &sprite_data_type);
   mrb_int i;
   mrb_get_args(mrb, "i", &i);
   sprite->ox = i;
@@ -171,7 +170,7 @@ static mrb_value
 sprite_oy_getter(mrb_state *mrb, mrb_value self)
 {
   Sprite *sprite;
-  Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+  sprite = (Sprite*)mrb_data_get_ptr(mrb, self, &sprite_data_type);
   return mrb_fixnum_value(sprite->oy);
 }
 
@@ -179,7 +178,7 @@ static mrb_value
 sprite_oy_setter(mrb_state *mrb, mrb_value self)
 {
   Sprite *sprite;
-  Data_Get_Struct(mrb, self, &sprite_data_type, sprite);
+  sprite = (Sprite*)mrb_data_get_ptr(mrb, self, &sprite_data_type);
   mrb_int i;
   mrb_get_args(mrb, "i", &i);
   sprite->oy = i;
@@ -206,7 +205,7 @@ sprite_color_setter(mrb_state *mrb, mrb_value self)
 
   // Get the passed-in object's shared_ptr
   moon_vec4* color_ptr;
-  Data_Get_Struct(mrb, new_color, &vector4_data_type, color_ptr);
+  color_ptr = (moon_vec4*)mrb_data_get_ptr(mrb, new_color, &vector4_data_type);
 
   // Create a new shared_ptr for this instance and overwrite the old one
   ((Sprite*)DATA_PTR(self))->color = moon_vec4(*color_ptr);
@@ -234,7 +233,7 @@ sprite_tone_setter(mrb_state *mrb, mrb_value self)
 
   // Get the passed-in object's shared_ptr
   moon_vec4* tone_ptr;
-  Data_Get_Struct(mrb, new_tone, &vector4_data_type, tone_ptr);
+  tone_ptr = (moon_vec4*)mrb_data_get_ptr(mrb, new_tone, &vector4_data_type);
 
   // Create a new shared_ptr for this instance and overwrite the old one
   ((Sprite*)DATA_PTR(self))->tone = moon_vec4(*tone_ptr);
@@ -262,7 +261,7 @@ sprite_texture_setter(mrb_state *mrb, mrb_value self)
 
   // Get the passed-in object's shared_ptr
   moon_texture* texture_ptr;
-  Data_Get_Struct(mrb, new_texture, &texture_data_type, texture_ptr);
+  texture_ptr = (moon_texture*)mrb_data_get_ptr(mrb, new_texture, &texture_data_type);
 
   // Create a new shared_ptr for this instance and overwrite the old one
   ((Sprite*)DATA_PTR(self))->setTexture(*texture_ptr);
@@ -291,7 +290,7 @@ sprite_clip_setter(mrb_state *mrb, mrb_value self)
   if(!mrb_nil_p(new_clip)) {
     // Get the passed-in object's shared_ptr
     moon_rect* clip_ptr;
-    Data_Get_Struct(mrb, new_clip, &rect_data_type, clip_ptr);
+    clip_ptr = (moon_rect*)mrb_data_get_ptr(mrb, new_clip, &rect_data_type);
 
     // Create a new shared_ptr for this instance and overwrite the old one
     ((Sprite*)DATA_PTR(self))->setClip(*clip_ptr);
