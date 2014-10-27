@@ -12,7 +12,7 @@
 #include <mruby/string.h>
 #include <mruby/variable.h>
 
-#include "moon/stdh.hxx"
+#include "moon/stdh_c.hxx"
 
 extern struct RClass* mmrb_Moon;
 
