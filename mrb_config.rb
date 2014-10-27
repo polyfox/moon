@@ -16,9 +16,7 @@ MRuby::Build.new do |conf|
   conf.gem github: 'IceDragon200/mruby-require'
 
   # so we can have nice things
-  #conf.gem github: "AndrewBelt/mruby-yaml"
-  # Due to an upstream error in the YAML.load when given an empty string:
-  conf.gem github: 'IceDragon200/mruby-yaml'
+  conf.gem github: "AndrewBelt/mruby-yaml"
 
   conf.gem github: "iij/mruby-io"
   conf.gem github: "iij/mruby-dir"
