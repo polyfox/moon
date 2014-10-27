@@ -14,13 +14,8 @@
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"
 
-struct mrb_data_type engine_data_type = {
-  "Engine", NULL,
-};
-
-struct mrb_data_type window_data_type = {
-  "Window", NULL,
-};
+struct mrb_data_type engine_data_type = { "Engine", NULL };
+struct mrb_data_type window_data_type = { "Window", NULL };
 
 struct RClass* mmrb_Moon;
 /* System */

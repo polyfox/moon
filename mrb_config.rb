@@ -10,7 +10,7 @@ MRuby::Build.new do |conf|
   # Temporary custom solution. If we end up
   # creating a custom gem, make a gem folder
   # in moon root and put it there.
-  # because Speedy won't update his Fork
+  # Because Speedy won't update his Fork
   #conf.gem github: 'archSeer/mruby-require'
   # We will use IceDragon's Spoon!
   conf.gem github: 'IceDragon200/mruby-require'

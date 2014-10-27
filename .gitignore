@@ -1,7 +1,5 @@
 build/
-bin/*/core
-bin/*/scripts
-bin/*/game
+bin/
 lib/
 
 # yard doc

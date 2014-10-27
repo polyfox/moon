@@ -8,7 +8,6 @@
 #include "moon/shared_types.hxx"
 #include "moon/mrb/shared_types.hxx"
 #include <glm/glm.hpp>
-//#include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 

@@ -55,7 +55,6 @@ namespace Moon {
 
   void Engine::setup_opengl() {
     glDisable(GL_DITHER);
-
     glEnable(GL_BLEND); // Enable blending (alpha transparency)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
