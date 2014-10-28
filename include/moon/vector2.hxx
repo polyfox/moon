@@ -5,6 +5,6 @@
 #include <glm/glm.hpp>
 
 typedef std::shared_ptr<glm::vec2> moon_vec2;
-#define moon_vec2_p(mvec2) (*mvec2)
-
+#define moon_vec2_ptr(vec) (*vec)
+#define moon_vec2_ref(vec) (**vec)
 #endif

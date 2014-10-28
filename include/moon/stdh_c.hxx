@@ -1,6 +1,9 @@
 #ifndef MOON_STD_C_H
 #define MOON_STD_C_H
 
+#include <string>
+#include <cstring>
+
 #include <stdlib.h>
 #include <stdio.h>
 
