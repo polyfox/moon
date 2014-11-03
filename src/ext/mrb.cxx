@@ -10,6 +10,7 @@
 #include "moon/mrb/spritesheet.hxx"
 #include "moon/mrb/texture.hxx"
 #include "moon/mrb/transform.hxx"
+#include "moon/mrb/vector1.hxx"
 #include "moon/mrb/vector2.hxx"
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"
@@ -24,6 +25,7 @@ struct RClass* mmrb_Screen;
 /* Data */
 struct RClass* mmrb_Context;
 struct RClass* mmrb_Rect;
+struct RClass* mmrb_Vector1;
 struct RClass* mmrb_Vector2;
 struct RClass* mmrb_Vector3;
 struct RClass* mmrb_Vector4;
@@ -45,6 +47,7 @@ void mmrb_init(mrb_state *mrb) {
   /* Data */
   mmrb_Context     = mmrb_context_init(mrb);
   mmrb_Rect        = mmrb_rect_init(mrb);
+  mmrb_Vector1     = mmrb_vector1_init(mrb);
   mmrb_Vector2     = mmrb_vector2_init(mrb);
   mmrb_Vector3     = mmrb_vector3_init(mrb);
   mmrb_Vector4     = mmrb_vector4_init(mrb);
