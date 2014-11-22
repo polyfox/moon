@@ -19,6 +19,7 @@ namespace Moon {
 
     if(!window) { // 3.3 wasn't created, let's try 2.1
       LEGACY_GL = true;
+      printf("Creating 2.1 context\n");
       glfwDefaultWindowHints();
       glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
       glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
