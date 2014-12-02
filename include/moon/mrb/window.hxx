@@ -1,5 +1,5 @@
-#ifndef MMRB_VECTOR4_H
-#define MMRB_VECTOR4_H
+#ifndef MMRB_WINDOW_H
+#define MMRB_WINDOW_H
 
 #include "moon/mrb.hxx"
 
