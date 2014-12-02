@@ -1,6 +1,8 @@
 #include "moon/engine.hxx"
 #include "moon/mrb/engine.hxx"
 #include "moon/mrb/window.hxx"
+#include "moon/mrb/screen.hxx"
+#include "moon/mrb/vector4.hxx"
 #include <clocale>
 
 namespace Moon {
@@ -82,6 +84,8 @@ namespace Moon {
 
     mrb_value window_val = mrb_obj_value(Data_Wrap_Struct(mrb, mrb->object_class, &window_data_type, (void*)(&window)));
     mrb_mod_cv_set(mrb, mmrb_Moon, mrb_intern_cstr(mrb, "window"), window_val);
+
+    mrb_funcall(mrb, mrb_obj_value(mmrb_Screen), "clear_color=", 1, mmrb_vector4_create(mrb, 0, 0, 0, 0));
 
     load_mrb_file("./core/load.rb"); // load core classes
     moon_load_user_scripts(this);
