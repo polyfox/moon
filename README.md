@@ -1,7 +1,6 @@
-# [![Moon](https://raw.githubusercontent.com/archSeer/moon/master/moon-logo.png)](https://raw.githubusercontent.com/archSeer/moon/master/moon-logo.png) Moon
+# [![Moon](https://raw.githubusercontent.com/IceDragon200/moon/master/moon-logo.png)](https://raw.githubusercontent.com/IceDragon200/moon/master/moon-logo.png) Moon
 
-[![Coverage Status](https://coveralls.io/repos/archSeer/moon/badge.png)](https://coveralls.io/r/archSeer/moon)
-[![Code Climate](https://codeclimate.com/github/archSeer/moon.png)](https://codeclimate.com/github/archSeer/moon)
+[![Build Status](https://travis-ci.org/IceDragon200/moon.svg?branch=codename-lunar)](https://travis-ci.org/IceDragon200/moon)
 
 ## Moon and Lunar Howl
 
