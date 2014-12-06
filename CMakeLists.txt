@@ -8,7 +8,7 @@ set(MOON_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(CMAKE_MODULE_PATH ${MOON_DIR}/cmake)
 # for gcc >= 4.7, or c++0x for 4.6
 set(OPTIMIZATION_FLAG "-O3")
-set(CXX_STD_FLAG "-std=c++11")
+set(CXX_STD_FLAG "-std=c++0x")
 #set(C_STD_FLAG "-std=c90")
 set(WARNING_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX_STD_FLAG} ${WARNING_FLAGS} ${OPTIMIZATION_FLAG}")
