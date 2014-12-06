@@ -6,7 +6,7 @@ before_install:
   - git submodule update --init --recursive
   - sudo apt-get update -qq
 install:
-  - sudo apt-get install -qq libopenal-dev libdevil-dev libglfw-dev libglew-dev
+  - sudo apt-get install -qq libopenal-dev libdevil-dev libglfw-dev libglew-dev freeglut3-dev
 before_script:
   - "mkdir -p build && cd build && cmake .."
 script:
