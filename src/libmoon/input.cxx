@@ -221,7 +221,10 @@ namespace Moon {
 
   std::array<int, 2> Input::Mouse::get_position() {
     double x, y;
+    std::array<int, 2> result;
     glfwGetCursorPos(window, &x, &y);
-    return {(int)floor(x), (int)floor(y)};
+    result[0] = (int)floor(x);
+    result[1] = (int)floor(y);
+    return result;
   }
 }
