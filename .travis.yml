@@ -1,12 +1,13 @@
 language: cpp
 compiler:
- - gcc
- - clang
+  - gcc
+  - clang
 before_install:
- - git submodule update --init --recursive
- - sudo apt-get update -qq
- - sudo apt-get install -qq libopenal-dev libdevil-dev libglfw-dev
+  - git submodule update --init --recursive
+  - sudo apt-get update -qq
+install:
+  - sudo apt-get install -qq libopenal-dev libdevil-dev libglfw-dev
 before_script:
- - cmake .
+  - "mkdir -p build && cd build && cmake .."
 script:
- - make -j4
+  - make -j4
