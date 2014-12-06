@@ -31,6 +31,7 @@ FIND_PATH(GLFW_INCLUDE_DIR GLFW/glfw3.h DOC "Path to GLFW include directory."
   /usr/local/include/GLFW
   ${GLFW_ROOT_DIR}/include/ # added by ptr
 )
+SET(GLFW3_INCLUDE_DIR ${GLFW_INCLUDE_DIR})
 
 FIND_LIBRARY(GLFW_LIBRARY_TEMP DOC "Absolute path to GLFW library."
   NAMES glfw GLFW.lib libglfw3.dylib
@@ -62,6 +63,7 @@ IF(GLFW_LIBRARY_TEMP AND GLFW_INCLUDE_DIR)
 
   # Set the final string here so the GUI reflects the final state.
   SET(GLFW_LIBRARY ${GLFW_LIBRARY_TEMP} CACHE STRING "Where the GLFW Library can be found")
+  SET(GLFW3_LIBRARY ${GLFW_LIBRARY})
   # Set the temp variable to INTERNAL so it is not seen in the CMake GUI
   SET(GLFW_LIBRARY_TEMP "" CACHE INTERNAL "")
 ENDIF(GLFW_LIBRARY_TEMP AND GLFW_INCLUDE_DIR)
