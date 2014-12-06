@@ -6,7 +6,11 @@ before_install:
   - git submodule update --init --recursive
   - sudo apt-get update -qq
 install:
+  # Moon
   - sudo apt-get install -qq libopenal-dev libdevil-dev libglfw-dev libglew-dev freeglut3-dev libx11-dev libxmu-dev libxi-dev libyaml-dev
+  # GLFW3
+  - sudo apt-get install -qq curl unzip xorg-dev libglu1-mesa-dev
+  - mkdir -p tmp && cd tmp && curl -L -O http://sourceforge.net/projects/glfw/files/glfw/3.0.4/glfw-3.0.4.zip && unzip glfw-3.0.4.zip && cd glfw-3.0.4 && cmake -G "Unix Makefiles" && make && sudo make install && cd ../..
 before_script:
   - "mkdir -p build && cd build && cmake .."
 script:
