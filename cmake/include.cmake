@@ -29,7 +29,7 @@ find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
 # GLFW
-find_package(GLFW REQUIRED)
+find_package(GLFW3 REQUIRED)
 include_directories(${GLFW_INCLUDE_DIR})
 
 # GLEW

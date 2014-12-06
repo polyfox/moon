@@ -26,9 +26,8 @@ FIND_PATH(GLFW_INCLUDE_DIR GLFW/glfw3.h DOC "Path to GLFW include directory."
   PATH_SUFFIX include
   PATHS
   /usr/include/
-  /usr/local/include/
-  # By default headers are under GL subfolder
   /usr/include/GLFW
+  /usr/local/include/
   /usr/local/include/GLFW
   ${GLFW_ROOT_DIR}/include/ # added by ptr
 )
@@ -40,8 +39,8 @@ FIND_LIBRARY(GLFW_LIBRARY_TEMP DOC "Absolute path to GLFW library."
   # In the expanded GLFW source archive. Should be uncommon, but whatever.
   PATH_SUFFIXES lib/win32 lib/cocoa lib/x11
   PATHS
-  /usr/local/lib
   /usr/lib
+  /usr/local/lib
   ${GLFW_ROOT_DIR}/lib-msvc100/release # added by ptr
 )
 
