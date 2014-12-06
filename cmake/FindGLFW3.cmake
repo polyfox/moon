@@ -20,30 +20,28 @@
 # Allow the user to select to link to a shared library or to a static library.
 
 #Search for the include file...
-FIND_PATH(GLFW_INCLUDE_DIR glfw.h DOC "Path to GLFW include directory."
+FIND_PATH(GLFW_INCLUDE_DIR GLFW/glfw3.h DOC "Path to GLFW include directory."
   HINTS
   $ENV{GLFW_ROOT}
   PATH_SUFFIX include
   PATHS
   /usr/include/
-  /usr/include/GL
-  /usr/include/GLFW
   /usr/local/include/
-  /usr/local/include/GL
+  # By default headers are under GL subfolder
+  /usr/include/GLFW
   /usr/local/include/GLFW
   ${GLFW_ROOT_DIR}/include/ # added by ptr
 )
 
 FIND_LIBRARY(GLFW_LIBRARY_TEMP DOC "Absolute path to GLFW library."
-  NAMES glfw GLFW.lib libglfw.dylib
+  NAMES glfw GLFW.lib libglfw3.dylib
   HINTS
   $ENV{GLFW_ROOT}
   # In the expanded GLFW source archive. Should be uncommon, but whatever.
   PATH_SUFFIXES lib/win32 lib/cocoa lib/x11
   PATHS
-  /usr/lib
   /usr/local/lib
-  ${GLFW_ROOT_DIR}/lib # added by IceDragon
+  /usr/lib
   ${GLFW_ROOT_DIR}/lib-msvc100/release # added by ptr
 )
 
