@@ -17,7 +17,7 @@ add_subdirectory(${MOON_DIR}/vendor/soil)
 add_subdirectory(${MOON_DIR}/vendor/gorilla-audio/build)
 
 # freetype-gl
-set(freetype-gl_BUILD_DEMOS false)
+set(freetype-gl_BUILD_DEMOS OFF)
 add_subdirectory(${MOON_DIR}/vendor/freetype-gl)
 
 # mruby
