@@ -761,6 +761,7 @@ void gauX_sample_source_ogg_close(void* in_context)
   gau_SampleSourceOggContext* ctx = &((gau_SampleSourceOgg*)in_context)->context;
   ov_clear(&ctx->oggFile);
   ga_data_source_release(ctx->dataSrc);
+  gc_mutex_destroy(ctx->oggMutex);
 }
 ga_SampleSource* gau_sample_source_create_ogg(ga_DataSource* in_dataSrc)
 {
@@ -984,8 +985,8 @@ gc_int32 gauX_sample_source_loop_tell(void* in_context, gc_int32* out_totalSampl
 void gauX_sample_source_loop_close(void* in_context)
 {
   gau_SampleSourceLoopContext* ctx = &((gau_SampleSourceLoop*)in_context)->context;
-  gc_mutex_destroy(ctx->loopMutex);
   ga_sample_source_release(ctx->innerSrc);
+  gc_mutex_destroy(ctx->loopMutex);
 }
 void gau_sample_source_loop_set(gau_SampleSourceLoop* in_sampleSrc, gc_int32 in_triggerSample, gc_int32 in_targetSample)
 {
@@ -1089,8 +1090,8 @@ gc_int32 gauX_sample_source_sound_tell(void* in_context, gc_int32* out_totalSamp
 void gauX_sample_source_sound_close(void* in_context)
 {
   gau_SampleSourceSoundContext* ctx = &((gau_SampleSourceSound*)in_context)->context;
-  gc_mutex_destroy(ctx->posMutex);
   ga_sound_release(ctx->sound);
+  gc_mutex_destroy(ctx->posMutex);
 }
 ga_SampleSource* gau_sample_source_create_sound(ga_Sound* in_sound)
 {

@@ -698,6 +698,22 @@ Welcome to Gorilla Audio! This tutorial will walk you through the basics of writ
 <div class="heading2">5.1&nbsp;&nbsp;Versions</div>
 <div class="copytext">
 
+  <div class="heading5">0.3.1</div>
+  <div class="copytext">
+    - Fixed various significant memory leaks (with help from hjj).<br />
+  </div>
+  
+  <div class="heading5">0.3.0</div>
+  <div class="copytext">
+    - All documentation written, at least in provisional form (GAU still needs more
+      detail).<br />
+    - Windows builds now only enable the OpenAL device by default. You can set
+      ENABLE_XAUDIO2 in cmake-gui to enable XAudio2 devices.<br />
+    - gau_manager_create() now takes 0 parameters. To customize the gau_Manager
+      settings, please use gau_manager_create_custom().<br />
+    - Various other small changes to the interface.<br />
+  </div>
+  
   <div class="heading5">0.2.9</div>
   <div class="copytext">
     - Added minimal Doxygen comments to the Gorilla Common API (GAU is still forthcoming).<br />

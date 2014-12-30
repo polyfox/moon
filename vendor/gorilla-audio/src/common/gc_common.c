@@ -49,6 +49,7 @@ gc_CircBuffer* gc_buffer_create(gc_uint32 in_size)
 }
 gc_result gc_buffer_destroy(gc_CircBuffer* in_buffer)
 {
+  gcX_ops->freeFunc(in_buffer->data);
   gcX_ops->freeFunc(in_buffer);
   return GC_SUCCESS;
 }

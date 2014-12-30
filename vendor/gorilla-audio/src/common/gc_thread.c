@@ -94,7 +94,7 @@ gc_Thread* gc_thread_create(gc_ThreadFunc in_threadFunc, void* in_context,
   pthread_mutex_lock(&threadData->suspendMutex);
   
   result = pthread_attr_init(&threadData->attr);
-  #ifdef __APPLE__
+  #if defined(__APPLE__) || defined(__ANDROID__)
   param.sched_priority = priorityLut[in_priority];
   #elif defined(__linux__)
   param.__sched_priority = priorityLut[in_priority];

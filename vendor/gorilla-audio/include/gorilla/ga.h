@@ -58,7 +58,7 @@ extern "C"
  *
  *  \ingroup version
  */
-#define GA_VERSION_REV 0
+#define GA_VERSION_REV 1
 
 /** Compares the API version against the specified version.
  *

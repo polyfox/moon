@@ -569,6 +569,8 @@ gc_result gaX_handle_cleanup(ga_Handle* in_handle)
   /* May only be called from the dispatch thread */
   ga_Mixer* m = in_handle->mixer;
   ga_sample_source_release(in_handle->sampleSrc);
+  gc_mutex_destroy(in_handle->handleMutex);
+  gcX_ops->freeFunc(in_handle);
   return GC_SUCCESS;
 }
 

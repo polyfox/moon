@@ -98,6 +98,7 @@ gc_result gaX_device_close_xaudio2(ga_DeviceImpl_XAudio2* in_device)
 
   for(i = 0; i < in_device->numBuffers; ++i)
     gcX_ops->freeFunc(in_device->buffers[i]);
+  gcX_ops->freeFunc(in_device->buffers);
   in_device->devType = GA_DEVICE_TYPE_UNKNOWN;
   in_device->source = 0;
   in_device->master = 0;
