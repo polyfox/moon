@@ -37,5 +37,5 @@ add_library(${MOON_TARGET} STATIC
 )
 
 # mruby
-add_dependencies(${MOON_TARGET} mruby)
+add_dependencies(${MOON_TARGET} ${MOON_DEPENDENCIES})
 target_link_libraries(${MOON_TARGET} ${MOON_LIBRARIES})

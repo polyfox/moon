@@ -102,7 +102,7 @@ set(MOON_LIBRARIES ${MOON_LIBRARIES} ${FREETYPE_LIBRARY})
 # SOIL
 set(MOON_LIBRARIES ${MOON_LIBRARIES} SOIL)
 # GLFW3
-set(MOON_LIBRARIES ${MOON_LIBRARIES} glfw ${GLFW_LIBRARIES})
+set(MOON_LIBRARIES ${MOON_LIBRARIES} ${GLFW_LIBRARIES} glfw)
 # GLEW
 set(MOON_LIBRARIES ${MOON_LIBRARIES} ${GLEW_LIBRARIES})
 # OpenGL
@@ -112,6 +112,11 @@ set(MOON_LIBRARIES ${MOON_LIBRARIES} yaml)
 # Math
 set(MOON_LIBRARIES ${MOON_LIBRARIES} m)
 
-set(MOON_LIBRARY moon ${MOON_LIBRARIES})
+# Stuff that moon depends on to build
+set(MOON_DEPENDENCIES glfw gorilla mruby)
+
+# Stuff that users will depend on to build moon into their apps
+set(MOON_LIBRARY ${MOON_LIBRARIES} moon)
+set(MOON_DEPENDENCY ${MOON_DEPENDENCIES} moon)
 
 add_subdirectory(src)
