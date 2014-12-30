@@ -1,6 +1,5 @@
 # [![Moon](https://raw.githubusercontent.com/IceDragon200/moon/master/moon-logo.png)](https://raw.githubusercontent.com/IceDragon200/moon/master/moon-logo.png) Moon
-
-[![Build Status](https://travis-ci.org/IceDragon200/moon.svg?branch=codename-lunar)](https://travis-ci.org/IceDragon200/moon)
+[![Build Status](https://travis-ci.org/IceDragon200/moon.svg?branch=master)](https://travis-ci.org/IceDragon200/moon)
 
 ## Moon and Lunar Howl
 
