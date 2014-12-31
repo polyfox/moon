@@ -14,3 +14,7 @@
 	path = vendor/soil
 	url = https://github.com/archSeer/SOIL.git
   ignore = dirty
+
+[submodule "vendor/gorilla-audio"]
+  path = vendor/gorilla-audio
+  url = https://github.com/IceDragon200/gorilla-audio.git
