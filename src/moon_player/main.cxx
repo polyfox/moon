@@ -13,13 +13,6 @@ moon_config(Moon::Engine *engine)
   //engine->set_resource_path("media");
 }
 
-int
-moon_start(Moon::Engine *engine)
-{
-  //
-  return 0;
-}
-
 void
 moon_step(mrb_state *mrb, double delta)
 {
@@ -31,13 +24,6 @@ moon_step(mrb_state *mrb, double delta)
 int
 main(int argc, char **argv)
 {
-  Moon::Engine *engine = NULL;
-  engine = new Moon::Engine();
-
-  moon_start(engine);
-
-  engine->run();
-  if(engine) delete(engine);
-
-  return 0;
+  Moon::Engine engine;
+  return engine.run();
 }

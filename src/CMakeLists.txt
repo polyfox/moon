@@ -5,4 +5,4 @@ if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR) # Make sure the user is 
 endif()
 
 add_subdirectory(libmoon)
-add_subdirectory(moon-player)
+add_subdirectory(moon_player)

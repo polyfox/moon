@@ -11,11 +11,16 @@
 #include "moon/mrb.hxx"
 
 namespace Moon {
+  enum run_status {
+    RUN_STATUS_SUCESS,
+    RUN_STATUS_EXCEPTION
+  };
+
   class Engine {
   public:
     Engine();
     ~Engine();
-    void run();
+    int run();
 
     bool load_mrb_file(const char *path);
     //void set_resource_path(const char *path);

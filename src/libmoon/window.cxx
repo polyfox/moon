@@ -3,7 +3,7 @@
 namespace Moon {
   Window::Window(int width, int height, const char* title) {
     if (!glfwInit()) {
-      printf( "Error initializing glfw!");
+      std::cerr << "Error initializing glfw!" << std::endl;
       throw;
     }
 
@@ -13,25 +13,35 @@ namespace Moon {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // for 3.0
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // for 3.0 and on
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // for 3.0 and on
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
     window = glfwCreateWindow(width, height, title, NULL, NULL);
 
-    if(!window) { // 3.3 wasn't created, let's try 2.1
+    if (!window) { // 3.3 wasn't created, let's try 2.1
       LEGACY_GL = true;
-      printf("Creating 2.1 context\n");
+      std::cout << "Requesting OpenGL 2.1 context" << std::endl;
       glfwDefaultWindowHints();
       glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
       glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
       glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
       window = glfwCreateWindow(width, height, title, NULL, NULL);
+
+      if (!window) {
+        std::cerr << "Creating OpenGL context has FAILED miserably" << std::endl;
+        throw;
+      }
+    } else {
+      std::cout << "Using a >= 3.3 Context and hoping for the best" << std::endl;
     }
 
     window_width = width;
     window_height = height;
     glfwMakeContextCurrent(window);
-    std::cout << "OpenGL v" << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR) << "." << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR) << std::endl;
-
+    std::cout << "OpenGL v" << glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR) << "." <<
+                               glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR) << std::endl;
+    std::cout << "GLSL v" << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+    std::cout << "GLFW v" << glfwGetVersionString() << std::endl;
     resize(width, height); // trigger setting up the projection matrix
   };
 

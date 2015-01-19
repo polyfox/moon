@@ -33,8 +33,8 @@ namespace Moon {
     Audio::terminate();
   }
 
-  void Engine::run() {
-    int ai = mrb_gc_arena_save(mrb);
+  int Engine::run() {
+    int ai;
 
     while (!window.should_close())
     {
@@ -42,17 +42,18 @@ namespace Moon {
 
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+      ai = mrb_gc_arena_save(mrb);
+      moon_step(mrb, fps.getDelta());
       if (mrb->exc) {
         mrb_print_error(mrb);
-        break;
+        return RUN_STATUS_EXCEPTION;
       };
-
-      moon_step(mrb, fps.getDelta());
       mrb_gc_arena_restore(mrb, ai);
 
       fps.update();
       window.update(&fps);
     }
+    return RUN_STATUS_SUCESS;
   }
 
   void Engine::setup_opengl() {
