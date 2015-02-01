@@ -36,6 +36,8 @@ namespace Moon {
   int Engine::run() {
     int ai;
 
+    // reset FPS before starting.
+    fps.update();
     while (!window.should_close())
     {
       Audio::update();
