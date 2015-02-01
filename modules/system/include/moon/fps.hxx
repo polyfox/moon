@@ -1,8 +1,6 @@
 #ifndef MOON_FPS_H
 #define MOON_FPS_H
 
-#include <GLFW/glfw3.h>
-
 namespace Moon {
   class FPS {
   public:

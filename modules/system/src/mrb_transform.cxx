@@ -3,35 +3,36 @@
  */
 #define GLM_FORCE_RADIANS
 
-#include "moon/mrb/transform.hxx"
-#include "moon/mrb/vector4.hxx"
-#include "moon/shared_types.hxx"
-#include "moon/mrb/shared_types.hxx"
+#include <mruby.h>
+#include <mruby/array.h>
+#include <mruby/class.h>
+#include <mruby/numeric.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "moon/transform.hxx"
+#include "moon/mrb/transform.hxx"
+#include "moon/mrb/vector1.hxx"
+#include "moon/mrb/vector2.hxx"
+#include "moon/mrb/vector3.hxx"
+#include "moon/mrb/vector4.hxx"
 
-#define math_op(__op__)                                                    \
+#define math_op(__op__)                                                   \
   mrb_value rother;                                                       \
   mrb_get_args(mrb, "o", &rother);                                        \
   mrb_value rtarget = mrb_obj_dup(mrb, self);                             \
   moon_mat4 *target_mat4;                                                 \
-  target_mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, rtarget, &transform_data_type);                 \
-                                                                          \
-  if (mrb_type(rother) == MRB_TT_DATA) {                                  \
-    if (DATA_TYPE(rother) == &transform_data_type) { /* Transform */                \
-      moon_mat4 *source_mat4;                                             \
-      source_mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, rother, &transform_data_type);              \
-                                                                          \
+  target_mat4 = get_transform(mrb, rtarget);                              \
+  const mrb_vtype t = mrb_type(rother);                                   \
+  if (t == MRB_TT_DATA) {                                                 \
+    const mrb_data_type *dt = DATA_TYPE(rother);                          \
+    if (dt == &transform_data_type) { /* Transform */                     \
+      moon_mat4 *source_mat4 = get_transform(mrb, rother);                \
       **target_mat4 __op__ ## = **source_mat4;                            \
-    } else if (DATA_TYPE(rother) == &vector4_data_type) { /* Vector4 */   \
-      moon_vec4 *source_vec4;                                             \
-      source_vec4 = (moon_vec4*)mrb_data_get_ptr(mrb, rother, &vector4_data_type);      \
-                                                                          \
-      **target_mat4 __op__ ## = **source_vec4;                            \
+    } else if (dt == &vector4_data_type) { /* Vector4 */                  \
+      **target_mat4 __op__ ## = mmrb_to_vector4(mrb, rother);             \
     }                                                                     \
-  } else if (mrb_type(rother) == MRB_TT_FIXNUM ||                         \
-             mrb_type(rother) == MRB_TT_FLOAT) { /* Scalar */             \
+  } else if (t == MRB_TT_FIXNUM || t == MRB_TT_FLOAT) { /* Scalar */      \
                                                                           \
     **target_mat4 __op__ ## = mrb_to_flo(mrb, rother);                    \
   } else {                                                                \
@@ -52,7 +53,13 @@ transform_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type transform_data_type = { "Transform", transform_free };
+const struct mrb_data_type transform_data_type = { "Transform", transform_free };
+
+static inline moon_mat4*
+get_transform(mrb_state *mrb, mrb_value self)
+{
+  return (moon_mat4*)mrb_data_get_ptr(mrb, self, &transform_data_type);
+}
 
 /*
  * @overload Transform#initialize()
@@ -95,10 +102,10 @@ transform_initialize(mrb_state *mrb, mrb_value self)
       mat = new moon_mat4(new glm::mat4(value));
     }
   } else if (argc == 4) {
-    glm::vec4 row1 = mmrb_obj_to_vec4(mrb, args[0]);
-    glm::vec4 row2 = mmrb_obj_to_vec4(mrb, args[1]);
-    glm::vec4 row3 = mmrb_obj_to_vec4(mrb, args[2]);
-    glm::vec4 row4 = mmrb_obj_to_vec4(mrb, args[3]);
+    glm::vec4 row1 = mmrb_to_vector4(mrb, args[0]);
+    glm::vec4 row2 = mmrb_to_vector4(mrb, args[1]);
+    glm::vec4 row3 = mmrb_to_vector4(mrb, args[2]);
+    glm::vec4 row4 = mmrb_to_vector4(mrb, args[3]);
 
     mat = new moon_mat4(new glm::mat4(row1, row2, row3, row4));
   } else if (argc == 16) {
@@ -192,14 +199,7 @@ transform_entry_get(mrb_state *mrb, mrb_value self)
       return mrb_nil_value();
     }
 
-    mrb_value rvec4 = mrb_obj_new(mrb, mmrb_Vector4, 0, {});
-
-    moon_vec4 *vec4;
-    vec4 = (moon_vec4*)mrb_data_get_ptr(mrb, rvec4, &vector4_data_type);
-
-    **vec4 = (**mat4)[x];
-
-    return rvec4;
+    return mmrb_vector4_value(mrb, (**mat4)[x]);
   } else if (len == 2) {
     mrb_int x, y;
 
@@ -367,7 +367,7 @@ transform_translate(mrb_state *mrb, mrb_value self)
   target_mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, rtarget, &transform_data_type);
 
   if (len == 1) {
-    glm::vec3 v3 = mmrb_obj_to_vec3(mrb, vals[0]);
+    glm::vec3 v3 = mmrb_to_vector3(mrb, vals[0]);
 
     **target_mat4 = glm::translate(**target_mat4, v3);
   } else if (len == 3) {
@@ -399,7 +399,7 @@ transform_rotate(mrb_state *mrb, mrb_value self)
 
   if (len == 2) {
     mrb_float angle = mrb_to_flo(mrb, vals[0]);
-    glm::vec3 rotate_v3 = mmrb_obj_to_vec3(mrb, vals[1]);
+    glm::vec3 rotate_v3 = mmrb_to_vector3(mrb, vals[1]);
 
     **target_mat4 = glm::rotate(**target_mat4, glm::radians((float)angle), rotate_v3);
   } else if (len == 4) {
@@ -431,7 +431,7 @@ transform_scale(mrb_state *mrb, mrb_value self)
   target_mat4 = (moon_mat4*)mrb_data_get_ptr(mrb, rtarget, &transform_data_type);
 
   if (len == 1) {
-    glm::vec3 v3 = mmrb_obj_to_vec3(mrb, vals[0]);
+    glm::vec3 v3 = mmrb_to_vector3(mrb, vals[0]);
 
     **target_mat4 = glm::scale(**target_mat4, v3);
   } else if (len == 3) {
@@ -538,10 +538,10 @@ transform_s_cast(mrb_state *mrb, mrb_value self)
 //  return mrb_nil_value();
 //};
 
-struct RClass*
-mmrb_transform_init(mrb_state *mrb)
+void
+mmrb_transform_init(mrb_state *mrb, struct RClass* mod)
 {
-  transform_class = mrb_define_class_under(mrb, mmrb_Moon, "Transform", mrb->object_class);
+  transform_class = mrb_define_class_under(mrb, mod, "Transform", mrb->object_class);
   MRB_SET_INSTANCE_TT(transform_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, transform_class, "initialize",      transform_initialize,      MRB_ARGS_ANY());
@@ -570,7 +570,5 @@ mmrb_transform_init(mrb_state *mrb)
 
   mrb_define_class_method(mrb, transform_class, "[]",        transform_s_cast,          MRB_ARGS_ANY());
   //mrb_define_class_method(mrb, transform_class, "extract",   transform_s_extract,       MRB_ARGS_REQ(1));
-
-  return transform_class;
 }
 

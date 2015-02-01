@@ -1,38 +1,77 @@
+#include <mruby.h>
+#include <mruby/array.h>
+#include <mruby/class.h>
+#include <mruby/object.h>
+#include <mruby/value.h>
 #include "moon/mrb/rect.hxx"
 #include "moon/rect.hxx"
-#include "moon/graphics.hxx"
-
-using Moon::Rect;
 
 static struct RClass *rect_class;
 
 static void
 rect_free(mrb_state *mrb, void *p)
 {
-  moon_rect *rect = (moon_rect*)p;
+  Moon::IntRect *rect = (Moon::IntRect*)p;
   if (rect) {
     delete(rect);
   }
 }
 
-struct mrb_data_type rect_data_type = { "Rect", rect_free };
+const struct mrb_data_type rect_data_type = { "Moon::IntRect", rect_free };
+
+static inline Moon::IntRect*
+get_rect(mrb_state *mrb, mrb_value self)
+{
+  return (Moon::IntRect*)mrb_data_get_ptr(mrb, other, &rect_data_type);
+}
+
+static inline void
+cleanup_rect(mrb_state *mrb, mrb_value self)
+{
+  Moon::IntRect *rect = (Moon::IntRect*)DATA_PTR(self);
+  if (rect) {
+    rect_free(mrb, (void*)rect);
+  }
+}
+
+Moon::IntRect
+mmrb_to_rect(mrb_state *mrb, mrb_value self)
+{
+  const mrb_vtype type = mrb_type(self);
+  if (type == MRB_TT_DATA) {
+    const mrb_data_type *dt = DATA_TYPE(self);
+    if (dt == rect_data_type) {
+      return *(Moon::IntRect*)DATA_PTR(self);
+    }
+  } else if (type == MRB_TT_ARRAY) {
+    //
+  } else if (type == MRB_TT_FIXNUM) {
+    //
+  }
+  mrb_raise(mrb, E_TYPE_ERROR, "unexpected type");
+  return Moon::IntRect{0,0,0,0};
+}
+
+mrb_value
+mmrb_rect_value(mrb_state *mrb, Moon::IntRect rect)
+{
+  Moon::IntRect *target;
+  mrb_value result;
+  result = mrb_obj_new(mrb, rect_class, 0, NULL);
+  target = get_rect(mrb, result);
+  *target = rect;
+  return result;
+}
 
 static mrb_value
 rect_initialize(mrb_state *mrb, mrb_value self)
 {
   mrb_int x, y, w, h;
-  moon_rect *rect;
+  Moon::IntRect *rect;
   mrb_get_args(mrb, "iiii", &x, &y, &w, &h);
-
-  rect = (moon_rect*)DATA_PTR(self);
-  if (rect) {
-    rect_free(mrb, (void*)rect);
-  }
-
-  rect = new moon_rect(new Rect(x, y, w, h));
-
+  cleanup_rect(mrb, self);
+  rect = new Moon::IntRect(x, y, w, h);
   mrb_data_init(self, rect, &rect_data_type);
-
   return self;
 }
 
@@ -40,16 +79,14 @@ static mrb_value
 rect_initialize_copy(mrb_state *mrb, mrb_value self)
 {
   mrb_value other;
-  moon_rect *src_rect;
-
+  Moon::IntRect *src_rect;
+  Moon::IntRect *rect;
   mrb_get_args(mrb, "o", &other);
-
-  src_rect = (moon_rect*)mrb_data_get_ptr(mrb, other, &rect_data_type);
-
-  auto rect = new moon_rect(new Rect((*src_rect)->x, (*src_rect)->y, (*src_rect)->w, (*src_rect)->h));
+  cleanup_rect(mrb, self);
+  src_rect = get_rect(mrb, other)
+  rect = new Moon::IntRect((*src_rect)->x, (*src_rect)->y, (*src_rect)->w, (*src_rect)->h);
   DATA_TYPE(self) = &rect_data_type;
   DATA_PTR(self) = rect;
-
   return self;
 }
 
@@ -58,23 +95,14 @@ rect_x_setter(mrb_state *mrb, mrb_value self)
 {
   mrb_int x;
   mrb_get_args(mrb, "i", &x);
-
-  moon_rect* rect;
-  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
-
-  (*rect)->x = x;
-
+  get_rect(mrb, self)->x = x;
   return mrb_nil_value();
 }
 
 static mrb_value
 rect_x_getter(mrb_state *mrb, mrb_value self)
 {
-  moon_rect* rect;
-  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
-
-  //return mrb_fixnum_value((int)(*rect)->x);
-  return mrb_float_value(mrb, (*rect)->x);
+  return mrb_fixnum_value(mrb, get_rect(mrb, self)->x);
 }
 
 static mrb_value
@@ -82,68 +110,44 @@ rect_y_setter(mrb_state *mrb, mrb_value self)
 {
   mrb_int y;
   mrb_get_args(mrb, "i", &y);
-
-  moon_rect* rect;
-  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
-
-  (*rect)->y = y;
-
+  get_rect(mrb, self)->y = y;
   return mrb_nil_value();
 }
 
 static mrb_value
 rect_y_getter(mrb_state *mrb, mrb_value self)
 {
-  moon_rect* rect;
-  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
-
-  return mrb_float_value(mrb, (*rect)->y);
+  return mrb_fixnum_value(mrb, get_rect(mrb, self)->y);
 }
 
 static mrb_value
 rect_width_setter(mrb_state *mrb, mrb_value self)
 {
-  mrb_int width;
-  mrb_get_args(mrb, "i", &width);
-
-  moon_rect* rect;
-  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
-
-  (*rect)->w = width;
-
+  mrb_int w;
+  mrb_get_args(mrb, "i", &w);
+  get_rect(mrb, self)->w = w;
   return mrb_nil_value();
 }
 
 static mrb_value
 rect_width_getter(mrb_state *mrb, mrb_value self)
 {
-  moon_rect* rect;
-  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
-
-  return mrb_float_value(mrb, (*rect)->w);
+  return mrb_fixnum_value(mrb, get_rect(mrb, self)->w);
 }
 
 static mrb_value
 rect_height_setter(mrb_state *mrb, mrb_value self)
 {
-  mrb_int height;
-  mrb_get_args(mrb, "i", &height);
-
-  moon_rect* rect;
-  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
-
-  (*rect)->h = height;
-
+  mrb_int h;
+  mrb_get_args(mrb, "i", &h);
+  get_rect(mrb, self)->h = h;
   return mrb_nil_value();
 }
 
 static mrb_value
 rect_height_getter(mrb_state *mrb, mrb_value self)
 {
-  moon_rect* rect;
-  rect = (moon_rect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
-
-  return mrb_float_value(mrb, (*rect)->h);
+  return mrb_fixnum_value(mrb, get_rect(mrb, self)->h);
 }
 
 struct RClass*
@@ -164,18 +168,4 @@ mmrb_rect_init(mrb_state *mrb)
   mrb_define_method(mrb, rect_class, "height",          rect_height_getter,   MRB_ARGS_NONE());
 
   return rect_class;
-}
-
-mrb_value
-mmrb_rect_wrap(mrb_state *mrb, Moon::Rect *ptr)
-{
-  moon_rect *rect_ptr = new moon_rect(ptr);
-  mrb_value rect = mrb_obj_value(Data_Wrap_Struct(mrb, rect_class, &rect_data_type, rect_ptr));
-  return rect;
-}
-
-mrb_value
-mmrb_rect_create(mrb_state *mrb, GLint x, GLint y, GLint w, GLint h)
-{
-  return mmrb_rect_wrap(mrb, new Moon::Rect(x, y, w, h));
 }

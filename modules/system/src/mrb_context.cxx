@@ -1,5 +1,10 @@
+#include <mruby.h>
+#include <mruby/array.h>
+#include <mruby/class.h>
+#include <mruby/compile.h>
 #include "moon/mrb/context.hxx"
-#include "moon/graphics.hxx"
+
+static struct RClass* context_class;
 
 static void
 context_free(mrb_state *mrb, void *p)
@@ -59,16 +64,13 @@ context_symbols(mrb_state *mrb, mrb_value self)
   return ary;
 }
 
-struct RClass*
-mmrb_context_init(mrb_state *mrb)
+void
+mmrb_context_init(mrb_state *mrb, struct RClass *mod)
 {
-  struct RClass *context_class;
-  context_class = mrb_define_class_under(mrb, mmrb_Moon, "Context", mrb->object_class);
+  context_class = mrb_define_class_under(mrb, mod, "Context", mrb->object_class);
   MRB_SET_INSTANCE_TT(context_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, context_class, "initialize", context_initialize, MRB_ARGS_NONE());
   mrb_define_method(mrb, context_class, "eval",       context_eval,       MRB_ARGS_REQ(1));
   mrb_define_method(mrb, context_class, "symbols",    context_symbols,    MRB_ARGS_NONE());
-
-  return context_class;
 }

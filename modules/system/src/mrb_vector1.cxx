@@ -1,90 +1,91 @@
 /*
  * Moon Vector1, a wrapper around glm::vec1
  */
-#include "moon/mrb/vector1.hxx"
+#include <mruby.h>
+#include <mruby/array.h>
+#include <mruby/class.h>
+#include <mruby/data.h>
+#include <mruby/numeric.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/random.hpp>
 #include <glm/gtx/compatibility.hpp>
-#include "moon/mrb/shared_types.hxx"
+#include "moon/mrb/vector1.hxx"
 
-#define VECTOR_DATA_TYPE &vector1_data_type
-#define VECTOR_MOON_STRUCT moon_vec1
-#define VECTOR_STRUCT glm::highp_vec1_t
-#define VECTOR_EXTRACT_FUNC(_mrb_) mmrb_vector1_extract_mrb_args(_mrb_)
-#define VECTOR_CLASS vector1_class
-#define moon_vector_ptr moon_vec1_ptr
-#define moon_vector_ref moon_vec1_ref
-#include "moon/mrb/vector_private.hxx"
-
-static struct RClass *VECTOR_CLASS = NULL;
+static struct RClass *vector1_class = NULL;
 
 static void
 vector1_free(mrb_state *mrb, void *p)
 {
-  VECTOR_MOON_STRUCT *vec = (VECTOR_MOON_STRUCT*)p;
+  moon_vec1 *vec = (moon_vec1*)p;
   if (vec) {
     delete(vec);
   }
 }
 
-struct mrb_data_type vector1_data_type = { "Vector1", vector1_free };
+const struct mrb_data_type vector1_data_type = { "Vector1", vector1_free };
 
 static inline void
 mrb_set_vector1_value_x(mrb_state *mrb, mrb_value target, mrb_float x)
 {
-  VECTOR_MOON_STRUCT *vect = new VECTOR_MOON_STRUCT(new VECTOR_STRUCT(x));
-  mrb_data_init(target, vect, VECTOR_DATA_TYPE);
+  moon_vec1 *vect = new moon_vec1(new glm::highp_vec1_t(x));
+  mrb_data_init(target, vect, &vector1_data_type);
 }
 
 mrb_value
-mmrb_vector1_value(mrb_state *mrb, VECTOR_STRUCT vec)
+mmrb_vector1_value(mrb_state *mrb, glm::highp_vec1_t vec)
 {
-  VECTOR_MOON_STRUCT *vec_ptr = new VECTOR_MOON_STRUCT(new VECTOR_STRUCT(vec));
-  return mrb_obj_value(Data_Wrap_Struct(mrb, VECTOR_CLASS, VECTOR_DATA_TYPE, vec_ptr));
+  moon_vec1 *vec_ptr = new moon_vec1(new glm::highp_vec1_t(vec));
+  return mrb_obj_value(Data_Wrap_Struct(mrb, vector1_class, &vector1_data_type, vec_ptr));
 }
 
 mrb_value
-mmrb_vector1_wrap(mrb_state *mrb, VECTOR_STRUCT *ptr)
+mmrb_vector1_wrap(mrb_state *mrb, glm::highp_vec1_t *ptr)
 {
-  VECTOR_MOON_STRUCT *vec_ptr = new VECTOR_MOON_STRUCT(ptr);
-  return mrb_obj_value(Data_Wrap_Struct(mrb, VECTOR_CLASS, VECTOR_DATA_TYPE, vec_ptr));
+  moon_vec1 *vec_ptr = new moon_vec1(ptr);
+  return mrb_obj_value(Data_Wrap_Struct(mrb, vector1_class, &vector1_data_type, vec_ptr));
 }
 
 mrb_value
-mmrb_vector1_wrap(mrb_state *mrb, VECTOR_MOON_STRUCT moonv)
+mmrb_vector1_wrap(mrb_state *mrb, moon_vec1 moonv)
 {
-  VECTOR_MOON_STRUCT *vec_ptr = new VECTOR_MOON_STRUCT(moonv);
-  return mrb_obj_value(Data_Wrap_Struct(mrb, VECTOR_CLASS, VECTOR_DATA_TYPE, vec_ptr));
+  moon_vec1 *vec_ptr = new moon_vec1(moonv);
+  return mrb_obj_value(Data_Wrap_Struct(mrb, vector1_class, &vector1_data_type, vec_ptr));
 }
 
 mrb_value
 mmrb_vector1_create(mrb_state *mrb, double x)
 {
-  return mmrb_vector1_wrap(mrb, new VECTOR_STRUCT(x));
+  return mmrb_vector1_wrap(mrb, new glm::highp_vec1_t(x));
 }
 
 /*
  * Black Magic
  */
-VECTOR_STRUCT
+glm::highp_vec1_t
 mmrb_vector1_extract_mrb_vec1(mrb_state *mrb, mrb_value obj)
 {
   m_vector_unwrap(obj, vec);
   return moon_vector_ref(vec);
 }
 
-static VECTOR_STRUCT
+glm::highp_vec1_t
+mmrb_to_vector1(mrb_state *mrb, mrb_value obj)
+{
+  return mmrb_vector1_extract_mrb_vec1(mrb, obj);
+}
+
+static glm::highp_vec1_t
 mmrb_vector1_extract_mrb_num(mrb_state *mrb, mrb_value obj)
 {
   double i = mrb_to_flo(mrb, obj);
-  return VECTOR_STRUCT(i);
+  return glm::highp_vec1_t(i);
 }
 
-static VECTOR_STRUCT
+static glm::highp_vec1_t
 mmrb_vector1_extract_mrb_array(mrb_state *mrb, mrb_value obj)
 {
-  VECTOR_STRUCT result;
+  glm::highp_vec1_t result;
   int _ary_len = mrb_ary_len(mrb, obj);
   if (_ary_len != 1) {
     mrb_raisef(mrb, E_ARGUMENT_ERROR,
@@ -95,16 +96,16 @@ mmrb_vector1_extract_mrb_array(mrb_state *mrb, mrb_value obj)
   return result;
 }
 
-static VECTOR_STRUCT
+static glm::highp_vec1_t
 mmrb_vector1_extract_mrb_to_vec1(mrb_state *mrb, mrb_value obj)
 {
   return mmrb_vector1_extract_mrb_vec1(mrb, mrb_funcall(mrb, obj, "to_vec1", 0));
 }
 
-VECTOR_STRUCT
+glm::highp_vec1_t
 mmrb_vector1_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
 {
-  VECTOR_STRUCT result;
+  glm::highp_vec1_t result;
   switch (argc) {
   case 1:
     mrb_value val;
@@ -118,7 +119,7 @@ mmrb_vector1_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
       result = mmrb_vector1_extract_mrb_array(mrb, val);
       break;
     case MRB_TT_DATA:
-      if (DATA_TYPE(val) == VECTOR_DATA_TYPE) {
+      if (DATA_TYPE(val) == &vector1_data_type) {
         result = mmrb_vector1_extract_mrb_vec1(mrb, val);
         break;
       }
@@ -140,7 +141,7 @@ mmrb_vector1_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
   return result;
 }
 
-static VECTOR_STRUCT
+static glm::highp_vec1_t
 mmrb_vector1_extract_mrb_args(mrb_state *mrb)
 {
   mrb_value *vals;
@@ -153,9 +154,9 @@ static mrb_value
 vector1_initialize(mrb_state *mrb, mrb_value self)
 {
   mrb_float x = 0.0;
-  VECTOR_MOON_STRUCT *vec;
+  moon_vec1 *vec;
   mrb_get_args(mrb, "|f", &x);
-  vec = (VECTOR_MOON_STRUCT*)DATA_PTR(self);
+  vec = (moon_vec1*)DATA_PTR(self);
   if (vec) {
     vector1_free(mrb, (void*)vec);
   }
@@ -166,8 +167,8 @@ vector1_initialize(mrb_state *mrb, mrb_value self)
 static mrb_value
 vector1_initialize_copy(mrb_state *mrb, mrb_value self)
 {
-  VECTOR_MOON_STRUCT* src_vec;
-  mrb_get_args(mrb, "d", &src_vec, VECTOR_DATA_TYPE);
+  moon_vec1* src_vec;
+  mrb_get_args(mrb, "d", &src_vec, &vector1_data_type);
   mrb_set_vector1_value_x(mrb, self, moon_vector_ptr(src_vec)->x);
   return self;
 }
@@ -302,16 +303,16 @@ static mrb_value
 vector1_distance(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator_head(src_mvec, arg_vec);
-  VECTOR_STRUCT diff = moon_vector_ref(src_mvec) - arg_vec;
+  glm::highp_vec1_t diff = moon_vector_ref(src_mvec) - arg_vec;
   return mrb_float_value(mrb, glm::dot(diff, diff));
 }
 
 static mrb_value
 vector1_lerp(mrb_state *mrb, mrb_value self)
 {
-  VECTOR_MOON_STRUCT *other;
+  moon_vec1 *other;
   mrb_float delta;
-  mrb_get_args(mrb, "df", &other, VECTOR_DATA_TYPE, &delta);
+  mrb_get_args(mrb, "df", &other, &vector1_data_type, &delta);
   m_vector_unwrap_self(vec);
   //return mmrb_vector1_value(mrb, glm::lerp(moon_vector_ref(vec), moon_vector_ref(other), (float)delta));
   return mrb_nil_value();
@@ -344,53 +345,52 @@ vector1_s_extract(mrb_state *mrb, mrb_value self)
 static mrb_value
 vector1_s_cast(mrb_state *mrb, mrb_value klass)
 {
-  mrb_value result = mrb_obj_new(mrb, VECTOR_CLASS, 0, {});
+  mrb_value result = mrb_obj_new(mrb, vector1_class, 0, {});
   m_vector_unwrap(result, dest_vect);
   m_vector_extract(src_vect);
   moon_vector_ref(dest_vect) = src_vect;
   return result;
 }
 
-struct RClass*
-mmrb_vector1_init(mrb_state *mrb)
+void
+mmrb_vector1_init(mrb_state *mrb, struct RClass *mod)
 {
-  VECTOR_CLASS = mrb_define_class_under(mrb, mmrb_Moon, "Vector1", mrb->object_class);
-  MRB_SET_INSTANCE_TT(VECTOR_CLASS, MRB_TT_DATA);
+  vector1_class = mrb_define_class_under(mrb, mod, "Vector1", mrb->object_class);
+  MRB_SET_INSTANCE_TT(vector1_class, MRB_TT_DATA);
 
-  mrb_define_method(mrb, VECTOR_CLASS, "initialize",      vector1_initialize,      MRB_ARGS_OPT(1));
-  mrb_define_method(mrb, VECTOR_CLASS, "initialize_copy", vector1_initialize_copy, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector1_class, "initialize",      vector1_initialize,      MRB_ARGS_OPT(1));
+  mrb_define_method(mrb, vector1_class, "initialize_copy", vector1_initialize_copy, MRB_ARGS_REQ(1));
   /* coercion */
-  mrb_define_method(mrb, VECTOR_CLASS, "coerce",          vector1_coerce,          MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector1_class, "coerce",          vector1_coerce,          MRB_ARGS_REQ(1));
   /* attribute setters */
-  mrb_define_method(mrb, VECTOR_CLASS, "x",               vector1_x_getter,        MRB_ARGS_NONE());
-  mrb_define_method(mrb, VECTOR_CLASS, "x=",              vector1_x_setter,        MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, VECTOR_CLASS, "set",             vector1_set,             MRB_ARGS_ANY());
+  mrb_define_method(mrb, vector1_class, "x",               vector1_x_getter,        MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector1_class, "x=",              vector1_x_setter,        MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector1_class, "set",             vector1_set,             MRB_ARGS_ANY());
   /* arithmetic */
-  mrb_define_method(mrb, VECTOR_CLASS, "-@",              vector1_negate,          MRB_ARGS_NONE());
-  mrb_define_method(mrb, VECTOR_CLASS, "+@",              vector1_identity,        MRB_ARGS_NONE());
-  mrb_define_method(mrb, VECTOR_CLASS, "+",               vector1_add,             MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, VECTOR_CLASS, "-",               vector1_sub,             MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, VECTOR_CLASS, "*",               vector1_mul,             MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, VECTOR_CLASS, "/",               vector1_div,             MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, VECTOR_CLASS, "dot",             vector1_dot,             MRB_ARGS_REQ(1));
-  /*mrb_define_method(mrb, VECTOR_CLASS, "cross",           vector1_cross,           MRB_ARGS_REQ(1));*/
+  mrb_define_method(mrb, vector1_class, "-@",              vector1_negate,          MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector1_class, "+@",              vector1_identity,        MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector1_class, "+",               vector1_add,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector1_class, "-",               vector1_sub,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector1_class, "*",               vector1_mul,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector1_class, "/",               vector1_div,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector1_class, "dot",             vector1_dot,             MRB_ARGS_REQ(1));
+  /*mrb_define_method(mrb, vector1_class, "cross",           vector1_cross,           MRB_ARGS_REQ(1));*/
   /* */
-  mrb_define_method(mrb, VECTOR_CLASS, "normalize",       vector1_normalize,       MRB_ARGS_NONE());
-  mrb_define_method(mrb, VECTOR_CLASS, "length",          vector1_length,          MRB_ARGS_NONE());
-  mrb_define_method(mrb, VECTOR_CLASS, "distance",        vector1_distance,        MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, VECTOR_CLASS, "lerp",            vector1_lerp,            MRB_ARGS_REQ(2));
+  mrb_define_method(mrb, vector1_class, "normalize",       vector1_normalize,       MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector1_class, "length",          vector1_length,          MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector1_class, "distance",        vector1_distance,        MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector1_class, "lerp",            vector1_lerp,            MRB_ARGS_REQ(2));
   /* bitwise operators */ /* If and only if we ever support integer based vectors */
-  /*mrb_define_method(mrb, VECTOR_CLASS, "~@",              vector1_not,             MRB_ARGS_NONE());*/
-  /*mrb_define_method(mrb, VECTOR_CLASS, "%",               vector1_modulo,          MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, VECTOR_CLASS, "<<",              vector1_shl,             MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, VECTOR_CLASS, ">>",              vector1_shr,             MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, VECTOR_CLASS, "&",               vector1_and,             MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, VECTOR_CLASS, "|",               vector1_or,              MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, VECTOR_CLASS, "^",               vector1_xor,             MRB_ARGS_REQ(1));*/
+  /*mrb_define_method(mrb, vector1_class, "~@",              vector1_not,             MRB_ARGS_NONE());*/
+  /*mrb_define_method(mrb, vector1_class, "%",               vector1_modulo,          MRB_ARGS_REQ(1));*/
+  /*mrb_define_method(mrb, vector1_class, "<<",              vector1_shl,             MRB_ARGS_REQ(1));*/
+  /*mrb_define_method(mrb, vector1_class, ">>",              vector1_shr,             MRB_ARGS_REQ(1));*/
+  /*mrb_define_method(mrb, vector1_class, "&",               vector1_and,             MRB_ARGS_REQ(1));*/
+  /*mrb_define_method(mrb, vector1_class, "|",               vector1_or,              MRB_ARGS_REQ(1));*/
+  /*mrb_define_method(mrb, vector1_class, "^",               vector1_xor,             MRB_ARGS_REQ(1));*/
   /* conversion */
-  mrb_define_method(mrb, VECTOR_CLASS, "to_a",            vector1_to_a,            MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector1_class, "to_a",            vector1_to_a,            MRB_ARGS_NONE());
   /* cast */
-  mrb_define_class_method(mrb, VECTOR_CLASS, "[]",        vector1_s_cast,          MRB_ARGS_ANY());
-  mrb_define_class_method(mrb, VECTOR_CLASS, "extract",   vector1_s_extract,       MRB_ARGS_REQ(1));
-  return VECTOR_CLASS;
+  mrb_define_class_method(mrb, vector1_class, "[]",        vector1_s_cast,          MRB_ARGS_ANY());
+  mrb_define_class_method(mrb, vector1_class, "extract",   vector1_s_extract,       MRB_ARGS_REQ(1));
 }

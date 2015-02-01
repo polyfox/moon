@@ -1,4 +1,6 @@
-#include "moon/mrb.hxx"
+#include <stdbool.h>
+#include <mruby.h>
+#include <mruby/class.h>
 #include "moon/mrb_err.hxx"
 
 bool

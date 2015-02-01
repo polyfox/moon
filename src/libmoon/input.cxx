@@ -186,24 +186,30 @@ namespace Moon {
   }
 
   void Input::update_key(GLFWwindow* window, int key_id, int scancode, int action, int mods) {
+    const int ai = mrb_gc_arena_save(mrb);
     mrb_funcall(mrb, mrb_obj_value(mmrb_Input), "on_key", 4,
       glfw_key_to_mrb_symbol(key_id),
       mrb_fixnum_value(scancode),
       glfw_state_to_mrb_symbol(action),
       mrb_fixnum_value(mods));
+    mrb_gc_arena_restore(mrb, ai);
   }
 
   void Input::update_button(GLFWwindow* window, int button_id, int action, int mods) {
+    const int ai = mrb_gc_arena_save(mrb);
     mrb_funcall(mrb, mrb_obj_value(mmrb_Input), "on_button", 3,
       glfw_key_to_mrb_symbol(button_id),
       glfw_state_to_mrb_symbol(action),
       mrb_fixnum_value(mods));
+    mrb_gc_arena_restore(mrb, ai);
   }
 
   void Input::update_cursor_pos(GLFWwindow* window, double x, double y) {
+    const int ai = mrb_gc_arena_save(mrb);
     mrb_funcall(mrb, mrb_obj_value(mmrb_Input), "on_mousemove", 2,
       mrb_float_value(mrb, x),
       mrb_float_value(mrb, y));
+    mrb_gc_arena_restore(mrb, ai);
   }
 
   /* Mouse functions */
