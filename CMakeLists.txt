@@ -77,15 +77,24 @@ option(freetype-gl_BUILD_DEMOS "freetype-gl Demos" OFF)
 add_subdirectory(${MOON_DIR}/vendor/freetype-gl)
 include_directories(${MOON_DIR}/vendor/freetype-gl)
 
+# nanovg
+add_custom_command(
+  OUTPUT libnanovg.a
+  COMMAND premake4 gmake
+  COMMAND make -C build
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vendor/nanovg
+)
+
 # mruby
 add_custom_command(
   OUTPUT libmruby.a
   COMMAND ./minirake MRUBY_CONFIG=../../mrb_config.rb
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vendor/mruby
 )
-add_custom_target(mruby DEPENDS libmruby.a)
+
+add_custom_target(mruby DEPENDS libmruby.a libnanovg.a)
 include_directories(${MOON_DIR}/vendor/mruby/include)
-set(MRUBY_LIBRARIES ${MOON_DIR}/vendor/mruby/build/host/lib/libmruby.a)
+set(MRUBY_LIBRARIES ${MOON_DIR}/vendor/mruby/build/host/lib/libmruby.a ${MOON_DIR}/vendor/nanovg/build/libnanovg.a)
 if(UNIX) # mrb-require needs for loading .so files
   set(MRUBY_LIBRARIES ${MRUBY_LIBRARIES} dl)
 endif(UNIX)
@@ -115,6 +124,12 @@ if(UNIX AND CMAKE_COMPILER_IS_GNUCC)
 endif(UNIX AND CMAKE_COMPILER_IS_GNUCC)
 # Math
 set(MOON_LIBRARIES ${MOON_LIBRARIES} m)
+#
+#if(LINUX)
+  set(MOON_LIBRARIES ${MOON_LIBRARIES} X11)
+  set(MOON_LIBRARIES ${MOON_LIBRARIES} Xcursor)
+  set(MOON_LIBRARIES ${MOON_LIBRARIES} Xinerama)
+#endif(LINUX)
 
 # Stuff that moon depends on to build
 set(MOON_DEPENDENCIES glfw gorilla mruby)
