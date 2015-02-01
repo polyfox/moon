@@ -1,11 +1,11 @@
 shader_version
-var_precision
+var_precision;
 invar vec2 f_texcoord;
 uniform sampler2D tex;
 uniform float opacity;
 uniform vec4 color;
 uniform vec4 tone;
-def_frag_color
+def_frag_color;
 
 vec3 rgb2hsv(vec3 c) {
   vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);

@@ -1,5 +1,5 @@
 shader_version
-var_precision
+var_precision;
 
 layout(location = 0) inattr vec2 vertex_pos;
 layout(location = 1) inattr vec2 texcoord;

@@ -1,5 +1,5 @@
 shader_version
-var_precision
+var_precision;
 
 uniform mat4 mvp_matrix;
 

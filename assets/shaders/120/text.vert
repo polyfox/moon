@@ -1,5 +1,5 @@
  #version 120
-
+;
 uniform mat4 mvp_matrix;
 attribute vec2 vertex_pos;
 attribute vec2 texcoord;
