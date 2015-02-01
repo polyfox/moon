@@ -10,7 +10,5 @@ install:
   - sudo apt-get install -qq libopenal-dev libdevil-dev libglfw-dev libglew-dev freeglut3-dev libx11-dev libxmu-dev libxi-dev libyaml-dev
   # GLFW3
   - sudo apt-get install -qq xorg-dev libglu1-mesa-dev
-before_script:
-  - "mkdir -p build && cd build && cmake .."
 script:
-  - make -j4
+  - bash build.sh
