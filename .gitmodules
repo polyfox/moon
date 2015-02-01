@@ -22,3 +22,13 @@
 [submodule "vendor/gorilla-audio"]
   path = vendor/gorilla-audio
   url = https://github.com/IceDragon200/gorilla-audio.git
+
+[submodule "vendor/nanovg"]
+  path = vendor/nanovg
+  url = https://github.com/memononen/nanovg.git
+
+[submodule "vendor/oui-blendish"]
+  path = vendor/oui-blendish
+  url = https://github.com/IceDragon200/oui-blendish.git
+
+
