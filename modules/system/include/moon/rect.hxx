@@ -11,6 +11,12 @@ namespace Moon {
       w = _w;
       h = _h;
     };
+    Rect(const Moon::Rect<T> &r) {
+      x = r.x;
+      y = r.y;
+      w = r.w;
+      h = r.h;
+    };
   };
   typedef Rect<int> IntRect;
 };

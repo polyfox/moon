@@ -3,4 +3,8 @@
 
 #include <glm/glm.hpp>
 
+namespace Moon {
+  typedef glm::vec4 Vector4;
+}
+
 #endif

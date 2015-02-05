@@ -1,11 +1,11 @@
 #ifndef MMRB_VECTOR3_H
 #define MMRB_VECTOR3_H
 
-#include <memory>
 #include <mruby.h>
 #include <mruby/class.h>
 #include <mruby/data.h>
 #include "moon/vector3.hxx"
+
 
 extern const struct mrb_data_type vector3_data_type;
 void mmrb_vector3_init(mrb_state *mrb, struct RClass *mod);
