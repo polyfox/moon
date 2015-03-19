@@ -4,11 +4,17 @@ compiler:
   - clang
 before_install:
   - sudo apt-get update -qq
-  - git submodule update --init --recursive
+  - git submodule update --init --recursive --depth=1
+  # build stuff
+  - sudo apt-get install -qq -y liblua5.1-0
+  # build.premake4
+  - wget http://mirrors.kernel.org/ubuntu/pool/universe/p/premake4/premake4_4.3+repack1-2_amd64.deb
+  - sudo dpkg -i ./premake4_4.3+repack1-2_amd64.deb
+  - rm -v ./premake4_4.3+repack1-2_amd64.deb
 install:
-  # Moon
+  # deps.moon
   - sudo apt-get install -qq libopenal-dev libdevil-dev libglfw-dev libglew-dev freeglut3-dev libx11-dev libxmu-dev libxi-dev libyaml-dev
-  # GLFW3
+  # deps.glfw3
   - sudo apt-get install -qq xorg-dev libglu1-mesa-dev
 script:
-  - bash build.sh
+  - exec bash build.sh

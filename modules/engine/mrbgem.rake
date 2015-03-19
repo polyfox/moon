@@ -1,3 +1,4 @@
+#encoding:UTF-8
 MRuby::Gem::Specification.new('mruby-moon-engine') do |spec|
   spec.license = 'MIT'
   spec.authors = ['Blaž Hrastnik', 'Corey Powell']
