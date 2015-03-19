@@ -1,7 +1,6 @@
 #ifndef MOON_AUDIO_H
 #define MOON_AUDIO_H
 
-#include "moon/stdh.hxx"
 /* Gorilla Audio */
 #include <gorilla/ga.h>
 #include <gorilla/gau.h>

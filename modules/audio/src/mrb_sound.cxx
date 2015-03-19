@@ -1,7 +1,15 @@
+#include <mruby.h>
+#include <mruby/class.h>
+#include <mruby/data.h>
+#include <mruby/numeric.h>
 #include "moon/mrb/sound.hxx"
 #include "moon/audio.hxx"
+#include "moon/api.h"
+#include "moon/intern.h"
 
 using Moon::Audio;
+
+static struct RClass *sound_class;
 
 static void
 sound_free(mrb_state *mrb, void *p)
@@ -12,7 +20,13 @@ sound_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type sound_data_type = { "Sound", sound_free };
+MOON_C_API const struct mrb_data_type sound_data_type = { "Sound", sound_free };
+
+static inline ga_Sound*
+get_sound(mrb_state *mrb, mrb_value self)
+{
+  return (ga_Sound*)mrb_data_get_ptr(mrb, self, &sound_data_type);
+}
 
 static mrb_value
 sound_initialize(mrb_state *mrb, mrb_value self)
@@ -46,12 +60,9 @@ sound_play(mrb_state *mrb, mrb_value self)
   mrb_float gain = 1.0;
   mrb_float pitch = 1.0;
   mrb_float pan = 0.0;
-  ga_Sound *sound;
+  ga_Sound *sound = get_sound(mrb, self);
   ga_Handle* handle;
   mrb_get_args(mrb, "|fff", &gain, &pitch, &pan);
-
-  sound = (ga_Sound*)mrb_data_get_ptr(mrb, self, &sound_data_type);
-
   handle = gau_create_handle_sound(Audio::get_mixer(), sound, &gau_on_finish_destroy, 0, 0);
   ga_handle_setParamf(handle, GA_HANDLE_PARAM_GAIN, gain);
   ga_handle_setParamf(handle, GA_HANDLE_PARAM_PITCH, pitch);
@@ -61,16 +72,12 @@ sound_play(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
-struct RClass*
-mmrb_sound_init(mrb_state *mrb)
+MOON_C_API void
+mmrb_sound_init(mrb_state *mrb, struct RClass *mod)
 {
-  struct RClass *sound_class;
-  sound_class = mrb_define_class_under(mrb, mmrb_Moon, "Sound", mrb->object_class);
+  sound_class = mrb_define_class_under(mrb, mod, "Sound", mrb->object_class);
   MRB_SET_INSTANCE_TT(sound_class, MRB_TT_DATA);
-
   mrb_define_method(mrb, sound_class, "initialize", sound_initialize, MRB_ARGS_REQ(2));
   mrb_define_method(mrb, sound_class, "play", sound_play,             MRB_ARGS_OPT(3));
-
-  return sound_class;
 }
 
