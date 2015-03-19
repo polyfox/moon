@@ -1,21 +1,21 @@
+#include "moon/engine.hxx"
+#include "moon/shader_loader.hxx"
 #include "moon/spritesheet.hxx"
+#include "moon/texture.hxx"
+#include "moon/vector4.hxx"
 
 namespace Moon {
   Spritesheet::Spritesheet()
-  : VBO(GL_STATIC_DRAW)
+  : m_vbo(GL_STATIC_DRAW)
   {
-    if (LEGACY_GL) {
-      m_shader = Shader::load("resources/shaders/120/quad.vert", "resources/shaders/120/quad.frag");
-    } else {
-      m_shader = Shader::load("resources/shaders/330/quad.vert", "resources/shaders/330/quad.frag");
-    }
+    m_shader = ShaderLoader::GetQuadShader();
   }
 
   Spritesheet::~Spritesheet() {
 
   };
 
-  void Spritesheet::load_texture(moon_texture texture, int tile_width, int tile_height) {
+  void Spritesheet::LoadTexture(Moon::Texture *texture, int tile_width, int tile_height) {
     m_texture = texture;
 
     this->tile_height = tile_height;
@@ -23,14 +23,10 @@ namespace Moon {
 
     total_sprites = 0;
 
-    generate_buffers();
+    GenerateBuffers();
   }
 
-  void Spritesheet::load_file(std::string filename, int tile_width, int tile_height) {
-    load_texture(Texture::load(filename), tile_width, tile_height);
-  }
-
-  bool Spritesheet::generate_buffers() {
+  bool Spritesheet::GenerateBuffers() {
     // If there is a texture loaded and clips to make vertex data from
     if(m_texture->id() != 0) {
       GLfloat tiles_per_row, tiles_per_column;
@@ -49,18 +45,18 @@ namespace Moon {
         float t0 = (oy) / tiles_per_column;
         float t1 = (oy + 1.0) / tiles_per_column;
 
-        vertex vertices[4] = {
-          { {0.f, 0.f},                {s0, t0} },
-          { {tile_width, 0.f},         {s1, t0} },
-          { {tile_width, tile_height}, {s1, t1} },
-          { {0.f, tile_height},        {s0, t1} }
+        Vertex vertices[4] = {
+          { {0.f, 0.f},                {s0, t0}, Vector4(0, 0, 0, 0) },
+          { {tile_width, 0.f},         {s1, t0}, Vector4(0, 0, 0, 0) },
+          { {tile_width, tile_height}, {s1, t1}, Vector4(0, 0, 0, 0) },
+          { {0.f, tile_height},        {s0, t1}, Vector4(0, 0, 0, 0) }
         };
 
-        VBO.push_back_vertices(vertices, 4);
+        m_vbo.push_back_vertices(vertices, 4);
       }
 
       GLuint indices[4] = {0, 1, 3, 2};
-      VBO.push_back_indices(indices, 4);
+      m_vbo.push_back_indices(indices, 4);
 
     } else {   //Error
       printf("No texture to render with!\n");
@@ -70,8 +66,8 @@ namespace Moon {
     return true;
   };
 
-  void Spritesheet::render(const float &x, const float &y, const float &z,
-                           const int &index, const ss_render_options &render_ops) {
+  void Spritesheet::Render(const float &x, const float &y, const float &z,
+                           const int &index, const Spritesheet::RenderState &render_ops) {
 
     // if you somehow managed to go out-of-bounds
     if ((index < 0) || (index >= (int)total_sprites)) return;
@@ -79,29 +75,30 @@ namespace Moon {
 
     int offset = index*4;
 
-    m_shader->use();
+    m_shader->Use();
 
     //model matrix - move it to the correct position in the world
+    Moon::Vector2 origin = render_ops.origin;
     glm::mat4 model_matrix = glm::translate(render_ops.transform, glm::vec3(x, y, z));
     glm::mat4 rotation_matrix = glm::translate(glm::rotate(
-      glm::translate(glm::mat4(1.0f), glm::vec3(render_ops.ox, render_ops.oy, 0)),
+      glm::translate(glm::mat4(1.0f), glm::vec3(origin.x, origin.y, 0)),
       glm::radians(render_ops.angle),
       glm::vec3(0, 0, 1)
-    ), glm::vec3(-render_ops.ox, -render_ops.oy, 0));
+    ), glm::vec3(-origin.x, -origin.y, 0));
 
     // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
     glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix * rotation_matrix;
-    glUniformMatrix4fv(m_shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+    glUniformMatrix4fv(m_shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
-    glUniform1f(m_shader->get_uniform("opacity"), render_ops.opacity);
-    glUniform4fv(m_shader->get_uniform("tone"), 1, glm::value_ptr(render_ops.tone));
-    glUniform4fv(m_shader->get_uniform("color"), 1, glm::value_ptr(render_ops.color));
+    glUniform1f(m_shader->GetUniform("opacity"), render_ops.opacity);
+    glUniform4fv(m_shader->GetUniform("tone"), 1, glm::value_ptr(render_ops.tone));
+    glUniform4fv(m_shader->GetUniform("color"), 1, glm::value_ptr(render_ops.color));
 
     //Set texture ID
     glActiveTexture(GL_TEXTURE0);
     m_texture->bind();
-    glUniform1i(m_shader->get_uniform("tex"), /*GL_TEXTURE*/0);
+    glUniform1i(m_shader->GetUniform("tex"), /*GL_TEXTURE*/0);
 
-    VBO.render_with_offset(GL_TRIANGLE_STRIP, offset);
+    m_vbo.render_with_offset(GL_TRIANGLE_STRIP, offset);
   };
 };

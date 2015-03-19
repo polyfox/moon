@@ -1,14 +1,14 @@
 #ifndef MOON_GFX_H
 #define MOON_GFX_H
 
-#include "moon/stdh.hxx"
-#include <glm/glm.hpp>
+#include "moon/vector2.hxx"
+#include "moon/vector4.hxx"
 
 namespace Moon {
-  struct vertex {
-    glm::vec2 pos;
-    glm::vec2 tex_coord;
-    glm::vec4 color;
+  struct Vertex {
+    Moon::Vector2 pos;
+    Moon::Vector2 tex_coord;
+    Moon::Vector4 color;
   };
 }
 #endif

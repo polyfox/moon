@@ -1,4 +1,7 @@
+#include "moon/engine.hxx"
 #include "moon/vertex_buffer.hxx"
+#include "moon/gl.h"
+#include "moon/glm.h"
 
 namespace Moon {
   VertexBuffer::VertexBuffer(GLenum usage) {
@@ -34,8 +37,8 @@ namespace Moon {
       2,             // number of elements per vertex, here (x,y)
       GL_FLOAT,      // the type of each element
       GL_FALSE,      // take our values as-is
-      sizeof(vertex),                  // stride
-      (GLvoid*)offsetof(vertex, pos)   // offset of first element
+      sizeof(Vertex),                  // stride
+      (GLvoid*)offsetof(Vertex, pos)   // offset of first element
     );
 
     glVertexAttribPointer(
@@ -43,8 +46,8 @@ namespace Moon {
       2,             // number of elements per vertex, here (x,y)
       GL_FLOAT,      // the type of each element
       GL_FALSE,      // take our values as-is
-      sizeof(vertex),                  // stride
-      (GLvoid*)offsetof(vertex, tex_coord)     // offset of first element
+      sizeof(Vertex),                  // stride
+      (GLvoid*)offsetof(Vertex, tex_coord)     // offset of first element
     );
 
     glVertexAttribPointer(
@@ -52,20 +55,20 @@ namespace Moon {
       4,             // number of elements per vertex, here (x,y)
       GL_FLOAT,      // the type of each element
       GL_FALSE,      // take our values as-is
-      sizeof(vertex),                  // stride
-      (GLvoid*)offsetof(vertex, color)   // offset of first element
+      sizeof(Vertex),                  // stride
+      (GLvoid*)offsetof(Vertex, color)   // offset of first element
     );
 
     glBindVertexArray(0);
   };
 
-  void VertexBuffer::push_back(vertex v) {
+  void VertexBuffer::push_back(Vertex v) {
     vertices.push_back(v);
     indices.push_back(indices.size());
     dirty = true;
   }
 
-  void VertexBuffer::push_back_vertices(vertex *v, int vertex_count) {
+  void VertexBuffer::push_back_vertices(Vertex *v, int vertex_count) {
     vertices.reserve(vertex_count);
     std::copy(v, v+vertex_count, std::back_inserter(vertices));
     dirty = true;
@@ -77,7 +80,7 @@ namespace Moon {
     dirty = true;
   }
 
-  void VertexBuffer::push_back(vertex *v, int vertex_count, GLuint i[], int index_count) {
+  void VertexBuffer::push_back(Vertex *v, int vertex_count, GLuint i[], int index_count) {
     int size = vertices.size();
 
     push_back_vertices(v, vertex_count);
@@ -101,7 +104,7 @@ namespace Moon {
   // upload the buffer to the GPU
   void VertexBuffer::upload() {
     glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertex), &vertices.front(), usage);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices.front(), usage);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices.front(), usage);

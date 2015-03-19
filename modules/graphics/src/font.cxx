@@ -1,36 +1,37 @@
+#include <SOIL.h>
+#include "moon/engine.hxx"
+#include "moon/gl.h"
+#include "moon/glm.h"
+#include "moon/shader_loader.hxx"
 #include "moon/font.hxx"
-#include "SOIL.h"
+#include "moon/vector2.hxx"
+#include "moon/vector4.hxx"
 
 namespace Moon {
   Font::Font(std::string filename, int font_size)
-  : buffer(GL_DYNAMIC_DRAW)
+  : m_buffer(GL_DYNAMIC_DRAW)
   {
-    if (LEGACY_GL) {
-      shader = Shader::load("resources/shaders/120/text.vert", "resources/shaders/120/text.frag");
-    } else {
-      shader = Shader::load("resources/shaders/330/text.vert", "resources/shaders/330/text.frag");
-    }
-    atlas = texture_atlas_new(512, 512, 1);
-    font = texture_font_new_from_file(atlas, font_size, filename.c_str());
-
-    texture_font_load_glyphs(font, L" !\"#$%&'()*+,-./0123456789:;<=>?"
+    m_shader = ShaderLoader::GetTextShader();
+    m_atlas = texture_atlas_new(512, 512, 1);
+    m_font = texture_font_new_from_file(m_atlas, font_size, filename.c_str());
+    texture_font_load_glyphs(m_font, L" !\"#$%&'()*+,-./0123456789:;<=>?"
                                    L"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
                                    L"`abcdefghijklmnopqrstuvwxyz{|}~");
   }
 
   Font::~Font() {
-    texture_font_delete(font);
-    texture_atlas_delete(atlas);
+    texture_font_delete(m_font);
+    texture_atlas_delete(m_atlas);
   }
 
   void Font::draw_text(const float &x, const float &y, const float &z,
                        const wchar_t *text) {
-    glm::vec4 color(1.0, 1.0, 1.0, 1.0);
+    Moon::Vector4 color(1.0, 1.0, 1.0, 1.0);
     draw_text(x, y, z, text, color);
   }
 
   void Font::draw_text(const float &x, const float &y, const float &z,
-                       const wchar_t *text, const glm::vec4 &color) {
+                       const wchar_t *text, const Moon::Vector4 &color) {
     font_render_options render_ops;
     render_ops.color = color;
     draw_text(x, y, z, text, render_ops);
@@ -40,40 +41,40 @@ namespace Moon {
                        const wchar_t *text, const font_render_options &render_ops) {
     // outline
     if (render_ops.outline > 0) {
-      font->outline_type = 2;
-      font->outline_thickness = render_ops.outline;
+      m_font->outline_type = 2;
+      m_font->outline_thickness = render_ops.outline;
       add_text(text, render_ops.outline_color);
     }
 
-    font->outline_type = 0;
-    font->outline_thickness = 0;
+    m_font->outline_type = 0;
+    m_font->outline_thickness = 0;
     add_text(text, render_ops.color);
 
-    shader->use();
+    m_shader->Use();
 
-    glBindTexture(GL_TEXTURE_2D, atlas->id);
+    glBindTexture(GL_TEXTURE_2D, m_atlas->id);
 
-    glUniform1i(shader->get_uniform("tex"), /*GL_TEXTURE*/0);
+    glUniform1i(m_shader->GetUniform("tex"), /*GL_TEXTURE*/0);
 
     //model matrix
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down
-      glm::translate(render_ops.transform, glm::vec3(x, y + font->ascender, z)), // move it to the correct position in the world
+      glm::translate(render_ops.transform, glm::vec3(x, y + m_font->ascender, z)), // move it to the correct position in the world
       glm::radians(180.0f),
       glm::vec3(1.0f, 0.0f, 0.0f)
     );
     // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
     glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
-    glUniformMatrix4fv(shader->get_uniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+    glUniformMatrix4fv(m_shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
-    buffer.render(GL_TRIANGLES);
-    buffer.clear();
+    m_buffer.render(GL_TRIANGLES);
+    m_buffer.clear();
   }
 
-  void Font::add_text(const wchar_t *text, const glm::vec4 &c) {
+  void Font::add_text(const wchar_t *text, const Moon::Vector4 &c) {
     float cursor = 0; // position of the write cursor
 
     for(size_t i = 0; i < wcslen(text); ++i) {
-      texture_glyph_t *glyph = texture_font_get_glyph(font, text[i]);
+      texture_glyph_t *glyph = texture_font_get_glyph(m_font, text[i]);
       if(glyph != NULL) {
         float kerning = 0;
         if(i > 0) {
@@ -91,18 +92,18 @@ namespace Moon {
         float t1 = glyph->t1;
 
         GLuint indices[6] = {0,1,2, 0,2,3};
-        vertex vertices[4] = { {{x0,y0},  {s0,t0}, c},
+        Vertex vertices[4] = { {{x0,y0},  {s0,t0}, c},
                                {{x0,y1},  {s0,t1}, c},
                                {{x1,y1},  {s1,t1}, c},
                                {{x1,y0},  {s1,t0}, c} };
-        buffer.push_back(vertices, 4, indices, 6);
+        m_buffer.push_back(vertices, 4, indices, 6);
         cursor += glyph->advance_x;
       }
     }
   }
 
-  glm::vec2 Font::compute_string_bbox(const wchar_t *text) {
-    glm::vec4 bbox;
+  Moon::Vector2 Font::compute_string_bbox(const wchar_t *text) {
+    Moon::Vector4 bbox;
 
     /* initialize string bbox to "empty" values */
     bbox.x = bbox.y =  32000;
@@ -113,7 +114,7 @@ namespace Moon {
     /* for each glyph image, compute its bounding box, */
     /* translate it, and grow the string bbox          */
     for(size_t i = 0; i < wcslen(text); ++i) {
-      texture_glyph_t *glyph = texture_font_get_glyph(font, text[i]);
+      texture_glyph_t *glyph = texture_font_get_glyph(m_font, text[i]);
 
       if(glyph != NULL) {
         float kerning = 0;
@@ -155,7 +156,7 @@ namespace Moon {
   }
 
   int Font::size() {
-    return font->size;
+    return m_font->size;
   }
   /*GlyphMap::GlyphMap() {
 

@@ -1,39 +1,40 @@
 #ifndef MOON_SHADER_H
 #define MOON_SHADER_H
 
-#include "moon/stdh.hxx"
-//#include <utility> // std::pair
 #include <fstream>
+#include <string>
+#include <unordered_map>
+#include <map>
+#include "moon/intern.h"
+#include "moon/gl.h"
+#include "moon/glm.h"
 #include "moon/cache.hxx"
 
 namespace Moon {
-  class Shader: public Cache<Shader, std::pair<const char*, const char*>> {
+  class Shader {
+    typedef std::unordered_map<const char *, GLint> AttributeMap;
   public:
-    ~Shader();
-
-    void   use();
-    GLuint get_program();
-    GLint  get_attribute(const char *name);
-    GLint  get_uniform(const char *name);
-
-    void   bind_attribute(GLuint location, const char *name);
-
     static glm::mat4 projection_matrix; // TEMPORARY LOCATION, TODO MOVE TO RENDERER
     static glm::mat4 view_matrix; // camera. TEMPORARY LOCATION, TODO MOVE TO RENDERER
+
+    Shader(const char* vertexfile, const char* fragmentfile);
+    ~Shader();
+    void   Use();
+    GLuint GetProgram();
+    GLint  GetAttribute(const char *name);
+    GLint  GetUniform(const char *name);
+    void   BindAttribute(GLuint location, const char *name);
   private:
-    Shader(const char *vertexfile, const char *fragmentfile);
+    GLuint  m_program;
+    AttributeMap m_attributeList;
+    AttributeMap m_uniformLocationList;
 
-    std::string file_read(const char *filePath);
-    void   print_log(GLuint object);
-    GLuint create_shader(const char* filename, GLenum type);
-    GLuint create_program(const char *vertexfile, const char *fragmentfile);
-
-    GLuint  _program;
-    std::unordered_map<const char *,GLuint> _attributeList;
-    std::unordered_map<const char *,GLuint> _uniformLocationList;
-  friend class Cache<Shader, std::pair<const char*, const char*>>;
+    std::string ReadFile(const char* filename);
+    void   PrintLog(GLuint object);
+    GLuint CreateShader(const char* filename, GLenum type);
+    GLuint CreateProgram(const char* vertexfile, const char* fragmentfile);
+    GLint  InitAttribute(const char *name);
+    GLint  InitUniform(const char *name);
   };
 };
-
-typedef std::shared_ptr<Moon::Shader> moon_shader;
 #endif

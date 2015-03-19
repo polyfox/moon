@@ -1,10 +1,11 @@
 #ifndef MOON_VERTBUFFER_H
 #define MOON_VERTBUFFER_H
 
-#include "moon/stdh.hxx"
-#include "moon/graphics.hxx"
 #include <vector>
 #include <algorithm>
+#include "moon/intern.h"
+#include "moon/gl.h"
+#include "moon/graphics.hxx"
 
 namespace Moon {
   class VertexBuffer {
@@ -14,10 +15,10 @@ namespace Moon {
 
     void render(GLenum mode);
     void render_with_offset(GLenum mode, const int &offset); // adds offset to the indices used (draws vertex at vbo[indice + offset])
-    void push_back(vertex v);
-    void push_back_vertices(vertex *v, int vertex_count);
+    void push_back(Vertex v);
+    void push_back_vertices(Vertex *v, int vertex_count);
     void push_back_indices(GLuint i[], int index_count);
-    void push_back(vertex *v, int vertex_count, GLuint i[], int index_count); // indices need to be relative to the vertices pushed in
+    void push_back(Vertex *v, int vertex_count, GLuint i[], int index_count); // indices need to be relative to the vertices pushed in
     void clear();
     void upload();
   private:
@@ -29,7 +30,7 @@ namespace Moon {
     GLenum usage;
     bool dirty; // do we need to reupload?
 
-    std::vector<vertex> vertices;
+    std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
   };
 };

@@ -1,42 +1,39 @@
 #ifndef MOON_SPRITE_H
 #define MOON_SPRITE_H
 
-#include "moon.hxx"
-#include "texture.hxx"
-#include "vertex_buffer.hxx"
-#include "graphics.hxx"
-#include "shared_types.hxx"
-#include <glm/glm.hpp>
+#include "moon/intern.h"
+#include "moon/glm.h"
+#include "moon/graphics.hxx"
+#include "moon/rect.hxx"
+#include "moon/shader.hxx"
+#include "moon/texture.hxx"
+#include "moon/vector4.hxx"
+#include "moon/vertex_buffer.hxx"
 
 namespace Moon {
   class Sprite {
   public:
-    Sprite();
-    ~Sprite();
-
+    bool use_clip;
     float opacity;
     float angle;
-    int ox;
-    int oy;
-    moon_vec4 color;
-    moon_vec4 tone;
+    Vector2 origin;
+    Vector4 color;
+    Vector4 tone;
 
-    void load_file(std::string filename);
-    void load_texture(moon_texture texture);
-
-    void render(const float &x, const float &y, const float &z);
-    std::shared_ptr<Texture> getTexture();
-    void setTexture(moon_texture tex);
-
-    std::shared_ptr<Rect> getClip();
-    void setClip(moon_rect clip);
+    Sprite();
+    ~Sprite();
+    void LoadTexture(Texture *texture);
+    Texture* GetTexture();
+    void SetTexture(Texture *tex);
+    IntRect GetClipRect();
+    void SetClipRect(IntRect clip);
+    void Render(const float &x, const float &y, const float &z);
   private:
-    bool generate_buffers();
-
-    moon_rect m_clip_rect; // default constructor nullptr
-    moon_shader m_shader;
-    moon_texture m_texture;
-    VertexBuffer m_VBO;
+    IntRect m_clip_rect;
+    Shader *m_shader;
+    Texture *m_texture;
+    VertexBuffer m_vbo;
+    bool GenerateBuffers();
   };
 };
 

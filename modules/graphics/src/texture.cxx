@@ -1,4 +1,6 @@
+#include "moon/engine.hxx"
 #include "moon/texture.hxx"
+#include "moon/gl.h"
 
 namespace Moon {
   Texture::Texture(std::string filename)
