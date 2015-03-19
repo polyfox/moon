@@ -2,6 +2,7 @@
 #include <mruby/array.h>
 #include <mruby/class.h>
 #include <mruby/compile.h>
+#include "moon/api.h"
 #include "moon/mrb/context.hxx"
 
 static struct RClass* context_class;
@@ -15,21 +16,24 @@ context_free(mrb_state *mrb, void *p)
   }
 }
 
-struct mrb_data_type context_data_type = { "Context", context_free };
+static inline mrbc_context*
+get_context(mrb_state *mrb, mrb_value self)
+{
+  return (mrbc_context*)mrb_data_get_ptr(mrb, self, &context_data_type);
+}
+
+const struct mrb_data_type context_data_type = { "Context", context_free };
 
 static mrb_value
 context_initialize(mrb_state *mrb, mrb_value self)
 {
   mrbc_context *cxt;
-
   cxt = (mrbc_context*)DATA_PTR(self);
   if (cxt) {
     context_free(mrb, (void*)cxt);
   }
   cxt = mrbc_context_new(mrb);
-
   mrb_data_init(self, cxt, &context_data_type);
-
   return self;
 }
 
@@ -38,12 +42,8 @@ context_eval(mrb_state *mrb, mrb_value self)
 {
   char* str;
   mrb_get_args(mrb, "z", &str);
-
-  mrbc_context *cxt;
-  cxt = (mrbc_context*)mrb_data_get_ptr(mrb, self, &context_data_type);
-
+  mrbc_context *cxt = get_context(mrb, self);
   auto v = mrb_load_string_cxt(mrb, str, cxt);
-
   if (mrb->exc) {
     mrb_print_error(mrb);
   }
@@ -51,26 +51,24 @@ context_eval(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-context_symbols(mrb_state *mrb, mrb_value self)
+context_each_symbol(mrb_state *mrb, mrb_value self)
 {
-  mrbc_context *cxt;
-  mrb_value ary;
-  cxt = (mrbc_context*)mrb_data_get_ptr(mrb, self, &context_data_type);
-
-  ary = mrb_ary_new_capa(mrb, cxt->slen);
+  mrb_value blk;
+  mrbc_context *cxt = get_context(mrb, self);
+  mrb_get_args(mrb, "&", &blk);
   for (int i = 0; i < cxt->slen; ++i) {
-    mrb_ary_push(mrb, ary, mrb_symbol_value(cxt->syms[i]));
+    mrb_yield(mrb, blk, mrb_symbol_value(cxt->syms[i]));
   }
-  return ary;
+  return self;
 }
 
-void
+MOON_C_API void
 mmrb_context_init(mrb_state *mrb, struct RClass *mod)
 {
   context_class = mrb_define_class_under(mrb, mod, "Context", mrb->object_class);
   MRB_SET_INSTANCE_TT(context_class, MRB_TT_DATA);
 
-  mrb_define_method(mrb, context_class, "initialize", context_initialize, MRB_ARGS_NONE());
-  mrb_define_method(mrb, context_class, "eval",       context_eval,       MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, context_class, "symbols",    context_symbols,    MRB_ARGS_NONE());
+  mrb_define_method(mrb, context_class, "initialize",  context_initialize,  MRB_ARGS_NONE());
+  mrb_define_method(mrb, context_class, "eval",        context_eval,        MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, context_class, "each_symbol", context_each_symbol, MRB_ARGS_NONE() | MRB_ARGS_BLOCK());
 }

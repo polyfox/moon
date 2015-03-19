@@ -17,7 +17,7 @@ rect_free(mrb_state *mrb, void *p)
   }
 }
 
-const struct mrb_data_type rect_data_type = { "Moon::IntRect", rect_free };
+MOON_C_API const struct mrb_data_type rect_data_type = { "Moon::IntRect", rect_free };
 
 static inline Moon::IntRect*
 get_rect(mrb_state *mrb, mrb_value self)
@@ -28,13 +28,13 @@ get_rect(mrb_state *mrb, mrb_value self)
 static inline void
 cleanup_rect(mrb_state *mrb, mrb_value self)
 {
-  Moon::IntRect *rect = (Moon::IntRect*)DATA_PTR(self);
-  if (rect) {
-    rect_free(mrb, (void*)rect);
+  void *ptr = DATA_PTR(self);
+  if (ptr) {
+    rect_free(mrb, ptr);
   }
 }
 
-Moon::IntRect
+MOON_C_API Moon::IntRect
 mmrb_to_rect(mrb_state *mrb, mrb_value self)
 {
   const mrb_vtype type = mrb_type(self);
@@ -52,7 +52,7 @@ mmrb_to_rect(mrb_state *mrb, mrb_value self)
   return Moon::IntRect{0, 0, 0, 0};
 }
 
-mrb_value
+MOON_C_API mrb_value
 mmrb_rect_value(mrb_state *mrb, Moon::IntRect rect)
 {
   Moon::IntRect *target;
@@ -145,7 +145,7 @@ rect_heighget_t(mrb_state *mrb, mrb_value self)
   return mrb_fixnum_value(get_rect(mrb, self)->h);
 }
 
-void
+MOON_C_API void
 mmrb_rect_init(mrb_state *mrb, struct RClass *mod)
 {
   rect_class = mrb_define_class_under(mrb, mod, "Rect", mrb->object_class);

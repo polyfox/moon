@@ -52,7 +52,7 @@ transform_free(mrb_state *mrb, void *p)
   }
 }
 
-const struct mrb_data_type transform_data_type = { "Transform", transform_free };
+MOON_C_API const struct mrb_data_type transform_data_type = { "Transform", transform_free };
 
 static inline Moon::Transform*
 get_transform(mrb_state *mrb, mrb_value self)
@@ -60,6 +60,20 @@ get_transform(mrb_state *mrb, mrb_value self)
   return (Moon::Transform*)mrb_data_get_ptr(mrb, self, &transform_data_type);
 }
 
+MOON_C_API Moon::Transform
+mmrb_to_transform(mrb_state *mrb, mrb_value self)
+{
+  return *get_transform(mrb, self);
+}
+
+MOON_C_API mrb_value
+mmrb_transform_value(mrb_state *mrb, Moon::Transform mat)
+{
+  mrb_value rsult = mrb_obj_new(mrb, transform_class, 0, NULL);
+  Moon::Transform *trns = get_transform(mrb, rsult);
+  *trns = mat;
+  return rsult;
+}
 /*
  * @overload Transform#initialize()
  * @overload Transform#initialize(Numeric)
@@ -508,11 +522,19 @@ transform_s_cast(mrb_state *mrb, mrb_value self)
   return mrb_obj_new(mrb, transform_class, len, vals);
 }
 
+static mrb_value
+transform_s_ortho(mrb_state *mrb, mrb_value self)
+{
+  mrb_float a, b, c, d, e, f;
+  mrb_get_args(mrb, "ffffff", &a, &b, &c, &d, &e, &f);
+  return mmrb_transform_value(mrb, glm::ortho(a, b, c, d, e, f));
+}
+
 //static mrb_value s_extract(mrb_state *mrb, mrb_value self) {
 //  return mrb_nil_value();
 //};
 
-void
+MOON_C_API void
 mmrb_transform_init(mrb_state *mrb, struct RClass* mod)
 {
   transform_class = mrb_define_class_under(mrb, mod, "Transform", mrb->object_class);
@@ -543,6 +565,7 @@ mmrb_transform_init(mrb_state *mrb, struct RClass* mod)
   mrb_define_method(mrb, transform_class, "to_a",            transform_to_a,            MRB_ARGS_NONE());
 
   mrb_define_class_method(mrb, transform_class, "[]",        transform_s_cast,          MRB_ARGS_ANY());
+  mrb_define_class_method(mrb, transform_class, "ortho",     transform_s_ortho,         MRB_ARGS_REQ(6));
   //mrb_define_class_method(mrb, transform_class, "extract",   transform_s_extract,       MRB_ARGS_REQ(1));
 }
 

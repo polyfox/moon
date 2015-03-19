@@ -6,10 +6,6 @@
 #include <mruby/class.h>
 #include <mruby/data.h>
 #include <mruby/numeric.h>
-#include <glm/glm.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-#include <glm/gtc/random.hpp>
-#include <glm/gtx/compatibility.hpp>
 #include "moon/mrb/vector1.hxx"
 #include "moon/mrb/vector2.hxx"
 #include "moon/mrb/vector3.hxx"
@@ -29,7 +25,7 @@ vector3_free(mrb_state *mrb, void *p)
   }
 }
 
-const struct mrb_data_type vector3_data_type = { "Vector3", vector3_free };
+MOON_C_API const struct mrb_data_type vector3_data_type = { "Vector3", vector3_free };
 
 DEF_VEC_HELPERS(vector3, Moon::Vector3, vector3_class, &vector3_data_type);
 
@@ -62,7 +58,7 @@ mmrb_vector3_extract_mrb_to_vec3(mrb_state *mrb, mrb_value obj)
   return get_vector3_value(mrb, mrb_funcall(mrb, obj, "to_vec3", 0));
 }
 
-Moon::Vector3
+static Moon::Vector3
 mmrb_vector3_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
 {
   Moon::Vector3 result;
@@ -144,13 +140,13 @@ vector3_from_mrb_args(mrb_state *mrb)
   return mmrb_vector3_extract_args(mrb, len, vals);
 }
 
-Moon::Vector3
+MOON_C_API Moon::Vector3
 mmrb_to_vector3(mrb_state *mrb, mrb_value obj)
 {
   return mmrb_vector3_extract_args(mrb, 1, &obj);
 }
 
-mrb_value
+MOON_C_API mrb_value
 mmrb_vector3_value(mrb_state *mrb, Moon::Vector3 vec)
 {
   return set_vector3(mrb, new_vector3(mrb), vec);
@@ -395,7 +391,7 @@ vector3_s_cast(mrb_state *mrb, mrb_value klass)
   return mmrb_vector3_value(mrb, vector3_from_mrb_args(mrb));
 }
 
-void
+MOON_C_API void
 mmrb_vector3_init(mrb_state *mrb, struct RClass *mod)
 {
   vector3_class = mrb_define_class_under(mrb, mod, "Vector3", mrb->object_class);

@@ -4,8 +4,9 @@
 #include <mruby.h>
 #include <mruby/class.h>
 #include <mruby/data.h>
+#include "moon/api.h"
 
-extern struct mrb_data_type context_data_type;
-void mmrb_context_init(mrb_state *mrb, struct RClass *mod);
+MOON_C_API const struct mrb_data_type context_data_type;
+MOON_C_API void mmrb_context_init(mrb_state *mrb, struct RClass *mod);
 
 #endif

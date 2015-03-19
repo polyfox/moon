@@ -4,7 +4,6 @@
 /*
  * DEF_VEC_HELPERS(vector2, Moon::Vector2, vector2_class, &vector2_data_type);
  * Moon::Vector2* get_vector2(mrb_state *mrb, mrb_value self)
- * Moon::Vector2* get_vector2_unsafe(mrb_state *mrb, mrb_value self)
  * Moon::Vector2 get_vector2_value(mrb_state *mrb, mrb_value self)
  * Moon::Vector2* get_vector2_from_args(mrb_state *mrb)
  * Moon::Vector2 get_vector2_from_args_value(mrb_state *mrb)
@@ -16,12 +15,6 @@ static inline T* \
 get_ ## N(mrb_state *mrb, mrb_value self) \
 { \
   return (T*)mrb_data_get_ptr(mrb, self, MT); \
-} \
- \
-static inline T* \
-get_ ## N ## _unsafe(mrb_state *mrb, mrb_value self) \
-{ \
-  return (T*)DATA_PTR(self); \
 } \
  \
 static inline T \
@@ -60,9 +53,9 @@ new_ ## N(mrb_state *mrb) \
 static inline void \
 cleanup_ ## N(mrb_state *mrb, mrb_value self) \
 { \
-  T *v = get_ ## N ## _unsafe(mrb, self); \
-  if (v) { \
-     N ## _free(mrb, (void*)v); \
+  void *ptr = DATA_PTR(self); \
+  if (ptr) { \
+    N ## _free(mrb, ptr); \
   } \
 }
 

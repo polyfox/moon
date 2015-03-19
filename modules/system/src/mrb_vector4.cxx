@@ -6,7 +6,6 @@
 #include <mruby/class.h>
 #include <mruby/data.h>
 #include <mruby/numeric.h>
-#include <glm/glm.hpp>
 #include "moon/mrb/vector1.hxx"
 #include "moon/mrb/vector2.hxx"
 #include "moon/mrb/vector3.hxx"
@@ -27,7 +26,7 @@ vector4_free(mrb_state *mrb, void *p)
   }
 }
 
-const struct mrb_data_type vector4_data_type = { "Moon::Vector4", vector4_free };
+MOON_C_API const struct mrb_data_type vector4_data_type = { "Moon::Vector4", vector4_free };
 
 DEF_VEC_HELPERS(vector4, Moon::Vector4, vector4_class, &vector4_data_type);
 
@@ -61,7 +60,7 @@ mmrb_vector4_extract_mrb_to_vec4(mrb_state *mrb, mrb_value obj)
   return get_vector4_value(mrb, mrb_funcall(mrb, obj, "to_vec4", 0));
 }
 
-Moon::Vector4
+static Moon::Vector4
 mmrb_vector4_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
 {
   Moon::Vector4 result;
@@ -158,13 +157,13 @@ vector4_from_mrb_args(mrb_state *mrb)
   return mmrb_vector4_extract_args(mrb, len, vals);
 }
 
-Moon::Vector4
+MOON_C_API Moon::Vector4
 mmrb_to_vector4(mrb_state *mrb, mrb_value obj)
 {
   return mmrb_vector4_extract_args(mrb, 1, &obj);
 }
 
-mrb_value
+MOON_C_API mrb_value
 mmrb_vector4_value(mrb_state *mrb, Moon::Vector4 vec)
 {
   return set_vector4(mrb, new_vector4(mrb), vec);
@@ -359,7 +358,7 @@ vector4_s_cast(mrb_state *mrb, mrb_value klass)
   return set_vector4(mrb, new_vector4(mrb), vector4_from_mrb_args(mrb));
 }
 
-void
+MOON_C_API void
 mmrb_vector4_init(mrb_state *mrb, struct RClass *mod)
 {
   vector4_class = mrb_define_class_under(mrb, mod, "Vector4", mrb->object_class);

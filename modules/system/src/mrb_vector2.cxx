@@ -6,10 +6,6 @@
 #include <mruby/class.h>
 #include <mruby/data.h>
 #include <mruby/numeric.h>
-#include <glm/glm.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-#include <glm/gtc/random.hpp>
-#include <glm/gtx/compatibility.hpp>
 #include "moon/mrb/vector1.hxx"
 #include "moon/mrb/vector2.hxx"
 #include "vec_helper.h"
@@ -28,7 +24,7 @@ vector2_free(mrb_state *mrb, void *p)
   }
 }
 
-const struct mrb_data_type vector2_data_type = { "Vector2", vector2_free };
+MOON_C_API const struct mrb_data_type vector2_data_type = { "Vector2", vector2_free };
 
 DEF_VEC_HELPERS(vector2, Moon::Vector2, vector2_class, &vector2_data_type);
 
@@ -60,7 +56,7 @@ mmrb_vector2_extract_mrb_to_vec2(mrb_state *mrb, mrb_value obj)
   return get_vector2_value(mrb, mrb_funcall(mrb, obj, "to_vec2", 0));
 }
 
-Moon::Vector2
+static Moon::Vector2
 mmrb_vector2_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
 {
   Moon::Vector2 result;
@@ -77,7 +73,10 @@ mmrb_vector2_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
       result = mmrb_vector2_extract_mrb_array(mrb, val);
       break;
     case MRB_TT_DATA:
-      if (DATA_TYPE(val) == &vector2_data_type) {
+      if (DATA_TYPE(val) == &vector1_data_type) {
+        result.y = result.x = mmrb_to_flo(mrb, val);
+        break;
+      } else if (DATA_TYPE(val) == &vector2_data_type) {
         result = get_vector2_value(mrb, val);
         break;
       }
@@ -112,13 +111,13 @@ vector2_from_mrb_args(mrb_state *mrb)
   return mmrb_vector2_extract_args(mrb, len, vals);
 }
 
-Moon::Vector2
+MOON_C_API Moon::Vector2
 mmrb_to_vector2(mrb_state *mrb, mrb_value obj)
 {
   return mmrb_vector2_extract_args(mrb, 1, &obj);
 }
 
-mrb_value
+MOON_C_API mrb_value
 mmrb_vector2_value(mrb_state *mrb, Moon::Vector2 vec)
 {
   return set_vector2(mrb, new_vector2(mrb), vec);
@@ -351,7 +350,7 @@ vector2_s_disk_rand(mrb_state *mrb, mrb_value klass)
   return mmrb_vector2_value(mrb, glm::diskRand((float)radius));
 }
 
-void
+MOON_C_API void
 mmrb_vector2_init(mrb_state *mrb, struct RClass *mod)
 {
   vector2_class = mrb_define_class_under(mrb, mod, "Vector2", mrb->object_class);

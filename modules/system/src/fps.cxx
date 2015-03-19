@@ -10,6 +10,14 @@ namespace Moon {
     fps       = 0;
   }
 
+  float FPS::getDelta() {
+    return delta;
+  };
+
+  int FPS::getFPS() {
+    return fps;
+  }
+
   void FPS::update() {
     float now = glfwGetTime();
     if(old_time + 1.0f < now) {
@@ -22,11 +30,9 @@ namespace Moon {
     frames++;
   }
 
-  float FPS::getDelta() {
-    return delta;
+  float FPS::restart() {
+    float d = getDelta();
+    update();
+    return d;
   };
-
-  int FPS::getFPS() {
-    return fps;
-  }
 }
