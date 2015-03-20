@@ -8,15 +8,15 @@
 namespace Moon {
   class Audio {
   public:
-    static void initialize();
-    static void update();
-    static void terminate();
-    static ga_Mixer* get_mixer();
-    static ga_StreamManager* get_stream_mgr();
+    static void Initialize();
+    static void Update();
+    static void Terminate();
+    static ga_Mixer* GetMixer();
+    static ga_StreamManager* GetStreamMgr();
   protected:
-    static gau_Manager* mgr;
-    static ga_Mixer* mixer;
-    static ga_StreamManager* streamMgr;
+    static gau_Manager* m_mgr;
+    static ga_Mixer* m_mixer;
+    static ga_StreamManager* m_streamMgr;
   };
 };
 

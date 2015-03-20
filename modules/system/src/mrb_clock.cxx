@@ -54,26 +54,26 @@ clock_initialize_copy(mrb_state *mrb, mrb_value self)
 static mrb_value
 clock_restart(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_clock(mrb, self)->restart());
+  return mrb_float_value(mrb, get_clock(mrb, self)->Restart());
 }
 
 static mrb_value
 clock_update(mrb_state *mrb, mrb_value self)
 {
-  get_clock(mrb, self)->update();
+  get_clock(mrb, self)->Update();
   return self;
 }
 
 static mrb_value
 clock_delta(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_clock(mrb, self)->getDelta());
+  return mrb_float_value(mrb, get_clock(mrb, self)->GetDelta());
 }
 
 static mrb_value
 clock_fps(mrb_state *mrb, mrb_value self)
 {
-  return mrb_fixnum_value(get_clock(mrb, self)->getFPS());
+  return mrb_fixnum_value(get_clock(mrb, self)->GetFPS());
 }
 
 MOON_C_API void

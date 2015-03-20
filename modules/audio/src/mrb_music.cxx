@@ -32,8 +32,8 @@ get_music(mrb_state *mrb, mrb_value self)
 static mrb_value
 music_initialize(mrb_state *mrb, mrb_value self)
 {
-  char* filename;
-  char* format;
+  char *filename;
+  char *format;
   Moon::Music *music;
 
   mrb_get_args(mrb, "zz", &filename, &format);
@@ -45,7 +45,7 @@ music_initialize(mrb_state *mrb, mrb_value self)
   music = new Moon::Music();
 
   if (exists(filename)) {
-    music->handle = gau_create_handle_buffered_file(Moon::Audio::get_mixer(), Moon::Audio::get_stream_mgr(),
+    music->handle = gau_create_handle_buffered_file(Moon::Audio::GetMixer(), Moon::Audio::GetStreamMgr(),
                                                     filename, format,
                                                     NULL, 0, &(music->loopSrc));
   } else {

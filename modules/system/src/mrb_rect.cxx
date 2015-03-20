@@ -115,32 +115,48 @@ rect_get_y(mrb_state *mrb, mrb_value self)
   return mrb_fixnum_value(get_rect(mrb, self)->y);
 }
 
+/*
+ * Rect#width=
+ # @param [Integer] width
+ */
 static mrb_value
-rect_widtset_h(mrb_state *mrb, mrb_value self)
+rect_set_width(mrb_state *mrb, mrb_value self)
 {
   mrb_int w;
   mrb_get_args(mrb, "i", &w);
   get_rect(mrb, self)->w = w;
-  return mrb_nil_value();
+  return self;
 }
 
+/*
+ * Rect#width
+ # @return [Integer]
+ */
 static mrb_value
-rect_widtget_h(mrb_state *mrb, mrb_value self)
+rect_get_width(mrb_state *mrb, mrb_value self)
 {
   return mrb_fixnum_value(get_rect(mrb, self)->w);
 }
 
+/*
+ * Rect#height=
+ # @param [Integer] height
+ */
 static mrb_value
-rect_heighset_t(mrb_state *mrb, mrb_value self)
+rect_set_height(mrb_state *mrb, mrb_value self)
 {
   mrb_int h;
   mrb_get_args(mrb, "i", &h);
   get_rect(mrb, self)->h = h;
-  return mrb_nil_value();
+  return self;
 }
 
+/*
+ * Rect#height
+ # @return [Integer]
+ */
 static mrb_value
-rect_heighget_t(mrb_state *mrb, mrb_value self)
+rect_get_height(mrb_state *mrb, mrb_value self)
 {
   return mrb_fixnum_value(get_rect(mrb, self)->h);
 }
@@ -157,8 +173,8 @@ mmrb_rect_init(mrb_state *mrb, struct RClass *mod)
   mrb_define_method(mrb, rect_class, "x",               rect_get_x,        MRB_ARGS_NONE());
   mrb_define_method(mrb, rect_class, "y=",              rect_set_y,        MRB_ARGS_REQ(1));
   mrb_define_method(mrb, rect_class, "y",               rect_get_y,        MRB_ARGS_NONE());
-  mrb_define_method(mrb, rect_class, "width=",          rect_widtset_h,    MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, rect_class, "width",           rect_widtget_h,    MRB_ARGS_NONE());
-  mrb_define_method(mrb, rect_class, "height=",         rect_heighset_t,   MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, rect_class, "height",          rect_heighget_t,   MRB_ARGS_NONE());
+  mrb_define_method(mrb, rect_class, "width=",          rect_set_width,    MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, rect_class, "width",           rect_get_width,    MRB_ARGS_NONE());
+  mrb_define_method(mrb, rect_class, "height=",         rect_set_height,   MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, rect_class, "height",          rect_get_height,   MRB_ARGS_NONE());
 }

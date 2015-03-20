@@ -75,6 +75,7 @@ module Moon
       c = GL2::GL_COLOR_BUFFER_BIT | GL2::GL_DEPTH_BUFFER_BIT
       until @window.should_close?
         GL2.glClear c
+        Audio.update
         @step.call self, @fps.restart
         @window.title = sprintf "FPS: %d", @fps.fps
         @window.swap_buffers

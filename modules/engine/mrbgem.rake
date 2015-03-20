@@ -6,4 +6,7 @@ MRuby::Gem::Specification.new('mruby-moon-engine') do |spec|
   spec.summary = 'Moon engine class'
   spec.description = 'Moon Engine\'s engine class'
   spec.homepage = 'https://github.com/IceDragon200/mruby-moon'
+  spec.add_dependency 'mruby-moon-system'
+  spec.add_dependency 'mruby-moon-graphics'
+  spec.add_dependency 'mruby-moon-audio'
 end

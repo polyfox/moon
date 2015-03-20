@@ -6,16 +6,16 @@ namespace Moon {
   public:
     FPS();
 
-    int   getFPS();
-    float getDelta();
-    void  update();
-    float restart();
+    int   GetFPS();
+    float GetDelta();
+    void  Update();
+    float Restart();
   private:
-    float old_time;
-    float last_time;
-    float delta; // time since last frame
-    int   fps;
-    int   frames;
+    float m_old_time;
+    float m_last_time;
+    float m_delta; // time since last frame
+    int   m_fps;
+    int   m_frames;
   };
 };
 

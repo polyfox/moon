@@ -3,36 +3,36 @@
 
 namespace Moon {
   FPS::FPS() {
-    old_time  = 0.0;
-    last_time = 0.0;
-    delta     = 0.0;
-    frames    = 0;
-    fps       = 0;
+    m_old_time  = 0.0;
+    m_last_time = 0.0;
+    m_delta     = 0.0;
+    m_frames    = 0;
+    m_fps       = 0;
   }
 
-  float FPS::getDelta() {
-    return delta;
+  float FPS::GetDelta() {
+    return m_delta;
   };
 
-  int FPS::getFPS() {
-    return fps;
+  int FPS::GetFPS() {
+    return m_fps;
   }
 
-  void FPS::update() {
+  void FPS::Update() {
     float now = glfwGetTime();
-    if(old_time + 1.0f < now) {
-      old_time = now;
-      fps = frames;
-      frames = 0;
+    if ((m_old_time + 1.0f) < now) {
+      m_old_time = now;
+      m_fps = m_frames;
+      m_frames = 0;
     }
-    delta = now - last_time;
-    last_time = now;
-    frames++;
+    m_delta = now - m_last_time;
+    m_last_time = now;
+    m_frames++;
   }
 
-  float FPS::restart() {
-    float d = getDelta();
-    update();
+  float FPS::Restart() {
+    float d = GetDelta();
+    Update();
     return d;
   };
 }

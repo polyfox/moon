@@ -63,7 +63,7 @@ sound_play(mrb_state *mrb, mrb_value self)
   ga_Sound *sound = get_sound(mrb, self);
   ga_Handle* handle;
   mrb_get_args(mrb, "|fff", &gain, &pitch, &pan);
-  handle = gau_create_handle_sound(Audio::get_mixer(), sound, &gau_on_finish_destroy, 0, 0);
+  handle = gau_create_handle_sound(Audio::GetMixer(), sound, &gau_on_finish_destroy, 0, 0);
   ga_handle_setParamf(handle, GA_HANDLE_PARAM_GAIN, gain);
   ga_handle_setParamf(handle, GA_HANDLE_PARAM_PITCH, pitch);
   ga_handle_setParamf(handle, GA_HANDLE_PARAM_PAN, pan);
