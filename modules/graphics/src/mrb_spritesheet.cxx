@@ -131,17 +131,8 @@ spritesheet_render(mrb_state *mrb, mrb_value self)
   mrb_float x, y, z;
   mrb_value options = mrb_nil_value();
   mrb_get_args(mrb, "fffi|H", &x, &y, &z, &index, &options);
-
   Moon::Spritesheet *spritesheet = get_spritesheet(mrb, self);
-
   Moon::Spritesheet::RenderState render_op;
-  render_op.color = glm::vec4(1.0, 1.0, 1.0, 1.0);
-  render_op.tone = glm::vec4(0.0, 0.0, 0.0, 1.0);
-  render_op.opacity = 1.0f;
-  render_op.angle = 0.0f;
-  render_op.origin.x = 0.0f;
-  render_op.origin.y = 0.0f;
-
   if (!mrb_nil_p(options)) {
     mrb_value keys = mrb_hash_keys(mrb, options);
     int len = mrb_ary_len(mrb, keys);

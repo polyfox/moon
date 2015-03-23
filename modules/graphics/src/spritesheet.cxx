@@ -15,7 +15,7 @@ namespace Moon {
 
   };
 
-  void Spritesheet::LoadTexture(Moon::Texture *texture, int tile_width, int tile_height) {
+  void Spritesheet::LoadTexture(Texture *texture, int tile_width, int tile_height) {
     m_texture = texture;
 
     this->tile_height = tile_height;
@@ -28,11 +28,11 @@ namespace Moon {
 
   bool Spritesheet::GenerateBuffers() {
     // If there is a texture loaded and clips to make vertex data from
-    if(m_texture->id() != 0) {
+    if(m_texture->GetID() != 0) {
       GLfloat tiles_per_row, tiles_per_column;
 
-      tiles_per_row = m_texture->width() / tile_width;
-      tiles_per_column = m_texture->height() / tile_height;
+      tiles_per_row = m_texture->GetWidth() / tile_width;
+      tiles_per_column = m_texture->GetHeight() / tile_height;
 
       total_sprites = tiles_per_row * tiles_per_column;
 
@@ -52,11 +52,11 @@ namespace Moon {
           { {0.f, tile_height},        {s0, t1}, Vector4(0, 0, 0, 0) }
         };
 
-        m_vbo.push_back_vertices(vertices, 4);
+        m_vbo.PushBackVertices(vertices, 4);
       }
 
       GLuint indices[4] = {0, 1, 3, 2};
-      m_vbo.push_back_indices(indices, 4);
+      m_vbo.PushBackIndices(indices, 4);
 
     } else {   //Error
       printf("No texture to render with!\n");
@@ -71,14 +71,14 @@ namespace Moon {
 
     // if you somehow managed to go out-of-bounds
     if ((index < 0) || (index >= (int)total_sprites)) return;
-    if (m_texture->id() == 0) return;
+    if (m_texture->GetID() == 0) return;
 
     int offset = index*4;
 
     m_shader->Use();
 
     //model matrix - move it to the correct position in the world
-    Moon::Vector2 origin = render_ops.origin;
+    Vector2 origin = render_ops.origin;
     glm::mat4 model_matrix = glm::translate(render_ops.transform, glm::vec3(x, y, z));
     glm::mat4 rotation_matrix = glm::translate(glm::rotate(
       glm::translate(glm::mat4(1.0f), glm::vec3(origin.x, origin.y, 0)),
@@ -96,9 +96,9 @@ namespace Moon {
 
     //Set texture ID
     glActiveTexture(GL_TEXTURE0);
-    m_texture->bind();
+    m_texture->Bind();
     glUniform1i(m_shader->GetUniform("tex"), /*GL_TEXTURE*/0);
 
-    m_vbo.render_with_offset(GL_TRIANGLE_STRIP, offset);
+    m_vbo.RenderWithOffset(GL_TRIANGLE_STRIP, offset);
   };
 };

@@ -10,7 +10,6 @@
 #include "moon/transform.hxx"
 
 namespace Moon {
-
   class Spritesheet {
   public:
     struct RenderState {
@@ -20,7 +19,15 @@ namespace Moon {
       Vector4 color;
       Vector4 tone;
       Transform transform;
+
+      RenderState() :
+        opacity(1.0),
+        angle(0.0),
+        origin(0.0, 0.0),
+        color(1.0, 1.0, 1.0, 1.0),
+        tone(0.0, 0.0, 0.0, 1.0) {};
     };
+
     GLfloat tile_width;
     GLfloat tile_height;
     int total_sprites;

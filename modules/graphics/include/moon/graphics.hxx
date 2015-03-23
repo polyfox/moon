@@ -6,9 +6,9 @@
 
 namespace Moon {
   struct Vertex {
-    Moon::Vector2 pos;
-    Moon::Vector2 tex_coord;
-    Moon::Vector4 color;
+    Vector2 pos;
+    Vector2 tex_coord;
+    Vector4 color;
   };
 }
 #endif

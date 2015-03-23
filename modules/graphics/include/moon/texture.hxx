@@ -14,17 +14,14 @@ namespace Moon {
   public:
     Texture(std::string filename);
     ~Texture();
-
-    void bind();
-
-    GLint width();
-    GLint height();
-    GLuint id();
+    void Bind();
+    GLint GetWidth();
+    GLint GetHeight();
+    GLuint GetID();
   private:
-
-    GLint texture_width;
-    GLint texture_height;
-    GLuint gl_texture_id;
+    GLint m_width;
+    GLint m_height;
+    GLuint m_gl_texture_id;
   friend class Cache<Texture>;
   };
 };

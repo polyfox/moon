@@ -61,13 +61,13 @@ texture_initialize(mrb_state *mrb, mrb_value self)
 static mrb_value
 texture_width(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_texture(mrb, self)->width());
+  return mrb_float_value(mrb, get_texture(mrb, self)->GetWidth());
 }
 
 static mrb_value
 texture_height(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_texture(mrb, self)->height());
+  return mrb_float_value(mrb, get_texture(mrb, self)->GetHeight());
 }
 
 MOON_C_API void

@@ -5,23 +5,22 @@
 
 namespace Moon {
   VertexBuffer::VertexBuffer(GLenum usage) {
-    this->usage = usage;
-    glGenVertexArrays(1, &vao_id);
-    glGenBuffers(1, &vbo_id);
-    glGenBuffers(1, &ibo_id);
-    dirty = false;
-
-    setup();
+    m_usage = usage;
+    glGenVertexArrays(1, &m_vao_id);
+    glGenBuffers(1, &m_vbo_id);
+    glGenBuffers(1, &m_ibo_id);
+    m_dirty = false;
+    Setup();
   }
 
   VertexBuffer::~VertexBuffer() {
-    glDeleteVertexArrays(1, &vao_id);
-    glDeleteBuffers(1, &vbo_id);
-    glDeleteBuffers(1, &ibo_id);
+    glDeleteVertexArrays(1, &m_vao_id);
+    glDeleteBuffers(1, &m_vbo_id);
+    glDeleteBuffers(1, &m_ibo_id);
   }
 
-  void VertexBuffer::setup() {
-    glBindVertexArray(vao_id);
+  void VertexBuffer::Setup() {
+    glBindVertexArray(m_vao_id);
 
     //Enable vertex and texture coordinate arrays
     glEnableVertexAttribArray(0); // location=0 --> vertex position
@@ -29,8 +28,8 @@ namespace Moon {
     glEnableVertexAttribArray(2); // location=2 --> color
 
     // Bind vertex buffer and index buffer
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo_id);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo_id);
 
     glVertexAttribPointer(
       0,             // attribute
@@ -62,68 +61,63 @@ namespace Moon {
     glBindVertexArray(0);
   };
 
-  void VertexBuffer::push_back(Vertex v) {
-    vertices.push_back(v);
-    indices.push_back(indices.size());
-    dirty = true;
+  void VertexBuffer::PushBack(Vertex v) {
+    m_vertices.push_back(v);
+    m_indices.push_back(m_indices.size());
+    m_dirty = true;
   }
 
-  void VertexBuffer::push_back_vertices(Vertex *v, int vertex_count) {
-    vertices.reserve(vertex_count);
-    std::copy(v, v+vertex_count, std::back_inserter(vertices));
-    dirty = true;
+  void VertexBuffer::PushBackVertices(Vertex *v, int vertex_count) {
+    m_vertices.reserve(vertex_count);
+    std::copy(v, v+vertex_count, std::back_inserter(m_vertices));
+    m_dirty = true;
   }
 
-  void VertexBuffer::push_back_indices(GLuint i[], int index_count) {
-    indices.reserve(index_count);
-    std::copy(i, i+index_count, std::back_inserter(indices));
-    dirty = true;
+  void VertexBuffer::PushBackIndices(GLuint i[], int index_count) {
+    m_indices.reserve(index_count);
+    std::copy(i, i+index_count, std::back_inserter(m_indices));
+    m_dirty = true;
   }
 
-  void VertexBuffer::push_back(Vertex *v, int vertex_count, GLuint i[], int index_count) {
-    int size = vertices.size();
-
-    push_back_vertices(v, vertex_count);
-    push_back_indices(i, index_count);
-
+  void VertexBuffer::PushBack(Vertex *v, int vertex_count, GLuint i[], int index_count) {
+    int size = m_vertices.size();
+    PushBackVertices(v, vertex_count);
+    PushBackIndices(i, index_count);
     // update the indices we've just copied over, since the old values
     // were something like (0,1,2,3) - relative to the vertex that was
     // pushed, and we want them to be set on a global range.
-    std::transform(indices.end()-index_count, indices.end(), indices.end()-index_count,
+    std::transform(m_indices.end()-index_count, m_indices.end(), m_indices.end()-index_count,
           std::bind2nd(std::plus<GLuint>(), size));
-
-    dirty = true;
+    m_dirty = true;
   }
 
-  void VertexBuffer::clear() {
-    vertices.clear();
-    indices.clear();
-    upload();
+  void VertexBuffer::Clear() {
+    m_vertices.clear();
+    m_indices.clear();
+    Upload();
   }
 
   // upload the buffer to the GPU
-  void VertexBuffer::upload() {
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices.front(), usage);
+  void VertexBuffer::Upload() {
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo_id);
+    glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vertex), &m_vertices.front(), m_usage);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo_id);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices.front(), usage);
-    dirty = false;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ibo_id);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLuint), &m_indices.front(), m_usage);
+    m_dirty = false;
   }
 
-  void VertexBuffer::render(GLenum mode) {
-    if(dirty) upload(); // update the VBO and IBO if dirty
-
-    glBindVertexArray(vao_id);
-    glDrawElements(mode, indices.size(), GL_UNSIGNED_INT, NULL);
+  void VertexBuffer::Render(GLenum mode) {
+    if (m_dirty) Upload(); // update the VBO and IBO if dirty
+    glBindVertexArray(m_vao_id);
+    glDrawElements(mode, m_indices.size(), GL_UNSIGNED_INT, NULL);
     glBindVertexArray(0);
   }
 
-  void VertexBuffer::render_with_offset(GLenum mode, const int &offset) {
-    if(dirty) upload(); // update the VBO and IBO if dirty
-
-    glBindVertexArray(vao_id);
-    glDrawElementsBaseVertex(mode, indices.size(), GL_UNSIGNED_INT, NULL, offset);
+  void VertexBuffer::RenderWithOffset(GLenum mode, const int &offset) {
+    if (m_dirty) Upload(); // update the VBO and IBO if dirty
+    glBindVertexArray(m_vao_id);
+    glDrawElementsBaseVertex(mode, m_indices.size(), GL_UNSIGNED_INT, NULL, offset);
     glBindVertexArray(0);
   }
 }

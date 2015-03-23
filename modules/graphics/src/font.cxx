@@ -8,6 +8,8 @@
 #include "moon/vector4.hxx"
 
 namespace Moon {
+  Vector4 Font::DefaultColor = Vector4(1, 1, 1, 1);
+
   Font::Font(std::string filename, int font_size)
   : m_buffer(GL_DYNAMIC_DRAW)
   {
@@ -24,38 +26,32 @@ namespace Moon {
     texture_atlas_delete(m_atlas);
   }
 
-  void Font::draw_text(const float &x, const float &y, const float &z,
+  void Font::DrawText(const float &x, const float &y, const float &z,
                        const wchar_t *text) {
-    Moon::Vector4 color(1.0, 1.0, 1.0, 1.0);
-    draw_text(x, y, z, text, color);
+    DrawText(x, y, z, text, DefaultColor);
   }
 
-  void Font::draw_text(const float &x, const float &y, const float &z,
-                       const wchar_t *text, const Moon::Vector4 &color) {
-    font_render_options render_ops;
+  void Font::DrawText(const float &x, const float &y, const float &z,
+                       const wchar_t *text, const Vector4 &color) {
+    RenderState render_ops;
     render_ops.color = color;
-    draw_text(x, y, z, text, render_ops);
+    DrawText(x, y, z, text, render_ops);
   }
 
-  void Font::draw_text(const float &x, const float &y, const float &z,
-                       const wchar_t *text, const font_render_options &render_ops) {
+  void Font::DrawText(const float &x, const float &y, const float &z,
+                       const wchar_t *text, const RenderState &render_ops) {
     // outline
     if (render_ops.outline > 0) {
       m_font->outline_type = 2;
       m_font->outline_thickness = render_ops.outline;
-      add_text(text, render_ops.outline_color);
+      AddText(text, render_ops.outline_color);
     }
-
     m_font->outline_type = 0;
     m_font->outline_thickness = 0;
-    add_text(text, render_ops.color);
-
+    AddText(text, render_ops.color);
     m_shader->Use();
-
     glBindTexture(GL_TEXTURE_2D, m_atlas->id);
-
     glUniform1i(m_shader->GetUniform("tex"), /*GL_TEXTURE*/0);
-
     //model matrix
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down
       glm::translate(render_ops.transform, glm::vec3(x, y + m_font->ascender, z)), // move it to the correct position in the world
@@ -65,12 +61,11 @@ namespace Moon {
     // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
     glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
     glUniformMatrix4fv(m_shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
-
-    m_buffer.render(GL_TRIANGLES);
-    m_buffer.clear();
+    m_buffer.Render(GL_TRIANGLES);
+    m_buffer.Clear();
   }
 
-  void Font::add_text(const wchar_t *text, const Moon::Vector4 &c) {
+  void Font::AddText(const wchar_t *text, const Vector4 &c) {
     float cursor = 0; // position of the write cursor
 
     for(size_t i = 0; i < wcslen(text); ++i) {
@@ -96,14 +91,14 @@ namespace Moon {
                                {{x0,y1},  {s0,t1}, c},
                                {{x1,y1},  {s1,t1}, c},
                                {{x1,y0},  {s1,t0}, c} };
-        m_buffer.push_back(vertices, 4, indices, 6);
+        m_buffer.PushBack(vertices, 4, indices, 6);
         cursor += glyph->advance_x;
       }
     }
   }
 
-  Moon::Vector2 Font::compute_string_bbox(const wchar_t *text) {
-    Moon::Vector4 bbox;
+  Vector2 Font::ComputeStringBbox(const wchar_t *text) {
+    Vector4 bbox;
 
     /* initialize string bbox to "empty" values */
     bbox.x = bbox.y =  32000;
@@ -113,7 +108,7 @@ namespace Moon {
 
     /* for each glyph image, compute its bounding box, */
     /* translate it, and grow the string bbox          */
-    for(size_t i = 0; i < wcslen(text); ++i) {
+    for (size_t i = 0; i < wcslen(text); ++i) {
       texture_glyph_t *glyph = texture_font_get_glyph(m_font, text[i]);
 
       if(glyph != NULL) {
@@ -155,10 +150,7 @@ namespace Moon {
     return glm::vec2(bbox.z - bbox.x, bbox.w - bbox.y);
   }
 
-  int Font::size() {
+  int Font::GetSize() {
     return m_font->size;
   }
-  /*GlyphMap::GlyphMap() {
-
-  };*/
 }

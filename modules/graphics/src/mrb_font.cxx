@@ -68,8 +68,6 @@ font_initialize(mrb_state *mrb, mrb_value self)
                    "cannot load such file -- %S",
                    mrb_str_new_cstr(mrb, filename));
   }
-
-
   return self;
 }
 
@@ -93,17 +91,15 @@ font_render(mrb_state *mrb, mrb_value self)
 
   // convert to wide char (UTF-8)
   wchar_t *text = char_to_utf8(str);
-
   Moon::Font *font = get_font(mrb, self);
-
   if (!mrb_nil_p(options)) {
-    Moon::font_render_options render_op;
+    Moon::Font::RenderState render_op;
 
     mrb_value keys = mrb_hash_keys(mrb, options);
     int len = mrb_ary_len(mrb, keys);
     const mrb_value *keys_ary = RARRAY_PTR(keys);
 
-    for (int i=0; i < len; ++i) {
+    for (int i = 0; i < len; ++i) {
       mrb_value key = keys_ary[i];
 
       if (mrb_symbol_p(key)) {
@@ -121,18 +117,17 @@ font_render(mrb_state *mrb, mrb_value self)
     if(!mrb_nil_p(color)) {
       render_op.color = *get_vector4(mrb, color);
     }
-    font->draw_text(x, y, z, text, render_op);
+    font->DrawText(x, y, z, text, render_op);
   } else {
     if(!mrb_nil_p(color)) {
       //text_color needs to be dereferenced to shared_ptr first and then to value
-      font->draw_text(x, y, z, text, *get_vector4(mrb, color));
+      font->DrawText(x, y, z, text, *get_vector4(mrb, color));
     } else {
-      font->draw_text(x, y, z, text);
+      font->DrawText(x, y, z, text);
     }
   }
   delete[] text;
-
-  return mrb_nil_value();
+  return self;
 }
 
 /*
@@ -142,7 +137,7 @@ font_render(mrb_state *mrb, mrb_value self)
 static mrb_value
 font_size(mrb_state *mrb, mrb_value self)
 {
-  return mrb_fixnum_value(get_font(mrb, self)->size());
+  return mrb_fixnum_value(get_font(mrb, self)->GetSize());
 }
 
 /*
@@ -158,7 +153,7 @@ font_calc_bounds(mrb_state *mrb, mrb_value self)
   // convert to wide char (UTF-8)
   wchar_t *text = char_to_utf8(str);
   Moon::Font *font = get_font(mrb, self);
-  Moon::Vector2 bounds = font->compute_string_bbox(text);
+  Moon::Vector2 bounds = font->ComputeStringBbox(text);
   delete[] text;
   mrb_value argv[2] = { mrb_fixnum_value(bounds.x), mrb_fixnum_value(bounds.y) };
   return mrb_ary_new_from_values(mrb, 2, argv);
