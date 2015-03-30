@@ -64,9 +64,9 @@ module Moon # :nodoc:
   # Spritesheet is a specialized class for rendering cell based sprites.
   class Spritesheet
     # @param [String, Texture] obj
-    # @param [Integer] cell_width
-    # @param [Integer] cell_height
-    def initialize(obj, cell_width, cell_height)
+    # @param [Integer] cell_w
+    # @param [Integer] cell_h
+    def initialize(obj, cell_w, cell_h)
     end
 
     # @param [Float] x
@@ -84,26 +84,26 @@ module Moon # :nodoc:
     end
 
     # @return [Integer]
-    def width
+    def w
     end
 
     # @return [Integer]
-    def height
+    def h
     end
 
-    # dreprecated use width instead
-    alias :cell_width :width
+    # dreprecated use w instead
+    alias :cell_w :w
 
-    # dreprecated use height instead
-    alias :cell_height :height
+    # dreprecated use h instead
+    alias :cell_h :h
   end
 
   # A storage class for pixel data on the GPU.
   class Texture
     # @return [Float]
-    attr_reader :width
+    attr_reader :w
     # @return [Float]
-    attr_reader :height
+    attr_reader :h
 
     # @param [String] filename
     def initialize(filename)

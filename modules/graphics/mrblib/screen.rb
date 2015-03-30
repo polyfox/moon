@@ -15,15 +15,20 @@ module Moon
     end
 
     private def init_shader
-      resize width, height
+      resize w, h
     end
 
-    def width
+    def w
       @window.window_size[0]
     end
 
-    def height
+    def h
       @window.window_size[1]
+    end
+
+    # @return [Moon::Rect]
+    def rect
+      Rect.new 0, 0, w, h
     end
 
     def clear_color=(color)
@@ -33,7 +38,7 @@ module Moon
 
     def resize(w, h)
       @window.window_size = [w, h]
-      Shader.projection_matrix = Transform.ortho 0.0, width, height, 0.0, -1.0, 1.0
+      Shader.projection_matrix = Transform.ortho 0.0, w, h, 0.0, -1.0, 1.0
     end
   end
 end

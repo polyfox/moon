@@ -50,9 +50,9 @@ module Moon # :nodoc:
     # @return [Integer]
     attr_accessor :y
     # @return [Integer]
-    attr_accessor :width
+    attr_accessor :w
     # @return [Integer]
-    attr_accessor :height
+    attr_accessor :h
 
     # @param [Integer] x
     # @param [Integer] y

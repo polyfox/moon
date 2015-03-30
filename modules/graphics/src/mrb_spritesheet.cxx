@@ -212,16 +212,16 @@ mmrb_spritesheet_init(mrb_state *mrb, struct RClass* mod)
   spritesheet_class = mrb_define_class_under(mrb, mod, "Spritesheet", mrb->object_class);
   MRB_SET_INSTANCE_TT(spritesheet_class, MRB_TT_DATA);
 
-  mrb_define_method(mrb, spritesheet_class, "initialize",  spritesheet_initialize,     MRB_ARGS_REQ(3));
-  mrb_define_method(mrb, spritesheet_class, "render",      spritesheet_render,         MRB_ARGS_ARG(4,1));
-  mrb_define_method(mrb, spritesheet_class, "texture",     spritesheet_texture_get,    MRB_ARGS_NONE());
-  mrb_define_method(mrb, spritesheet_class, "cell_width",  spritesheet_cell_width,     MRB_ARGS_NONE()); /* deprecated, use width instead */
-  mrb_define_method(mrb, spritesheet_class, "cell_height", spritesheet_cell_height,    MRB_ARGS_NONE()); /* deprecated, use height instead */
+  mrb_define_method(mrb, spritesheet_class, "initialize", spritesheet_initialize,     MRB_ARGS_REQ(3));
+  mrb_define_method(mrb, spritesheet_class, "render",     spritesheet_render,         MRB_ARGS_ARG(4,1));
+  mrb_define_method(mrb, spritesheet_class, "texture",    spritesheet_texture_get,    MRB_ARGS_NONE());
+  mrb_define_method(mrb, spritesheet_class, "cell_w",     spritesheet_cell_width,     MRB_ARGS_NONE()); /* deprecated, use width instead */
+  mrb_define_method(mrb, spritesheet_class, "cell_h",     spritesheet_cell_height,    MRB_ARGS_NONE()); /* deprecated, use height instead */
 
-  mrb_define_method(mrb, spritesheet_class, "cell_count",  spritesheet_cell_count,     MRB_ARGS_NONE());
+  mrb_define_method(mrb, spritesheet_class, "cell_count", spritesheet_cell_count,     MRB_ARGS_NONE());
 
-  mrb_define_method(mrb, spritesheet_class, "width",       spritesheet_cell_width,     MRB_ARGS_NONE());
-  mrb_define_method(mrb, spritesheet_class, "height",      spritesheet_cell_height,    MRB_ARGS_NONE());
+  mrb_define_method(mrb, spritesheet_class, "w",          spritesheet_cell_width,     MRB_ARGS_NONE());
+  mrb_define_method(mrb, spritesheet_class, "h",          spritesheet_cell_height,    MRB_ARGS_NONE());
 
   id_opacity   = mrb_intern_cstr(mrb, "opacity");
   id_tone      = mrb_intern_cstr(mrb, "tone");

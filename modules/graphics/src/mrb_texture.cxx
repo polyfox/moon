@@ -77,6 +77,6 @@ mmrb_texture_init(mrb_state *mrb, struct RClass* mod)
   MRB_SET_INSTANCE_TT(texture_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, texture_class, "initialize", texture_initialize, MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, texture_class, "width",      texture_width,      MRB_ARGS_NONE());
-  mrb_define_method(mrb, texture_class, "height",     texture_height,     MRB_ARGS_NONE());
+  mrb_define_method(mrb, texture_class, "w",      texture_width,      MRB_ARGS_NONE());
+  mrb_define_method(mrb, texture_class, "h",     texture_height,     MRB_ARGS_NONE());
 }
