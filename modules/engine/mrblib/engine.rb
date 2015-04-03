@@ -1,4 +1,7 @@
 module Moon
+  class EngineQuit < Exception
+  end
+
   class Engine
     attr_reader :window
     attr_reader :screen
@@ -10,6 +13,14 @@ module Moon
       @input = nil
       @fps = Moon::Clock.new
       @step = block
+    end
+
+    def uptime
+      GLFW.time
+    end
+
+    def quit
+      raise EngineQuit
     end
 
     private def setup_opengl
@@ -57,10 +68,6 @@ module Moon
       GLEW.init
     end
 
-    def uptime
-      GLFW.time
-    end
-
     def setup
       setup_glfw
       create_window
@@ -69,6 +76,11 @@ module Moon
       create_input
       setup_glew
       self
+    end
+
+    def shutdown
+      @window.destroy
+      @window = nil
     end
 
     def main
@@ -81,11 +93,13 @@ module Moon
         @window.swap_buffers
         GLFW.poll_events
       end
+    rescue EngineQuit
     end
 
     def run
       setup
       main
+      shutdown
     end
   end
 end
