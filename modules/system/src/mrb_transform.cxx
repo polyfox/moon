@@ -7,9 +7,6 @@
 #include <mruby/array.h>
 #include <mruby/class.h>
 #include <mruby/numeric.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include "moon/transform.hxx"
 #include "moon/mrb/transform.hxx"
 #include "moon/mrb/vector1.hxx"
@@ -74,6 +71,7 @@ mmrb_transform_value(mrb_state *mrb, Moon::Transform mat)
   *trns = mat;
   return rsult;
 }
+
 /*
  * @overload Transform#initialize()
  * @overload Transform#initialize(Numeric)
