@@ -1,5 +1,5 @@
-# [![Moon](https://raw.githubusercontent.com/IceDragon200/moon/master/moon-logo.png)](https://raw.githubusercontent.com/IceDragon200/moon/master/moon-logo.png) Moon
-[![Build Status](https://travis-ci.org/IceDragon200/moon.svg?branch=master)](https://travis-ci.org/IceDragon200/moon)
+# [![Moon](https://raw.githubusercontent.com/polyfox/moon/master/moon-logo.png)](https://raw.githubusercontent.com/polyfox/moon/master/moon-logo.png) Moon
+[![Build Status](https://travis-ci.org/polyfox/moon.svg?branch=master)](https://travis-ci.org/polyfox/moon)
 
 ## Introduction
 Moon is a experimental prototyping 2D Game Engine written in C++ and scripted using
