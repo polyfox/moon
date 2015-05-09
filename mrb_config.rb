@@ -1,5 +1,8 @@
 MRuby::Build.new do |conf|
-  toolchain :gcc
+  toolchain_name = (ENV['MOON_MRUBY_TOOLCHAIN'] || :gcc).to_sym
+  toolchain toolchain_name
+
+  puts "\t\\\\ Using #{toolchain_name} Toolchain \\\\"
 
   # Can I haz sane stack traces please :(
   #enable_debug # debugging causes oui and blendish to spaz out
@@ -21,6 +24,24 @@ MRuby::Build.new do |conf|
   conf.gem github: 'IceDragon200/mruby-oui'      # OUI
   conf.gem github: 'IceDragon200/mruby-blendish' # blendish
 
+  conf.cxx do |cxx|
+    std = 'c++11'
+    comp = toolchain_name == :clang ? 'clang' : 'gcc'
+    result = `#{comp} -dumpversion`.chomp
+    case toolchain_name
+    when :clang
+      # nothing yet
+      #if ver < '2.9'
+      #  end
+    when :gcc
+      if result < '4.7'
+        std = 'c++0x'
+      end
+    end
+    puts "\t\\\\ Using #{comp}(#{result}) c++ std: #{std} \\\\"
+    cxx.flags << "-std=#{std}"
+  end
+
   d = File.dirname(__FILE__)
   [conf.cc, conf.cxx].each do |cc|
     # system
@@ -38,20 +59,20 @@ MRuby::Build.new do |conf|
 
   conf.linker do |l|
     linker.library_paths << File.join(d, 'vendor/freetype-gl/build')
-    linker.library_paths << File.join(d, 'vendor/glfw/build')
+    linker.library_paths << File.join(d, 'vendor/glfw/build/src')
     linker.library_paths << File.join(d, 'vendor/gorilla-audio/build/build')
     linker.library_paths << File.join(d, 'vendor/nanovg/build')
     linker.library_paths << File.join(d, 'vendor/sil/build')
     linker.library_paths << File.join(d, 'vendor/soil/build')
-    linker.libraries << 'pthread'
-    linker.libraries << 'GL'
-    linker.libraries << 'openal'
     linker.libraries << 'glfw'
-    linker.libraries << 'SOIL'
-    linker.libraries << 'SIL'
-    linker.libraries << 'nanovg'
-    linker.libraries << 'freetype'
     linker.libraries << 'freetype-gl'
     linker.libraries << 'gorilla'
+    linker.libraries << 'nanovg'
+    linker.libraries << 'freetype'
+    linker.libraries << 'SOIL'
+    linker.libraries << 'SIL'
+    linker.libraries << 'GL'
+    linker.libraries << 'openal'
+    linker.libraries << 'pthread'
   end
 end

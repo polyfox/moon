@@ -17,9 +17,9 @@ MRuby::Gem::Specification.new('mruby-moon-audio') do |spec|
     cc.flags << '-Wextra'
   end
 
-  spec.cxx do |cxx|
-    cxx.flags << '-std=c++11'
-  end
+  #spec.cxx do |cxx|
+  #  cxx.flags << '-std=c++11'
+  #end
 
   spec.add_dependency 'mruby-moon-system'
 end

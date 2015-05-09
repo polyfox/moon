@@ -88,12 +88,13 @@ namespace Moon {
   }
 
   GLuint Shader::CreateProgram(const char* vertexfile, const char* fragmentfile) {
-    GLuint program = glCreateProgram();
     GLuint shader;
+    GLuint program = glCreateProgram();
+    assert(program);
 
     if (vertexfile) {
       shader = CreateShader(vertexfile, GL_VERTEX_SHADER);
-      if(!shader)
+      if (!shader)
         return 0;
       glAttachShader(program, shader);
       glDeleteShader(shader); // http://stackoverflow.com/questions/9113154/proper-way-to-delete-glsl-shader
@@ -129,45 +130,47 @@ namespace Moon {
   GLint Shader::InitAttribute(const char *name) {
     GLint attribute = glGetAttribLocation(m_program, name);
     if (attribute == -1) {
-      fprintf(stderr, "Shader: Could not bind attribute %s\n", name);
+      fprintf(stderr, "Shader(%i): Could not bind attribute %s: %x\n", m_program, name, glGetError());
       abort();
     }
     m_attributeList[name] = attribute;
     return attribute;
   }
 
-  GLint Shader::GetAttribute(const char *name) {
-    assert(name);
-    try {
-      return m_attributeList.at(name);
-    }
-    catch (const std::out_of_range& oor) {
-      return InitAttribute(name);
-    }
-  }
-
   GLint Shader::InitUniform(const char *name) {
-    assert(name);
     GLint uniform = glGetUniformLocation(m_program, name);
-    if(uniform == -1) {
-      fprintf(stderr, "Shader: Could not bind uniform %s\n", name);
+    if (uniform == -1) {
+      fprintf(stderr, "Shader(%i): Could not bind uniform %s: %x\n", m_program, name, glGetError());
       abort();
     }
     m_uniformLocationList[name] = uniform;
     return uniform;
   }
 
-  GLint Shader::GetUniform(const char *name) {
+  GLint Shader::GetAttribute(const char *name) {
+    assert(m_program);
     assert(name);
-    try {
-      return m_uniformLocationList.at(name);
+    AttributeMap::iterator iter = m_attributeList.find(name);
+    if (iter == m_attributeList.end()) {
+      return InitAttribute(name);
+    } else {
+      return iter->second;
     }
-    catch (const std::out_of_range& oor) { // uniform not found, load it!
+  }
+
+  GLint Shader::GetUniform(const char *name) {
+    assert(m_program);
+    assert(name);
+    AttributeMap::iterator iter = m_uniformLocationList.find(name);
+    if (iter == m_uniformLocationList.end()) {
       return InitUniform(name);
+    } else {
+      return iter->second;
     }
   }
 
   void Shader::BindAttribute(GLuint location, const char *name) {
+    assert(m_program);
     glBindAttribLocation(m_program, location, name);
   }
 
@@ -176,6 +179,7 @@ namespace Moon {
   }
 
   void Shader::Use() {
+    assert(m_program);
     glUseProgram(m_program);
   }
 };

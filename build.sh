@@ -78,12 +78,14 @@ clean() {
 build() {
   local j=4
   cd "${oldwd}"
+  echo SIL
   cd "vendor/sil" &&
   (premake4 gmake &&
      cd build &&
      make -j ${j} SIL) || exit
   cd "${oldwd}"
 
+  echo SOIL
   cd "vendor/soil" &&
   (premake4 gmake &&
      cd build &&
@@ -91,26 +93,30 @@ build() {
   cd "${oldwd}"
 
   # build nanovg
+  echo Nanovg
   cd "vendor/nanovg" &&
   (premake4 gmake &&
    cd build &&
    make -j ${j} nanovg) || exit
   cd "${oldwd}"
 
+  echo freetype-gl
   cd "vendor/freetype-gl" &&
   mkdir -p build &&
   cd build &&
-  (cmake .. &&
+  (cmake -Dfreetype-gl_BUILD_DEMOS=false .. &&
      make -j ${j}) || exit
   cd "${oldwd}"
 
+  echo GLFW
   cd "vendor/glfw" &&
   mkdir -p build &&
   cd build &&
-  (cmake .. &&
+  (cmake -DBUILD_SHARED_LIBS=true -DGLFW_BUILD_EXAMPLES=false .. &&
      make -j ${j}) || exit
   cd "${oldwd}"
 
+  echo gorilla-audio
   cd "vendor/gorilla-audio" &&
   mkdir -p build/build &&
   cd build/build &&
@@ -118,15 +124,16 @@ build() {
      make -j ${j}) || exit
   cd "${oldwd}"
 
+  echo mruby
   cd "vendor/mruby" &&
-  (MRUBY_CONFIG="${configfile}" rake -j ${j}) || exit
+  (MRUBY_CONFIG="${configfile}" make -j ${j}) || exit
   cd "${oldwd}"
 }
 
 mtest() {
   cd "${oldwd}"
   cd "vendor/mruby" &&
-  MRUBY_CONFIG="${configfile}" rake -j ${j} test
+  MRUBY_CONFIG="${configfile}" make -j ${j} test
   cd "${oldwd}"
 }
 
@@ -135,6 +142,7 @@ if [[ -z "$@" ]] ; then
 else
   while ! [[ -z "$@" ]] ; do
     case "$@" in
+      "test")         mtest ;;
       "build")        build ;;
       "clean-hard")   clean-hard ;;
       "clean-mruby")  clean-mruby ;;
