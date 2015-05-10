@@ -1,3 +1,5 @@
+require_relative 'lib/platform'
+
 MRuby::Build.new do |conf|
   toolchain_name = (ENV['MOON_MRUBY_TOOLCHAIN'] || :gcc).to_sym
   toolchain toolchain_name
@@ -45,6 +47,10 @@ MRuby::Build.new do |conf|
   d = File.dirname(__FILE__)
   vd = File.expand_path('vendor', d)
   [conf.cc, conf.cxx].each do |cc|
+    cc.flags << '-g3'
+
+    cc.flags << '-DMOON_GLEW' if Platform.linux?
+
     # system
     cc.include_paths << File.join(vd, 'glm')
     # graphics
@@ -71,7 +77,7 @@ MRuby::Build.new do |conf|
     linker.libraries << 'freetype'
     linker.libraries << 'SOIL'
     linker.libraries << 'SIL'
-    if RUBY_PLATFORM.include?('darwin')
+    if Platform.darwin?
       linker.flags_after_libraries << '-framework OpenGL'
       linker.flags_after_libraries << '-framework OpenAL'
       linker.flags_after_libraries << '-framework CoreFoundation'
