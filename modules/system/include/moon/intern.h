@@ -23,23 +23,4 @@ exists(const std::string& name)
   return (stat(name.c_str(), &buffer) == 0);
 };
 
-static inline wchar_t*
-char_to_utf8(char* str)
-{
-#ifdef _WIN32
-  int length;
-
-  // get length of converted string in characters
-  length = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, str, sizeof(str), NULL, 0);
-
-  wchar_t *name = new wchar_t[length];
-  MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, str, sizeof(str), name, length);
-  return name;
-#else
-  int length = mbstowcs(0, str, 0);
-  wchar_t *text = new wchar_t[length+1];
-  mbstowcs(text, str, length+1);
-  return text;
-#endif
-};
 #endif

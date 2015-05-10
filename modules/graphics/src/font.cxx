@@ -4,6 +4,7 @@
 #include "moon/glm.h"
 #include "moon/shader_loader.hxx"
 #include "moon/font.hxx"
+#include "moon/string.hxx"
 #include "moon/vector2.hxx"
 #include "moon/vector4.hxx"
 
@@ -27,19 +28,19 @@ namespace Moon {
   }
 
   void Font::DrawText(const float x, const float y, const float z,
-                       const wchar_t *text) {
+                      const Moon::String &text) {
     DrawText(x, y, z, text, DefaultColor);
   }
 
   void Font::DrawText(const float x, const float y, const float z,
-                      const wchar_t *text, const Vector4 &color) {
+                      const Moon::String &text, const Vector4 &color) {
     RenderState render_ops;
     render_ops.color = color;
     DrawText(x, y, z, text, render_ops);
   }
 
   void Font::DrawText(const float x, const float y, const float z,
-                      const wchar_t *text, const RenderState &render_ops) {
+                      const Moon::String &text, const RenderState &render_ops) {
     // outline
     if (render_ops.outline > 0) {
       m_font->outline_type = 2;
@@ -65,10 +66,10 @@ namespace Moon {
     m_buffer.Clear();
   }
 
-  void Font::AddText(const wchar_t *text, const Vector4 &c) {
+  void Font::AddText(const Moon::String &text, const Vector4 &c) {
     float cursor = 0; // position of the write cursor
 
-    for(size_t i = 0; i < wcslen(text); ++i) {
+    for(size_t i = 0; i < text.length(); ++i) {
       texture_glyph_t *glyph = texture_font_get_glyph(m_font, text[i]);
       if(glyph != NULL) {
         float kerning = 0;
@@ -97,7 +98,7 @@ namespace Moon {
     }
   }
 
-  Vector2 Font::ComputeStringBbox(const wchar_t *text) {
+  Vector2 Font::ComputeStringBbox(const Moon::String &text) {
     Vector4 bbox;
 
     /* initialize string bbox to "empty" values */
@@ -108,7 +109,7 @@ namespace Moon {
 
     /* for each glyph image, compute its bounding box, */
     /* translate it, and grow the string bbox          */
-    for (size_t i = 0; i < wcslen(text); ++i) {
+    for (size_t i = 0; i < text.length(); ++i) {
       texture_glyph_t *glyph = texture_font_get_glyph(m_font, text[i]);
 
       if(glyph != NULL) {
