@@ -32,9 +32,3 @@
   path = vendor/nanovg
   url = https://github.com/IceDragon200/nanovg.git
   branch = static-stb_image
-
-[submodule "vendor/oui-blendish"]
-  path = vendor/oui-blendish
-  url = https://github.com/IceDragon200/oui-blendish.git
-
-

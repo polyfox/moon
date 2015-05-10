@@ -21,8 +21,6 @@ MRuby::Build.new do |conf|
   # nice things
   conf.gem github: 'AndrewBelt/mruby-yaml'       # YAML :3
   conf.gem github: 'IceDragon200/mruby-nanovg'   # nanovg
-  conf.gem github: 'IceDragon200/mruby-oui'      # OUI
-  conf.gem github: 'IceDragon200/mruby-blendish' # blendish
 
   conf.cxx do |cxx|
     std = 'c++11'
@@ -53,7 +51,6 @@ MRuby::Build.new do |conf|
     cc.include_paths << File.join(vd, 'sil/include')
     cc.include_paths << File.join(vd, 'freetype-gl')
     cc.include_paths << File.join(vd, 'nanovg/src')
-    cc.include_paths << File.join(vd, 'oui-blendish')
     # audio
     cc.include_paths << File.join(vd, 'gorilla-audio/include')
   end
