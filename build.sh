@@ -104,7 +104,7 @@ build() {
   cd "vendor/freetype-gl" &&
   mkdir -p build &&
   cd build &&
-  (cmake -Dfreetype-gl_BUILD_DEMOS=false .. &&
+  (cmake -Dfreetype-gl_BUILD_DEMOS=false -Dfreetype-gl_BUILD_APIDOC=false .. &&
      make -j ${j}) || exit
   cd "${oldwd}"
 

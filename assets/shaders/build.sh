@@ -38,8 +38,10 @@ compile_shader() {
   # space before the varying/attribute declarations.
   ###
   #sed "/^#\s/d" "${tmpfile}" | sed "s/^\s\b//g" > "${outfile}"
-  sed "s/^\s\b//g" "${tmpfile}" > "${outfile}"
-  #cp $tmpfile $outfile
+  # replace lines with only a semicolon on it
+  sed "s/^\s\b//g" "${tmpfile}" |
+    sed "s/^\s*;//g" |
+    astyle --mode=c --style=linux --indent=spaces=4 > "${outfile}"
 
   ##
   # remove the tmpfile
