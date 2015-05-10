@@ -1,6 +1,8 @@
 # yard doc
-.yard
-doc
+/.yard
+/.yardoc
+/doc
+/coverage
 
 # Compiled Object files
 *.slo

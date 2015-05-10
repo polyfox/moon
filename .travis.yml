@@ -1,8 +1,4 @@
 language: cpp
-#compiler:
-#  - gcc
-#  - clang
-
 matrix:
   include:
     - compiler: clang
@@ -31,6 +27,7 @@ before_install:
   - wget http://ftp.us.debian.org/debian/pool/main/c/cmake/cmake_2.8.9-1_amd64.deb
   - sudo dpkg -i ./cmake_2.8.9-1_amd64.deb
   - rm -v ./cmake_2.8.9-1_amd64.deb
+  - sudo gem install bundler
 install:
   # deps.moon
   - sudo apt-get install -qq libopenal-dev libdevil-dev libglew-dev libgles2-mesa-dev freeglut3-dev libx11-dev libxmu-dev libxi-dev libyaml-dev
@@ -38,5 +35,6 @@ install:
   - sudo apt-get install -qq doxygen
   # deps.glfw3
   - sudo apt-get install -qq xorg-dev libglu1-mesa-dev
+  - bundle install
 script:
-  - exec bash build.sh
+  - bundle exec rake build
