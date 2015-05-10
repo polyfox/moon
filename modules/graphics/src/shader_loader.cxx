@@ -2,6 +2,7 @@
 #include <string.h>
 #include <assert.h>
 #include "moon/engine.hxx"
+#include "moon/gl.h"
 #include "moon/shader.hxx"
 #include "moon/shader_loader.hxx"
 
