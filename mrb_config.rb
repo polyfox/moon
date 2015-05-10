@@ -4,8 +4,8 @@ MRuby::Build.new do |conf|
 
   puts "\t\\\\ Using #{toolchain_name} Toolchain \\\\"
 
-  # Can I haz sane stack traces please :(
-  #enable_debug # debugging causes oui and blendish to spaz out
+  # Full backtraces
+  enable_debug
 
   # include the default GEMs
   conf.gembox 'default'
@@ -20,6 +20,8 @@ MRuby::Build.new do |conf|
 
   # nice things
   conf.gem github: 'AndrewBelt/mruby-yaml'       # YAML :3
+  conf.gem github: 'IceDragon200/mruby-glew'     # GLEW
+  conf.gem github: 'IceDragon200/mruby-glfw3'    # GLFW
   conf.gem github: 'IceDragon200/mruby-nanovg'   # nanovg
 
   conf.cxx do |cxx|
