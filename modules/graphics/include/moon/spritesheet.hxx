@@ -35,7 +35,7 @@ namespace Moon {
     Spritesheet();
     ~Spritesheet();
     void LoadTexture(Texture *texture, int tile_width, int tile_height);
-    void Render(const float &x, const float &y, const float &z, const int &index, const struct RenderState &render_op);
+    void Render(const float x, const float y, const float z, const int index, const struct RenderState &render_op);
   private:
     VertexBuffer m_vbo;
     Texture *m_texture;

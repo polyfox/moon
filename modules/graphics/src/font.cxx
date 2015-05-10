@@ -26,20 +26,20 @@ namespace Moon {
     texture_atlas_delete(m_atlas);
   }
 
-  void Font::DrawText(const float &x, const float &y, const float &z,
+  void Font::DrawText(const float x, const float y, const float z,
                        const wchar_t *text) {
     DrawText(x, y, z, text, DefaultColor);
   }
 
-  void Font::DrawText(const float &x, const float &y, const float &z,
-                       const wchar_t *text, const Vector4 &color) {
+  void Font::DrawText(const float x, const float y, const float z,
+                      const wchar_t *text, const Vector4 &color) {
     RenderState render_ops;
     render_ops.color = color;
     DrawText(x, y, z, text, render_ops);
   }
 
-  void Font::DrawText(const float &x, const float &y, const float &z,
-                       const wchar_t *text, const RenderState &render_ops) {
+  void Font::DrawText(const float x, const float y, const float z,
+                      const wchar_t *text, const RenderState &render_ops) {
     // outline
     if (render_ops.outline > 0) {
       m_font->outline_type = 2;

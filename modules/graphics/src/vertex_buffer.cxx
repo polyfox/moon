@@ -114,7 +114,7 @@ namespace Moon {
     glBindVertexArray(0);
   }
 
-  void VertexBuffer::RenderWithOffset(GLenum mode, const int &offset) {
+  void VertexBuffer::RenderWithOffset(GLenum mode, const int offset) {
     if (m_dirty) Upload(); // update the VBO and IBO if dirty
     glBindVertexArray(m_vao_id);
     glDrawElementsBaseVertex(mode, m_indices.size(), GL_UNSIGNED_INT, NULL, offset);

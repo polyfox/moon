@@ -31,9 +31,9 @@ namespace Moon {
     Font(std::string name, int font_size);
     ~Font();
 
-    void DrawText(const float &x, const float &y, const float &z, const wchar_t *text); /* white text */
-    void DrawText(const float &x, const float &y, const float &z, const wchar_t *text, const Vector4 &color);
-    void DrawText(const float &x, const float &y, const float &z, const wchar_t *text, const RenderState &options);
+    void DrawText(const float x, const float y, const float z, const wchar_t *text); /* white text */
+    void DrawText(const float x, const float y, const float z, const wchar_t *text, const Vector4 &color);
+    void DrawText(const float x, const float y, const float z, const wchar_t *text, const RenderState &options);
     int GetSize();
     Vector2 ComputeStringBbox(const wchar_t *text);
   private:

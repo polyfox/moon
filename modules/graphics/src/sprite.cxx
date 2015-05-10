@@ -85,7 +85,7 @@ namespace Moon {
     GenerateBuffers();
   };
 
-  void Sprite::Render(const float &x, const float &y, const float &z) {
+  void Sprite::Render(const float x, const float y, const float z) {
     m_shader->Use();
     // rotation matrix - rotate the model around specified origin
     // really ugly, we translate the rotation origin to 0,0, rotate,

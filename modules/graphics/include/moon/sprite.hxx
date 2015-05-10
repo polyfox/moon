@@ -27,7 +27,7 @@ namespace Moon {
     void SetTexture(Texture *tex);
     IntRect GetClipRect();
     void SetClipRect(IntRect clip);
-    void Render(const float &x, const float &y, const float &z);
+    void Render(const float x, const float y, const float z);
   private:
     IntRect m_clip_rect;
     Shader *m_shader;
