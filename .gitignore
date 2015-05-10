@@ -1,7 +1,3 @@
-build/
-bin/
-lib/
-
 # yard doc
 .yard
 doc
