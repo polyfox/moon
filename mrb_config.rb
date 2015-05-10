@@ -43,27 +43,28 @@ MRuby::Build.new do |conf|
   end
 
   d = File.dirname(__FILE__)
+  vd = File.expand_path('vendor', d)
   [conf.cc, conf.cxx].each do |cc|
     # system
-    cc.include_paths << File.join(d, 'vendor/glm')
+    cc.include_paths << File.join(vd, 'glm')
     # graphics
-    cc.include_paths << File.join(d, 'vendor/glfw/include')
-    cc.include_paths << File.join(d, 'vendor/soil/include')
-    cc.include_paths << File.join(d, 'vendor/sil/include')
-    cc.include_paths << File.join(d, 'vendor/freetype-gl')
-    cc.include_paths << File.join(d, 'vendor/nanovg/src')
-    cc.include_paths << File.join(d, 'vendor/oui-blendish')
+    cc.include_paths << File.join(vd, 'glfw/include')
+    cc.include_paths << File.join(vd, 'soil/include')
+    cc.include_paths << File.join(vd, 'sil/include')
+    cc.include_paths << File.join(vd, 'freetype-gl')
+    cc.include_paths << File.join(vd, 'nanovg/src')
+    cc.include_paths << File.join(vd, 'oui-blendish')
     # audio
-    cc.include_paths << File.join(d, 'vendor/gorilla-audio/include')
+    cc.include_paths << File.join(vd, 'gorilla-audio/include')
   end
 
   conf.linker do |l|
-    linker.library_paths << File.join(d, 'vendor/freetype-gl/build')
-    linker.library_paths << File.join(d, 'vendor/glfw/build/src')
-    linker.library_paths << File.join(d, 'vendor/gorilla-audio/build/build')
-    linker.library_paths << File.join(d, 'vendor/nanovg/build')
-    linker.library_paths << File.join(d, 'vendor/sil/build')
-    linker.library_paths << File.join(d, 'vendor/soil/build')
+    linker.library_paths << File.join(vd, 'glfw/build/src')
+    linker.library_paths << File.join(vd, 'freetype-gl/build')
+    linker.library_paths << File.join(vd, 'gorilla-audio/build/build')
+    linker.library_paths << File.join(vd, 'nanovg/build')
+    linker.library_paths << File.join(vd, 'sil/build')
+    linker.library_paths << File.join(vd, 'soil/build')
     linker.libraries << 'glfw'
     linker.libraries << 'freetype-gl'
     linker.libraries << 'gorilla'
