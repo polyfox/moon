@@ -7,10 +7,6 @@
 #include "moon/api.h"
 #include "moon/intern.h"
 
-using Moon::Audio;
-
-static struct RClass *sound_class;
-
 static void
 sound_free(mrb_state *mrb, void *p)
 {
@@ -63,7 +59,7 @@ sound_play(mrb_state *mrb, mrb_value self)
   ga_Sound *sound = get_sound(mrb, self);
   ga_Handle* handle;
   mrb_get_args(mrb, "|fff", &gain, &pitch, &pan);
-  handle = gau_create_handle_sound(Audio::GetMixer(), sound, &gau_on_finish_destroy, 0, 0);
+  handle = gau_create_handle_sound(Moon::Audio::GetMixer(), sound, &gau_on_finish_destroy, 0, 0);
   ga_handle_setParamf(handle, GA_HANDLE_PARAM_GAIN, gain);
   ga_handle_setParamf(handle, GA_HANDLE_PARAM_PITCH, pitch);
   ga_handle_setParamf(handle, GA_HANDLE_PARAM_PAN, pan);
@@ -75,8 +71,9 @@ sound_play(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_sound_init(mrb_state *mrb, struct RClass *mod)
 {
-  sound_class = mrb_define_class_under(mrb, mod, "Sound", mrb->object_class);
+  struct RClass *sound_class = mrb_define_class_under(mrb, mod, "Sound", mrb->object_class);
   MRB_SET_INSTANCE_TT(sound_class, MRB_TT_DATA);
+
   mrb_define_method(mrb, sound_class, "initialize", sound_initialize, MRB_ARGS_REQ(2));
   mrb_define_method(mrb, sound_class, "play", sound_play,             MRB_ARGS_OPT(3));
 }

@@ -7,8 +7,6 @@
 #include "moon/api.h"
 #include "moon/intern.h"
 
-static struct RClass *music_class;
-
 static void
 music_free(mrb_state *mrb, void *p)
 {
@@ -147,7 +145,7 @@ music_clear_loop(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_music_init(mrb_state *mrb, struct RClass *mod)
 {
-  music_class = mrb_define_class_under(mrb, mod, "Music", mrb->object_class);
+  struct RClass *music_class = mrb_define_class_under(mrb, mod, "Music", mrb->object_class);
   MRB_SET_INSTANCE_TT(music_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, music_class, "initialize", music_initialize, MRB_ARGS_REQ(2));
