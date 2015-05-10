@@ -3,6 +3,7 @@
 
 /* OpenGL via GLFW */
 #define GLFW_INCLUDE_GLCOREARB
+#define GLFW_INCLUDE_GLEXT
 #define GL3_PROTOTYPES
 #include <GLFW/glfw3.h>
 
