@@ -1,24 +1,34 @@
 [submodule "vendor/mruby"]
-	path = vendor/mruby
-	url = https://github.com/mruby/mruby.git
+  path = vendor/mruby
+  url = https://github.com/mruby/mruby.git
 
 [submodule "vendor/freetype-gl"]
-	path = vendor/freetype-gl
-	url = https://github.com/rougier/freetype-gl.git
+  path = vendor/freetype-gl
+  url = https://github.com/rougier/freetype-gl.git
 
 [submodule "vendor/glm"]
-	path = vendor/glm
-	url = https://github.com/g-truc/glm.git
+  path = vendor/glm
+  url = https://github.com/g-truc/glm.git
 
 [submodule "vendor/glfw"]
   path = vendor/glfw
   url = https://github.com/glfw/glfw.git
 
+[submodule "vendor/sil"]
+  path = vendor/sil
+  url = https://github.com/IceDragon200/SIL.git
+  ignore = dirty
+
 [submodule "vendor/soil"]
-	path = vendor/soil
-	url = https://github.com/archSeer/SOIL.git
+  path = vendor/soil
+  url = https://github.com/IceDragon200/SOIL.git
   ignore = dirty
 
 [submodule "vendor/gorilla-audio"]
   path = vendor/gorilla-audio
   url = https://github.com/IceDragon200/gorilla-audio.git
+
+[submodule "vendor/nanovg"]
+  path = vendor/nanovg
+  url = https://github.com/IceDragon200/nanovg.git
+  branch = static-stb_image

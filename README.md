@@ -1,6 +1,38 @@
-# [![Moon](https://raw.githubusercontent.com/IceDragon200/moon/master/moon-logo.png)](https://raw.githubusercontent.com/IceDragon200/moon/master/moon-logo.png) Moon
-[![Build Status](https://travis-ci.org/IceDragon200/moon.svg?branch=master)](https://travis-ci.org/IceDragon200/moon)
+# [![Moon](https://raw.githubusercontent.com/polyfox/moon/master/moon-logo.png)](https://raw.githubusercontent.com/polyfox/moon/master/moon-logo.png) Moon
+[![Build Status](https://travis-ci.org/polyfox/moon.svg?branch=master)](https://travis-ci.org/polyfox/moon)
 
+## Introduction
+Moon is a experimental prototyping 2D Game Engine written in C++ and scripted using
+mruby.
+
+## Projects using Moon
+Lunar Howl (MMO RPG)
+es-moon (Roguelike RPG)
+Lunar Metal (2D Top-Down RTS)
+
+## Dependencies
+Moon ships with most of its dependencies in the vendor directory
+```
+freetype-gl
+glfw (3)
+glm
+gorilla-audio
+mruby
+soil
+```
+
+## Building
+If you are downloading moon for the first time from git you can use:
+```
+git clone --recursive https://github.com/archSeer/moon.git
+```
+This will grab moon and all its submodules.
+
+
+
+
+
+__ORIGINAL_README__
 ## Moon and Lunar Howl
 
 Moon is the name of the engine (libmoon), running OpenGL, GLFW and mruby.

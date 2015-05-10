@@ -1,0 +1,20 @@
+MRuby::GemBox.new do |conf|
+  conf.gem core: 'mruby-string-utf8'
+  # patches some core issues
+  conf.gem github: 'IceDragon200/mruby-patch-core'
+  conf.gem github: 'IceDragon200/mruby-catch-throw'
+  # required for mruby-graphics
+  conf.gem github: 'IceDragon200/mruby-glfw3'
+  conf.gem github: 'IceDragon200/mruby-glew'
+
+  # moon gems
+  d = File.dirname(__FILE__)
+  # moon-system
+  conf.gem File.join(d, 'system')
+  # moon-graphics
+  conf.gem File.join(d, 'graphics')
+  # moon-audio
+  conf.gem File.join(d, 'audio')
+  # moon-engine
+  conf.gem File.join(d, 'engine')
+end

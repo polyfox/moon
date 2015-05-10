@@ -4,9 +4,9 @@
 #    define shader_version #version 100
 #    define var_precision \
 #      ifdef GL_FRAGMENT_PRECISION_HIGH \
-#        define var_precision precision highp float; \
+#        define var_precision precision highp float \
 #      else \
-#        define var_precision precision mediump float; \
+#        define var_precision precision mediump float \
 #      endif
 #  else
 #    define shader_version #version 120
@@ -41,6 +41,6 @@
 #  define outvar out
 #  define inattr in
 #  define outattr out
-#  define def_frag_color out vec4 fragColor;
+#  define def_frag_color out vec4 fragColor
 #  define frag_color fragColor
 #endif

@@ -20,7 +20,7 @@ compile_shader() {
   local outfile=${3}
   local tmpfile="${outfile}.tmp"
 
-  echo "Compiling $infile > $outfile"
+  echo "  [PP] $infile > $outfile"
   $PP -I. -nostdinc -E -P -xc \
       -D__GLSL_VERSION__=$glslv \
       -DGL_ES=$build_for_gl_es \

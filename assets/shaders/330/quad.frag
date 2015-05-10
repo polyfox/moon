@@ -1,5 +1,5 @@
  #version 330
-
+;
 in vec2 f_texcoord;
 uniform sampler2D tex;
 uniform float opacity;

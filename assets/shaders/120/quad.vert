@@ -1,5 +1,5 @@
  #version 120
-
+;
 attribute vec2 vertex_pos;
 attribute vec2 texcoord;
 varying vec2 f_texcoord;

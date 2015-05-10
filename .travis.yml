@@ -1,16 +1,42 @@
 language: cpp
-compiler:
-  - gcc
-  - clang
+#compiler:
+#  - gcc
+#  - clang
+
+matrix:
+  include:
+    - compiler: clang
+      env: MOON_MRUBY_TOOLCHAIN=clang
+
+    - compiler: gcc
+      env: MOON_MRUBY_TOOLCHAIN=gcc
+
+  allow_failures:
+    - compiler: clang
+
 before_install:
   - sudo apt-get update -qq
-  - git submodule update --init --recursive
+  - git submodule update --init --recursive --depth=1
+  # build stuff
+  - sudo apt-get install -qq -y liblua5.1-0
+  # build.premake4
+  - wget http://mirrors.kernel.org/ubuntu/pool/universe/p/premake4/premake4_4.3+repack1-2_amd64.deb
+  - sudo dpkg -i ./premake4_4.3+repack1-2_amd64.deb
+  - rm -v ./premake4_4.3+repack1-2_amd64.deb
+  # build.cmake-data
+  - wget http://ftp.us.debian.org/debian/pool/main/c/cmake/cmake-data_2.8.9-1_all.deb
+  - sudo dpkg -i ./cmake-data_2.8.9-1_all.deb
+  - rm -v ./cmake-data_2.8.9-1_all.deb
+  # build.cmake
+  - wget http://ftp.us.debian.org/debian/pool/main/c/cmake/cmake_2.8.9-1_amd64.deb
+  - sudo dpkg -i ./cmake_2.8.9-1_amd64.deb
+  - rm -v ./cmake_2.8.9-1_amd64.deb
 install:
-  # Moon
-  - sudo apt-get install -qq libopenal-dev libdevil-dev libglfw-dev libglew-dev freeglut3-dev libx11-dev libxmu-dev libxi-dev libyaml-dev
-  # GLFW3
+  # deps.moon
+  - sudo apt-get install -qq libopenal-dev libdevil-dev libglew-dev libgles2-mesa-dev freeglut3-dev libx11-dev libxmu-dev libxi-dev libyaml-dev
+  # deps.freetype-gl
+  - sudo apt-get install -qq doxygen
+  # deps.glfw3
   - sudo apt-get install -qq xorg-dev libglu1-mesa-dev
-before_script:
-  - "mkdir -p build && cd build && cmake .."
 script:
-  - make -j4
+  - exec bash build.sh
