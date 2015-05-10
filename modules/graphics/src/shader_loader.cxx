@@ -5,8 +5,6 @@
 #include "moon/shader.hxx"
 #include "moon/shader_loader.hxx"
 
-#define str_join_cstr(a, b) (basepath + vert_basename).c_str()
-
 namespace Moon {
   Shader *ShaderLoader::s_quad_shader = NULL;
   Shader *ShaderLoader::s_text_shader = NULL;
