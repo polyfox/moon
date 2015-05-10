@@ -69,8 +69,14 @@ MRuby::Build.new do |conf|
     linker.libraries << 'freetype'
     linker.libraries << 'SOIL'
     linker.libraries << 'SIL'
-    linker.libraries << 'GL'
-    linker.libraries << 'openal'
+    if RUBY_PLATFORM.include?('darwin')
+      linker.flags_after_libraries << '-framework OpenGL'
+      linker.flags_after_libraries << '-framework OpenAL'
+      linker.flags_after_libraries << '-framework CoreFoundation'
+    else
+      linker.libraries << 'GL'
+      linker.libraries << 'openal'
+    end
     linker.libraries << 'pthread'
   end
 end

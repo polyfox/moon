@@ -2,6 +2,7 @@
 #define MOON_VERTBUFFER_H
 
 #include <vector>
+#include <functional>
 #include <algorithm>
 #include "moon/intern.h"
 #include "moon/gl.h"
