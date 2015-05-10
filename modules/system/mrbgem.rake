@@ -5,7 +5,7 @@ MRuby::Gem::Specification.new('mruby-moon-system') do |spec|
   spec.version = '0.0.0'
   spec.summary = 'Moon system modules'
   spec.description = 'Moon Engine\'s system modules'
-  spec.homepage = 'https://github.com/IceDragon200/mruby-moon'
+  spec.homepage = 'https://github.com/polyfox/moon'
   # compiler config
   spec.cc.include_paths << ["#{build.root}/src", "#{build.root}/include"]
   # I think we inherited the parent flags, might as well flatten the array to
