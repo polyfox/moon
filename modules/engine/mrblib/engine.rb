@@ -51,6 +51,7 @@ module Moon
       GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 3
       GLFW.window_hint GLFW::OPENGL_FORWARD_COMPAT, GL2::GL_TRUE # for 3.0
       GLFW.window_hint GLFW::OPENGL_PROFILE, GLFW::OPENGL_CORE_PROFILE # for 3.0 and on
+      Moon::Shader.is_legacy = false
 
       begin
         @window = GLFW::Window.new 800, 600, 'Moon Player'
@@ -58,6 +59,7 @@ module Moon
         GLFW.default_window_hints
         GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 2
         GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 1
+        Moon::Shader.is_legacy = true
 
         @window = GLFW::Window.new 800, 600, 'Moon Player'
       end

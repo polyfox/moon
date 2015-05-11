@@ -55,6 +55,10 @@ MRuby::Build.new do |conf|
       c.flags << '-DMOON_GL_GLEW'
     end
 
+    # If you want Moon to guess the GLSL shader versions to load, enable this
+    # line, otherwise, you must set is_legacy
+    #c.flags << '-DMOON_GUESS_SHADER_VERSION'
+
     # system
     c.include_paths << File.join(vd, 'glm')
     # graphics
