@@ -12,6 +12,7 @@
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"
 #include "moon/glm.h"
+#include "moon/string.hxx"
 #include "moon/font.hxx"
 
 static mrb_sym id_outline;
@@ -71,6 +72,38 @@ font_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+static void
+font_render_with_options(mrb_state *mrb, Moon::Font *font,
+  const float x, const float y, const float z, const Moon::String &text,
+  mrb_value color, mrb_value options)
+{
+  Moon::Font::RenderState render_op;
+
+  mrb_value keys = mrb_hash_keys(mrb, options);
+  int len = mrb_ary_len(mrb, keys);
+  const mrb_value *keys_ary = RARRAY_PTR(keys);
+
+  for (int i = 0; i < len; ++i) {
+    mrb_value key = keys_ary[i];
+
+    if (mrb_symbol_p(key)) {
+      // :opacity
+      mrb_value val = mrb_hash_get(mrb, options, key);
+      if (mrb_symbol(key) == id_outline) {
+        render_op.outline = mrb_to_flo(mrb, val);
+      } else if (mrb_symbol(key) == id_outline_color) {
+        render_op.outline_color = *get_vector4(mrb, val);
+      } else if (mrb_symbol(key) == id_transform) {
+        render_op.transform = *get_transform(mrb, val);
+      }
+    }
+  }
+  if(!mrb_nil_p(color)) {
+    render_op.color = *get_vector4(mrb, color);
+  }
+  font->DrawText(x, y, z, text, render_op);
+}
+
 /*
  * Font#draw_text(x, y, z, str[, color])
  * @param [Numeric] x
@@ -90,43 +123,18 @@ font_render(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "fffz|oH", &x, &y, &z, &str, &color, &options);
 
   // convert to wide char (UTF-8)
-  wchar_t *text = char_to_utf8(str);
+  Moon::String text(str);
   Moon::Font *font = get_font(mrb, self);
   if (!mrb_nil_p(options)) {
-    Moon::Font::RenderState render_op;
-
-    mrb_value keys = mrb_hash_keys(mrb, options);
-    int len = mrb_ary_len(mrb, keys);
-    const mrb_value *keys_ary = RARRAY_PTR(keys);
-
-    for (int i = 0; i < len; ++i) {
-      mrb_value key = keys_ary[i];
-
-      if (mrb_symbol_p(key)) {
-        // :opacity
-        mrb_value val = mrb_hash_get(mrb, options, key);
-        if (mrb_symbol(key) == id_outline) {
-          render_op.outline = mrb_to_flo(mrb, val);
-        } else if (mrb_symbol(key) == id_outline_color) {
-          render_op.outline_color = *get_vector4(mrb, val);
-        } else if (mrb_symbol(key) == id_transform) {
-          render_op.transform = *get_transform(mrb, val);
-        }
-      }
-    }
-    if(!mrb_nil_p(color)) {
-      render_op.color = *get_vector4(mrb, color);
-    }
-    font->DrawText(x, y, z, text, render_op);
+    font_render_with_options(mrb, font, x, y, z, text, color, options);
   } else {
-    if(!mrb_nil_p(color)) {
+    if (!mrb_nil_p(color)) {
       //text_color needs to be dereferenced to shared_ptr first and then to value
       font->DrawText(x, y, z, text, *get_vector4(mrb, color));
     } else {
       font->DrawText(x, y, z, text);
     }
   }
-  delete[] text;
   return self;
 }
 
@@ -151,10 +159,9 @@ font_calc_bounds(mrb_state *mrb, mrb_value self)
   char *str;
   mrb_get_args(mrb, "z", &str);
   // convert to wide char (UTF-8)
-  wchar_t *text = char_to_utf8(str);
+  Moon::String text(str);
   Moon::Font *font = get_font(mrb, self);
   Moon::Vector2 bounds = font->ComputeStringBbox(text);
-  delete[] text;
   mrb_value argv[2] = { mrb_fixnum_value(bounds.x), mrb_fixnum_value(bounds.y) };
   return mrb_ary_new_from_values(mrb, 2, argv);
 }

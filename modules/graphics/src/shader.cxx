@@ -109,9 +109,9 @@ namespace Moon {
     }
 
     if (ShaderLoader::IsLegacy()) {
-      BindAttribute(0, "vertex_pos");
-      BindAttribute(1, "texcoord");
-      BindAttribute(2, "color");
+      glBindAttribLocation(program, 0, "vertex_pos");
+      glBindAttribLocation(program, 1, "texcoord");
+      glBindAttribLocation(program, 2, "color");
     }
 
     glLinkProgram(program);
@@ -167,11 +167,6 @@ namespace Moon {
     } else {
       return iter->second;
     }
-  }
-
-  void Shader::BindAttribute(GLuint location, const char *name) {
-    assert(m_program);
-    glBindAttribLocation(m_program, location, name);
   }
 
   GLuint Shader::GetProgram() {

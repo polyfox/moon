@@ -9,6 +9,7 @@
 #include "moon/vector2.hxx"
 #include "moon/vector4.hxx"
 #include "moon/transform.hxx"
+#include "moon/string.hxx"
 
 namespace Moon {
   class Font {
@@ -31,17 +32,17 @@ namespace Moon {
     Font(std::string name, int font_size);
     ~Font();
 
-    void DrawText(const float x, const float y, const float z, const wchar_t *text); /* white text */
-    void DrawText(const float x, const float y, const float z, const wchar_t *text, const Vector4 &color);
-    void DrawText(const float x, const float y, const float z, const wchar_t *text, const RenderState &options);
+    void DrawText(const float x, const float y, const float z, const Moon::String &text); /* white text */
+    void DrawText(const float x, const float y, const float z, const Moon::String &text, const Vector4 &color);
+    void DrawText(const float x, const float y, const float z, const Moon::String &text, const RenderState &options);
     int GetSize();
-    Vector2 ComputeStringBbox(const wchar_t *text);
+    Vector2 ComputeStringBbox(const Moon::String &text);
   private:
     texture_font_t *m_font;
     texture_atlas_t *m_atlas;
     VertexBuffer m_buffer;
     Shader *m_shader;
-    void AddText(const wchar_t *text, const Vector4 &c);
+    void AddText(const Moon::String &text, const Vector4 &c);
   };
 };
 
