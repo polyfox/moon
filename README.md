@@ -1,5 +1,6 @@
 # [![Moon](https://raw.githubusercontent.com/polyfox/moon/master/moon-logo.png)](https://raw.githubusercontent.com/polyfox/moon/master/moon-logo.png) Moon
 [![Build Status](https://travis-ci.org/polyfox/moon.svg?branch=master)](https://travis-ci.org/polyfox/moon)
+[![Code Climate](https://codeclimate.com/github/polyfox/moon/badges/gpa.svg)](https://codeclimate.com/github/polyfox/moon)
 
 ## Introduction
 Moon is a experimental prototyping 2D Game Engine written in C++ and scripted using
