@@ -79,5 +79,4 @@ TODO
 
 
 ## Problems
-Please report all problems that you encounter in Moon, we'll fix them as fast
-as we can, if its within our abilities that is.
+Please report any problems by [opening an issue](https://github.com/polyfox/moon/issues/new).
