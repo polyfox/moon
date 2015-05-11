@@ -1,3 +1,5 @@
+require 'fileutils'
+
 namespace :mruby do
   rootdir = File.expand_path('../', File.dirname(__FILE__))
   dir = File.expand_path('vendor/mruby', rootdir)
@@ -18,5 +20,9 @@ namespace :mruby do
 
   task :clean do
     sh %(make -C "#{dir}" clean)
+  end
+
+  task :clean_gems do
+    FileUtils.rm_rf(File.join(dir, 'build/mrbgems'))
   end
 end
