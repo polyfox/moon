@@ -49,11 +49,22 @@ MRuby::Build.new do |conf|
   [conf.cc, conf.cxx].each do |c|
     c.flags << '-g3'
 
+    # Its a good idea to get all the warnings
+    c.flags << ' -Wall'
+    c.flags << ' -Wextra'
+    # shuts up those unusued-parameter warnings, trust me, you'll be swimming
+    # in them for a mruby extension.
+    c.flags << ' -Wno-unused-parameter'
+
     if Platform.darwin?
       c.flags << '-DMOON_GL_GLFW'
     else
       c.flags << '-DMOON_GL_GLEW'
     end
+
+    # If you want Moon to guess the GLSL shader versions to load, enable this
+    # line, otherwise, you must set is_legacy
+    #c.flags << '-DMOON_GUESS_SHADER_VERSION'
 
     # system
     c.include_paths << File.join(vd, 'glm')

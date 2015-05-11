@@ -35,5 +35,6 @@ task build: [
   'soil:build'
 ]
 
-task doc: :yard
-task default: [:build, :doc]
+task test: 'mruby:test'
+task docs: :yard
+task default: [:build, :docs]

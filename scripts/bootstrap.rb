@@ -3,9 +3,13 @@ engine = Moon::Engine.new do |e, delta|
   step e, delta
 end
 
-engine.setup
+begin
+  engine.setup
 
-require 'core/load'
-require 'scripts/load'
+  require 'core/load'
+  require 'scripts/load'
 
-engine.main
+  engine.main
+ensure
+  engine.shutdown
+end

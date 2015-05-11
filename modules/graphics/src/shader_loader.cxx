@@ -9,12 +9,17 @@
 namespace Moon {
   Shader *ShaderLoader::s_quad_shader = NULL;
   Shader *ShaderLoader::s_text_shader = NULL;
+  bool ShaderLoader::is_legacy = false;
 
   bool ShaderLoader::IsLegacy()
   {
+#ifdef MOON_GUESS_SHADER_VERSION
     const GLubyte *shader_version = glGetString(GL_SHADING_LANGUAGE_VERSION);
     assert(shader_version);
     return strcmp("1.50", (char*)shader_version) >= 0;
+#else
+    return is_legacy;
+#endif
   }
 
   Shader* ShaderLoader::Load(const char *vert_basename, const char *frag_basename)
