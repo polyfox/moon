@@ -1,4 +1,5 @@
 module Moon
+  # Error raised by {Engine#quit}, used to terminate a {Engine#main} loop
   class EngineQuit < Exception
   end
 
@@ -30,7 +31,7 @@ module Moon
 
     # Terminates a running {Engine#main}
     #
-    # @raise EngineQuit
+    # @raise {EngineQuit}
     def quit
       raise EngineQuit
     end

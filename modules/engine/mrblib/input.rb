@@ -1,11 +1,13 @@
 module Moon
   class Input
+    # [Hash<Integer, Symbol>] Maps key states to symbols
     STATE_MAP = {
       GLFW::PRESS => :press,
       GLFW::RELEASE => :release,
       GLFW::REPEAT => :repeat,
     }
 
+    # [Hash<Integer, Symbol>] maps key codes to Symbols
     KEY_MAP = {
       GLFW::KEY_SPACE => :space,
       GLFW::KEY_APOSTROPHE => :apostrophe,
