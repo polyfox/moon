@@ -3,10 +3,17 @@ module Moon
   end
 
   class Engine
+    # @!attribute step
+    #   @return [Proc] per frame step function
+    attr_accessor :step
+
+    attr_accessor :log
     attr_reader :window
     attr_reader :screen
     attr_reader :input
 
+    # @yieldparam [Engine] engine
+    # @yieldparam [Float] delta
     def initialize(&block)
       @window = nil
       @screen = nil
@@ -16,10 +23,14 @@ module Moon
       @log = STDERR
     end
 
+    # @return [Float]
     def uptime
       GLFW.time
     end
 
+    # Terminates a running {Engine#main}
+    #
+    # @raise EngineQuit
     def quit
       raise EngineQuit
     end
@@ -93,6 +104,7 @@ module Moon
       @log.puts 'GLEW initialized'
     end
 
+    # @return [self]
     def setup
       setup_glfw
       setup_window
@@ -103,12 +115,14 @@ module Moon
       self
     end
 
-    #
+    # Destroys the current window and cleans up.
     def shutdown
-      @window.destroy
+      @window.destroy if @window
       @window = nil
+      self
     end
 
+    # Starts the main loop, terminate the loop using {#quit}
     def main
       @log.puts 'Starting main loop'
       clear_bits = GL2::GL_COLOR_BUFFER_BIT | GL2::GL_DEPTH_BUFFER_BIT
@@ -126,6 +140,7 @@ module Moon
     def run
       setup
       main
+    ensure
       shutdown
     end
   end
