@@ -49,6 +49,13 @@ MRuby::Build.new do |conf|
   [conf.cc, conf.cxx].each do |c|
     c.flags << '-g3'
 
+    # Its a good idea to get all the warnings
+    c.flags << ' -Wall'
+    c.flags << ' -Wextra'
+    # shuts up those unusued-parameter warnings, trust me, you'll be swimming
+    # in them for a mruby extension.
+    c.flags << ' -Wno-unused-parameter'
+
     if Platform.darwin?
       c.flags << '-DMOON_GL_GLFW'
     else
