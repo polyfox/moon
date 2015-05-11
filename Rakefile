@@ -25,6 +25,16 @@ task clean: [
   'soil:clean'
 ]
 
+task hard_clean: [
+  'freetype-gl:hard_clean',
+  'glfw:hard_clean',
+  'gorilla-audio:hard_clean',
+  'mruby:hard_clean',
+  'nanovg:hard_clean',
+  'sil:hard_clean',
+  'soil:hard_clean'
+]
+
 task build: [
   'freetype-gl:build',
   'glfw:build',

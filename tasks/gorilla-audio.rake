@@ -11,4 +11,8 @@ namespace :'gorilla-audio' do
   task :clean do
     sh %(make -C "#{dir}/build/build" clean)
   end
+
+  task :hard_clean do
+    FileUtils.rm_rf(File.join(dir, 'build/build'))
+  end
 end
