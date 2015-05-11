@@ -23,7 +23,6 @@ namespace Moon {
     GLuint GetProgram();
     GLint  GetAttribute(const char *name);
     GLint  GetUniform(const char *name);
-    void   BindAttribute(GLuint location, const char *name);
   private:
     GLuint  m_program;
     AttributeMap m_attributeList;
