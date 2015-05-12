@@ -33,11 +33,18 @@ doxygen
 yaml
 ```
 
+## Support
 
-### Features required
-In order to use Moon, a OpenGL 2.1 or greater, capable system is required,
-we will make no effort to support anything less than 2.1.
+We support graphics cards with OpenGL 2.1 support and the following extensions:
 
+- GL_ARB_draw_elements_base_vertex
+- GL_ARB_vertex_array_object
+
+Cards that support OpenGL 3.0+ naturally support these extensions, because they
+are a part of the OpenGL 3.x series. (We basically use a 3.0 context with only
+the things we need that are widely supported on 2.1 cards so we have wider support).
+
+We will make no effort to support anything less than 2.1.
 
 ## Building
 
