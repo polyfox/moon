@@ -277,6 +277,18 @@ vector1_set(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
+vector1_to_int(mrb_state *mrb, mrb_value self)
+{
+  return mrb_fixnum_value((mrb_int)get_vector1(mrb, self)->x);
+}
+
+static mrb_value
+vector1_to_f(mrb_state *mrb, mrb_value self)
+{
+  return mrb_float_value(mrb, (mrb_float)get_vector1(mrb, self)->x);
+}
+
+static mrb_value
 vector1_to_a(mrb_state *mrb, mrb_value self)
 {
   mrb_value argv[1] = { mrb_float_value(mrb, get_vector1(mrb, self)->x) };
@@ -333,6 +345,9 @@ mmrb_vector1_init(mrb_state *mrb, struct RClass *mod)
   /*mrb_define_method(mrb, vector1_class, "|",               vector1_or,              MRB_ARGS_REQ(1));*/
   /*mrb_define_method(mrb, vector1_class, "^",               vector1_xor,             MRB_ARGS_REQ(1));*/
   /* conversion */
+  mrb_define_method(mrb, vector1_class, "to_int",          vector1_to_int,          MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector1_class, "to_i",            vector1_to_int,          MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector1_class, "to_f",            vector1_to_f,            MRB_ARGS_NONE());
   mrb_define_method(mrb, vector1_class, "to_a",            vector1_to_a,            MRB_ARGS_NONE());
   /* cast */
   mrb_define_class_method(mrb, vector1_class, "[]",        vector1_s_cast,          MRB_ARGS_ANY());
