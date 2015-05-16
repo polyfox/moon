@@ -21,7 +21,8 @@ MRuby::Build.new do |conf|
   conf.gem github: 'iij/mruby-require'           # require
 
   # nice things
-  conf.gem github: 'AndrewBelt/mruby-yaml'       # YAML :3
+  #conf.gem github: 'AndrewBelt/mruby-yaml'       # YAML :3
+  conf.gem github: 'IceDragon200/mruby-yaml', branch: 'booleans-and-nil'
   conf.gem github: 'IceDragon200/mruby-glew'     # GLEW
   conf.gem github: 'IceDragon200/mruby-glfw3'    # GLFW
   conf.gem github: 'IceDragon200/mruby-nanovg'   # nanovg
@@ -53,14 +54,26 @@ MRuby::Build.new do |conf|
     c.flags << ' -Wall'
     c.flags << ' -Wextra'
     # shuts up those unusued-parameter warnings, trust me, you'll be swimming
-    # in them for a mruby extension.
+    # in them from a mruby extension.
     c.flags << ' -Wno-unused-parameter'
 
     if Platform.darwin?
-      c.flags << '-DMOON_GL_GLFW'
+      # GLFW
+      c.defines << 'MOON_GL_GLFW'
     else
-      c.flags << '-DMOON_GL_GLEW'
+      # GLEW
+      c.defines << 'MOON_GL_GLEW'
     end
+
+    # disable all the extra mruby-yaml aliases, this makes it more like
+    # ruby
+    c.flags << "-DMRUBY_YAML_NULL=0"
+    c.flags << "-DMRUBY_YAML_BOOLEAN_ON=0"
+    c.flags << "-DMRUBY_YAML_BOOLEAN_YES=0"
+    c.flags << "-DMRUBY_YAML_BOOLEAN_SHORTHAND_YES=0"
+    c.flags << "-DMRUBY_YAML_BOOLEAN_OFF=0"
+    c.flags << "-DMRUBY_YAML_BOOLEAN_NO=0"
+    c.flags << "-DMRUBY_YAML_BOOLEAN_SHORTHAND_NO=0"
 
     # If you want Moon to guess the GLSL shader versions to load, enable this
     # line, otherwise, you must set is_legacy
