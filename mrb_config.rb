@@ -21,8 +21,7 @@ MRuby::Build.new do |conf|
   conf.gem github: 'iij/mruby-require'           # require
 
   # nice things
-  #conf.gem github: 'AndrewBelt/mruby-yaml'       # YAML :3
-  conf.gem github: 'IceDragon200/mruby-yaml', branch: 'booleans-and-nil'
+  conf.gem github: 'AndrewBelt/mruby-yaml'       # YAML :3
   conf.gem github: 'IceDragon200/mruby-glew'     # GLEW
   conf.gem github: 'IceDragon200/mruby-glfw3'    # GLFW
   conf.gem github: 'IceDragon200/mruby-nanovg'   # nanovg
@@ -65,9 +64,12 @@ MRuby::Build.new do |conf|
       c.defines << 'MOON_GL_GLEW'
     end
 
-    # disable all the extra mruby-yaml aliases, this makes it more like
-    # ruby
-    c.flags << "-DMRUBY_YAML_NULL=0"
+    # use a GLES2 context for mruby-nanovg
+    c.flags << "-DMRUBY_NANOVG_GLES2=1"
+
+    # enable mruby-yaml: null, Null and NULL
+    c.flags << "-DMRUBY_YAML_NULL=1"
+    # disable all the extra mruby-yaml aliases, this makes it more like ruby
     c.flags << "-DMRUBY_YAML_BOOLEAN_ON=0"
     c.flags << "-DMRUBY_YAML_BOOLEAN_YES=0"
     c.flags << "-DMRUBY_YAML_BOOLEAN_SHORTHAND_YES=0"
@@ -76,18 +78,19 @@ MRuby::Build.new do |conf|
     c.flags << "-DMRUBY_YAML_BOOLEAN_SHORTHAND_NO=0"
 
     # If you want Moon to guess the GLSL shader versions to load, enable this
-    # line, otherwise, you must set is_legacy
+    # line, otherwise, you must set is_legacy if running GLSL 1.5 or lower
+    # shaders
     #c.flags << '-DMOON_GUESS_SHADER_VERSION'
 
-    # system
+    # required system includes
     c.include_paths << File.join(vd, 'glm')
-    # graphics
+    # required graphics includes
     c.include_paths << File.join(vd, 'glfw/include')
     c.include_paths << File.join(vd, 'soil/include')
     c.include_paths << File.join(vd, 'sil/include')
     c.include_paths << File.join(vd, 'freetype-gl')
     c.include_paths << File.join(vd, 'nanovg/src')
-    # audio
+    # required audio includes
     c.include_paths << File.join(vd, 'gorilla-audio/include')
   end
 
