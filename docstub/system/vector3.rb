@@ -28,6 +28,10 @@ module Moon
     end
 
     # @return [Array<Float>]
+    def to_a
+    end
+
+    # @return [Array<Float>]
     def self.extract(obj)
     end
   end

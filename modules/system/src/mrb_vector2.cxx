@@ -8,6 +8,7 @@
 #include <mruby/numeric.h>
 #include "moon/mrb/vector1.hxx"
 #include "moon/mrb/vector2.hxx"
+#include "moon/mrb/vector_unroll.hxx"
 #include "vec_helper.h"
 
 #define m_vector_operator(__op__) \
@@ -29,77 +30,11 @@ MOON_C_API const struct mrb_data_type vector2_data_type = { "Vector2", vector2_f
 DEF_VEC_HELPERS(vector2, Moon::Vector2, vector2_class, &vector2_data_type);
 
 static Moon::Vector2
-mmrb_vector2_extract_mrb_num(mrb_state *mrb, mrb_value obj)
-{
-  double i = mmrb_to_flo(mrb, obj);
-  return Moon::Vector2(i, i);
-}
-
-static Moon::Vector2
-mmrb_vector2_extract_mrb_array(mrb_state *mrb, mrb_value obj)
-{
-  Moon::Vector2 result;
-  int _ary_len = mrb_ary_len(mrb, obj);
-  if (_ary_len != 2) {
-    mrb_raisef(mrb, E_ARGUMENT_ERROR,
-               "wrong array size %d (expected 2)", _ary_len);
-  } else {
-    result.x = mmrb_to_flo(mrb, RARRAY_PTR(obj)[0]);
-    result.y = mmrb_to_flo(mrb, RARRAY_PTR(obj)[1]);
-  }
-  return result;
-}
-
-static Moon::Vector2
-mmrb_vector2_extract_mrb_to_vec2(mrb_state *mrb, mrb_value obj)
-{
-  return get_vector2_value(mrb, mrb_funcall(mrb, obj, "to_vec2", 0));
-}
-
-static Moon::Vector2
 mmrb_vector2_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
 {
-  Moon::Vector2 result;
-  switch (argc) {
-  case 1:
-    mrb_value val;
-    val = vals[0];
-    switch (mrb_type(val)) {
-    case MRB_TT_FIXNUM:
-    case MRB_TT_FLOAT:
-      result = mmrb_vector2_extract_mrb_num(mrb, val);
-      break;
-    case MRB_TT_ARRAY:
-      result = mmrb_vector2_extract_mrb_array(mrb, val);
-      break;
-    case MRB_TT_DATA:
-      if (DATA_TYPE(val) == &vector1_data_type) {
-        result.y = result.x = mmrb_to_flo(mrb, val);
-        break;
-      } else if (DATA_TYPE(val) == &vector2_data_type) {
-        result = get_vector2_value(mrb, val);
-        break;
-      }
-    default:
-      if (mrb_respond_to(mrb, val, mrb_intern_cstr(mrb, "to_vec2"))) {
-        result = mmrb_vector2_extract_mrb_to_vec2(mrb, val);
-        break;
-      } else {
-        mrb_raisef(mrb, E_TYPE_ERROR,
-                   "wrong type %S (expected Numeric, Array or Vector2)",
-                   mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, val)));
-      }
-    }
-    break;
-  case 2:
-    result.x = mmrb_to_flo(mrb, vals[0]);
-    result.y = mmrb_to_flo(mrb, vals[1]);
-    break;
-  default:
-    mrb_raisef(mrb, E_ARGUMENT_ERROR,
-               "wrong number of arguments (%d for 1..2)", argc);
-  }
-  return result;
+  mrb_float result[2];
+  mmrb_vector_unroll(mrb, argc, vals, 2, result);
+  return Moon::Vector2(result[0], result[1]);
 }
 
 static Moon::Vector2

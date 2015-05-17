@@ -9,6 +9,7 @@
 #include "moon/mrb/vector1.hxx"
 #include "moon/mrb/vector2.hxx"
 #include "moon/mrb/vector3.hxx"
+#include "moon/mrb/vector_unroll.hxx"
 #include "vec_helper.h"
 
 #define m_vector_operator(__op__) \
@@ -29,106 +30,12 @@ MOON_C_API const struct mrb_data_type vector3_data_type = { "Vector3", vector3_f
 
 DEF_VEC_HELPERS(vector3, Moon::Vector3, vector3_class, &vector3_data_type);
 
-static inline Moon::Vector3
-mmrb_vector3_extract_mrb_num(mrb_state *mrb, mrb_value obj)
-{
-  double i = mmrb_to_flo(mrb, obj);
-  return Moon::Vector3(i, i, i);
-}
-
-static inline Moon::Vector3
-mmrb_vector3_extract_mrb_array(mrb_state *mrb, mrb_value obj)
-{
-  Moon::Vector3 result;
-  int _ary_len = mrb_ary_len(mrb, obj);
-  if (_ary_len != 3) {
-    mrb_raisef(mrb, E_ARGUMENT_ERROR,
-               "wrong array size %d (expected 3)", _ary_len);
-  } else {
-    result.x = mmrb_to_flo(mrb, RARRAY_PTR(obj)[0]);
-    result.y = mmrb_to_flo(mrb, RARRAY_PTR(obj)[1]);
-    result.z = mmrb_to_flo(mrb, RARRAY_PTR(obj)[2]);
-  }
-  return result;
-}
-
-static inline Moon::Vector3
-mmrb_vector3_extract_mrb_to_vec3(mrb_state *mrb, mrb_value obj)
-{
-  return get_vector3_value(mrb, mrb_funcall(mrb, obj, "to_vec3", 0));
-}
-
 static Moon::Vector3
 mmrb_vector3_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
 {
-  Moon::Vector3 result;
-
-  switch (argc) {
-  case 1: {
-    mrb_value val;
-    val = vals[0];
-    switch (mrb_type(val)) {
-    case MRB_TT_FIXNUM:
-    case MRB_TT_FLOAT:
-      result = mmrb_vector3_extract_mrb_num(mrb, val);
-      break;
-    case MRB_TT_ARRAY:
-      result = mmrb_vector3_extract_mrb_array(mrb, val);
-      break;
-    case MRB_TT_DATA:
-      if (DATA_TYPE(val) == &vector3_data_type) {
-        result = get_vector3_value(mrb, val);
-        break;
-      }
-    default:
-      if (mrb_respond_to(mrb, val, mrb_intern_cstr(mrb, "to_vec3"))) {
-        result = mmrb_vector3_extract_mrb_to_vec3(mrb, val);
-        break;
-      } else {
-        mrb_raisef(mrb, E_TYPE_ERROR,
-                   "wrong type %S (expected Numeric, Array or Vector3)",
-                   mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, val)));
-      }
-    }
-    break;
-  } case 2: {
-    int index = 0;
-    for (int i = 0; i < 2; ++i) {
-      mrb_value val = vals[i];
-      if (mrb_type(val) == MRB_TT_DATA) {
-        const mrb_data_type *t = (mrb_data_type*)DATA_TYPE(val);
-        if (t == &vector1_data_type) {
-          Moon::Vector1 v1 = mmrb_to_vector1(mrb, val);
-          result[index++] = v1[0]; if (index >= 3) break;
-        } else if (t == &vector2_data_type) {
-          Moon::Vector2 v2 = mmrb_to_vector2(mrb, val);
-          result[index++] = v2[0]; if (index >= 3) break;
-          result[index++] = v2[1];
-        } else {
-          mrb_raisef(mrb, E_TYPE_ERROR,
-                     "wrong type %S (expected Vector1, Vector2)",
-                     mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, val)));
-        }
-      } else if ((mrb_type(val) == MRB_TT_FIXNUM) || (mrb_type(val) == MRB_TT_FLOAT)) {
-        result[index++] = mrb_to_flo(mrb, val);
-      }
-      if (index >= 3) break;
-    };
-    if (index < 3) {
-      mrb_raisef(mrb, E_ARGUMENT_ERROR, "not enough parameters (required 3)");
-    }
-    break;
-  } case 3: {
-    result.x = mmrb_to_flo(mrb, vals[0]);
-    result.y = mmrb_to_flo(mrb, vals[1]);
-    result.z = mmrb_to_flo(mrb, vals[2]);
-    break;
-  } default:
-    mrb_raisef(mrb, E_ARGUMENT_ERROR,
-               //"wrong number of arguments (%d for 1 or 3)", argc);
-               "wrong number of arguments (%d for 1, 2, or 3)", argc);
-  }
-  return result;
+  mrb_float result[3];
+  mmrb_vector_unroll(mrb, argc, vals, 3, result);
+  return Moon::Vector3(result[0], result[1], result[2]);
 }
 
 static Moon::Vector3
@@ -158,7 +65,6 @@ vector3_initialize(mrb_state *mrb, mrb_value self)
   mrb_float x = 0.0;
   mrb_float y = 0.0;
   mrb_float z = 0.0;
-  Moon::Vector3 *vec3;
   mrb_get_args(mrb, "|fff", &x, &y, &z);
   cleanup_vector3(mrb, self);
   mrb_data_init(self, new Moon::Vector3(x, y, z), &vector3_data_type);

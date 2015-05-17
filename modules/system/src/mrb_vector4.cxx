@@ -10,6 +10,7 @@
 #include "moon/mrb/vector2.hxx"
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"
+#include "moon/mrb/vector_unroll.hxx"
 #include "vec_helper.h"
 
 #define m_vector_operator(__op__) \
@@ -30,122 +31,12 @@ MOON_C_API const struct mrb_data_type vector4_data_type = { "Moon::Vector4", vec
 
 DEF_VEC_HELPERS(vector4, Moon::Vector4, vector4_class, &vector4_data_type);
 
-static inline Moon::Vector4
-mmrb_vector4_extract_mrb_array(mrb_state *mrb, mrb_value obj)
-{
-  Moon::Vector4 result;
-  int _ary_len = mrb_ary_len(mrb, obj);
-  if (_ary_len != 4) {
-    mrb_raisef(mrb, E_ARGUMENT_ERROR,
-               "wrong array size %d (expected 4)", _ary_len);
-  } else {
-    result.x = mmrb_to_flo(mrb, RARRAY_PTR(obj)[0]);
-    result.y = mmrb_to_flo(mrb, RARRAY_PTR(obj)[1]);
-    result.z = mmrb_to_flo(mrb, RARRAY_PTR(obj)[2]);
-    result.w = mmrb_to_flo(mrb, RARRAY_PTR(obj)[3]);
-  }
-  return result;
-}
-
-static inline Moon::Vector4
-mmrb_vector4_extract_mrb_num(mrb_state *mrb, mrb_value obj)
-{
-  double i = mmrb_to_flo(mrb, obj);
-  return Moon::Vector4(i, i, i, i);
-}
-
-static inline Moon::Vector4
-mmrb_vector4_extract_mrb_to_vec4(mrb_state *mrb, mrb_value obj)
-{
-  return get_vector4_value(mrb, mrb_funcall(mrb, obj, "to_vec4", 0));
-}
-
 static Moon::Vector4
 mmrb_vector4_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
 {
-  Moon::Vector4 result;
-
-  switch (argc) {
-  case 1:
-    mrb_value val;
-    val = vals[0];
-    switch (mrb_type(val)) {
-    case MRB_TT_FIXNUM:
-    case MRB_TT_FLOAT:
-      result = mmrb_vector4_extract_mrb_num(mrb, val);
-      break;
-    case MRB_TT_ARRAY:
-      result = mmrb_vector4_extract_mrb_array(mrb, val);
-      break;
-    case MRB_TT_DATA:
-      if (DATA_TYPE(val) == &vector4_data_type) {
-        result = *get_vector4(mrb, val);
-        break;
-      }
-    default:
-      if (mrb_respond_to(mrb, val, mrb_intern_cstr(mrb, "to_vec4"))) {
-        result = mmrb_vector4_extract_mrb_to_vec4(mrb, val);
-        break;
-      } else {
-        mrb_raisef(mrb, E_TYPE_ERROR,
-                   "wrong type %S (expected Numeric, Array or Vector4)",
-                   mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, val)));
-      }
-    }
-    break;
-  case 2:
-  case 3: {
-    int index = 0;
-    for (int i = 0; i < argc; ++i) {
-      mrb_value val = vals[i];
-      if (mrb_type(val) == MRB_TT_DATA) {
-        const mrb_data_type *t = (mrb_data_type*)DATA_TYPE(val);
-        /* Vector unrolling */
-        if (t == &vector1_data_type) {
-          Moon::Vector1 vec1 = mmrb_to_vector1(mrb, val);
-          result[index++] = vec1[0]; if (index >= 4) break;
-        } else if (t == &vector2_data_type) {
-          Moon::Vector2 vec2 = mmrb_to_vector2(mrb, val);
-          result[index++] = vec2[0]; if (index >= 4) break;
-          result[index++] = vec2[1];
-        } else if (t == &vector3_data_type) {
-          Moon::Vector3 vec3 = mmrb_to_vector3(mrb, val);
-          result[index++] = vec3[0]; if (index >= 4) break;
-          result[index++] = vec3[1]; if (index >= 4) break;
-          result[index++] = vec3[2];
-        //} else if (t == &vector4_data_type) {
-        //  Moon::Vector4 vec4 = mmrb_to_vector4(mrb, val);
-        //  result[index++] = vec4[0]; if (index >= 4) break;
-        //  result[index++] = vec4[1]; if (index >= 4) break;
-        //  result[index++] = vec4[2]; if (index >= 4) break;
-        //  result[index++] = vec4[3];
-        } else {
-          mrb_raisef(mrb, E_TYPE_ERROR,
-                     "wrong type %S (expected Vector1, Vector2 or Vector3)",
-                     mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, val)));
-        }
-      } else if ((mrb_type(val) == MRB_TT_FIXNUM) || (mrb_type(val) == MRB_TT_FLOAT)) {
-        result[index++] = mrb_to_flo(mrb, val);
-      }
-      if (index >= 4) break;
-    };
-    if (index < 4) {
-      mrb_raisef(mrb, E_ARGUMENT_ERROR, "not enough parameters (required 4)");
-    }
-    break;
-  } case 4: {
-    result.x = mmrb_to_flo(mrb, vals[0]);
-    result.y = mmrb_to_flo(mrb, vals[1]);
-    result.z = mmrb_to_flo(mrb, vals[2]);
-    result.w = mmrb_to_flo(mrb, vals[3]);
-    break;
-  } default:
-    mrb_raisef(mrb, E_ARGUMENT_ERROR,
-               //"wrong number of arguments (%d for 1 or 4)", argc);
-               "wrong number of arguments (%d for 1, 2, 3, or 4)", argc);
-  }
-
-  return result;
+  mrb_float result[4];
+  mmrb_vector_unroll(mrb, argc, vals, 4, result);
+  return Moon::Vector4(result[0], result[1], result[2], result[3]);
 }
 
 static Moon::Vector4
