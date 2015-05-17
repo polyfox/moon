@@ -262,9 +262,9 @@ sprite_set_clip_rect(mrb_state *mrb, mrb_value self)
   mrb_value clip_rect;
   Moon::Sprite *sprite = get_sprite(mrb, self);
   mrb_get_args(mrb, "o", &clip_rect);
-  if(!mrb_nil_p(clip_rect)) {
-    sprite->SetClipRect(*get_rect(mrb, clip_rect));
+  if (!mrb_nil_p(clip_rect)) {
     sprite->use_clip = true;
+    sprite->SetClipRect(*get_rect(mrb, clip_rect));
   } else {
     sprite->use_clip = false;
   }
