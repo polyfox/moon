@@ -16,6 +16,9 @@
 #define m_vector_operator(__op__) \
   return mmrb_vector4_value(mrb, get_vector4_value(mrb, self) __op__ vector4_from_mrb_args(mrb));
 
+#define m_vector_int_operator(__op__) \
+  return mmrb_vector4_value(mrb, Moon::Vector4(glm::ivec4(get_vector4_value(mrb, self)) __op__ glm::ivec4(vector4_from_mrb_args(mrb))));
+
 static struct RClass *vector4_class = NULL;
 
 static void
@@ -198,9 +201,47 @@ vector4_div(mrb_state *mrb, mrb_value self)
   m_vector_operator(/);
 }
 
-//static mrb_value //vector4_mod(mrb_state *mrb, mrb_value self) {
-//  m_vector_operator(%);
-//};
+static mrb_value
+vector4_not(mrb_state *mrb, mrb_value self)
+{
+  return mmrb_vector4_value(mrb, Moon::Vector4(~(glm::ivec4(*get_vector4(mrb, self)))));
+}
+
+static mrb_value
+vector4_modulo(mrb_state *mrb, mrb_value self)
+{
+  m_vector_int_operator(%);
+}
+
+static mrb_value
+vector4_shl(mrb_state *mrb, mrb_value self)
+{
+  m_vector_int_operator(<<);
+}
+
+static mrb_value
+vector4_shr(mrb_state *mrb, mrb_value self)
+{
+  m_vector_int_operator(>>);
+}
+
+static mrb_value
+vector4_and(mrb_state *mrb, mrb_value self)
+{
+  m_vector_int_operator(&);
+}
+
+static mrb_value
+vector4_or(mrb_state *mrb, mrb_value self)
+{
+  m_vector_int_operator(|);
+}
+
+static mrb_value
+vector4_xor(mrb_state *mrb, mrb_value self)
+{
+  m_vector_int_operator(^);
+}
 
 static mrb_value
 vector4_dot(mrb_state *mrb, mrb_value self)
@@ -282,7 +323,13 @@ mmrb_vector4_init(mrb_state *mrb, struct RClass *mod)
   //mrb_define_method(mrb, vector4_class, "cross",           vector4_cross,           MRB_ARGS_REQ(1));
   mrb_define_method(mrb, vector4_class, "distance",        vector4_distance,        MRB_ARGS_REQ(1));
   /* bitwise operators */
-  //mrb_define_method(mrb, vector4_class, "%",               vector4_mod,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector4_class, "~@",              vector4_not,             MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector4_class, "%",               vector4_modulo,          MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector4_class, "<<",              vector4_shl,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector4_class, ">>",              vector4_shr,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector4_class, "&",               vector4_and,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector4_class, "|",               vector4_or,              MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector4_class, "^",               vector4_xor,             MRB_ARGS_REQ(1));
   /* conversion */
   mrb_define_method(mrb, vector4_class, "to_a",            vector4_to_a,            MRB_ARGS_NONE());
   /* cast */

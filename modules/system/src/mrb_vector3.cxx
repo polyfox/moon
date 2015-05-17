@@ -15,6 +15,9 @@
 #define m_vector_operator(__op__) \
   return mmrb_vector3_value(mrb, get_vector3_value(mrb, self) __op__ vector3_from_mrb_args(mrb));
 
+#define m_vector_int_operator(__op__) \
+  return mmrb_vector3_value(mrb, Moon::Vector3(glm::ivec3(get_vector3_value(mrb, self)) __op__ glm::ivec3(vector3_from_mrb_args(mrb))));
+
 static struct RClass *vector3_class = NULL;
 
 static void
@@ -181,9 +184,47 @@ vector3_div(mrb_state *mrb, mrb_value self)
   m_vector_operator(/);
 }
 
-//static mrb_value //vector3_mod(mrb_state *mrb, mrb_value self) {
-//  m_vector_operator(%);
-//};
+static mrb_value
+vector3_not(mrb_state *mrb, mrb_value self)
+{
+  return mmrb_vector3_value(mrb, Moon::Vector3(~(glm::ivec3(*get_vector3(mrb, self)))));
+}
+
+static mrb_value
+vector3_modulo(mrb_state *mrb, mrb_value self)
+{
+  m_vector_int_operator(%);
+}
+
+static mrb_value
+vector3_shl(mrb_state *mrb, mrb_value self)
+{
+  m_vector_int_operator(<<);
+}
+
+static mrb_value
+vector3_shr(mrb_state *mrb, mrb_value self)
+{
+  m_vector_int_operator(>>);
+}
+
+static mrb_value
+vector3_and(mrb_state *mrb, mrb_value self)
+{
+  m_vector_int_operator(&);
+}
+
+static mrb_value
+vector3_or(mrb_state *mrb, mrb_value self)
+{
+  m_vector_int_operator(|);
+}
+
+static mrb_value
+vector3_xor(mrb_state *mrb, mrb_value self)
+{
+  m_vector_int_operator(^);
+}
 
 static mrb_value
 vector3_dot(mrb_state *mrb, mrb_value self)
@@ -335,13 +376,13 @@ mmrb_vector3_init(mrb_state *mrb, struct RClass *mod)
   mrb_define_method(mrb, vector3_class, "lerp",            vector3_lerp,            MRB_ARGS_REQ(2));
   mrb_define_method(mrb, vector3_class, "slerp",           vector3_slerp,           MRB_ARGS_REQ(2));
   /* bitwise operators */
-  /*mrb_define_method(mrb, vector3_class, "~@",              vector3_not,             MRB_ARGS_NONE());*/
-  /*mrb_define_method(mrb, vector3_class, "%",               vector3_modulo,          MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, vector3_class, "<<",              vector3_shl,             MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, vector3_class, ">>",              vector3_shr,             MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, vector3_class, "&",               vector3_and,             MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, vector3_class, "|",               vector3_or,              MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, vector3_class, "^",               vector3_xor,             MRB_ARGS_REQ(1));*/
+  mrb_define_method(mrb, vector3_class, "~@",              vector3_not,             MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector3_class, "%",               vector3_modulo,          MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector3_class, "<<",              vector3_shl,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector3_class, ">>",              vector3_shr,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector3_class, "&",               vector3_and,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector3_class, "|",               vector3_or,              MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector3_class, "^",               vector3_xor,             MRB_ARGS_REQ(1));
   /* conversion */
   mrb_define_method(mrb, vector3_class, "to_a",            vector3_to_a,            MRB_ARGS_NONE());
   /* cast */

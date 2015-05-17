@@ -14,6 +14,9 @@
 #define m_vector_operator(__op__) \
   return mmrb_vector2_value(mrb, get_vector2_value(mrb, self) __op__ vector2_from_mrb_args(mrb));
 
+#define m_vector_int_operator(__op__) \
+  return mmrb_vector2_value(mrb, Moon::Vector2(glm::ivec2(get_vector2_value(mrb, self)) __op__ glm::ivec2(vector2_from_mrb_args(mrb))));
+
 static struct RClass *vector2_class = NULL;
 
 static void
@@ -152,49 +155,47 @@ vector2_div(mrb_state *mrb, mrb_value self)
   m_vector_operator(/);
 }
 
-/* // Uncomment this when integer vectors are supported
 static mrb_value
 vector2_not(mrb_state *mrb, mrb_value self)
 {
-  m_vector_mutate_copy(~(moon_vector_ref(result_vec)));
+  return mmrb_vector2_value(mrb, Moon::Vector2(~(glm::ivec2(*get_vector2(mrb, self)))));
 }
 
 static mrb_value
 vector2_modulo(mrb_state *mrb, mrb_value self)
 {
-  m_vector_operator(%);
+  m_vector_int_operator(%);
 }
 
 static mrb_value
 vector2_shl(mrb_state *mrb, mrb_value self)
 {
-  m_vector_operator(<<);
+  m_vector_int_operator(<<);
 }
 
 static mrb_value
 vector2_shr(mrb_state *mrb, mrb_value self)
 {
-  m_vector_operator(>>);
+  m_vector_int_operator(>>);
 }
 
 static mrb_value
 vector2_and(mrb_state *mrb, mrb_value self)
 {
-  m_vector_operator(&);
+  m_vector_int_operator(&);
 }
 
 static mrb_value
 vector2_or(mrb_state *mrb, mrb_value self)
 {
-  m_vector_operator(|);
+  m_vector_int_operator(|);
 }
 
 static mrb_value
 vector2_xor(mrb_state *mrb, mrb_value self)
 {
-  m_vector_operator(^);
+  m_vector_int_operator(^);
 }
-*/
 
 static mrb_value
 vector2_dot(mrb_state *mrb, mrb_value self)
@@ -316,14 +317,14 @@ mmrb_vector2_init(mrb_state *mrb, struct RClass *mod)
   mrb_define_method(mrb, vector2_class, "distance",        vector2_distance,        MRB_ARGS_REQ(1));
   mrb_define_method(mrb, vector2_class, "rotate",          vector2_rotate,          MRB_ARGS_REQ(1));
   mrb_define_method(mrb, vector2_class, "lerp",            vector2_lerp,            MRB_ARGS_REQ(2));
-  /* bitwise operators */ /* If and only if we ever support integer based vectors */
-  /*mrb_define_method(mrb, vector2_class, "~@",              vector2_not,             MRB_ARGS_NONE());*/
-  /*mrb_define_method(mrb, vector2_class, "%",               vector2_modulo,          MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, vector2_class, "<<",              vector2_shl,             MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, vector2_class, ">>",              vector2_shr,             MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, vector2_class, "&",               vector2_and,             MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, vector2_class, "|",               vector2_or,              MRB_ARGS_REQ(1));*/
-  /*mrb_define_method(mrb, vector2_class, "^",               vector2_xor,             MRB_ARGS_REQ(1));*/
+  /* bitwise operators */
+  mrb_define_method(mrb, vector2_class, "~@",              vector2_not,             MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector2_class, "%",               vector2_modulo,          MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector2_class, "<<",              vector2_shl,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector2_class, ">>",              vector2_shr,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector2_class, "&",               vector2_and,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector2_class, "|",               vector2_or,              MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector2_class, "^",               vector2_xor,             MRB_ARGS_REQ(1));
   /* conversion */
   mrb_define_method(mrb, vector2_class, "to_a",            vector2_to_a,            MRB_ARGS_NONE());
   /* cast */
