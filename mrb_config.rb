@@ -6,14 +6,15 @@ MRuby::Build.new do |conf|
 
   puts "\t\\\\ Using #{toolchain_name} Toolchain \\\\"
 
-  # Full backtraces
-  enable_debug
-
   # include the default GEMs
   conf.gembox 'default'
   conf.gembox File.join(File.dirname(__FILE__), 'modules/moon')
 
+  # Full backtraces
+  conf.enable_debug
+
   conf.gem core: 'mruby-eval'
+  conf.gem core: 'mruby-bin-debugger'
   conf.gem github: 'iij/mruby-io'                # General IO stuff, File system blah de dah.
   conf.gem github: 'iij/mruby-dir'               # Directory access
   conf.gem github: 'iij/mruby-regexp-pcre'       # Regular expression engine :3
@@ -55,6 +56,8 @@ MRuby::Build.new do |conf|
     # shuts up those unusued-parameter warnings, trust me, you'll be swimming
     # in them from a mruby extension.
     c.flags << ' -Wno-unused-parameter'
+
+    c.defines << 'ENABLE_DEBUG'
 
     if Platform.darwin?
       # GLFW
