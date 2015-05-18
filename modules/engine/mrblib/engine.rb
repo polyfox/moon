@@ -57,9 +57,8 @@ module Moon
       gl_assert
     end
 
-    private def setup_glfw
-      GLFW.init
 
+    private def setup_glfw
       GLFW.default_window_hints
       GLFW.window_hint GLFW::RESIZABLE, GL2::GL_FALSE
       GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 3
