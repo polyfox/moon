@@ -46,7 +46,9 @@ module Moon
       end
     end
 
-    private def setup_opengl
+    # Resets Moon's required GL flags, since some external gems may change
+    # them for their own evil ;3
+    def reset_gl_flags
       GL2.glDisable GL2::GL_DITHER
       gl_assert
       GL2.glDisable GL2::GL_CULL_FACE
@@ -57,6 +59,9 @@ module Moon
       gl_assert
     end
 
+    private def setup_opengl
+      reset_gl_flags
+    end
 
     private def setup_glfw
       GLFW.default_window_hints
