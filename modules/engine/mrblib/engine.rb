@@ -8,6 +8,8 @@ module Moon
     #   @return [Proc] per frame step function
     attr_accessor :step
 
+    attr_accessor :config
+
     attr_accessor :log
     attr_reader :window
     attr_reader :screen
@@ -16,6 +18,7 @@ module Moon
     # @yieldparam [Engine] engine
     # @yieldparam [Float] delta
     def initialize(&block)
+      @config = { width: 800, height: 600 }
       @window = nil
       @screen = nil
       @input = nil
@@ -65,15 +68,16 @@ module Moon
       GLFW.window_hint GLFW::OPENGL_PROFILE, GLFW::OPENGL_CORE_PROFILE # for 3.0 and on
       Moon::Shader.is_legacy = false
 
+      w, h = @config.fetch(:width), @config.fetch(:height)
       begin
-        @window = GLFW::Window.new 800, 600, 'Moon Player'
+        @window = GLFW::Window.new w, h, 'Moon Player'
       rescue GLFWError
         GLFW.default_window_hints
         GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 2
         GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 1
         Moon::Shader.is_legacy = true
 
-        @window = GLFW::Window.new 800, 600, 'Moon Player'
+        @window = GLFW::Window.new w, h, 'Moon Player'
       end
 
       @log.puts 'GLFW initialized'
