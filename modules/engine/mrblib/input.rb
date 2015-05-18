@@ -161,7 +161,7 @@ module Moon
     private def register_callbacks
       win = @engine.window
       win.set_key_callback do |_, key_id, scancode, action, mods|
-        on_key KEY_MAP.fetch(key_id), scancode, STATE_MAP.fetch(action), mods
+        on_key KEY_MAP.fetch(key_id), scancode, STATE_MAP.fetch(action), mods unless key_id == -1
       end
 
       win.set_mouse_button_callback do |_, button_id, action, mods|
