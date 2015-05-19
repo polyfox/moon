@@ -6,7 +6,6 @@ load 'tasks/freetype-gl.rake'
 load 'tasks/glfw.rake'
 load 'tasks/gorilla-audio.rake'
 load 'tasks/mruby.rake'
-load 'tasks/nanovg.rake'
 load 'tasks/sil.rake'
 load 'tasks/soil.rake'
 
@@ -20,7 +19,6 @@ task clean: [
   'glfw:clean',
   'gorilla-audio:clean',
   'mruby:clean',
-  'nanovg:clean',
   'sil:clean',
   'soil:clean'
 ]
@@ -30,7 +28,6 @@ task hard_clean: [
   'glfw:hard_clean',
   'gorilla-audio:hard_clean',
   'mruby:hard_clean',
-  'nanovg:hard_clean',
   'sil:hard_clean',
   'soil:hard_clean'
 ]
@@ -40,7 +37,6 @@ task build: [
   'glfw:build',
   'gorilla-audio:build',
   'mruby:build',
-  'nanovg:build',
   'sil:build',
   'soil:build'
 ]

@@ -27,8 +27,3 @@
 [submodule "vendor/gorilla-audio"]
   path = vendor/gorilla-audio
   url = https://github.com/IceDragon200/gorilla-audio.git
-
-[submodule "vendor/nanovg"]
-  path = vendor/nanovg
-  url = https://github.com/IceDragon200/nanovg.git
-  branch = static-stb_image

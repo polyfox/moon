@@ -6,12 +6,12 @@ MRuby::Build.new do |conf|
 
   puts "\t\\\\ Using #{toolchain_name} Toolchain \\\\"
 
+  # Full backtraces
+  conf.enable_debug
+
   # include the default GEMs
   conf.gembox 'default'
   conf.gembox File.join(File.dirname(__FILE__), 'modules/moon')
-
-  # Full backtraces
-  conf.enable_debug
 
   conf.gem core: 'mruby-eval'
   conf.gem core: 'mruby-bin-debugger'
@@ -25,7 +25,6 @@ MRuby::Build.new do |conf|
   conf.gem github: 'AndrewBelt/mruby-yaml'       # YAML :3
   conf.gem github: 'IceDragon200/mruby-glew'     # GLEW
   conf.gem github: 'IceDragon200/mruby-glfw3'    # GLFW
-  conf.gem github: 'IceDragon200/mruby-nanovg'   # nanovg
 
   conf.cxx do |c|
     std = 'c++11'
@@ -67,9 +66,6 @@ MRuby::Build.new do |conf|
       c.defines << 'MOON_GL_GLEW'
     end
 
-    # use a GLES2 context for mruby-nanovg
-    c.flags << "-DMRUBY_NANOVG_GLES2=1"
-
     # enable mruby-yaml: null, Null and NULL
     c.flags << "-DMRUBY_YAML_NULL=1"
     # disable all the extra mruby-yaml aliases, this makes it more like ruby
@@ -92,7 +88,6 @@ MRuby::Build.new do |conf|
     c.include_paths << File.join(vd, 'soil/include')
     c.include_paths << File.join(vd, 'sil/include')
     c.include_paths << File.join(vd, 'freetype-gl')
-    c.include_paths << File.join(vd, 'nanovg/src')
     # required audio includes
     c.include_paths << File.join(vd, 'gorilla-audio/include')
   end
@@ -101,13 +96,11 @@ MRuby::Build.new do |conf|
     l.library_paths << File.join(vd, 'glfw/build/src')
     l.library_paths << File.join(vd, 'freetype-gl/build')
     l.library_paths << File.join(vd, 'gorilla-audio/build/build')
-    l.library_paths << File.join(vd, 'nanovg/build')
     l.library_paths << File.join(vd, 'sil/build')
     l.library_paths << File.join(vd, 'soil/build')
     l.libraries << 'glfw'
     l.libraries << 'freetype-gl'
     l.libraries << 'gorilla'
-    l.libraries << 'nanovg'
     l.libraries << 'freetype'
     l.libraries << 'SOIL'
     l.libraries << 'SIL'

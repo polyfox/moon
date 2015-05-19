@@ -13,7 +13,6 @@ namespace :mruby do
     'glfw:build',
     'soil:build',
     'freetype-gl:build',
-    'nanovg:build',
     'gorilla-audio:build',
     :build_mruby
   ]
