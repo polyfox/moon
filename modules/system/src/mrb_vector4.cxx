@@ -94,6 +94,17 @@ vector4_coerce(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
+vector4_eq(mrb_state *mrb, mrb_value self)
+{
+  mrb_value other;
+  mrb_get_args(mrb, "o", &other);
+  if (mrb_obj_is_kind_of(mrb, other, vector4_class)) {
+    return mrb_bool_value((*get_vector4(mrb, self)) == (*get_vector4(mrb, other)));
+  }
+  return mrb_bool_value(false);
+}
+
+static mrb_value
 vector4_get_x(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, get_vector4(mrb, self)->x);
@@ -300,15 +311,16 @@ mmrb_vector4_init(mrb_state *mrb, struct RClass *mod)
   mrb_define_method(mrb, vector4_class, "initialize_copy", vector4_initialize_copy, MRB_ARGS_REQ(1));
   /* coercion */
   mrb_define_method(mrb, vector4_class, "coerce",          vector4_coerce,          MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector4_class, "==",              vector4_eq,              MRB_ARGS_REQ(1));
   /* attribute setters */
-  mrb_define_method(mrb, vector4_class, "x",               vector4_get_x,        MRB_ARGS_NONE());
-  mrb_define_method(mrb, vector4_class, "y",               vector4_get_y,        MRB_ARGS_NONE());
-  mrb_define_method(mrb, vector4_class, "z",               vector4_get_z,        MRB_ARGS_NONE());
-  mrb_define_method(mrb, vector4_class, "w",               vector4_get_w,        MRB_ARGS_NONE());
-  mrb_define_method(mrb, vector4_class, "x=",              vector4_set_x,        MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, vector4_class, "y=",              vector4_set_y,        MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, vector4_class, "z=",              vector4_set_z,        MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, vector4_class, "w=",              vector4_set_w,        MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector4_class, "x",               vector4_get_x,           MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector4_class, "y",               vector4_get_y,           MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector4_class, "z",               vector4_get_z,           MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector4_class, "w",               vector4_get_w,           MRB_ARGS_NONE());
+  mrb_define_method(mrb, vector4_class, "x=",              vector4_set_x,           MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector4_class, "y=",              vector4_set_y,           MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector4_class, "z=",              vector4_set_z,           MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector4_class, "w=",              vector4_set_w,           MRB_ARGS_REQ(1));
   mrb_define_method(mrb, vector4_class, "set",             vector4_set,             MRB_ARGS_ANY());
   /* arithmetic */
   mrb_define_method(mrb, vector4_class, "-@",              vector4_negate,          MRB_ARGS_NONE());

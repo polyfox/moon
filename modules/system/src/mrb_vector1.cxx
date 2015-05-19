@@ -144,6 +144,20 @@ vector1_coerce(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 2, argv);
 }
 
+/*
+ * @return [Boolean]
+ */
+static mrb_value
+vector1_eq(mrb_state *mrb, mrb_value self)
+{
+  mrb_value other;
+  mrb_get_args(mrb, "o", &other);
+  if (mrb_obj_is_kind_of(mrb, other, vector1_class)) {
+    return mrb_bool_value((*get_vector1(mrb, self)) == (*get_vector1(mrb, other)));
+  }
+  return mrb_bool_value(false);
+}
+
 static mrb_value
 vector1_x_getter(mrb_state *mrb, mrb_value self)
 {
@@ -320,6 +334,7 @@ mmrb_vector1_init(mrb_state *mrb, struct RClass *mod)
   mrb_define_method(mrb, vector1_class, "initialize_copy", vector1_initialize_copy, MRB_ARGS_REQ(1));
   /* coercion */
   mrb_define_method(mrb, vector1_class, "coerce",          vector1_coerce,          MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector1_class, "==",              vector1_eq,              MRB_ARGS_REQ(1));
   /* attribute setters */
   mrb_define_method(mrb, vector1_class, "x",               vector1_x_getter,        MRB_ARGS_NONE());
   mrb_define_method(mrb, vector1_class, "x=",              vector1_x_setter,        MRB_ARGS_REQ(1));

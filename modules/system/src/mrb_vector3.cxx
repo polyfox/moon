@@ -92,6 +92,17 @@ vector3_coerce(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
+vector3_eq(mrb_state *mrb, mrb_value self)
+{
+  mrb_value other;
+  mrb_get_args(mrb, "o", &other);
+  if (mrb_obj_is_kind_of(mrb, other, vector3_class)) {
+    return mrb_bool_value((*get_vector3(mrb, self)) == (*get_vector3(mrb, other)));
+  }
+  return mrb_bool_value(false);
+}
+
+static mrb_value
 vector3_get_x(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, get_vector3(mrb, self)->x);
@@ -348,6 +359,7 @@ mmrb_vector3_init(mrb_state *mrb, struct RClass *mod)
   mrb_define_method(mrb, vector3_class, "initialize_copy", vector3_initialize_copy, MRB_ARGS_REQ(1));
   /* coercion */
   mrb_define_method(mrb, vector3_class, "coerce",          vector3_coerce,          MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, vector3_class, "==",              vector3_eq,              MRB_ARGS_REQ(1));
   /* attribute setters */
   mrb_define_method(mrb, vector3_class, "x",               vector3_get_x,        MRB_ARGS_NONE());
   mrb_define_method(mrb, vector3_class, "y",               vector3_get_y,        MRB_ARGS_NONE());

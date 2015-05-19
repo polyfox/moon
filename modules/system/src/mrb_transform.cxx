@@ -161,6 +161,7 @@ transform_initialize_copy(mrb_state *mrb, mrb_value self)
 {
   Moon::Transform *source_mat;
   mrb_get_args(mrb, "d", &source_mat, &transform_data_type);
+  transform_free(mrb, DATA_PTR(self));
   mrb_data_init(self, new Moon::Transform(*source_mat), &transform_data_type);
   return self;
 }
@@ -175,6 +176,20 @@ transform_coerce(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "o", &other);
   mrb_value argv[2] = { self, other };
   return mrb_ary_new_from_values(mrb, 2, argv);
+}
+
+/*
+ * @return [Boolean]
+ */
+static mrb_value
+transform_eq(mrb_state *mrb, mrb_value self)
+{
+  mrb_value other;
+  mrb_get_args(mrb, "o", &other);
+  if (mrb_obj_is_kind_of(mrb, other, transform_class)) {
+    return mrb_bool_value((*get_transform(mrb, self)) == (*get_transform(mrb, other)));
+  }
+  return mrb_bool_value(false);
 }
 
 /*
@@ -542,6 +557,8 @@ mmrb_transform_init(mrb_state *mrb, struct RClass* mod)
   mrb_define_method(mrb, transform_class, "initialize_copy", transform_initialize_copy, MRB_ARGS_REQ(1));
 
   mrb_define_method(mrb, transform_class, "coerce",          transform_coerce,          MRB_ARGS_REQ(1));
+
+  mrb_define_method(mrb, transform_class, "==",              transform_eq,              MRB_ARGS_REQ(1));
 
   mrb_define_method(mrb, transform_class, "[]",              transform_entry_get,       MRB_ARGS_ARG(1,1));
   mrb_define_method(mrb, transform_class, "[]=",             transform_entry_set,       MRB_ARGS_ARG(2,1));
