@@ -8,8 +8,13 @@ end
 begin
   engine.setup
 
-  require 'core/load'
-  require 'scripts/load'
+  begin
+    GC.disable
+    require 'core/load'
+    require 'scripts/load'
+  ensure
+    GC.enable
+  end
 
   engine.main
 ensure
