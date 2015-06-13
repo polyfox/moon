@@ -1,18 +1,25 @@
 project(moon)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.5)
+cmake_minimum_required(VERSION 2.8.5)
 
-OPTION(freetype-gl_BUILD_DEMOS OFF)
-OPTION(freetype-gl_BUILD_APIDOC OFF)
-OPTION(GLFW_BUILD_EXAMPLES OFF)
-OPTION(GLFW_BUILD_TESTS OFF)
 
-add_subdirectory("vendor/freetype-gl")
-add_subdirectory("vendor/glfw")
-#add_subdirectory("vendor/glm")
 add_subdirectory("vendor/gorilla-audio/build")
-add_subdirectory("vendor/soil")
+#add_subdirectory("vendor/glm")
+
+option(freetype-gl_BUILD_DEMOS OFF)
+option(freetype-gl_BUILD_APIDOC OFF)
+add_subdirectory("vendor/freetype-gl")
+
+option(GLFW_BUILD_EXAMPLES OFF)
+option(GLFW_BUILD_TESTS OFF)
+option(BUILD_SHARED_LIBS ON)
+set(BUILD_SHARED_LIBS ON)
+add_subdirectory("vendor/glfw")
+
 add_subdirectory("vendor/sil")
+add_subdirectory("vendor/soil")
+
+find_library(YAML yaml)
 
 add_custom_target(moon-mruby ALL
   DEPENDS freetype-gl glfw gorilla SOIL SIL
