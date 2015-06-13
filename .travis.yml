@@ -1,11 +1,11 @@
 language: cpp
 matrix:
   include:
-    - compiler: clang
-      env: MOON_MRUBY_TOOLCHAIN=clang
-
     - compiler: gcc
       env: MOON_MRUBY_TOOLCHAIN=gcc
+
+    - compiler: clang
+      env: MOON_MRUBY_TOOLCHAIN=clang
 
   allow_failures:
     - compiler: clang
