@@ -46,4 +46,5 @@ before_script:
   - ruby --version
 
 script:
-  - bundle exec rake build
+  - mkdir -p build
+  - cd build && cmake .. && make

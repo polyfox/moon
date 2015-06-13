@@ -23,23 +23,26 @@ task clean: [
   'soil:clean'
 ]
 
+task :remove_build_dir do
+  FileUtils.rm_rf 'build'
+end
+
 task hard_clean: [
   'freetype-gl:hard_clean',
   'glfw:hard_clean',
   'gorilla-audio:hard_clean',
   'mruby:hard_clean',
   'sil:hard_clean',
-  'soil:hard_clean'
+  'soil:hard_clean',
+  'remove_build_dir'
 ]
 
-task build: [
-  'freetype-gl:build',
-  'glfw:build',
-  'gorilla-audio:build',
-  'mruby:build',
-  'sil:build',
-  'soil:build'
-]
+task :build do
+  FileUtils.mkdir_p 'build'
+  Dir.chdir 'build' do
+    sh 'cmake .. && make'
+  end
+end
 
 task test: 'mruby:test'
 task docs: :yard
