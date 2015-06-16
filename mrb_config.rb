@@ -113,6 +113,8 @@ MRuby::Build.new do |conf|
       l.libraries << 'GL'
       l.libraries << 'openal'
     end
-    l.libraries << 'pthread'
+    if Platform.unix?
+      l.libraries << 'pthread'
+    end
   end
 end
