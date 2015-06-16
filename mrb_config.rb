@@ -46,6 +46,7 @@ MRuby::Build.new do |conf|
 
   d = File.dirname(__FILE__)
   vd = File.expand_path('vendor', d)
+  bvd = File.expand_path('build/vendor', d)
   [conf.cc, conf.cxx].each do |c|
     c.flags << '-g3'
 
@@ -93,11 +94,11 @@ MRuby::Build.new do |conf|
   end
 
   conf.linker do |l|
-    l.library_paths << File.join(vd, 'glfw/build/src')
-    l.library_paths << File.join(vd, 'freetype-gl/build')
-    l.library_paths << File.join(vd, 'gorilla-audio/build/build')
-    l.library_paths << File.join(vd, 'sil/build')
-    l.library_paths << File.join(vd, 'soil/build')
+    l.library_paths << File.join(bvd, 'glfw/src')
+    l.library_paths << File.join(bvd, 'freetype-gl')
+    l.library_paths << File.join(bvd, 'gorilla-audio/build')
+    l.library_paths << File.join(bvd, 'sil')
+    l.library_paths << File.join(bvd, 'soil')
     l.libraries << 'glfw'
     l.libraries << 'freetype-gl'
     l.libraries << 'gorilla'

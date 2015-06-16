@@ -18,9 +18,9 @@ things you'll need before getting started.
 ### Dependencies
 ```
 # building
-premake4 
-cmake >= 2.8.9
+cmake >= 2.8.12
 ruby >= 1.9.2
+  yard (for docs)
 
 # runtime
 OpenAL
@@ -58,8 +58,15 @@ gem install bundler
 # make sure you have all the nice things moon needs to build
 bundle update
 
+
 # finally execute the build process and watch it go
 bundle exec rake build
+
+# alternatively you can do this, which is done by the `rake build`
+mkdir -p build
+cd build
+cmake ..
+make
 ```
 
 The build process is still clunky and your build may fail.
