@@ -108,10 +108,11 @@ namespace Moon {
   }
 
   void VertexBuffer::Render(GLenum mode) {
-    if (m_dirty) Upload(); // update the VBO and IBO if dirty
+    /*if (m_dirty) Upload(); // update the VBO and IBO if dirty
     glBindVertexArray(m_vao_id);
     glDrawElements(mode, m_indices.size(), GL_UNSIGNED_INT, NULL);
-    glBindVertexArray(0);
+    glBindVertexArray(0);*/
+    RenderWithOffset(mode, 0)
   }
 
   void VertexBuffer::RenderWithOffset(GLenum mode, const int offset) {
