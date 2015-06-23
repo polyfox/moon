@@ -24,90 +24,87 @@ static mrb_sym id_oy;
 static mrb_sym id_angle;
 static mrb_sym id_transform;
 
-static void
-spritesheet_free(mrb_state *mrb, void *p)
-{
-  Moon::Spritesheet *spritesheet = (Moon::Spritesheet*)p;
-  if (spritesheet) {
-    delete(spritesheet);
-  }
-}
-
-MOON_C_API const struct mrb_data_type spritesheet_data_type = { "Moon::Spritesheet", spritesheet_free };
-
-static inline Moon::Spritesheet*
-get_spritesheet(mrb_state *mrb, mrb_value self)
-{
-  return (Moon::Spritesheet*)mrb_data_get_ptr(mrb, self, &spritesheet_data_type);
-}
-
-/*
- * @overload Spritesheet#initialize(texture: Texture, cell_width: int, cell_height: int)
- * @overload Spritesheet#initialize(filename: str, cell_width: int, cell_height: int)
- */
 static mrb_value
-spritesheet_initialize(mrb_state *mrb, mrb_value self)
+spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
 {
-  mrb_value obj;
-  mrb_int tile_width, tile_height;
-  Moon::Spritesheet *spritesheet;
-  mrb_get_args(mrb, "oii", &obj, &tile_width, &tile_height);
+  // get C++ texture object
+  // get C++ VBO object
 
-  spritesheet_free(mrb, DATA_PTR(self));
-  DATA_PTR(self) = NULL;
+  // If there is a texture loaded and clips to make vertex data from
+  if (m_texture->GetID() != 0) {
+    GLfloat tiles_per_row, tiles_per_column;
 
-  spritesheet = new Moon::Spritesheet();
+    tiles_per_row = m_texture->GetWidth() / tile_width;
+    tiles_per_column = m_texture->GetHeight() / tile_height;
 
-  switch (mrb_type(obj)) {
-    case MRB_TT_STRING: {
-      char* filename = RSTRING_PTR(obj);
-      if (exists(filename)) {
-        mrb_value texture = mmrb_texture_load_file(mrb, filename);
-        spritesheet->LoadTexture(get_texture(mrb, texture), tile_width, tile_height);
-        IVset(KEY_TEXTURE, texture);
-      } else {
-        delete(spritesheet);
-        mrb_raisef(mrb, E_SCRIPT_ERROR,
-                   "cannot load such file -- %S",
-                   mrb_str_new_cstr(mrb, filename));
-      }
-      break;
+    total_sprites = tiles_per_row * tiles_per_column;
+
+    for(int i = 0; i < total_sprites; ++i) {
+      GLfloat ox = (float)(i % (int)tiles_per_row);
+      GLfloat oy = (float)(i / (int)tiles_per_row);
+
+      float s0 = (ox) / tiles_per_row;
+      float s1 = (ox + 1.0) / tiles_per_row;
+      float t0 = (oy) / tiles_per_column;
+      float t1 = (oy + 1.0) / tiles_per_column;
+
+      Vertex vertices[4] = {
+        { {0.f, 0.f},                {s0, t0}, Vector4(0, 0, 0, 0) },
+        { {tile_width, 0.f},         {s1, t0}, Vector4(0, 0, 0, 0) },
+        { {tile_width, tile_height}, {s1, t1}, Vector4(0, 0, 0, 0) },
+        { {0.f, tile_height},        {s0, t1}, Vector4(0, 0, 0, 0) }
+      };
+
+      m_vbo.PushBackVertices(vertices, 4);
     }
-    case MRB_TT_DATA: {
-      if (DATA_TYPE(obj) == &texture_data_type) {
-        spritesheet->LoadTexture(get_texture(mrb, obj), tile_width, tile_height);
-        IVset(KEY_TEXTURE, obj);
-      } else {
-        delete(spritesheet);
-        mrb_raisef(mrb, E_TYPE_ERROR,
-                   "wrong argument DATA type %S (expected Moon::Texture)",
-                   mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, obj)));
-      }
-      break;
-    }
-    default: {
-      delete(spritesheet);
-      mrb_raisef(mrb, E_TYPE_ERROR,
-                 "wrong argument type %S (expected Moon::Texture or String)",
-                 mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, obj)));
-    }
+
+    GLuint indices[4] = {0, 1, 3, 2};
+    m_vbo.PushBackIndices(indices, 4);
+
+  } else {   //Error
+    printf("No texture to render with!\n");
+    return false;
   }
 
-  if (!spritesheet) {
-    return mrb_nil_value();
-  }
-
-  mrb_data_init(self, spritesheet, &spritesheet_data_type);
-  renderable_initialize_shader<Moon::Spritesheet>(mrb, self);
-  return self;
+  return true;
 }
 
-static mrb_value
-spritesheet_texture_get(mrb_state *mrb, mrb_value self)
-{
-  return IVget(KEY_TEXTURE);
-}
+static void spritesheet_render(const float x, const float y, const float z,
+    const int index, const Spritesheet::RenderState &render_ops) {
 
+  // if you somehow managed to go out-of-bounds
+  if ((index < 0) || (index >= (int)total_sprites)) return;
+  if (m_texture->GetID() == 0) return;
+  if (!shader) return;
+
+  int offset = index * 4;
+
+  shader->Use();
+
+  //model matrix - move it to the correct position in the world
+  Vector2 origin = render_ops.origin;
+  glm::mat4 model_matrix = glm::translate(render_ops.transform, glm::vec3(x, y, z));
+  glm::mat4 rotation_matrix = glm::translate(glm::rotate(
+        glm::translate(glm::mat4(1.0f), glm::vec3(origin.x, origin.y, 0)),
+        glm::radians(render_ops.angle),
+        glm::vec3(0, 0, 1)
+        ), glm::vec3(-origin.x, -origin.y, 0));
+
+  // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
+  glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix * rotation_matrix;
+  glUniformMatrix4fv(shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+
+  glUniform1f(shader->GetUniform("opacity"), render_ops.opacity);
+  glUniform4fv(shader->GetUniform("tone"), 1, glm::value_ptr(render_ops.tone));
+  glUniform4fv(shader->GetUniform("color"), 1, glm::value_ptr(render_ops.color));
+
+  //Set texture ID
+  glActiveTexture(GL_TEXTURE0);
+  m_texture->Bind();
+  glUniform1i(shader->GetUniform("tex"), /*GL_TEXTURE*/0);
+
+  m_vbo.RenderWithOffset(GL_TRIANGLE_STRIP, offset);
+};
 /*
  * @overload Spritesheet#render(x: float, y: float, z: float, index: int)
  * @overload Spritesheet#render(x: float, y: float, z: float, index: int, options: Hash<Symbol, Object>)
@@ -162,57 +159,19 @@ spritesheet_render(mrb_state *mrb, mrb_value self)
       }
     }
   }
-  spritesheet->Render(x, y, z, index, render_op);
+  spritesheet_render(x, y, z, index, render_op);
   return mrb_nil_value();
-}
-
-/*
- * @return [Integer]
- */
-static mrb_value
-spritesheet_cell_width(mrb_state *mrb, mrb_value self)
-{
-  return mrb_fixnum_value((int)get_spritesheet(mrb, self)->tile_width);
-}
-
-/*
- * @return [Integer]
- */
-static mrb_value
-spritesheet_cell_height(mrb_state *mrb, mrb_value self)
-{
-  return mrb_fixnum_value((int)get_spritesheet(mrb, self)->tile_height);
-}
-
-/*
- * @return [Integer]
- */
-static mrb_value
-spritesheet_cell_count(mrb_state *mrb, mrb_value self)
-{
-  return mrb_fixnum_value((int)get_spritesheet(mrb, self)->total_sprites);
 }
 
 MOON_C_API void
 mmrb_spritesheet_init(mrb_state *mrb, struct RClass* mod)
 {
   struct RClass *spritesheet_class = mrb_define_class_under(mrb, mod, "Spritesheet", mrb->object_class);
-  MRB_SET_INSTANCE_TT(spritesheet_class, MRB_TT_DATA);
 
-  mrb_define_method(mrb, spritesheet_class, "initialize", spritesheet_initialize,     MRB_ARGS_REQ(3));
   mrb_define_method(mrb, spritesheet_class, "render",     spritesheet_render,         MRB_ARGS_ARG(4,1));
 
+  mrb_define_method(mrb, spritesheet_class, "generate_buffers",    spritesheet_generate_buffers,    MRB_ARGS_NONE());
   mrb_define_method(mrb, spritesheet_class, "shader=",    renderable_shader_set<Moon::Spritesheet>,    MRB_ARGS_REQ(1));
-
-  mrb_define_method(mrb, spritesheet_class, "texture",    spritesheet_texture_get,    MRB_ARGS_NONE());
-
-  mrb_define_method(mrb, spritesheet_class, "cell_w",     spritesheet_cell_width,     MRB_ARGS_NONE()); /* deprecated, use width instead */
-  mrb_define_method(mrb, spritesheet_class, "cell_h",     spritesheet_cell_height,    MRB_ARGS_NONE()); /* deprecated, use height instead */
-
-  mrb_define_method(mrb, spritesheet_class, "cell_count", spritesheet_cell_count,     MRB_ARGS_NONE());
-
-  mrb_define_method(mrb, spritesheet_class, "w",          spritesheet_cell_width,     MRB_ARGS_NONE());
-  mrb_define_method(mrb, spritesheet_class, "h",          spritesheet_cell_height,    MRB_ARGS_NONE());
 
   id_opacity   = mrb_intern_cstr(mrb, "opacity");
   id_tone      = mrb_intern_cstr(mrb, "tone");
