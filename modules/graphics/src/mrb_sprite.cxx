@@ -26,13 +26,7 @@ sprite_free(mrb_state *mrb, void *p)
   }
 }
 
-MOON_C_API const struct mrb_data_type sprite_data_type = { "Sprite", sprite_free };
-
-static inline Moon::Texture*
-get_texture(mrb_state *mrb, mrb_value self)
-{
-  return (Moon::Texture*)mrb_data_get_ptr(mrb, self, &texture_data_type);
-}
+MOON_C_API const struct mrb_data_type sprite_data_type = { "Moon::Sprite", sprite_free };
 
 static inline Moon::Sprite*
 get_sprite(mrb_state *mrb, mrb_value self)
@@ -121,13 +115,13 @@ sprite_render(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-sprite_get_opacity(mrb_state *mrb, mrb_value self)
+sprite_opacity_get(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, get_sprite(mrb, self)->opacity);
 }
 
 static mrb_value
-sprite_set_opacity(mrb_state *mrb, mrb_value self)
+sprite_opacity_set(mrb_state *mrb, mrb_value self)
 {
   mrb_float f;
   mrb_get_args(mrb, "f", &f);
@@ -136,13 +130,13 @@ sprite_set_opacity(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-sprite_get_angle(mrb_state *mrb, mrb_value self)
+sprite_angle_get(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, get_sprite(mrb, self)->angle);
 }
 
 static mrb_value
-sprite_set_angle(mrb_state *mrb, mrb_value self)
+sprite_angle_set(mrb_state *mrb, mrb_value self)
 {
   mrb_float f;
   mrb_get_args(mrb, "f", &f);
@@ -151,13 +145,13 @@ sprite_set_angle(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-sprite_get_ox(mrb_state *mrb, mrb_value self)
+sprite_ox_get(mrb_state *mrb, mrb_value self)
 {
   return mrb_fixnum_value(get_sprite(mrb, self)->origin.x);
 }
 
 static mrb_value
-sprite_set_ox(mrb_state *mrb, mrb_value self)
+sprite_ox_set(mrb_state *mrb, mrb_value self)
 {
   mrb_float i;
   mrb_get_args(mrb, "f", &i);
@@ -166,13 +160,13 @@ sprite_set_ox(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-sprite_get_oy(mrb_state *mrb, mrb_value self)
+sprite_oy_get(mrb_state *mrb, mrb_value self)
 {
   return mrb_fixnum_value(get_sprite(mrb, self)->origin.y);
 }
 
 static mrb_value
-sprite_set_oy(mrb_state *mrb, mrb_value self)
+sprite_oy_set(mrb_state *mrb, mrb_value self)
 {
   mrb_float i;
   mrb_get_args(mrb, "f", &i);
@@ -181,13 +175,13 @@ sprite_set_oy(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-sprite_get_color(mrb_state *mrb, mrb_value self)
+sprite_color_get(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector4_value(mrb, get_sprite(mrb, self)->color);
 }
 
 static mrb_value
-sprite_set_color(mrb_state *mrb, mrb_value self)
+sprite_color_set(mrb_state *mrb, mrb_value self)
 {
   Moon::Vector4 *color;
   Moon::Sprite *sprite = get_sprite(mrb, self);
@@ -197,13 +191,13 @@ sprite_set_color(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-sprite_get_tone(mrb_state *mrb, mrb_value self)
+sprite_tone_get(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector4_value(mrb, get_sprite(mrb, self)->tone);
 }
 
 static mrb_value
-sprite_set_tone(mrb_state *mrb, mrb_value self)
+sprite_tone_set(mrb_state *mrb, mrb_value self)
 {
   Moon::Vector4 *tone;
   Moon::Sprite *sprite = get_sprite(mrb, self);
@@ -219,7 +213,7 @@ sprite_texture_get(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-sprite_set_texture(mrb_state *mrb, mrb_value self)
+sprite_texture_set(mrb_state *mrb, mrb_value self)
 {
   mrb_value new_texture;
   Moon::Texture *texture;
@@ -232,7 +226,7 @@ sprite_set_texture(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-sprite_get_clip_rect(mrb_state *mrb, mrb_value self)
+sprite_clip_rect_get(mrb_state *mrb, mrb_value self)
 {
   Moon::Sprite *sprite = get_sprite(mrb, self);
   if (sprite->use_clip) {
@@ -242,7 +236,7 @@ sprite_get_clip_rect(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-sprite_set_clip_rect(mrb_state *mrb, mrb_value self)
+sprite_clip_rect_set(mrb_state *mrb, mrb_value self)
 {
   mrb_value clip_rect;
   Moon::Sprite *sprite = get_sprite(mrb, self);
@@ -262,28 +256,29 @@ mmrb_sprite_init(mrb_state *mrb, struct RClass* mod)
   struct RClass *sprite_class = mrb_define_class_under(mrb, mod, "Sprite", mrb->object_class);
   MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
 
-  mrb_define_method(mrb, sprite_class, "initialize", sprite_initialize,     MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, sprite_class, "render",     sprite_render,         MRB_ARGS_REQ(3));
-  mrb_define_method(mrb, sprite_class, "opacity",    sprite_get_opacity, MRB_ARGS_NONE());
-  mrb_define_method(mrb, sprite_class, "opacity=",   sprite_set_opacity, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, sprite_class, "initialize", sprite_initialize,    MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, sprite_class, "render",     sprite_render,        MRB_ARGS_REQ(3));
 
   mrb_define_method(mrb, sprite_class, "shader=",    renderable_shader_set<Moon::Sprite>,    MRB_ARGS_REQ(1));
 
-  mrb_define_method(mrb, sprite_class, "angle",      sprite_get_angle,   MRB_ARGS_NONE());
-  mrb_define_method(mrb, sprite_class, "angle=",     sprite_set_angle,   MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, sprite_class, "ox",         sprite_get_ox,      MRB_ARGS_NONE());
-  mrb_define_method(mrb, sprite_class, "ox=",        sprite_set_ox,      MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, sprite_class, "oy",         sprite_get_oy,      MRB_ARGS_NONE());
-  mrb_define_method(mrb, sprite_class, "oy=",        sprite_set_oy,      MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, sprite_class, "opacity",    sprite_opacity_get,   MRB_ARGS_NONE());
+  mrb_define_method(mrb, sprite_class, "opacity=",   sprite_opacity_set,   MRB_ARGS_REQ(1));
 
-  mrb_define_method(mrb, sprite_class, "color",      sprite_get_color,  MRB_ARGS_NONE());
-  mrb_define_method(mrb, sprite_class, "color=",     sprite_set_color,  MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, sprite_class, "angle",      sprite_angle_get,     MRB_ARGS_NONE());
+  mrb_define_method(mrb, sprite_class, "angle=",     sprite_angle_set,     MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, sprite_class, "ox",         sprite_ox_get,        MRB_ARGS_NONE());
+  mrb_define_method(mrb, sprite_class, "ox=",        sprite_ox_set,        MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, sprite_class, "oy",         sprite_oy_get,        MRB_ARGS_NONE());
+  mrb_define_method(mrb, sprite_class, "oy=",        sprite_oy_set,        MRB_ARGS_REQ(1));
 
-  mrb_define_method(mrb, sprite_class, "tone",       sprite_get_tone,    MRB_ARGS_NONE());
-  mrb_define_method(mrb, sprite_class, "tone=",      sprite_set_tone,    MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, sprite_class, "color",      sprite_color_get,     MRB_ARGS_NONE());
+  mrb_define_method(mrb, sprite_class, "color=",     sprite_color_set,     MRB_ARGS_REQ(1));
 
-  mrb_define_method(mrb, sprite_class, "texture",    sprite_get_texture, MRB_ARGS_NONE());
-  mrb_define_method(mrb, sprite_class, "texture=",   sprite_set_texture, MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, sprite_class, "clip_rect",  sprite_get_clip_rect,    MRB_ARGS_NONE());
-  mrb_define_method(mrb, sprite_class, "clip_rect=", sprite_set_clip_rect,    MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, sprite_class, "tone",       sprite_tone_get,      MRB_ARGS_NONE());
+  mrb_define_method(mrb, sprite_class, "tone=",      sprite_tone_set,      MRB_ARGS_REQ(1));
+
+  mrb_define_method(mrb, sprite_class, "texture",    sprite_texture_get,   MRB_ARGS_NONE());
+  mrb_define_method(mrb, sprite_class, "texture=",   sprite_texture_set,   MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, sprite_class, "clip_rect",  sprite_clip_rect_get, MRB_ARGS_NONE());
+  mrb_define_method(mrb, sprite_class, "clip_rect=", sprite_clip_rect_set, MRB_ARGS_REQ(1));
 }
