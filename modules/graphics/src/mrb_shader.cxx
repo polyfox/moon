@@ -21,12 +21,11 @@ static mrb_value
 shader_initialize(mrb_state *mrb, mrb_value self)
 {
   Moon::Shader *shader;
-  char* vertexContents;
-  char* fragmentContents;
+  char* vertexShader;
+  char* fragmentShader;
   shader_free(mrb, DATA_PTR(self));
-  mrb_get_args(mrb, "zz", &vertexContents, &fragmentContents);
-  shader = new Moon::Shader();
-  shader->CreateFromString(vertexContents, fragmentContents);
+  mrb_get_args(mrb, "zz", &vertexShader, &fragmentShader);
+  shader = new Moon::Shader(vertexShader, fragmentShader);
   mrb_data_init(self, shader, &shader_data_type);
   return self;
 }

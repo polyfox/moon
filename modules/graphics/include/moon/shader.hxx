@@ -18,10 +18,8 @@ namespace Moon {
     static glm::mat4 view_matrix; // camera. TEMPORARY LOCATION, TODO MOVE TO RENDERER
     static bool is_legacy;
 
-    Shader();
+    Shader(const std::string vertexShader, const std::string fragmentShader);
     ~Shader();
-    void CreateFromString(const std::string vertexContent, const std::string fragmentContent);
-    void CreateFromFile(const char* vertexFilename, const char* fragmentFilename);
     void   Use();
     GLuint GetProgram();
     GLint  GetAttribute(const char *name);
@@ -31,10 +29,9 @@ namespace Moon {
     AttributeMap m_attributeList;
     AttributeMap m_uniformLocationList;
 
-    std::string ReadFile(const char* filename);
     void   PrintLog(GLuint object);
     GLuint CreateShader(const std::string contents, GLenum type);
-    GLuint CreateProgram(const std::string vertexContent, const std::string fragmentContent);
+    GLuint CreateProgram(const std::string vertexShader, const std::string fragmentShader);
     GLint  InitAttribute(const char *name);
     GLint  InitUniform(const char *name);
   };
