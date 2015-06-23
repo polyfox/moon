@@ -15,19 +15,12 @@
 #include "moon/mrb_err.hxx"
 #include "moon/sprite.hxx"
 #include "moon/glm.h"
-
-#define TEXTURE_CLASS mrb_module_get_under(mrb, mrb_module_get(mrb, "Moon"), "Texture")
-#define IVget(_name_) mrb_iv_get(mrb, self, mrb_intern_lit(mrb, _name_))
-#define IVset(_name_, _value_) mrb_iv_set(mrb, self, mrb_intern_lit(mrb, _name_), _value_)
-
-#define KEY_TEXTURE "__texture"
-
-static struct RClass *sprite_class;
+#include "moon/mrb/renderable.hxx"
 
 static void
 sprite_free(mrb_state *mrb, void *p)
 {
-  Moon::Sprite *sprite = (Moon::Sprite*)p;
+  Moon::Sprite *sprite = static_cast<Moon::Sprite*>(p);
   if (sprite) {
     delete(sprite);
   }
@@ -44,29 +37,19 @@ get_texture(mrb_state *mrb, mrb_value self)
 static inline Moon::Sprite*
 get_sprite(mrb_state *mrb, mrb_value self)
 {
-  return (Moon::Sprite*)mrb_data_get_ptr(mrb, self, &sprite_data_type);
+  return static_cast<Moon::Sprite*>(mrb_data_get_ptr(mrb, self, &sprite_data_type));
 }
 
 static inline Moon::IntRect*
 get_rect(mrb_state *mrb, mrb_value self)
 {
-  return (Moon::IntRect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
+  return static_cast<Moon::IntRect*>(mrb_data_get_ptr(mrb, self, &rect_data_type));
 }
 
 static inline Moon::Vector4*
 get_vector4(mrb_state *mrb, mrb_value self)
 {
-  return (Moon::Vector4*)mrb_data_get_ptr(mrb, self, &vector4_data_type);
-}
-
-static inline void
-cleanup_sprite(mrb_state *mrb, mrb_value self)
-{
-  void *ptr = DATA_PTR(self);
-  if (ptr) {
-    sprite_free(mrb, ptr);
-  }
-  DATA_PTR(self) = NULL;
+  return static_cast<Moon::Vector4*>(mrb_data_get_ptr(mrb, self, &vector4_data_type));
 }
 
 /*
@@ -80,7 +63,9 @@ sprite_initialize(mrb_state *mrb, mrb_value self)
   Moon::Sprite *sprite;
   mrb_get_args(mrb, "o", &obj);
 
-  cleanup_sprite(mrb, self);
+  sprite_free(mrb, DATA_PTR(self));
+  DATA_PTR(self) = NULL;
+
   sprite = new Moon::Sprite();
 
   switch (mrb_type(obj)) {
@@ -119,10 +104,10 @@ sprite_initialize(mrb_state *mrb, mrb_value self)
   }
 
   if (!sprite) {
-    return self;
+    return mrb_nil_value();
   }
-
   mrb_data_init(self, sprite, &sprite_data_type);
+  renderable_initialize_shader<Moon::Sprite>(mrb, self);
   return self;
 }
 
@@ -228,7 +213,7 @@ sprite_set_tone(mrb_state *mrb, mrb_value self)
 }
 
 static mrb_value
-sprite_get_texture(mrb_state *mrb, mrb_value self)
+sprite_texture_get(mrb_state *mrb, mrb_value self)
 {
   return IVget(KEY_TEXTURE);
 }
@@ -274,7 +259,7 @@ sprite_set_clip_rect(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_sprite_init(mrb_state *mrb, struct RClass* mod)
 {
-  sprite_class = mrb_define_class_under(mrb, mod, "Sprite", mrb->object_class);
+  struct RClass *sprite_class = mrb_define_class_under(mrb, mod, "Sprite", mrb->object_class);
   MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, sprite_class, "initialize", sprite_initialize,     MRB_ARGS_REQ(1));
@@ -282,6 +267,7 @@ mmrb_sprite_init(mrb_state *mrb, struct RClass* mod)
   mrb_define_method(mrb, sprite_class, "opacity",    sprite_get_opacity, MRB_ARGS_NONE());
   mrb_define_method(mrb, sprite_class, "opacity=",   sprite_set_opacity, MRB_ARGS_REQ(1));
 
+  mrb_define_method(mrb, sprite_class, "shader=",    renderable_shader_set<Moon::Sprite>,    MRB_ARGS_REQ(1));
 
   mrb_define_method(mrb, sprite_class, "angle",      sprite_get_angle,   MRB_ARGS_NONE());
   mrb_define_method(mrb, sprite_class, "angle=",     sprite_set_angle,   MRB_ARGS_REQ(1));

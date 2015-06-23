@@ -29,6 +29,8 @@ namespace Moon {
     };
 
     static Vector4 DefaultColor;
+    Shader *shader;
+
     Font(std::string name, int font_size);
     ~Font();
 
@@ -41,7 +43,6 @@ namespace Moon {
     texture_font_t *m_font;
     texture_atlas_t *m_atlas;
     VertexBuffer m_buffer;
-    Shader *m_shader;
     void AddText(const Moon::String &text, const Vector4 &c);
   };
 };
