@@ -1,14 +1,12 @@
 #include "moon/engine.hxx"
-#include "moon/shader_loader.hxx"
 #include "moon/spritesheet.hxx"
 #include "moon/texture.hxx"
 #include "moon/vector4.hxx"
 
 namespace Moon {
-  Spritesheet::Spritesheet()
-  : m_vbo(GL_STATIC_DRAW)
+  Spritesheet::Spritesheet() : m_vbo(GL_STATIC_DRAW)
   {
-    m_shader = ShaderLoader::GetQuadShader();
+    shader = NULL;
   }
 
   Spritesheet::~Spritesheet() {
@@ -28,7 +26,7 @@ namespace Moon {
 
   bool Spritesheet::GenerateBuffers() {
     // If there is a texture loaded and clips to make vertex data from
-    if(m_texture->GetID() != 0) {
+    if (m_texture->GetID() != 0) {
       GLfloat tiles_per_row, tiles_per_column;
 
       tiles_per_row = m_texture->GetWidth() / tile_width;
@@ -72,10 +70,11 @@ namespace Moon {
     // if you somehow managed to go out-of-bounds
     if ((index < 0) || (index >= (int)total_sprites)) return;
     if (m_texture->GetID() == 0) return;
+    if (!shader) return;
 
-    int offset = index*4;
+    int offset = index * 4;
 
-    m_shader->Use();
+    shader->Use();
 
     //model matrix - move it to the correct position in the world
     Vector2 origin = render_ops.origin;
@@ -88,16 +87,16 @@ namespace Moon {
 
     // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
     glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix * rotation_matrix;
-    glUniformMatrix4fv(m_shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+    glUniformMatrix4fv(shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
-    glUniform1f(m_shader->GetUniform("opacity"), render_ops.opacity);
-    glUniform4fv(m_shader->GetUniform("tone"), 1, glm::value_ptr(render_ops.tone));
-    glUniform4fv(m_shader->GetUniform("color"), 1, glm::value_ptr(render_ops.color));
+    glUniform1f(shader->GetUniform("opacity"), render_ops.opacity);
+    glUniform4fv(shader->GetUniform("tone"), 1, glm::value_ptr(render_ops.tone));
+    glUniform4fv(shader->GetUniform("color"), 1, glm::value_ptr(render_ops.color));
 
     //Set texture ID
     glActiveTexture(GL_TEXTURE0);
     m_texture->Bind();
-    glUniform1i(m_shader->GetUniform("tex"), /*GL_TEXTURE*/0);
+    glUniform1i(shader->GetUniform("tex"), /*GL_TEXTURE*/0);
 
     m_vbo.RenderWithOffset(GL_TRIANGLE_STRIP, offset);
   };

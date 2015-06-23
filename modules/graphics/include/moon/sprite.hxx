@@ -5,8 +5,8 @@
 #include "moon/glm.h"
 #include "moon/graphics.hxx"
 #include "moon/rect.hxx"
-#include "moon/shader.hxx"
 #include "moon/texture.hxx"
+#include "moon/shader.hxx"
 #include "moon/vector4.hxx"
 #include "moon/vertex_buffer.hxx"
 
@@ -19,6 +19,7 @@ namespace Moon {
     Vector2 origin;
     Vector4 color;
     Vector4 tone;
+    Shader *shader;
 
     Sprite();
     ~Sprite();
@@ -30,7 +31,6 @@ namespace Moon {
     void Render(const float x, const float y, const float z);
   private:
     IntRect m_clip_rect;
-    Shader *m_shader;
     Texture *m_texture;
     VertexBuffer m_vbo;
     bool GenerateBuffers();

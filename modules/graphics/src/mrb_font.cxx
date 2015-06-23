@@ -14,6 +14,7 @@
 #include "moon/glm.h"
 #include "moon/string.hxx"
 #include "moon/font.hxx"
+#include "moon/mrb/renderable.hxx"
 
 static mrb_sym id_outline;
 static mrb_sym id_outline_color;
@@ -28,7 +29,7 @@ font_free(mrb_state *mrb, void *p)
   }
 }
 
-MOON_C_API const struct mrb_data_type font_data_type = { "Font", font_free };
+MOON_C_API const struct mrb_data_type font_data_type = { "Moon::Font", font_free };
 
 static inline Moon::Font*
 get_font(mrb_state *mrb, mrb_value self)
@@ -48,27 +49,33 @@ get_transform(mrb_state *mrb, mrb_value self)
   return (Moon::Transform*)mrb_data_get_ptr(mrb, self, &transform_data_type);
 }
 
+/*
+ * Font#initialize(filename, size)
+ */
 static mrb_value
 font_initialize(mrb_state *mrb, mrb_value self)
 {
   char* filename;
   mrb_int font_size;
-  Moon::Font *font;
+  Moon::Font *font = NULL;
+
+  font_free(mrb, DATA_PTR(self));
+  DATA_PTR(self) = NULL;
+
   mrb_get_args(mrb, "zi", &filename, &font_size);
-
-  font = (Moon::Font*)DATA_PTR(self);
-  if (font) {
-    font_free(mrb, (void*)font);
-  }
-
   if (exists(std::string(filename))) {
     font = new Moon::Font(filename, font_size);
-    mrb_data_init(self, font, &font_data_type);
   } else {
     mrb_raisef(mrb, E_SCRIPT_ERROR,
                    "cannot load such file -- %S",
                    mrb_str_new_cstr(mrb, filename));
   }
+  // This should never happen
+  if (!font) {
+    return mrb_nil_value();
+  }
+  mrb_data_init(self, font, &font_data_type);
+  renderable_initialize_shader<Moon::Font>(mrb, self);
   return self;
 }
 
@@ -169,11 +176,13 @@ font_calc_bounds(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_font_init(mrb_state *mrb, struct RClass* mod)
 {
-  struct RClass *font_class;
-  font_class = mrb_define_class_under(mrb, mod, "Font", mrb->object_class);
+  struct RClass *font_class = mrb_define_class_under(mrb, mod, "Font", mrb->object_class);
   MRB_SET_INSTANCE_TT(font_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, font_class, "initialize",  font_initialize,  MRB_ARGS_REQ(2));
+
+  mrb_define_method(mrb, font_class, "shader=",    renderable_shader_set<Moon::Font>,    MRB_ARGS_REQ(1));
+
   mrb_define_method(mrb, font_class, "render",      font_render,      MRB_ARGS_ARG(4,2));
   mrb_define_method(mrb, font_class, "size",        font_size,        MRB_ARGS_NONE());
   mrb_define_method(mrb, font_class, "calc_bounds", font_calc_bounds, MRB_ARGS_REQ(1));

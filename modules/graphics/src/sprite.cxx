@@ -1,25 +1,43 @@
 #include "moon/engine.hxx"
 #include "moon/sprite.hxx"
 #include "moon/shader.hxx"
-#include "moon/shader_loader.hxx"
 #include "moon/texture.hxx"
 #include "moon/vector4.hxx"
 
 namespace Moon {
-  Sprite::Sprite()
-  : m_vbo(GL_DYNAMIC_DRAW)
+  Sprite::Sprite() : m_vbo(GL_DYNAMIC_DRAW)
   {
+    shader = NULL;
     use_clip = false;
     opacity = 1.0;
     angle = 0.0;
     origin = Vector2(0, 0);
     color = Vector4(1.0, 1.0, 1.0, 1.0);
     tone = Vector4(0.0, 0.0, 0.0, 1.0);
-    m_shader = ShaderLoader::GetQuadShader();
+    m_texture = NULL;
   };
 
   Sprite::~Sprite() {
 
+  };
+
+  // change Sprite's texture
+  void Sprite::SetTexture(Texture* tex) {
+    m_texture = tex;
+    GenerateBuffers();
+  };
+
+  Texture* Sprite::GetTexture() {
+    return m_texture;
+  };
+
+  void Sprite::SetClipRect(IntRect clip) {
+    m_clip_rect = std::move(clip); // passing by value already makes a copy
+    GenerateBuffers();
+  };
+
+  IntRect Sprite::GetClipRect() {
+    return m_clip_rect;
   };
 
   void Sprite::LoadTexture(Texture *texture) {
@@ -66,27 +84,11 @@ namespace Moon {
     return false;
   };
 
-  Texture* Sprite::GetTexture() {
-    return m_texture;
-  };
-
-  // change Sprite's texture
-  void Sprite::SetTexture(Texture* tex) {
-    m_texture = tex;
-    GenerateBuffers();
-  };
-
-  IntRect Sprite::GetClipRect() {
-    return m_clip_rect;
-  };
-
-  void Sprite::SetClipRect(IntRect clip) {
-    m_clip_rect = std::move(clip); // passing by value already makes a copy
-    GenerateBuffers();
-  };
-
   void Sprite::Render(const float x, const float y, const float z) {
-    m_shader->Use();
+    if (!m_texture) return;
+    if (!shader) return;
+
+    shader->Use();
     // rotation matrix - rotate the model around specified origin
     // really ugly, we translate the rotation origin to 0,0, rotate,
     // then translate back to original position
@@ -99,14 +101,14 @@ namespace Moon {
     glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
     // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
     glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix * rotation_matrix;
-    glUniformMatrix4fv(m_shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
-    glUniform1f(m_shader->GetUniform("opacity"), opacity);
-    glUniform4fv(m_shader->GetUniform("color"), 1, glm::value_ptr(color));
-    glUniform4fv(m_shader->GetUniform("tone"), 1, glm::value_ptr(tone));
+    glUniformMatrix4fv(shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+    glUniform1f(shader->GetUniform("opacity"), opacity);
+    glUniform4fv(shader->GetUniform("color"), 1, glm::value_ptr(color));
+    glUniform4fv(shader->GetUniform("tone"), 1, glm::value_ptr(tone));
     //Set texture ID
     glActiveTexture(GL_TEXTURE0);
     m_texture->Bind();
-    glUniform1i(m_shader->GetUniform("tex"), /*GL_TEXTURE*/0);
+    glUniform1i(shader->GetUniform("tex"), /*GL_TEXTURE*/0);
     m_vbo.Render(GL_TRIANGLE_STRIP);
   };
 };

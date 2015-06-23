@@ -113,6 +113,22 @@ module Moon
       @log.puts 'GLEW initialized'
     end
 
+    def setup_default_shaders
+      @shaders = {}
+      shader_path = if Moon::Shader.is_legacy
+        'resources/shaders/120/'
+      else
+        'resources/shaders/330/'
+      end
+
+      @shaders[:quad] = Moon::Shader.load(shader_path + 'quad.vert', shader_path + 'quad.frag')
+      @shaders[:text] = Moon::Shader.load(shader_path + 'text.vert', shader_path + 'text.frag')
+
+      Moon::Sprite.default_shader = @shaders[:quad]
+      Moon::Spritesheet.default_shader = @shaders[:quad]
+      Moon::Font.default_shader = @shaders[:text]
+    end
+
     # @return [self]
     def setup
       setup_glfw
@@ -121,6 +137,7 @@ module Moon
       create_screen
       create_input
       setup_glew
+      setup_default_shaders
       self
     end
 

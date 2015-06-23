@@ -5,21 +5,16 @@
 #include <mruby/hash.h>
 #include <mruby/numeric.h>
 #include <mruby/string.h>
-#include <mruby/variable.h>
 #include "moon/api.h"
 #include "moon/mrb/spritesheet.hxx"
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"
 #include "moon/mrb/transform.hxx"
 #include "moon/mrb/texture.hxx"
+#include "moon/mrb/renderable.hxx"
 #include "moon/mrb_err.hxx"
 #include "moon/spritesheet.hxx"
 #include "moon/glm.h"
-
-#define IVget(_name_) mrb_iv_get(mrb, self, mrb_intern_lit(mrb, _name_))
-#define IVset(_name_, _value_) mrb_iv_set(mrb, self, mrb_intern_lit(mrb, _name_), _value_)
-
-#define KEY_TEXTURE "__texture"
 
 static mrb_sym id_opacity;
 static mrb_sym id_tone;
@@ -40,12 +35,6 @@ spritesheet_free(mrb_state *mrb, void *p)
 
 MOON_C_API const struct mrb_data_type spritesheet_data_type = { "Moon::Spritesheet", spritesheet_free };
 
-static inline Moon::Texture*
-get_texture(mrb_state *mrb, mrb_value self)
-{
-  return (Moon::Texture*)mrb_data_get_ptr(mrb, self, &texture_data_type);
-}
-
 static inline Moon::Spritesheet*
 get_spritesheet(mrb_state *mrb, mrb_value self)
 {
@@ -64,10 +53,9 @@ spritesheet_initialize(mrb_state *mrb, mrb_value self)
   Moon::Spritesheet *spritesheet;
   mrb_get_args(mrb, "oii", &obj, &tile_width, &tile_height);
 
-  spritesheet = (Moon::Spritesheet*)DATA_PTR(self);
-  if (spritesheet) {
-    spritesheet_free(mrb, (void*)spritesheet);
-  }
+  spritesheet_free(mrb, DATA_PTR(self));
+  DATA_PTR(self) = NULL;
+
   spritesheet = new Moon::Spritesheet();
 
   switch (mrb_type(obj)) {
@@ -110,7 +98,7 @@ spritesheet_initialize(mrb_state *mrb, mrb_value self)
   }
 
   mrb_data_init(self, spritesheet, &spritesheet_data_type);
-
+  renderable_initialize_shader<Moon::Spritesheet>(mrb, self);
   return self;
 }
 
@@ -208,13 +196,16 @@ spritesheet_cell_count(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_spritesheet_init(mrb_state *mrb, struct RClass* mod)
 {
-  struct RClass *spritesheet_class;
-  spritesheet_class = mrb_define_class_under(mrb, mod, "Spritesheet", mrb->object_class);
+  struct RClass *spritesheet_class = mrb_define_class_under(mrb, mod, "Spritesheet", mrb->object_class);
   MRB_SET_INSTANCE_TT(spritesheet_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, spritesheet_class, "initialize", spritesheet_initialize,     MRB_ARGS_REQ(3));
   mrb_define_method(mrb, spritesheet_class, "render",     spritesheet_render,         MRB_ARGS_ARG(4,1));
+
+  mrb_define_method(mrb, spritesheet_class, "shader=",    renderable_shader_set<Moon::Spritesheet>,    MRB_ARGS_REQ(1));
+
   mrb_define_method(mrb, spritesheet_class, "texture",    spritesheet_texture_get,    MRB_ARGS_NONE());
+
   mrb_define_method(mrb, spritesheet_class, "cell_w",     spritesheet_cell_width,     MRB_ARGS_NONE()); /* deprecated, use width instead */
   mrb_define_method(mrb, spritesheet_class, "cell_h",     spritesheet_cell_height,    MRB_ARGS_NONE()); /* deprecated, use height instead */
 

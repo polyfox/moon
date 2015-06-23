@@ -1,15 +1,14 @@
 #include <iostream>
 #include "moon/engine.hxx"
 #include "moon/shader.hxx"
-#include "moon/shader_loader.hxx"
 
 namespace Moon {
   glm::mat4 Shader::projection_matrix = glm::mat4(1.0f);
   glm::mat4 Shader::view_matrix = glm::mat4(1.0f);
+  bool Shader::is_legacy = false;
 
-  Shader::Shader(const char* vertexfile, const char* fragmentfile)
-  {
-    m_program = CreateProgram(vertexfile, fragmentfile);
+  Shader::Shader(const std::string vertexShader, const std::string fragmentShader) {
+    m_program = CreateProgram(vertexShader, fragmentShader);
   };
 
   Shader::~Shader() {
@@ -17,27 +16,9 @@ namespace Moon {
   };
 
   /**
-   * Store all the file's contents in memory, useful to pass shaders
-   * source code to OpenGL
-   */
-  std::string Shader::ReadFile(const char* filePath) {
-    std::ifstream fileStream;
-    fileStream.open(filePath, std::ios_base::in);
-
-    if (fileStream) {
-      std::string buffer(std::istreambuf_iterator<char>(fileStream), (std::istreambuf_iterator<char>()));
-      return buffer;
-    } else {
-      std::cerr << "Could not read shader file" << filePath << ". File does not exist." << std::endl;
-      return "";
-    };
-  };
-
-  /**
    * Display compilation errors from the OpenGL shader compiler
    */
-  void Shader::PrintLog(GLuint object)
-  {
+  void Shader::PrintLog(GLuint object) {
     GLint infoLogLength = 0;
     if (glIsShader(object))
       glGetShaderiv(object, GL_INFO_LOG_LENGTH, &infoLogLength);
@@ -62,15 +43,8 @@ namespace Moon {
   /**
    * Compile the shader from file 'filename', with error handling
    */
-  GLuint Shader::CreateShader(const char* filename, GLenum type)
-  {
-    std::string contents = ReadFile(filename);
+  GLuint Shader::CreateShader(const std::string contents, GLenum type) {
     const GLchar* source = contents.c_str();
-
-    if (source == NULL) {
-      std::cerr << "Error opening: " << filename << std::endl;
-      return 0;
-    }
     GLuint res = glCreateShader(type);
     glShaderSource(res, 1, &source, NULL);
 
@@ -78,7 +52,7 @@ namespace Moon {
     GLint status;
     glGetShaderiv(res, GL_COMPILE_STATUS, &status);
     if (status == GL_FALSE) {
-      fprintf(stderr, "Shader::CreateShader(%s, %i) error occured:", filename, type);
+      fprintf(stderr, "Shader::CreateShader(_, %i) error occured:", type);
       PrintLog(res);
       glDeleteShader(res);
       return 0;
@@ -87,28 +61,22 @@ namespace Moon {
     return res;
   }
 
-  GLuint Shader::CreateProgram(const char* vertexfile, const char* fragmentfile) {
+  GLuint Shader::CreateProgram(const std::string vertexContent, const std::string fragmentContent) {
     GLuint shader;
     GLuint program = glCreateProgram();
     assert(program);
 
-    if (vertexfile) {
-      shader = CreateShader(vertexfile, GL_VERTEX_SHADER);
-      if (!shader)
-        return 0;
-      glAttachShader(program, shader);
-      glDeleteShader(shader); // http://stackoverflow.com/questions/9113154/proper-way-to-delete-glsl-shader
-    }
+    shader = CreateShader(vertexContent, GL_VERTEX_SHADER);
+    if (!shader) return 0;
+    glAttachShader(program, shader);
+    glDeleteShader(shader); // http://stackoverflow.com/questions/9113154/proper-way-to-delete-glsl-shader
 
-    if (fragmentfile) {
-      shader = CreateShader(fragmentfile, GL_FRAGMENT_SHADER);
-      if(!shader)
-        return 0;
-      glAttachShader(program, shader);
-      glDeleteShader(shader);
-    }
+    shader = CreateShader(fragmentContent, GL_FRAGMENT_SHADER);
+    if(!shader) return 0;
+    glAttachShader(program, shader);
+    glDeleteShader(shader);
 
-    if (ShaderLoader::IsLegacy()) {
+    if (Shader::is_legacy) {
       glBindAttribLocation(program, 0, "vertex_pos");
       glBindAttribLocation(program, 1, "texcoord");
       glBindAttribLocation(program, 2, "color");

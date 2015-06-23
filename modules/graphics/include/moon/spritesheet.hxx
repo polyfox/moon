@@ -31,6 +31,7 @@ namespace Moon {
     GLfloat tile_width;
     GLfloat tile_height;
     int total_sprites;
+    Shader *shader;
 
     Spritesheet();
     ~Spritesheet();
@@ -39,7 +40,6 @@ namespace Moon {
   private:
     VertexBuffer m_vbo;
     Texture *m_texture;
-    Shader  *m_shader;
     bool GenerateBuffers(); // use only in constructor
   };
 };

@@ -2,7 +2,6 @@
 #include "moon/engine.hxx"
 #include "moon/gl.h"
 #include "moon/glm.h"
-#include "moon/shader_loader.hxx"
 #include "moon/font.hxx"
 #include "moon/string.hxx"
 #include "moon/vector2.hxx"
@@ -11,10 +10,9 @@
 namespace Moon {
   Vector4 Font::DefaultColor = Vector4(1, 1, 1, 1);
 
-  Font::Font(std::string filename, int font_size)
-  : m_buffer(GL_DYNAMIC_DRAW)
+  Font::Font(std::string filename, int font_size) : m_buffer(GL_DYNAMIC_DRAW)
   {
-    m_shader = ShaderLoader::GetTextShader();
+    shader = NULL;
     m_atlas = texture_atlas_new(512, 512, 1);
     m_font = texture_font_new_from_file(m_atlas, font_size, filename.c_str());
     texture_font_load_glyphs(m_font, L" !\"#$%&'()*+,-./0123456789:;<=>?"
@@ -41,6 +39,7 @@ namespace Moon {
 
   void Font::DrawText(const float x, const float y, const float z,
                       const Moon::String &text, const RenderState &render_ops) {
+    if (!shader) return;
     // outline
     if (render_ops.outline > 0) {
       m_font->outline_type = 2;
@@ -50,9 +49,9 @@ namespace Moon {
     m_font->outline_type = 0;
     m_font->outline_thickness = 0;
     AddText(text, render_ops.color);
-    m_shader->Use();
+    shader->Use();
     glBindTexture(GL_TEXTURE_2D, m_atlas->id);
-    glUniform1i(m_shader->GetUniform("tex"), /*GL_TEXTURE*/0);
+    glUniform1i(shader->GetUniform("tex"), /*GL_TEXTURE*/0);
     //model matrix
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down
       glm::translate(render_ops.transform, glm::vec3(x, y + m_font->ascender, z)), // move it to the correct position in the world
@@ -61,7 +60,7 @@ namespace Moon {
     );
     // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
     glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
-    glUniformMatrix4fv(m_shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+    glUniformMatrix4fv(shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
     m_buffer.Render(GL_TRIANGLES);
     m_buffer.Clear();
   }
