@@ -112,7 +112,7 @@ namespace Moon {
     glBindVertexArray(m_vao_id);
     glDrawElements(mode, m_indices.size(), GL_UNSIGNED_INT, NULL);
     glBindVertexArray(0);*/
-    RenderWithOffset(mode, 0)
+    RenderWithOffset(mode, 0);
   }
 
   void VertexBuffer::RenderWithOffset(GLenum mode, const int offset) {

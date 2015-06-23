@@ -3,7 +3,7 @@
 #include <mruby/data.h>
 #include <mruby/numeric.h>
 #include <mruby/string.h>
-#include "moon/mrb/vertex_buffer.hxx"
+#include "moon/mrb/vbo.hxx"
 #include "moon/vertex_buffer.hxx"
 #include "moon/api.h"
 
@@ -29,7 +29,7 @@ get_vbo(mrb_state *mrb, mrb_value self)
 static mrb_value
 vbo_initialize(mrb_state *mrb, mrb_value self)
 {
-  GLenum* usage;
+  GLenum usage;
   Moon::VertexBuffer *vbo;
   mrb_get_args(mrb, "i", &usage);
 
@@ -55,8 +55,8 @@ vbo_clear(mrb_state *mrb, mrb_value self)
 static mrb_value
 vbo_render(mrb_state *mrb, mrb_value self)
 {
-  GLenum* mode;
-  GLuint* offset;
+  GLenum mode;
+  GLuint offset;
   offset = 0;
   mrb_get_args(mrb, "i|i", &mode, &offset);
 
