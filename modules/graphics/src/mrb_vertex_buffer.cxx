@@ -28,11 +28,7 @@ vbo_initialize(mrb_state *mrb, mrb_value self)
   Moon::VertexBuffer *vbo;
   mrb_get_args(mrb, "i", &usage);
 
-  vbo = (Moon::VertexBuffer*)DATA_PTR(self);
-  if (vbo) {
-    vbo_free(mrb, (void*)vbo);
-    vbo = NULL;
-  }
+  vbo_free(mrb, DATA_PTR(self));
   DATA_PTR(self) = NULL;
 
   vbo = new Moon::VertexBuffer(usage);
