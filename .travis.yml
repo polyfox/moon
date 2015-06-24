@@ -36,7 +36,6 @@ install:
 
 before_script:
   - cmake --version
-  - premake4 --version
   - ruby --version
 
 script:
