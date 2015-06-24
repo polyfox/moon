@@ -17,6 +17,7 @@
 
 #define KEY_TEXTURE "@texture"
 #define KEY_SHADER "@shader"
+#define KEY_VBO "@vbo"
 
 #define TEXTURE_CLASS mrb_module_get_under(mrb, mrb_module_get(mrb, "Moon"), "Texture")
 ;
@@ -33,7 +34,7 @@ get_shader(mrb_state *mrb, mrb_value self)
   return static_cast<Moon::Shader*>(mrb_data_get_ptr(mrb, self, &shader_data_type));
 }
 
-static inline Moon::Shader*
+static inline Moon::VertexBuffer*
 get_vbo(mrb_state *mrb, mrb_value self)
 {
   return static_cast<Moon::VertexBuffer*>(mrb_data_get_ptr(mrb, self, &vbo_data_type));
