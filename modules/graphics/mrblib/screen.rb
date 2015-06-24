@@ -1,5 +1,8 @@
 module Moon
   class Screen
+    attr_reader :w
+    attr_reader :h
+    attr_reader :rect
     attr_reader :scale
     attr_reader :window
     attr_reader :clear_color
@@ -18,20 +21,12 @@ module Moon
     end
 
     private def init_shader
-      resize w, h
+      resize(*@window.window_size)
     end
 
-    def w
-      @window.window_size[0]
-    end
-
-    def h
-      @window.window_size[1]
-    end
-
-    # @return [Moon::Rect]
-    def rect
-      Rect.new 0, 0, w, h
+    def refresh_size
+      @w, @h = *@window.window_size
+      @rect = Rect.new(0, 0, @w, @h)
     end
 
     # @param [Vector4] color
@@ -48,6 +43,7 @@ module Moon
     # @param [Integer] h
     def resize(w, h)
       @window.window_size = [w, h]
+      refresh_size
       update_projection
     end
 
