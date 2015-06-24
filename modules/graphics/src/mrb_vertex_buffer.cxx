@@ -8,8 +8,6 @@
 #include "moon/vertex_buffer.hxx"
 #include "moon/api.h"
 
-static struct RClass *vbo_class;
-
 static void
 vbo_free(mrb_state *mrb, void *p)
 {
@@ -19,7 +17,7 @@ vbo_free(mrb_state *mrb, void *p)
   }
 }
 
-MOON_C_API const struct mrb_data_type vbo_data_type = { "VBO", vbo_free };
+MOON_C_API const struct mrb_data_type vbo_data_type = { "Moon::VertexBuffer", vbo_free };
 
 static mrb_value
 vbo_initialize(mrb_state *mrb, mrb_value self)
@@ -58,7 +56,7 @@ vbo_render(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_vbo_init(mrb_state *mrb, struct RClass* mod)
 {
-  vbo_class = mrb_define_class_under(mrb, mod, "VBO", mrb->object_class);
+  struct RClass *vbo_class = mrb_define_class_under(mrb, mod, "VertexBuffer", mrb->object_class);
   MRB_SET_INSTANCE_TT(vbo_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, vbo_class, "initialize", vbo_initialize, MRB_ARGS_REQ(1));
