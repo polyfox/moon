@@ -7,8 +7,10 @@
 #include <mruby/variable.h>
 #include "moon/shader.hxx"
 #include "moon/texture.hxx"
+#include "moon/vertex_buffer.hxx"
 #include "moon/mrb/shader.hxx"
 #include "moon/mrb/texture.hxx"
+#include "moon/mrb/vbo.hxx"
 
 #define IVget(_name_) mrb_iv_get(mrb, self, mrb_intern_lit(mrb, _name_))
 #define IVset(_name_, _value_) mrb_iv_set(mrb, self, mrb_intern_lit(mrb, _name_), _value_)
@@ -29,6 +31,12 @@ static inline Moon::Shader*
 get_shader(mrb_state *mrb, mrb_value self)
 {
   return static_cast<Moon::Shader*>(mrb_data_get_ptr(mrb, self, &shader_data_type));
+}
+
+static inline Moon::Shader*
+get_vbo(mrb_state *mrb, mrb_value self)
+{
+  return static_cast<Moon::VertexBuffer*>(mrb_data_get_ptr(mrb, self, &vbo_data_type));
 }
 
 #endif

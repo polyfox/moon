@@ -4,6 +4,7 @@
 #include <mruby/numeric.h>
 #include <mruby/string.h>
 #include "moon/mrb/vbo.hxx"
+#include "moon/mrb/helpers.hxx"
 #include "moon/vertex_buffer.hxx"
 #include "moon/api.h"
 
@@ -19,12 +20,6 @@ vbo_free(mrb_state *mrb, void *p)
 }
 
 MOON_C_API const struct mrb_data_type vbo_data_type = { "VBO", vbo_free };
-
-static inline Moon::VertexBuffer*
-get_vbo(mrb_state *mrb, mrb_value self)
-{
-  return (Moon::VertexBuffer*)mrb_data_get_ptr(mrb, self, &vbo_data_type);
-}
 
 static mrb_value
 vbo_initialize(mrb_state *mrb, mrb_value self)
