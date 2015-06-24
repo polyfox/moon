@@ -14,7 +14,6 @@
 #include "moon/mrb/texture.hxx"
 #include "moon/mrb/renderable.hxx"
 #include "moon/mrb_err.hxx"
-#include "moon/spritesheet.hxx"
 #include "moon/glm.h"
 
 static mrb_sym id_opacity;
@@ -24,6 +23,22 @@ static mrb_sym id_ox;
 static mrb_sym id_oy;
 static mrb_sym id_angle;
 static mrb_sym id_transform;
+
+static struct RenderState {
+  GLfloat opacity;
+  GLfloat angle;
+  Moon::Vector2 origin;
+  Moon::Vector4 color;
+  Moon::Vector4 tone;
+  Moon::Transform transform;
+
+  RenderState() :
+    opacity(1.0),
+    angle(0.0),
+    origin(0.0, 0.0),
+    color(1.0, 1.0, 1.0, 1.0),
+    tone(0.0, 0.0, 0.0, 1.0) {};
+};
 
 static inline Moon::Texture*
 get_valid_texture(mrb_state *mrb, mrb_value obj)
@@ -78,7 +93,7 @@ spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
 
 static void
 render(mrb_state *mrb, mrb_value self, const glm::vec3 position,
-    const int index, const Moon::Spritesheet::RenderState &render_ops) {
+    const int index, const RenderState &render_ops) {
   const int total_sprites = mrb_int(mrb, IVget("@cell_count"));
   if ((index < 0) || (index >= total_sprites)) {
     mrb_raisef(mrb, E_ARGUMENT_ERROR, "sprite index is out of range.");
@@ -127,7 +142,7 @@ spritesheet_render(mrb_state *mrb, mrb_value self)
   mrb_float x, y, z;
   mrb_value options = mrb_nil_value();
   mrb_get_args(mrb, "fffi|H", &x, &y, &z, &index, &options);
-  Moon::Spritesheet::RenderState render_op;
+  RenderState render_op;
   if (!mrb_nil_p(options)) {
     mrb_value keys = mrb_hash_keys(mrb, options);
     int len = mrb_ary_len(mrb, keys);
