@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'guard'
 gem 'rake'
-gem 'yard'
 gem 'redcarpet'
+gem 'yard'
