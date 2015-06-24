@@ -24,7 +24,7 @@ static mrb_sym id_oy;
 static mrb_sym id_angle;
 static mrb_sym id_transform;
 
-static struct RenderState {
+struct RenderState {
   GLfloat opacity;
   GLfloat angle;
   Moon::Vector2 origin;
