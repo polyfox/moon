@@ -13,12 +13,6 @@ matrix:
 before_install:
   - sudo apt-get update -qq
   - git submodule update --init --recursive --depth=1
-  # build stuff
-  - sudo apt-get install -qq -y liblua5.1-0
-  # build.premake4
-  - wget http://mirrors.kernel.org/ubuntu/pool/universe/p/premake4/premake4_4.3+repack1-2_amd64.deb
-  - sudo dpkg -i ./premake4_4.3+repack1-2_amd64.deb
-  - rm -v ./premake4_4.3+repack1-2_amd64.deb
   # build.cmake-data
   - wget http://ftp.us.debian.org/debian/pool/main/c/cmake/cmake-data_2.8.9-1_all.deb
   - sudo dpkg -i ./cmake-data_2.8.9-1_all.deb
