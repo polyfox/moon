@@ -39,8 +39,9 @@ end
 guard :moon_build do
   watch(/modules\/(.+)\/(?:src|include|tools)\/(.+\.(?:cpp|cxx|cc|c|hpp|hxx|hh|h))/)
   watch(/modules\/(.+)\/(?:mrblib|docstub)\/(.+\.rb)/)
-  watch(/test\/(.+\.rb)/)
   watch(/(.+\.rake)/)
-  watch(/Rakefile/)
+  watch(/CMakeLists.txt/)
   watch(/mrb_config.rb/)
+  watch(/Rakefile/)
+  watch(/test\/(.+\.rb)/)
 end
