@@ -44,6 +44,9 @@ task :build do
   end
 end
 
+task clean_build: ['mruby:hard_clean', 'remove_build_dir']
+task rebuild: [:clean_build, :build]
+
 task test: 'mruby:test'
 task docs: :yard
 task default: [:build, :docs]

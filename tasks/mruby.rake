@@ -9,11 +9,12 @@ namespace :mruby do
   end
 
   task :clean_gems do
-    FileUtils.rm_rf(File.join(dir, 'build/mrbgems'))
+    FileUtils::Verbose.rm_rf(File.join(dir, 'build/mrbgems'))
   end
 
   task :hard_clean do
-    FileUtils.rm_rf(File.join(dir, 'build'))
+    FileUtils::Verbose.rm_rf(File.join(dir, 'build'))
+  end
 
   task :test do
     Dir.chdir dir do
