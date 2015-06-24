@@ -22,6 +22,7 @@ module Moon
       @h = tile_height
       @cell_count = 0
       @shader = nil
+      @vbo = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
       generate_buffers
     end
   end
