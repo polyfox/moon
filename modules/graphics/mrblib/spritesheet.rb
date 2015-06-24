@@ -15,7 +15,7 @@ module Moon
       when Texture
         texture
       else
-        raise TypeError, "wrong class, expected Moon::Texture"
+        raise TypeError, "wrong argument type #{texture.class} (expected Moon::Texture or String)"
       end
 
       @w = tile_width
