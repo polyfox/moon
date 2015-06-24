@@ -27,7 +27,7 @@ void main(void) {
   const vec3 white = vec3(1.0, 1.0, 1.0);
 
   vec4 basecolor = texture(tex, f_texcoord);
-  if(basecolor.a == 0.0) discard; // alpha testing
+  if (basecolor.a == 0.0) discard; // alpha testing
 
   vec3 blendcolor = mix(basecolor.rgb, white, tone.rgb);
 

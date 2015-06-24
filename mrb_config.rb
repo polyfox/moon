@@ -105,6 +105,7 @@ MRuby::Build.new do |conf|
     l.libraries << 'freetype'
     l.libraries << 'SOIL'
     l.libraries << 'SIL'
+
     if Platform.darwin?
       l.flags_after_libraries << '-framework OpenGL'
       l.flags_after_libraries << '-framework OpenAL'
