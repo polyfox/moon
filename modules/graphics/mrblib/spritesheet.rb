@@ -17,11 +17,10 @@ module Moon
       else
         raise TypeError, "wrong argument type #{texture.class} (expected Moon::Texture or String)"
       end
-
       @w = tile_width
       @h = tile_height
       @cell_count = 0
-      @shader = nil
+      @shader = self.class.default_shader
       @vbo = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
       generate_buffers
     end
