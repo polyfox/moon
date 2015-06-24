@@ -49,6 +49,7 @@ MRuby::Build.new do |conf|
   bvd = File.expand_path('build/vendor', d)
   [conf.cc, conf.cxx].each do |c|
     c.flags << '-g3'
+    c.flags << '-O3'
 
     # Its a good idea to get all the warnings
     c.flags << ' -Wall'
