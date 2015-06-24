@@ -153,8 +153,8 @@ spritesheet_render(mrb_state *mrb, mrb_value self)
   mrb_int index;
   mrb_float x, y, z;
   mrb_value options = mrb_nil_value();
-  mrb_get_args(mrb, "fffi|H", &x, &y, &z, &index, &options);
   RenderState render_op;
+  mrb_get_args(mrb, "fffi|H", &x, &y, &z, &index, &options);
   if (!mrb_nil_p(options)) {
     mrb_value keys = mrb_hash_keys(mrb, options);
     int len = mrb_ary_len(mrb, keys);
@@ -205,8 +205,8 @@ mmrb_spritesheet_init(mrb_state *mrb, struct RClass* mod)
 {
   struct RClass *spritesheet_class = mrb_define_class_under(mrb, mod, "Spritesheet", mrb->object_class);
 
-  mrb_define_method(mrb, spritesheet_class, "render",     spritesheet_render,         MRB_ARGS_ARG(4,1));
-  mrb_define_method(mrb, spritesheet_class, "generate_buffers",    spritesheet_generate_buffers,    MRB_ARGS_NONE());
+  mrb_define_method(mrb, spritesheet_class, "render",           spritesheet_render,         MRB_ARGS_ARG(4,1));
+  mrb_define_method(mrb, spritesheet_class, "generate_buffers", spritesheet_generate_buffers,    MRB_ARGS_NONE());
 
   id_opacity   = mrb_intern_cstr(mrb, "opacity");
   id_tone      = mrb_intern_cstr(mrb, "tone");
