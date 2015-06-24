@@ -14,5 +14,10 @@ namespace :mruby do
 
   task :hard_clean do
     FileUtils.rm_rf(File.join(dir, 'build'))
+
+  task :test do
+    Dir.chdir dir do
+      sh %(./minirake MRUBY_CONFIG="#{rootdir}/mrb_config.rb" test)
+    end
   end
 end
