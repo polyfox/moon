@@ -2,6 +2,7 @@
 #include <mruby/array.h>
 #include <mruby/class.h>
 #include <mruby/data.h>
+#include <mruby/error.h>
 #include <mruby/hash.h>
 #include <mruby/numeric.h>
 #include <mruby/string.h>
@@ -24,35 +25,27 @@ static mrb_sym id_oy;
 static mrb_sym id_angle;
 static mrb_sym id_transform;
 
+static inline Moon::Texture*
+get_valid_texture(mrb_state *mrb, mrb_value obj)
+{
+  Moon::Texture *texture = get_texture(mrb, obj);
+  if (texture->GetID() != 0) {
+    mrb_raisef(mrb, E_ARGUMENT_ERROR, "invalid texture handle.");
+  }
+  return texture;
+}
+
 static mrb_value
 spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
 {
-  // TODO: check type of mrb_texture to be Moon::Texture
-  //mrb_raisef(mrb, E_TYPE_ERROR,
-  //                "wrong argument type %S (expected Moon::Texture)",
-  //                mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, obj)));
-  Moon::Texture *texture = get_texture(mrb, IVget(KEY_TEXTURE));
-
-  // TODO: generalize get_with_typecheck(from, to, expected_class)
-  // that fetches the ivar, checks class == expected_class (throws a
-  // E_TYPE_ERROR otherwise), then returns the val.
-
-  if (texture->GetID() != 0) {
-    mrb_raisef(mrb, E_TYPE_ERROR, "No texture to render with!");
-  }
-
-  // TODO: get C++ VBO object
+  Moon::Texture *texture = get_valid_texture(mrb, IVget(KEY_TEXTURE));
   Moon::VertexBuffer *vbo = get_vbo(mrb, IVget(KEY_VBO));
+  const GLuint tile_width = mrb_fixnum(IVget("@w"));
+  const GLuint tile_height = mrb_fixnum(IVget("@h"));
+  const GLfloat tiles_per_row = texture->GetWidth() / tile_width;
+  const GLfloat tiles_per_column = texture->GetHeight() / tile_height;
+  const GLuint total_sprites = tiles_per_row * tiles_per_column;
 
-  GLuint tile_width = mrb_fixnum(IVget("@w"));
-  GLuint tile_height = mrb_fixnum(IVget("@h"));
-
-  GLfloat tiles_per_row, tiles_per_column;
-
-  tiles_per_row = texture->GetWidth() / tile_width;
-  tiles_per_column = texture->GetHeight() / tile_height;
-
-  GLuint total_sprites = tiles_per_row * tiles_per_column;
   // set @cell_count
   IVset("@cell_count", mrb_fixnum_value(total_sprites));
 
@@ -69,38 +62,38 @@ spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
     float t0 = (oy) / tiles_per_column;
     float t1 = (oy + 1.0) / tiles_per_column;
 
-    Vertex vertices[4] = {
-      { {0.f, 0.f},                {s0, t0}, Vector4(0, 0, 0, 0) },
-      { {tile_width, 0.f},         {s1, t0}, Vector4(0, 0, 0, 0) },
-      { {tile_width, tile_height}, {s1, t1}, Vector4(0, 0, 0, 0) },
-      { {0.f, tile_height},        {s0, t1}, Vector4(0, 0, 0, 0) }
+    Moon::Vertex vertices[4] = {
+      { {0.f, 0.f},                {s0, t0}, Moon::Vector4(0, 0, 0, 0) },
+      { {tile_width, 0.f},         {s1, t0}, Moon::Vector4(0, 0, 0, 0) },
+      { {tile_width, tile_height}, {s1, t1}, Moon::Vector4(0, 0, 0, 0) },
+      { {0.f, tile_height},        {s0, t1}, Moon::Vector4(0, 0, 0, 0) }
     };
 
-    vbo.PushBackVertices(vertices, 4);
+    vbo->PushBackVertices(vertices, 4);
   }
-
   GLuint indices[4] = {0, 1, 3, 2};
-  vbo.PushBackIndices(indices, 4);
-
+  vbo->PushBackIndices(indices, 4);
   return self;
 }
 
-static void spritesheet_render(const float x, const float y, const float z,
-    const int index, const Spritesheet::RenderState &render_ops) {
+static void
+render(mrb_state *mrb, mrb_value self, const glm::vec3 position,
+    const int index, const Moon::Spritesheet::RenderState &render_ops) {
+  const int total_sprites = mrb_int(mrb, IVget("@cell_count"));
+  if ((index < 0) || (index >= total_sprites)) {
+    mrb_raisef(mrb, E_ARGUMENT_ERROR, "sprite index is out of range.");
+  }
 
-  // if you somehow managed to go out-of-bounds
-  // TODO: raise errors for these instead of silently failing
-  if ((index < 0) || (index >= (int)total_sprites)) return;
-  if (m_texture->GetID() == 0) return;
-  if (!shader) return;
-
-  int offset = index * 4;
+  const int offset = index * 4;
+  Moon::Texture *texture = get_valid_texture(mrb, IVget(KEY_TEXTURE));
+  Moon::Shader *shader = get_shader(mrb, IVget(KEY_SHADER));
+  Moon::VertexBuffer *vbo = get_vbo(mrb, IVget(KEY_VBO));
 
   shader->Use();
 
   //model matrix - move it to the correct position in the world
-  Vector2 origin = render_ops.origin;
-  glm::mat4 model_matrix = glm::translate(render_ops.transform, glm::vec3(x, y, z));
+  Moon::Vector2 origin = render_ops.origin;
+  glm::mat4 model_matrix = glm::translate(render_ops.transform, position);
   glm::mat4 rotation_matrix = glm::translate(glm::rotate(
         glm::translate(glm::mat4(1.0f), glm::vec3(origin.x, origin.y, 0)),
         glm::radians(render_ops.angle),
@@ -108,7 +101,7 @@ static void spritesheet_render(const float x, const float y, const float z,
         ), glm::vec3(-origin.x, -origin.y, 0));
 
   // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
-  glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix * rotation_matrix;
+  glm::mat4 mvp_matrix = Moon::Shader::projection_matrix * Moon::Shader::view_matrix * model_matrix * rotation_matrix;
   glUniformMatrix4fv(shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
 
   glUniform1f(shader->GetUniform("opacity"), render_ops.opacity);
@@ -117,11 +110,12 @@ static void spritesheet_render(const float x, const float y, const float z,
 
   //Set texture ID
   glActiveTexture(GL_TEXTURE0);
-  m_texture->Bind();
+  texture->Bind();
   glUniform1i(shader->GetUniform("tex"), /*GL_TEXTURE*/0);
 
-  m_vbo.RenderWithOffset(GL_TRIANGLE_STRIP, offset);
+  vbo->RenderWithOffset(GL_TRIANGLE_STRIP, offset);
 };
+
 /*
  * @overload Spritesheet#render(x: float, y: float, z: float, index: int)
  * @overload Spritesheet#render(x: float, y: float, z: float, index: int, options: Hash<Symbol, Object>)
@@ -133,7 +127,6 @@ spritesheet_render(mrb_state *mrb, mrb_value self)
   mrb_float x, y, z;
   mrb_value options = mrb_nil_value();
   mrb_get_args(mrb, "fffi|H", &x, &y, &z, &index, &options);
-  Moon::Spritesheet *spritesheet = get_spritesheet(mrb, self);
   Moon::Spritesheet::RenderState render_op;
   if (!mrb_nil_p(options)) {
     mrb_value keys = mrb_hash_keys(mrb, options);
@@ -176,7 +169,7 @@ spritesheet_render(mrb_state *mrb, mrb_value self)
       }
     }
   }
-  spritesheet_render(x, y, z, index, render_op);
+  render(mrb, self, glm::vec3(x, y, z), index, render_op);
   return mrb_nil_value();
 }
 
@@ -186,9 +179,7 @@ mmrb_spritesheet_init(mrb_state *mrb, struct RClass* mod)
   struct RClass *spritesheet_class = mrb_define_class_under(mrb, mod, "Spritesheet", mrb->object_class);
 
   mrb_define_method(mrb, spritesheet_class, "render",     spritesheet_render,         MRB_ARGS_ARG(4,1));
-
   mrb_define_method(mrb, spritesheet_class, "generate_buffers",    spritesheet_generate_buffers,    MRB_ARGS_NONE());
-  mrb_define_method(mrb, spritesheet_class, "shader=",    renderable_shader_set<Moon::Spritesheet>,    MRB_ARGS_REQ(1));
 
   id_opacity   = mrb_intern_cstr(mrb, "opacity");
   id_tone      = mrb_intern_cstr(mrb, "tone");

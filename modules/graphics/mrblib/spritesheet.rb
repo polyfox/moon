@@ -2,7 +2,11 @@ module Moon
   class Spritesheet
     include Shadable
 
-    attr_reader :texture, :tile_width, :tile_height, :total_sprites
+    attr_accessor :shader
+    attr_reader :cell_count
+    attr_reader :texture
+    attr_reader :w
+    attr_reader :h
 
     def initialize texture, tile_width, tile_height
       @texture = case texture
@@ -13,10 +17,11 @@ module Moon
       else
         raise TypeError, "wrong class, expected Moon::Texture"
       end
-      
-      @w  = tile_width
+
+      @w = tile_width
       @h = tile_height
       @cell_count = 0
+      @shader = nil
       generate_buffers
     end
   end
