@@ -27,52 +27,69 @@ static mrb_sym id_transform;
 static mrb_value
 spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
 {
-  // get C++ texture object
-  // get C++ VBO object
+  // TODO: check type of mrb_texture to be Moon::Texture
+  //mrb_raisef(mrb, E_TYPE_ERROR,
+  //                "wrong argument type %S (expected Moon::Texture)",
+  //                mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, obj)));
+  Moon::Texture *texture = get_texture(mrb, IVget(KEY_TEXTURE));
 
-  // If there is a texture loaded and clips to make vertex data from
-  if (m_texture->GetID() != 0) {
-    GLfloat tiles_per_row, tiles_per_column;
+  // TODO: generalize get_with_typecheck(from, to, expected_class)
+  // that fetches the ivar, checks class == expected_class (throws a
+  // E_TYPE_ERROR otherwise), then returns the val.
 
-    tiles_per_row = m_texture->GetWidth() / tile_width;
-    tiles_per_column = m_texture->GetHeight() / tile_height;
-
-    total_sprites = tiles_per_row * tiles_per_column;
-
-    for(int i = 0; i < total_sprites; ++i) {
-      GLfloat ox = (float)(i % (int)tiles_per_row);
-      GLfloat oy = (float)(i / (int)tiles_per_row);
-
-      float s0 = (ox) / tiles_per_row;
-      float s1 = (ox + 1.0) / tiles_per_row;
-      float t0 = (oy) / tiles_per_column;
-      float t1 = (oy + 1.0) / tiles_per_column;
-
-      Vertex vertices[4] = {
-        { {0.f, 0.f},                {s0, t0}, Vector4(0, 0, 0, 0) },
-        { {tile_width, 0.f},         {s1, t0}, Vector4(0, 0, 0, 0) },
-        { {tile_width, tile_height}, {s1, t1}, Vector4(0, 0, 0, 0) },
-        { {0.f, tile_height},        {s0, t1}, Vector4(0, 0, 0, 0) }
-      };
-
-      m_vbo.PushBackVertices(vertices, 4);
-    }
-
-    GLuint indices[4] = {0, 1, 3, 2};
-    m_vbo.PushBackIndices(indices, 4);
-
-  } else {   //Error
-    printf("No texture to render with!\n");
-    return false;
+  if (texture->GetID() != 0) {
+    mrb_raisef(mrb, E_TYPE_ERROR, "No texture to render with!");
   }
 
-  return true;
+  // TODO: get C++ VBO object
+  Moon::VertexBuffer *vbo = get_vbo(mrb, IVget(KEY_VBO));
+
+  GLuint tile_width = mrb_fixnum(IVget("@w"));
+  GLuint tile_height = mrb_fixnum(IVget("@h"));
+
+  GLfloat tiles_per_row, tiles_per_column;
+
+  tiles_per_row = texture->GetWidth() / tile_width;
+  tiles_per_column = texture->GetHeight() / tile_height;
+
+  GLuint total_sprites = tiles_per_row * tiles_per_column;
+  // set @cell_count
+  IVset("@cell_count", mrb_fixnum_value(total_sprites));
+
+  // TODO: clear out VBO if we're calling generate_buffers again
+  // note: this is only called once in initialize, so it never needs clearing
+  // right now
+
+  for(int i = 0; i < total_sprites; ++i) {
+    GLfloat ox = (float)(i % (int)tiles_per_row);
+    GLfloat oy = (float)(i / (int)tiles_per_row);
+
+    float s0 = (ox) / tiles_per_row;
+    float s1 = (ox + 1.0) / tiles_per_row;
+    float t0 = (oy) / tiles_per_column;
+    float t1 = (oy + 1.0) / tiles_per_column;
+
+    Vertex vertices[4] = {
+      { {0.f, 0.f},                {s0, t0}, Vector4(0, 0, 0, 0) },
+      { {tile_width, 0.f},         {s1, t0}, Vector4(0, 0, 0, 0) },
+      { {tile_width, tile_height}, {s1, t1}, Vector4(0, 0, 0, 0) },
+      { {0.f, tile_height},        {s0, t1}, Vector4(0, 0, 0, 0) }
+    };
+
+    vbo.PushBackVertices(vertices, 4);
+  }
+
+  GLuint indices[4] = {0, 1, 3, 2};
+  vbo.PushBackIndices(indices, 4);
+
+  return self;
 }
 
 static void spritesheet_render(const float x, const float y, const float z,
     const int index, const Spritesheet::RenderState &render_ops) {
 
   // if you somehow managed to go out-of-bounds
+  // TODO: raise errors for these instead of silently failing
   if ((index < 0) || (index >= (int)total_sprites)) return;
   if (m_texture->GetID() == 0) return;
   if (!shader) return;
