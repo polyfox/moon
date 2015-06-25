@@ -19,22 +19,6 @@
 #include "moon/glm.h"
 #include "moon/mrb/renderable.hxx"
 
-static void
-sprite_free(mrb_state *mrb, void *p)
-{
-  Moon::Sprite *sprite = static_cast<Moon::Sprite*>(p);
-  if (sprite) {
-    delete(sprite);
-  }
-}
-
-MOON_C_API const struct mrb_data_type sprite_data_type = { "Moon::Sprite", sprite_free };
-
-static inline Moon::Sprite*
-get_sprite(mrb_state *mrb, mrb_value self)
-{
-  return static_cast<Moon::Sprite*>(mrb_data_get_ptr(mrb, self, &sprite_data_type));
-}
 static mrb_value
 sprite_generate_buffers(mrb_state *mrb, mrb_value self)
 {
@@ -129,8 +113,6 @@ MOON_C_API void
 mmrb_sprite_init(mrb_state *mrb, struct RClass* mod)
 {
   struct RClass *sprite_class = mrb_define_class_under(mrb, mod, "Sprite", mrb->object_class);
-  MRB_SET_INSTANCE_TT(sprite_class, MRB_TT_DATA);
-
-  mrb_define_method(mrb, sprite_class, "generate_buffers", sprite_generate_buffers,    MRB_ARGS_NONE());
-  mrb_define_method(mrb, sprite_class, "render",           sprite_render,        MRB_ARGS_REQ(3));
+  mrb_define_method(mrb, sprite_class, "generate_buffers", sprite_generate_buffers, MRB_ARGS_NONE());
+  mrb_define_method(mrb, sprite_class, "render",           sprite_render,           MRB_ARGS_REQ(3));
 }
