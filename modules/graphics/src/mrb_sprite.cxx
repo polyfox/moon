@@ -67,13 +67,16 @@ sprite_generate_buffers(mrb_state *mrb, mrb_value self)
 static mrb_value
 sprite_render(mrb_state *mrb, mrb_value self)
 {
+  const GLfloat opacity = mrb_to_flo(mrb, IVget("@opacity"));
+  const GLfloat angle = mrb_to_flo(mrb, IVget("@angle"));
+  Moon::Texture *texture = get_valid_texture(mrb, IVget(KEY_TEXTURE));
+  Moon::Shader *shader = get_shader(mrb, IVget(KEY_SHADER));
+  Moon::VertexBuffer *vbo = get_vbo(mrb, IVget(KEY_VBO));
+  Moon::Vector2 origin = *get_vector2(mrb, IVget("@origin"));
+  Moon::Vector4 color = *get_vector4(mrb, IVget("@color"));
+  Moon::Vector4 tone = *get_vector4(mrb, IVget("@tone"));
   mrb_float x, y, z;
   mrb_get_args(mrb, "fff", &x, &y, &z);
-
-  // TODO: extract texture, shader, origin, angle, color, tone and opacity
-
-  if (!texture) return;
-  if (!shader) return;
 
   shader->Use();
   // rotation matrix - rotate the model around specified origin
@@ -96,16 +99,7 @@ sprite_render(mrb_state *mrb, mrb_value self)
   glActiveTexture(GL_TEXTURE0);
   texture->Bind();
   glUniform1i(shader->GetUniform("tex"), /*GL_TEXTURE*/0);
-  vbo.Render(GL_TRIANGLE_STRIP);
-  return self;
-}
-
-static mrb_value
-sprite_opacity_set(mrb_state *mrb, mrb_value self)
-{
-  mrb_float f;
-  mrb_get_args(mrb, "f", &f);
-  get_sprite(mrb, self)->opacity = glm::clamp(f, 0.0, 1.0);
+  vbo->Render(GL_TRIANGLE_STRIP);
   return self;
 }
 
