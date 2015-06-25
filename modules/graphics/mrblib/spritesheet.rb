@@ -5,8 +5,7 @@ module Moon
     attr_accessor :shader
     attr_reader :cell_count
     attr_reader :texture
-    attr_reader :w
-    attr_reader :h
+    attr_reader :w, :h
 
     def initialize texture, tile_width, tile_height
       @texture = case texture
@@ -21,7 +20,7 @@ module Moon
       @h = tile_height
       @cell_count = 0
       @shader = self.class.default_shader
-      @vbo = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
+      @vbo = VertexBuffer.new(VertexBuffer::STATIC_DRAW)
       generate_buffers
     end
   end
