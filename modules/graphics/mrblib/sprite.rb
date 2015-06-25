@@ -1,9 +1,14 @@
 module Moon
   class Sprite
+    extend TypedAttributes
     include Shadable
-    
-    # TODO: validate types on assignment here, create a mixin
-    attr_accessor :opacity, :angle, :origin, :color, :tone, :shader
+
+    typed_attr_accessor :opacity, Float
+    typed_attr_accessor :angle,   Float
+    typed_attr_accessor :origin,  Vector2
+    typed_attr_accessor :color,   Vector4
+    typed_attr_accessor :tone,    Vector4
+    typed_attr_accessor :shader,  Shader
     # call generate_buffers after assigning these
     attr_reader :clip_rect, :texture
 
@@ -20,14 +25,14 @@ module Moon
       @opacity = 1.0
       @angle = 0.0
       @origin = Vector2.new(0, 0)
-      @color = Vector4(1.0, 1.0, 1.0, 1.0)
-      @tone = Vector4(1.0, 1.0, 1.0, 1.0)
+      @color = Vector4.new(1.0, 1.0, 1.0, 1.0)
+      @tone = Vector4.new(0.0, 0.0, 0.0, 1.0)
 
       @shader = self.class.default_shader
       @vbo = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
       generate_buffers
     end
-    
+
     def texture= texture
       if !texture.is_a? Moon::Texture
         raise TypeError, "wrong argument type #{texture.class} (expected Moon::Texture)"
@@ -36,8 +41,9 @@ module Moon
       generate_buffers
     end
 
-    def clip_rect rect
-      # TODO: validate
+    def clip_rect= rect
+      unless rect == nil || rect.is_a?(Rect)
+      end
       @clip_rect = rect
       generate_buffers
     end
