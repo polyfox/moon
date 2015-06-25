@@ -40,6 +40,12 @@ get_rect(mrb_state *mrb, mrb_value self)
   return static_cast<Moon::IntRect*>(mrb_data_get_ptr(mrb, self, &rect_data_type));
 }
 
+static inline Moon::Vector2*
+get_vector2(mrb_state *mrb, mrb_value self)
+{
+  return static_cast<Moon::Vector2*>(mrb_data_get_ptr(mrb, self, &vector2_data_type));
+}
+
 static inline Moon::Vector4*
 get_vector4(mrb_state *mrb, mrb_value self)
 {
