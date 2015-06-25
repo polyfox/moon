@@ -72,9 +72,9 @@ sprite_render(mrb_state *mrb, mrb_value self)
   Moon::Texture *texture = get_valid_texture(mrb, IVget(KEY_TEXTURE));
   Moon::Shader *shader = get_shader(mrb, IVget(KEY_SHADER));
   Moon::VertexBuffer *vbo = get_vbo(mrb, IVget(KEY_VBO));
-  Moon::Vector2 origin = *get_vector2(mrb, IVget("@origin"));
-  Moon::Vector4 color = *get_vector4(mrb, IVget("@color"));
-  Moon::Vector4 tone = *get_vector4(mrb, IVget("@tone"));
+  Moon::Vector2 origin(*get_vector2(mrb, IVget("@origin")));
+  Moon::Vector4 color(*get_vector4(mrb, IVget("@color")));
+  Moon::Vector4 tone(*get_vector4(mrb, IVget("@tone")));
   mrb_float x, y, z;
   mrb_get_args(mrb, "fff", &x, &y, &z);
 
