@@ -10,8 +10,10 @@
 #include "moon/mrb/sprite.hxx"
 #include "moon/mrb/texture.hxx"
 #include "moon/mrb/rect.hxx"
+#include "moon/mrb/vector2.hxx"
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"
+#include "moon/mrb/helpers.hxx"
 #include "moon/mrb_err.hxx"
 #include "moon/sprite.hxx"
 #include "moon/glm.h"
@@ -33,25 +35,6 @@ get_sprite(mrb_state *mrb, mrb_value self)
 {
   return static_cast<Moon::Sprite*>(mrb_data_get_ptr(mrb, self, &sprite_data_type));
 }
-
-static inline Moon::IntRect*
-get_rect(mrb_state *mrb, mrb_value self)
-{
-  return static_cast<Moon::IntRect*>(mrb_data_get_ptr(mrb, self, &rect_data_type));
-}
-
-static inline Moon::Vector2*
-get_vector2(mrb_state *mrb, mrb_value self)
-{
-  return static_cast<Moon::Vector2*>(mrb_data_get_ptr(mrb, self, &vector2_data_type));
-}
-
-static inline Moon::Vector4*
-get_vector4(mrb_state *mrb, mrb_value self)
-{
-  return static_cast<Moon::Vector4*>(mrb_data_get_ptr(mrb, self, &vector4_data_type));
-}
-
 static mrb_value
 sprite_generate_buffers(mrb_state *mrb, mrb_value self)
 {

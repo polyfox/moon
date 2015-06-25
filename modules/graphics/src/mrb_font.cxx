@@ -37,18 +37,6 @@ get_font(mrb_state *mrb, mrb_value self)
   return (Moon::Font*)mrb_data_get_ptr(mrb, self, &font_data_type);
 }
 
-static inline Moon::Vector4*
-get_vector4(mrb_state *mrb, mrb_value self)
-{
-  return (Moon::Vector4*)mrb_data_get_ptr(mrb, self, &vector4_data_type);
-}
-
-static inline Moon::Transform*
-get_transform(mrb_state *mrb, mrb_value self)
-{
-  return (Moon::Transform*)mrb_data_get_ptr(mrb, self, &transform_data_type);
-}
-
 /*
  * Font#initialize(filename, size)
  */
