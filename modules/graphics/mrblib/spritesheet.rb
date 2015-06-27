@@ -1,8 +1,9 @@
 module Moon
   class Spritesheet
+    extend TypedAttributes
     include Shadable
 
-    attr_accessor :shader
+    attribute :shader,  Shader
     attr_reader :cell_count
     attr_reader :texture
     attr_reader :w, :h

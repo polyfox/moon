@@ -3,9 +3,9 @@ module Moon
   # @example
   #   class MyClass
   #     # color only accepts Vector4s
-  #     typed_attr_accessor :color, Vector4
+  #     attribute :color, Vector4
   #     # l is able to accept either an A or a B
-  #     typed_attr_accessor :l, A, B
+  #     attribute :l, A, B
   #   end
   module TypedAttributes
     # Defines a type checked attribute.
@@ -13,7 +13,7 @@ module Moon
     # @param [Symbol] name
     # @param [Array<Class>] klasses
     # @return [Symbol] attribute name
-    def typed_attr_accessor(name, *klasses)
+    def attribute(name, *klasses)
       attr_reader name
       varname = "@#{name}"
       define_method((name.to_s + "=").to_sym) do |value|

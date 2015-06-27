@@ -3,12 +3,12 @@ module Moon
     extend TypedAttributes
     include Shadable
 
-    typed_attr_accessor :opacity, Float
-    typed_attr_accessor :angle,   Float
-    typed_attr_accessor :origin,  Vector2
-    typed_attr_accessor :color,   Vector4
-    typed_attr_accessor :tone,    Vector4
-    typed_attr_accessor :shader,  Shader
+    attribute :opacity, Float
+    attribute :angle,   Float
+    attribute :origin,  Vector2
+    attribute :color,   Vector4
+    attribute :tone,    Vector4
+    attribute :shader,  Shader
     # call generate_buffers after assigning these
     attr_reader :clip_rect, :texture
 
