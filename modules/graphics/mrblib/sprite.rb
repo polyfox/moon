@@ -10,7 +10,8 @@ module Moon
     attribute :tone,    Vector4
     attribute :shader,  Shader
     # call generate_buffers after assigning these
-    attr_reader :clip_rect, :texture
+    attribute :clip_rect, Rect, nil
+    attribute :texture, Texture
 
     def initialize texture
       @texture = case texture
@@ -34,17 +35,12 @@ module Moon
     end
 
     def texture= texture
-      if !texture.is_a? Moon::Texture
-        raise TypeError, "wrong argument type #{texture.class} (expected Moon::Texture)"
-      end
-      @texture = texture
+      super
       generate_buffers
     end
 
     def clip_rect= rect
-      unless rect == nil || rect.is_a?(Rect)
-      end
-      @clip_rect = rect
+      super
       generate_buffers
     end
 
