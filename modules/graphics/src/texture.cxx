@@ -5,7 +5,6 @@
 
 namespace Moon {
   Texture::Texture(std::string filename)
-  : Cache(filename)
   {
     unsigned char* pixels;
     int channels;
