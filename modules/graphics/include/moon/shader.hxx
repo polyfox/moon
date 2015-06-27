@@ -8,7 +8,6 @@
 #include "moon/intern.h"
 #include "moon/gl.h"
 #include "moon/glm.h"
-#include "moon/cache.hxx"
 
 namespace Moon {
   class Shader {
