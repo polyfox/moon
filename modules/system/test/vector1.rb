@@ -12,7 +12,7 @@ end
 assert 'Moon::Vector1#-@' do
   v1 = Moon::Vector1.new(1)
   v2 = -v1
-  assert_equal -1, v2.x
+  assert_equal(-1, v2.x)
 end
 
 assert 'Moon::Vector1#to_i' do
