@@ -5,12 +5,22 @@
 #include <mruby/data.h>
 #include <mruby/string.h>
 #include <mruby/variable.h>
+#include "moon/rect.hxx"
 #include "moon/shader.hxx"
 #include "moon/texture.hxx"
+#include "moon/transform.hxx"
+#include "moon/vector2.hxx"
+#include "moon/vector3.hxx"
+#include "moon/vector4.hxx"
 #include "moon/vertex_buffer.hxx"
+#include "moon/mrb/rect.hxx"
 #include "moon/mrb/shader.hxx"
 #include "moon/mrb/texture.hxx"
+#include "moon/mrb/transform.hxx"
 #include "moon/mrb/vbo.hxx"
+#include "moon/mrb/vector2.hxx"
+#include "moon/mrb/vector3.hxx"
+#include "moon/mrb/vector4.hxx"
 
 #define IVget(_name_) mrb_iv_get(mrb, self, mrb_intern_lit(mrb, _name_))
 #define IVset(_name_, _value_) mrb_iv_set(mrb, self, mrb_intern_lit(mrb, _name_), _value_)
@@ -21,6 +31,36 @@
 
 #define TEXTURE_CLASS mrb_module_get_under(mrb, mrb_module_get(mrb, "Moon"), "Texture")
 ;
+
+static inline Moon::IntRect*
+get_rect(mrb_state *mrb, mrb_value self)
+{
+  return static_cast<Moon::IntRect*>(mrb_data_get_ptr(mrb, self, &rect_data_type));
+}
+
+static inline Moon::Vector2*
+get_vector2(mrb_state *mrb, mrb_value self)
+{
+  return static_cast<Moon::Vector2*>(mrb_data_get_ptr(mrb, self, &vector2_data_type));
+}
+
+static inline Moon::Vector3*
+get_vector3(mrb_state *mrb, mrb_value self)
+{
+  return static_cast<Moon::Vector3*>(mrb_data_get_ptr(mrb, self, &vector3_data_type));
+}
+
+static inline Moon::Vector4*
+get_vector4(mrb_state *mrb, mrb_value self)
+{
+  return static_cast<Moon::Vector4*>(mrb_data_get_ptr(mrb, self, &vector4_data_type));
+}
+
+static inline Moon::Transform*
+get_transform(mrb_state *mrb, mrb_value self)
+{
+  return static_cast<Moon::Transform*>(mrb_data_get_ptr(mrb, self, &transform_data_type));
+}
 
 static inline Moon::Texture*
 get_texture(mrb_state *mrb, mrb_value self)
@@ -38,6 +78,16 @@ static inline Moon::VertexBuffer*
 get_vbo(mrb_state *mrb, mrb_value self)
 {
   return static_cast<Moon::VertexBuffer*>(mrb_data_get_ptr(mrb, self, &vbo_data_type));
+}
+
+static inline Moon::Texture*
+get_valid_texture(mrb_state *mrb, mrb_value obj)
+{
+  Moon::Texture *texture = get_texture(mrb, obj);
+  if (!texture->GetID()) {
+    mrb_raisef(mrb, E_ARGUMENT_ERROR, "invalid texture handle.");
+  }
+  return texture;
 }
 
 #endif

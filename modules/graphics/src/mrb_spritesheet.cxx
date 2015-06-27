@@ -40,16 +40,6 @@ struct RenderState {
     tone(0.0, 0.0, 0.0, 1.0) {};
 };
 
-static inline Moon::Texture*
-get_valid_texture(mrb_state *mrb, mrb_value obj)
-{
-  Moon::Texture *texture = get_texture(mrb, obj);
-  if (!texture->GetID()) {
-    mrb_raisef(mrb, E_ARGUMENT_ERROR, "invalid texture handle.");
-  }
-  return texture;
-}
-
 static mrb_value
 spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
 {
