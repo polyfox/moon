@@ -15,7 +15,6 @@
 #include "moon/mrb/vector4.hxx"
 #include "moon/mrb/helpers.hxx"
 #include "moon/mrb_err.hxx"
-#include "moon/sprite.hxx"
 #include "moon/glm.h"
 #include "moon/mrb/renderable.hxx"
 
