@@ -1,10 +1,23 @@
-assert 'Moon::Vector4#initialize' do
-  v1 = Moon::Vector4.new
+assert 'Moon::Vector4#initialize with no parameters' do
+  v = Moon::Vector4.new
+  assert_equal [0, 0, 0, 0], v.to_a
 end
 
-assert 'Moon::Vector4#to_a' do
-  v1 = Moon::Vector4.new(1, 2, 3, 4)
-  assert_equal [1, 2, 3, 4], v1.to_a
+assert 'Moon::Vector4#initialize with 4 parameters' do
+  v = Moon::Vector4.new(1, 2, 3, 4)
+  assert_equal [1, 2, 3, 4], v.to_a
+end
+
+assert 'Moon::Vector4 attribute aliases' do
+  v = Moon::Vector4.new(1, 2, 3, 4)
+  assert_equal 1, v.x
+  assert_equal 2, v.y
+  assert_equal 3, v.z
+  assert_equal 4, v.w
+  assert_equal v.x, v.r
+  assert_equal v.y, v.g
+  assert_equal v.z, v.b
+  assert_equal v.w, v.a
 end
 
 assert 'Moon::Vector4#[]' do
