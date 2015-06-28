@@ -34,13 +34,15 @@ module Moon
       generate_buffers
     end
 
+    alias :set_texture :texture=
     def texture= texture
-      super
+      set_texture texture
       generate_buffers
     end
 
+    alias :set_clip_rect :clip_rect=
     def clip_rect= rect
-      super
+      set_clip_rect rect
       generate_buffers
     end
 
