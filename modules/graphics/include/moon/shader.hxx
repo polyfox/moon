@@ -8,6 +8,7 @@
 #include "moon/intern.h"
 #include "moon/gl.h"
 #include "moon/glm.h"
+#include "moon/vector4.hxx"
 
 namespace Moon {
   class Shader {
@@ -23,6 +24,11 @@ namespace Moon {
     GLuint GetProgram();
     GLint  GetAttribute(const char *name);
     GLint  GetUniform(const char *name);
+
+    void SetUniform(const char *name, GLint v1);
+    void SetUniform(const char *name, GLfloat v1);
+    void SetUniform(const char *name, Moon::Vector4 v1);
+    void SetUniform(const char *name, glm::mat4 v1);
   private:
     GLuint  m_program;
     AttributeMap m_attributeList;

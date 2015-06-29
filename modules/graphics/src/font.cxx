@@ -49,9 +49,8 @@ namespace Moon {
     m_font->outline_type = 0;
     m_font->outline_thickness = 0;
     AddText(text, render_ops.color);
+
     shader->Use();
-    glBindTexture(GL_TEXTURE_2D, m_atlas->id);
-    glUniform1i(shader->GetUniform("tex"), /*GL_TEXTURE*/0);
     //model matrix
     glm::mat4 model_matrix = glm::rotate( // rotate it for 180 around the x-axis, because the text was upside down
       glm::translate(render_ops.transform, glm::vec3(x, y + m_font->ascender, z)), // move it to the correct position in the world
@@ -60,7 +59,11 @@ namespace Moon {
     );
     // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
     glm::mat4 mvp_matrix = Shader::projection_matrix * Shader::view_matrix * model_matrix;
-    glUniformMatrix4fv(shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+    shader->SetUniform("mvp_matrix", mvp_matrix);
+
+    // Set texture ID
+    glBindTexture(GL_TEXTURE_2D, m_atlas->id);
+    shader->SetUniform("tex", /*GL_TEXTURE*/0);
     m_buffer.Render(GL_TRIANGLES);
     m_buffer.Clear();
   }

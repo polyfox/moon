@@ -119,16 +119,16 @@ render(mrb_state *mrb, mrb_value self, const glm::vec3 position,
 
   // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
   glm::mat4 mvp_matrix = Moon::Shader::projection_matrix * Moon::Shader::view_matrix * model_matrix * rotation_matrix;
-  glUniformMatrix4fv(shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
+  shader->SetUniform("mvp_matrix", mvp_matrix);
 
-  glUniform1f(shader->GetUniform("opacity"), render_ops.opacity);
-  glUniform4fv(shader->GetUniform("tone"), 1, glm::value_ptr(render_ops.tone));
-  glUniform4fv(shader->GetUniform("color"), 1, glm::value_ptr(render_ops.color));
+  shader->SetUniform("opacity", render_ops.opacity);
+  shader->SetUniform("color", render_ops.color);
+  shader->SetUniform("tone", render_ops.tone);
 
   //Set texture ID
   glActiveTexture(GL_TEXTURE0);
   texture->Bind();
-  glUniform1i(shader->GetUniform("tex"), /*GL_TEXTURE*/0);
+  shader->SetUniform("tex", /*GL_TEXTURE*/0);
 
   vbo->RenderWithOffset(GL_TRIANGLE_STRIP, offset);
 };

@@ -86,18 +86,21 @@ sprite_render(mrb_state *mrb, mrb_value self)
         glm::radians(angle),
         glm::vec3(0, 0, 1)
         ), glm::vec3(-origin.x, -origin.y, 0));
+
   // model matrix - move it to the correct position in the world
   glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
   // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
   glm::mat4 mvp_matrix = Moon::Shader::projection_matrix * Moon::Shader::view_matrix * model_matrix * rotation_matrix;
-  glUniformMatrix4fv(shader->GetUniform("mvp_matrix"), 1, GL_FALSE, glm::value_ptr(mvp_matrix));
-  glUniform1f(shader->GetUniform("opacity"), opacity);
-  glUniform4fv(shader->GetUniform("color"), 1, glm::value_ptr(color));
-  glUniform4fv(shader->GetUniform("tone"), 1, glm::value_ptr(tone));
+  shader->SetUniform("mvp_matrix", mvp_matrix);
+
+  shader->SetUniform("opacity", opacity);
+  shader->SetUniform("color",  color);
+  shader->SetUniform("tone", tone);
+
   //Set texture ID
   glActiveTexture(GL_TEXTURE0);
   texture->Bind();
-  glUniform1i(shader->GetUniform("tex"), /*GL_TEXTURE*/0);
+  shader->SetUniform("tex", /*GL_TEXTURE*/0);
   vbo->Render(GL_TRIANGLE_STRIP);
   return self;
 }

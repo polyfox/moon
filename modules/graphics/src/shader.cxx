@@ -137,6 +137,22 @@ namespace Moon {
     }
   }
 
+  void Shader::SetUniform(const char *name, GLint v1) {
+    glUniform1i(GetUniform(name), v1);
+  }
+
+  void Shader::SetUniform(const char *name, GLfloat v1) {
+    glUniform1f(GetUniform(name), v1);
+  }
+
+  void Shader::SetUniform(const char *name, Moon::Vector4 v1) {
+    glUniform4fv(GetUniform(name), 1, glm::value_ptr(v1));
+  }
+
+  void Shader::SetUniform(const char *name, glm::mat4 v1) {
+    glUniformMatrix4fv(GetUniform(name), 1, GL_FALSE, glm::value_ptr(v1));
+  }
+
   GLuint Shader::GetProgram() {
     return m_program;
   }
