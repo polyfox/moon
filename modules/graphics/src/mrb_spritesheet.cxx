@@ -125,7 +125,7 @@ render(mrb_state *mrb, mrb_value self, const glm::vec3 position,
   texture->Bind();
   shader->SetUniform("tex", /*GL_TEXTURE*/0);
 
-  vbo->RenderWithOffset(GL_TRIANGLE_STRIP, offset);
+  vbo->Render(GL_TRIANGLE_STRIP, offset);
 };
 
 /*

@@ -14,7 +14,7 @@ namespace Moon {
     VertexBuffer(GLenum usage); // STATIC_DRAW, DYNAMIC_DRAW...
     ~VertexBuffer();
     void Render(GLenum mode);
-    void RenderWithOffset(GLenum mode, const int offset); // adds offset to the indices used (draws vertex at vbo[indice + offset])
+    void Render(GLenum mode, const int offset); // adds offset to the indices used (draws vertex at vbo[indice + offset])
     void PushBack(Vertex v);
     void PushBackVertices(Vertex *v, int vertex_count);
     void PushBackIndices(GLuint i[], int index_count);
