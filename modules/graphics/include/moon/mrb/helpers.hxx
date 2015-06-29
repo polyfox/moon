@@ -90,4 +90,15 @@ get_valid_texture(mrb_state *mrb, mrb_value obj)
   return texture;
 }
 
+static inline glm::mat4 moon_rotate(float angle, glm::vec2 origin) {
+  // rotation matrix - rotate the model around specified origin
+  // really ugly, we translate the rotation origin to 0,0, rotate,
+  // then translate back to original position
+  return  glm::translate(glm::rotate(
+        glm::translate(glm::mat4(1.0f), glm::vec3(origin.x, origin.y, 0)),
+        glm::radians(angle),
+        glm::vec3(0, 0, 1)
+        ), glm::vec3(-origin.x, -origin.y, 0));
+}
+
 #endif

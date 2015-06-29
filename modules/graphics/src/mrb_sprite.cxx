@@ -78,15 +78,8 @@ sprite_render(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "fff", &x, &y, &z);
 
   shader->Use();
-  // rotation matrix - rotate the model around specified origin
-  // really ugly, we translate the rotation origin to 0,0, rotate,
-  // then translate back to original position
-  glm::mat4 rotation_matrix = glm::translate(glm::rotate(
-        glm::translate(glm::mat4(1.0f), glm::vec3(origin.x, origin.y, 0)),
-        glm::radians(angle),
-        glm::vec3(0, 0, 1)
-        ), glm::vec3(-origin.x, -origin.y, 0));
 
+  glm::mat4 rotation_matrix = moon_rotate(angle, origin);
   // model matrix - move it to the correct position in the world
   glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
   // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
