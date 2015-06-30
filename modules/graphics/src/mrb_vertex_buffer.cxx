@@ -49,7 +49,7 @@ vbo_render(mrb_state *mrb, mrb_value self)
   offset = 0;
   mrb_get_args(mrb, "i|i", &mode, &offset);
 
-  get_vbo(mrb, self)->RenderWithOffset(mode, offset);
+  get_vbo(mrb, self)->Render(mode, offset);
   return self;
 }
 
