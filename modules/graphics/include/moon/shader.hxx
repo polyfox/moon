@@ -25,10 +25,10 @@ namespace Moon {
     GLint  GetAttribute(const char *name);
     GLint  GetUniform(const char *name);
 
-    void SetUniform(const char *name, GLint v1);
-    void SetUniform(const char *name, GLfloat v1);
-    void SetUniform(const char *name, Moon::Vector4 v1);
-    void SetUniform(const char *name, glm::mat4 v1);
+    void SetUniform(const char *name, const GLint v1);
+    void SetUniform(const char *name, const GLfloat v1);
+    void SetUniform(const char *name, const Moon::Vector4 &vec);
+    void SetUniform(const char *name, const glm::mat4 &mat);
   private:
     GLuint  m_program;
     AttributeMap m_attributeList;
