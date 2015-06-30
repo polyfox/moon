@@ -115,7 +115,7 @@ namespace Moon {
     return uniform;
   }
 
-  GLint Shader::GetAttribute(const char *name) {
+  GLint Shader::Attribute(const char *name) {
     assert(m_program);
     assert(name);
     AttributeMap::iterator iter = m_attributeList.find(name);
@@ -126,7 +126,7 @@ namespace Moon {
     }
   }
 
-  GLint Shader::GetUniform(const char *name) {
+  GLint Shader::Uniform(const char *name) {
     assert(m_program);
     assert(name);
     AttributeMap::iterator iter = m_uniformLocationList.find(name);
@@ -138,23 +138,19 @@ namespace Moon {
   }
 
   void Shader::SetUniform(const char *name, const GLint v1) {
-    glUniform1i(GetUniform(name), v1);
+    glUniform1i(Uniform(name), v1);
   }
 
   void Shader::SetUniform(const char *name, const GLfloat v1) {
-    glUniform1f(GetUniform(name), v1);
+    glUniform1f(Uniform(name), v1);
   }
 
   void Shader::SetUniform(const char *name, const Moon::Vector4 &vec) {
-    glUniform4fv(GetUniform(name), 1, glm::value_ptr(vec));
+    glUniform4fv(Uniform(name), 1, glm::value_ptr(vec));
   }
 
   void Shader::SetUniform(const char *name, const glm::mat4 &mat) {
-    glUniformMatrix4fv(GetUniform(name), 1, GL_FALSE, glm::value_ptr(mat));
-  }
-
-  GLuint Shader::GetProgram() {
-    return m_program;
+    glUniformMatrix4fv(Uniform(name), 1, GL_FALSE, glm::value_ptr(mat));
   }
 
   void Shader::Use() {
