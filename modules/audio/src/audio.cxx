@@ -7,19 +7,27 @@ namespace Moon {
 
   void Audio::Initialize() {
     // setup Gorilla Audio
-    gc_initialize(0);
-    m_mgr = gau_manager_create();
-    m_mixer = gau_manager_mixer(m_mgr);
-    m_streamMgr = gau_manager_streamManager(m_mgr);
+    if (!m_mgr) {
+      gc_initialize(0);
+      m_mgr = gau_manager_create();
+      m_mixer = gau_manager_mixer(m_mgr);
+      m_streamMgr = gau_manager_streamManager(m_mgr);
+    }
   };
 
   void Audio::Update() {
-    gau_manager_update(m_mgr);
+    if (m_mgr)
+      gau_manager_update(m_mgr);
   };
 
   void Audio::Terminate() {
-    gau_manager_destroy(m_mgr);
-    gc_shutdown();
+    if (m_mgr) {
+      gau_manager_destroy(m_mgr);
+      gc_shutdown();
+      m_mgr = NULL;
+      m_mixer = NULL;
+      m_streamMgr = NULL;
+    }
   };
 
   ga_Mixer* Audio::GetMixer() {
