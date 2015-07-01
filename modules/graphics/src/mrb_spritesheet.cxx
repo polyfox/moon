@@ -88,23 +88,10 @@ render(mrb_state *mrb, mrb_value self, const glm::vec3 position,
   if ((index < 0) || (index >= total_sprites)) {
     mrb_raisef(mrb, E_ARGUMENT_ERROR, "sprite index is out of range.");
   }
-
   const int offset = index * 4;
-  mrb_value texture_obj = IVget(KEY_TEXTURE);
-  mrb_value shader_obj = IVget(KEY_SHADER);
-  mrb_value vbo_obj = IVget(KEY_VBO);
-  if (mrb_nil_p(texture_obj)) {
-    mrb_raisef(mrb, E_TYPE_ERROR, "cannot render with a `nil` @texture");
-  }
-  if (mrb_nil_p(shader_obj)) {
-    mrb_raisef(mrb, E_TYPE_ERROR, "cannot render with a `nil` @shader");
-  }
-  if (mrb_nil_p(vbo_obj)) {
-    mrb_raisef(mrb, E_TYPE_ERROR, "cannot render with a `nil` @vbo");
-  }
-  Moon::Texture *texture = get_valid_texture(mrb, texture_obj);
-  Moon::Shader *shader = get_shader(mrb, shader_obj);
-  Moon::VertexBuffer *vbo = get_vbo(mrb, vbo_obj);
+  Moon::Texture *texture = get_texture(mrb, IVget(KEY_TEXTURE));
+  Moon::Shader *shader = get_shader(mrb, IVget(KEY_SHADER));
+  Moon::VertexBuffer *vbo = get_vbo(mrb, IVget(KEY_VBO));
 
   shader->Use();
 
@@ -182,7 +169,7 @@ spritesheet_render(mrb_state *mrb, mrb_value self)
     }
   }
   render(mrb, self, glm::vec3(x, y, z), index, render_op);
-  return mrb_nil_value();
+  return self;
 }
 
 MOON_C_API void
