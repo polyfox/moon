@@ -7,7 +7,7 @@
 #include <wchar.h>
 
 static inline wchar_t*
-char_to_utf8(char* str)
+chars_to_utf8(const char* str)
 {
 #ifdef _WIN32
   int length;
@@ -39,7 +39,7 @@ namespace Moon {
     }
 
     String(char *str) {
-      m_str = char_to_utf8(str);
+      m_str = chars_to_utf8(str);
       m_length = wcslen(m_str);
     }
 
