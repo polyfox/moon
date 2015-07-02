@@ -69,7 +69,7 @@ text_render(mrb_state *mrb, mrb_value self)
 
   // Set texture ID
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, font->atlas->id);
+  font->Bind();
   shader->SetUniform("tex", /*GL_TEXTURE*/0);
   vbo->Render(GL_TRIANGLES);
   return self;

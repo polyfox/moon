@@ -131,4 +131,8 @@ namespace Moon {
   int Font::GetSize() {
     return font->size;
   }
+
+  void Font::Bind() {
+    glBindTexture(GL_TEXTURE_2D, atlas->id);
+  }
 }
