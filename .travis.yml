@@ -37,6 +37,6 @@ before_script:
   - ruby --version
 
 script:
-  - bundle exec rake build
+  - bundle exec rake --verbose build
   - ruby travis/check_libs.rb
-  - bundle exec rake test
+  - bundle exec rake --verbose test
