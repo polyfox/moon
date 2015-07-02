@@ -17,6 +17,20 @@ addons:
     - xorg-dev
     - libglu1-mesa-dev
     - cmake
+
+  coverity_scan:
+    project:
+      name: "polyfox/moon"
+      description: "2D game engine, with a mruby scripting system"
+    notification_email: mistdragon100@gmail.com
+    build_command_prepend: "echo echo"
+    build_command:   "bundle exec rake build"
+    branch_pattern: coverity_scan
+
+env:
+  global:
+    - secure: "EI+8CM8TJ5BJJYX8TKNqUkBCdj83ZOZpZxtrxNA+6SECIqIIJ3K6KhZ3A8+P7KPx3zn/nFiAr4Wd7N9i5SX0P3mSWdxXmZeOMFwcqYLRq67LYFL4DuGVVIuAuGiydfKlG8mTZyY5p+uP3ZkwZm9ZGJ8j7OOMoLEN1xArumsKLtA="
+
 matrix:
   include:
     - compiler: gcc
