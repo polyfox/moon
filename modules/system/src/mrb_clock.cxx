@@ -4,25 +4,26 @@
 #include <mruby/data.h>
 #include "moon/api.h"
 #include "moon/mrb/clock.hxx"
-#include "moon/fps.hxx"
+#include "moon/time.hxx"
+#include "moon/clock.hxx"
 
 static struct RClass *clock_class;
 
 static void
 clock_free(mrb_state *mrb, void *ptr)
 {
-  Moon::FPS *clk = (Moon::FPS*)ptr;
+  Moon::Clock *clk = (Moon::Clock*)ptr;
   if (clk) {
     delete(clk);
   }
 }
 
-MOON_C_API const mrb_data_type clock_data_type = { "Moon::FPS", clock_free };
+MOON_C_API const mrb_data_type clock_data_type = { "Moon::Clock", clock_free };
 
-static inline Moon::FPS*
+static inline Moon::Clock*
 get_clock(mrb_state *mrb, mrb_value self)
 {
-  return (Moon::FPS*)mrb_data_get_ptr(mrb, self, &clock_data_type);
+  return (Moon::Clock*)mrb_data_get_ptr(mrb, self, &clock_data_type);
 }
 
 static inline void
@@ -39,7 +40,7 @@ static mrb_value
 clock_initialize(mrb_state *mrb, mrb_value self)
 {
   clock_cleanup(mrb, self);
-  mrb_data_init(self, new Moon::FPS(), &clock_data_type);
+  mrb_data_init(self, new Moon::Clock(), &clock_data_type);
   return self;
 }
 
@@ -47,14 +48,14 @@ static mrb_value
 clock_initialize_copy(mrb_state *mrb, mrb_value self)
 {
   clock_cleanup(mrb, self);
-  mrb_data_init(self, new Moon::FPS(), &clock_data_type);
+  mrb_data_init(self, new Moon::Clock(), &clock_data_type);
   return self;
 }
 
 static mrb_value
 clock_restart(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_clock(mrb, self)->Restart());
+  return mrb_float_value(mrb, moon_microseconds_to_seconds(get_clock(mrb, self)->Restart()));
 }
 
 static mrb_value
@@ -67,7 +68,7 @@ clock_update(mrb_state *mrb, mrb_value self)
 static mrb_value
 clock_delta(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_clock(mrb, self)->GetDelta());
+  return mrb_float_value(mrb, moon_microseconds_to_seconds(get_clock(mrb, self)->GetDelta()));
 }
 
 static mrb_value
