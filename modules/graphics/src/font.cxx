@@ -119,6 +119,8 @@ namespace Moon {
       bbox.z = 0;
       bbox.w = 0;
     } else {
+      // adjusts bbox.z position to compensate for the last character
+      // glyph->advance_x
       if (cursor > bbox.z) bbox.z = cursor;
     }
 
