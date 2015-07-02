@@ -79,7 +79,7 @@ static mrb_value
 font_calc_bounds(mrb_state *mrb, mrb_value self)
 {
   char *str;
-  mrb_float line_height = 1.0;
+  mrb_float line_height = 1.2;
   mrb_get_args(mrb, "z|f", &str, &line_height);
   // convert to wide char (UTF-8)
   Moon::String text(str);
