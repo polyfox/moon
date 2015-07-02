@@ -5,6 +5,9 @@ project(moon)
 find_library(YAML yaml)
 
 add_subdirectory("vendor/sil")
+# cmake doesn't like relative paths for include dirs, so we'll need the absolute
+# path instead
+get_filename_component(SIL_INCLUDE_DIR "vendor/sil/include" ABSOLUTE)
 add_subdirectory("vendor/soil")
 add_subdirectory("vendor/gorilla-audio/build")
 #add_subdirectory("vendor/glm")
