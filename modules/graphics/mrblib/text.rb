@@ -12,19 +12,21 @@ module Moon
     attribute :color,         Vector4
     attribute :outline,       Integer
     attribute :outline_color, Vector4
+    attribute :line_height,   Float
 
     # @param [Font] font
     # @param [String] string
     def initialize(font, string = "")
       set_font font
       set_string string
-      @color = Vector4.new(1, 1, 1, 1)
       @outline = 0
-      @outline_color = Vector4.new(0, 0, 0, 1)
-      @vbo = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
-      @shader = self.class.default_shader
+      @line_height = 1.0
       @w = 0
       @h = 0
+      @shader = self.class.default_shader
+      @vbo = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
+      @color = Vector4.new(1, 1, 1, 1)
+      @outline_color = Vector4.new(0, 0, 0, 1)
       generate_buffers
     end
 
@@ -67,9 +69,18 @@ module Moon
     alias :set_outline :outline=
     # Sets a new outline size for the text
     #
-    # @param [Vector4] outline
+    # @param [Integer] outline
     def outline=(outline)
       set_outline(outline)
+      generate_buffers
+    end
+
+    alias :set_line_height :line_height=
+    # Sets a new line_height size for the text
+    #
+    # @param [Float] line_height
+    def line_height=(line_height)
+      set_line_height(line_height)
       generate_buffers
     end
   end

@@ -68,19 +68,23 @@ font_size(mrb_state *mrb, mrb_value self)
 }
 
 /*
+ * @method Font#calc_bounds
  * Calculates the string's width and height in pixel using the font.
+ *
  * @param [String] str
+ * @param [Float] line_height
  * @return [Array<Integer>[2]]
  */
 static mrb_value
 font_calc_bounds(mrb_state *mrb, mrb_value self)
 {
   char *str;
-  mrb_get_args(mrb, "z", &str);
+  mrb_float line_height = 1.0;
+  mrb_get_args(mrb, "z|f", &str, &line_height);
   // convert to wide char (UTF-8)
   Moon::String text(str);
   Moon::Font *font = get_font(mrb, self);
-  Moon::Vector2 bounds = font->ComputeStringBbox(text);
+  Moon::Vector2 bounds = font->ComputeStringBbox(text, line_height);
   mrb_value argv[2] = { mrb_fixnum_value(bounds.x), mrb_fixnum_value(bounds.y) };
   return mrb_ary_new_from_values(mrb, 2, argv);
 }
@@ -93,5 +97,5 @@ mmrb_font_init(mrb_state *mrb, struct RClass* mod)
 
   mrb_define_method(mrb, font_class, "initialize",  font_initialize,  MRB_ARGS_REQ(2));
   mrb_define_method(mrb, font_class, "size",        font_size,        MRB_ARGS_NONE());
-  mrb_define_method(mrb, font_class, "calc_bounds", font_calc_bounds, MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, font_class, "calc_bounds", font_calc_bounds, MRB_ARGS_ARG(1,1));
 }

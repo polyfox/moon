@@ -1,6 +1,7 @@
 #include <mruby.h>
 #include <mruby/class.h>
 #include <mruby/data.h>
+#include <mruby/numeric.h>
 #include <mruby/variable.h>
 #include "moon/vertex_buffer.hxx"
 #include "moon/api.h"
@@ -22,6 +23,7 @@ text_generate_buffers(mrb_state *mrb, mrb_value self)
 {
   // string will be deleted at the end
   mrb_int outline = mrb_int(mrb, IVget("@outline"));
+  mrb_float line_height = mrb_to_flo(mrb, IVget("@line_height"));
   Moon::String string(mrb_str_to_cstr(mrb, IVget("@string")));
   Moon::VertexBuffer *vbo = get_vbo(mrb, IVget(KEY_VBO));
   Moon::Font *font = get_font(mrb, IVget("@font"));
@@ -32,13 +34,13 @@ text_generate_buffers(mrb_state *mrb, mrb_value self)
   if (outline > 0) {
     font->font->outline_type = 2;
     font->font->outline_thickness = outline;
-    font->FillTextBuffer(vbo, string, outline_color);
+    font->FillTextBuffer(vbo, string, outline_color, line_height);
   }
   font->font->outline_type = 0;
   font->font->outline_thickness = 0;
-  font->FillTextBuffer(vbo, string, color);
+  font->FillTextBuffer(vbo, string, color, line_height);
   // cache size
-  glm::vec2 bb = font->ComputeStringBbox(string);
+  glm::vec2 bb = font->ComputeStringBbox(string, line_height);
   IVset("@w", mrb_fixnum_value(bb.x));
   IVset("@h", mrb_fixnum_value(bb.y));
 }
@@ -60,12 +62,7 @@ text_render(mrb_state *mrb, mrb_value self)
 
   shader->Use();
   // model matrix - move it to the correct position in the world
-  glm::mat4 model_matrix = glm::rotate(
-    glm::translate(glm::mat4(1.0f), glm::vec3(x, y + font->font->ascender, z)),
-    // text is rendered upside down, so it must be flipped upside
-    glm::radians(180.0f),
-    glm::vec3(1.0f, 0.0f, 0.0f)
-  );
+  glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y + font->font->ascender, z));
   // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
   glm::mat4 mvp_matrix = Moon::Shader::projection_matrix * Moon::Shader::view_matrix * model_matrix;
   shader->SetUniform("mvp_matrix", mvp_matrix);

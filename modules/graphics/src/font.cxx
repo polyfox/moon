@@ -7,6 +7,8 @@
 #include "moon/vector2.hxx"
 #include "moon/vector4.hxx"
 
+#define isNewline(_char_) ((_char_) == '\n' || (_char_) == '\r')
+
 namespace Moon {
   Font::Font(std::string filename, int font_size)
   {
@@ -22,9 +24,17 @@ namespace Moon {
     texture_atlas_delete(atlas);
   }
 
-  void Font::FillTextBuffer(VertexBuffer *vbo, const String &text, const Vector4 &c) {
+  void Font::FillTextBuffer(VertexBuffer *vbo, const String &text, const Vector4 &c, const float line_height) {
+    const float line_space = line_height * font->size;
     float cursor = 0; // position of the write cursor
+    float line = 0;
     for(size_t i = 0; i < text.length(); ++i) {
+      if (isNewline(text[i])) {
+        cursor = 0;
+        line += line_space;
+        continue;
+      }
+
       texture_glyph_t *glyph = texture_font_get_glyph(font, text[i]);
       if (glyph != NULL) {
         float kerning = 0;
@@ -32,10 +42,10 @@ namespace Moon {
           kerning = texture_glyph_get_kerning(glyph, text[i - 1]);
         }
         cursor += kerning;
-        float x0  = cursor + glyph->offset_x;
-        float y0  = glyph->offset_y;
-        float x1  = x0 + glyph->width;
-        float y1  = y0 - glyph->height;
+        float x0 = cursor + glyph->offset_x;
+        float y0 = line - glyph->offset_y;
+        float x1 = x0 + glyph->width;
+        float y1 = y0 + glyph->height;
 
         float s0 = glyph->s0;
         float t0 = glyph->t0;
@@ -53,18 +63,26 @@ namespace Moon {
     }
   }
 
-  Vector2 Font::ComputeStringBbox(const String &text) {
+  Vector2 Font::ComputeStringBbox(const String &text, const float line_height) {
     Vector4 bbox;
+    const float line_space = line_height * font->size;
+    float cursor = 0; // position of the write cursor
+    float line = 0;
 
     /* initialize string bbox to "empty" values */
     bbox.x = bbox.y =  32000;
     bbox.z = bbox.w = -32000;
 
-    float cursor = 0; // position of the write cursor
-
     /* for each glyph image, compute its bounding box, */
     /* translate it, and grow the string bbox          */
     for (size_t i = 0; i < text.length(); ++i) {
+      if (isNewline(text[i])) {
+        if (cursor > bbox.z) bbox.z = cursor;
+        cursor = 0;
+        line += line_space;
+        continue;
+      }
+
       texture_glyph_t *glyph = texture_font_get_glyph(font, text[i]);
 
       if (glyph != NULL) {
@@ -73,10 +91,10 @@ namespace Moon {
           kerning = texture_glyph_get_kerning(glyph, text[i-1]);
         }
         cursor += kerning;
-        float x0 = (cursor + glyph->offset_x);
-        float y0 = glyph->offset_y;
-        float x1  = x0 + glyph->width;
-        float y1  = y0 + glyph->height;
+        float x0 = cursor + glyph->offset_x;
+        float y0 = line - glyph->offset_y;
+        float x1 = x0 + glyph->width;
+        float y1 = y0 + glyph->height;
 
         if (x0 < bbox.x)
           bbox.x = x0;
@@ -101,8 +119,7 @@ namespace Moon {
       bbox.z = 0;
       bbox.w = 0;
     } else {
-      if (cursor > bbox.z)
-        bbox.z = cursor;
+      if (cursor > bbox.z) bbox.z = cursor;
     }
 
     /* return string bbox */
