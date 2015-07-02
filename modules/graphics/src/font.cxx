@@ -10,7 +10,7 @@
 #define isNewline(_char_) ((_char_) == '\n' || (_char_) == '\r')
 
 namespace Moon {
-  Font::Font(std::string filename, int font_size)
+  Font::Font(const std::string &filename, const int font_size)
   {
     atlas = texture_atlas_new(512, 512, 1);
     font = texture_font_new_from_file(atlas, font_size, filename.c_str());

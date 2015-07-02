@@ -17,7 +17,7 @@ namespace Moon {
     texture_font_t *font;
     texture_atlas_t *atlas;
 
-    Font(std::string name, int font_size);
+    Font(const std::string &name, const int font_size);
     ~Font();
 
     int GetSize();
