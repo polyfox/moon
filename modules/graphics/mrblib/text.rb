@@ -28,7 +28,7 @@ module Moon
       set_line_height options.fetch(:line_height, 1.2)
       @w = 0
       @h = 0
-      set_shader self.class.default_shader
+      @shader = self.class.default_shader
       @vbo = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
       set_color options.fetch(:color) { Vector4.new(1, 1, 1, 1) }
       set_outline_color options.fetch(:outline_color) { Vector4.new(0, 0, 0, 1) }
