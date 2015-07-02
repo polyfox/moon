@@ -38,5 +38,5 @@ before_script:
 
 script:
   - bundle exec rake build
-  # tests won't pass correctly yet due to a test being skipped in mruby-io
-  - bundle exec rake test || echo "Test!"
+  - ruby travis/check_libs.rb
+  - bundle exec rake test
