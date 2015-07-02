@@ -12,6 +12,7 @@ namespace Moon {
 
     pixels = SOIL_load_image(filename.c_str(), &m_width, &m_height, &channels, SOIL_LOAD_AUTO);
     m_gl_texture_id = SOIL_create_OGL_texture(pixels, m_width, m_height, channels, SOIL_CREATE_NEW_ID, SOIL_FLAG_MULTIPLY_ALPHA);
+    SOIL_free_image_data(pixels);
 
     glBindTexture(GL_TEXTURE_2D, m_gl_texture_id);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
