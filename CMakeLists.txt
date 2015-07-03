@@ -14,12 +14,16 @@ add_subdirectory("vendor/gorilla-audio/build")
 
 option(freetype-gl_BUILD_DEMOS OFF)
 option(freetype-gl_BUILD_APIDOC OFF)
+set(freetype-gl_BUILD_DEMOS OFF)
+set(freetype-gl_BUILD_APIDOC OFF)
 add_subdirectory("vendor/freetype-gl")
 
 option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS OFF)
-option(BUILD_SHARED_LIBS ON)
 set(BUILD_SHARED_LIBS ON)
+option(BUILD_SHARED_LIBS OFF)
+set(GLFW_BUILD_EXAMPLES OFF)
+set(GLFW_BUILD_TESTS OFF)
 add_subdirectory("vendor/glfw")
 
 option(RAKE_VERBOSE OFF)
