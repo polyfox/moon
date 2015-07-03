@@ -39,4 +39,3 @@ before_script:
 script:
   - bundle exec rake --verbose build
   - ruby travis/check_libs.rb
-  - bundle exec rake --verbose test
