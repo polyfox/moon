@@ -8,7 +8,7 @@ module ::Guard
 
     def do_tests
       Guard::Notifier.notify 'Testing', title: 'moon', image: :pending
-      if exec_build('test')
+      if exec_build('--verbose', 'test')
         Guard::Notifier.notify 'Tests Passed', title: 'moon', image: :success
         true
       else
@@ -19,7 +19,7 @@ module ::Guard
 
     def do_build
       Guard::Notifier.notify 'Building', title: 'moon', image: :pending
-      if exec_build('build')
+      if exec_build('--verbose', 'build')
         Guard::Notifier.notify 'Build Successful', title: 'moon', image: :success
         true
       else
