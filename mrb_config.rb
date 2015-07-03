@@ -103,6 +103,7 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
     c.include_paths << File.expand_path('freetype-gl', vd)
     # required audio includes
     c.include_paths << File.expand_path('gorilla-audio/include', vd)
+    c.include_paths.uniq!
 
     c.flags = flags.to_a
   end
@@ -113,6 +114,7 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
     l.library_paths << File.expand_path('gorilla-audio/build', bvd)
     l.library_paths << File.expand_path('sil', bvd)
     l.library_paths << File.expand_path('soil', bvd)
+    l.library_paths.uniq!
 
     l.libraries << 'glfw'
     l.libraries << 'freetype-gl'
