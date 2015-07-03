@@ -1,9 +1,10 @@
 require 'set'
 require_relative 'lib/platform'
 
+toolchain_name = (ENV['MOON_MRUBY_TOOLCHAIN'] || :gcc).to_sym
+
 rootdir = File.dirname(__FILE__)
 MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
-  toolchain_name = (ENV['MOON_MRUBY_TOOLCHAIN'] || :gcc).to_sym
   toolchain toolchain_name
 
   puts "\t\\\\ Using #{toolchain_name} Toolchain \\\\"
