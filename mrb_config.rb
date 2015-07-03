@@ -113,13 +113,24 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
     l.library_paths << File.expand_path('sil', bvd)
     l.library_paths << File.expand_path('soil', bvd)
 
-    l.libraries << 'glfw'
-    l.libraries << 'freetype-gl'
     l.libraries << 'gorilla'
+    l.libraries << 'freetype-gl'
     l.libraries << 'freetype'
     l.libraries << 'SOIL'
     l.libraries << 'SIL'
 
+    l.libraries << ':libglfw3.a'
+
+
+    if Platform.linux?
+      l.libraries << 'Xrandr'
+      l.libraries << 'Xxf86vm'
+      l.libraries << 'Xinerama'
+      l.libraries << 'Xcursor'
+      l.libraries << 'Xi'
+      l.libraries << 'X11'
+      l.libraries << 'rt'
+    end
 
     if Platform.linux?
       l.libraries << 'GL'

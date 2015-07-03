@@ -20,10 +20,10 @@ add_subdirectory("vendor/freetype-gl")
 
 option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS OFF)
-set(BUILD_SHARED_LIBS ON)
 option(BUILD_SHARED_LIBS OFF)
 set(GLFW_BUILD_EXAMPLES OFF)
 set(GLFW_BUILD_TESTS OFF)
+set(BUILD_SHARED_LIBS OFF)
 add_subdirectory("vendor/glfw")
 
 option(RAKE_VERBOSE OFF)
