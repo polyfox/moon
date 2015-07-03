@@ -2,10 +2,10 @@ require 'set'
 require_relative 'lib/platform'
 
 use_static_glfw = !!(ENV['MOON_STATIC_GLFW'] =~ /\A(TRUE|YES|ON|T|Y|1)\z/i)
+toolchain_name = (ENV['MOON_MRUBY_TOOLCHAIN'] || :gcc).to_sym
 
 rootdir = File.dirname(__FILE__)
 MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
-  toolchain_name = (ENV['MOON_MRUBY_TOOLCHAIN'] || :gcc).to_sym
   toolchain toolchain_name
 
   puts "\t\\\\ Using #{toolchain_name} Toolchain \\\\"
