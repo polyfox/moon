@@ -72,6 +72,19 @@ make
 
 The build process is still clunky and your build may fail.
 
+Here are a list of ENV variables you may be interested in
+
+| VAR                    | Description                              | Default |
+| ---------------------- | ---------------------------------------- | ------- |
+| `MOON_STATIC_GLFW`     | Statically link GLFW into the build      | `false` |
+| `MOON_MRUBY_TOOLCHAIN` | Which toolchain should mruby build with? | `gcc`   |
+
+Example:
+
+```shell
+MOON_MRUBY_TOOLCHAIN=clang MOON_STATIC_GLFW=ON bundle exec rake build 
+```
+
 ## Updating
 You can update Moon at anytime by grabbing the latest commits from master
 and updating the submodules if needs be:
