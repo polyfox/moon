@@ -1,7 +1,11 @@
+require 'set'
 require_relative 'lib/platform'
 
-MRuby::Build.new do |conf|
-  toolchain_name = (ENV['MOON_MRUBY_TOOLCHAIN'] || :gcc).to_sym
+use_static_glfw = !!(ENV['MOON_STATIC_GLFW'] =~ /\A(TRUE|YES|ON|T|Y|1)\z/i)
+toolchain_name = (ENV['MOON_MRUBY_TOOLCHAIN'] || :gcc).to_sym
+
+rootdir = File.dirname(__FILE__)
+MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
   toolchain toolchain_name
 
   puts "\t\\\\ Using #{toolchain_name} Toolchain \\\\"
@@ -11,7 +15,7 @@ MRuby::Build.new do |conf|
 
   # include the default GEMs
   conf.gembox 'default'
-  conf.gembox File.join(File.dirname(__FILE__), 'modules/moon')
+  conf.gembox File.expand_path('modules/moon', rootdir)
 
   conf.gem core: 'mruby-eval'
   conf.gem core: 'mruby-bin-debugger'
@@ -46,19 +50,28 @@ MRuby::Build.new do |conf|
     c.flags << "-std=#{std}"
   end
 
-  d = File.dirname(__FILE__)
-  vd = File.expand_path('vendor', d)
-  bvd = File.expand_path('build/vendor', d)
+  vd = File.expand_path('vendor', rootdir)
+  bvd = File.expand_path('build/vendor', rootdir)
+  puts "VendorDir: #{vd}"
+  puts "Build.VendorDir: #{bvd}"
   [conf.cc, conf.cxx].each do |c|
-    c.flags << '-g3'
-    c.flags << '-O3'
+    flags = Set.new(c.flags)
+    # remove other optimization flags
+    flags.delete("-O0")
+    flags.delete("-O1")
+    flags.delete("-O2")
+
+    # enable debugging
+    flags << '-g3'
+    # optimize level 3
+    flags << '-O3'
 
     # Its a good idea to get all the warnings
-    c.flags << ' -Wall'
-    c.flags << ' -Wextra'
+    flags << '-Wall'
+    flags << '-Wextra'
     # shuts up those unusued-parameter warnings, trust me, you'll be swimming
     # in them from a mruby extension.
-    c.flags << ' -Wno-unused-parameter'
+    flags << '-Wno-unused-parameter'
 
     c.defines << 'ENABLE_DEBUG'
 
@@ -71,55 +84,79 @@ MRuby::Build.new do |conf|
     end
 
     # enable mruby-yaml: null, Null and NULL
-    c.flags << "-DMRUBY_YAML_NULL=1"
+    flags << "-DMRUBY_YAML_NULL=1"
     # disable all the extra mruby-yaml aliases, this makes it more like ruby
-    c.flags << "-DMRUBY_YAML_BOOLEAN_ON=0"
-    c.flags << "-DMRUBY_YAML_BOOLEAN_YES=0"
-    c.flags << "-DMRUBY_YAML_BOOLEAN_SHORTHAND_YES=0"
-    c.flags << "-DMRUBY_YAML_BOOLEAN_OFF=0"
-    c.flags << "-DMRUBY_YAML_BOOLEAN_NO=0"
-    c.flags << "-DMRUBY_YAML_BOOLEAN_SHORTHAND_NO=0"
-
-    # If you want Moon to guess the GLSL shader versions to load, enable this
-    # line, otherwise, you must set is_legacy if running GLSL 1.5 or lower
-    # shaders
-    #c.flags << '-DMOON_GUESS_SHADER_VERSION'
+    flags << "-DMRUBY_YAML_BOOLEAN_ON=0"
+    flags << "-DMRUBY_YAML_BOOLEAN_YES=0"
+    flags << "-DMRUBY_YAML_BOOLEAN_SHORTHAND_YES=0"
+    flags << "-DMRUBY_YAML_BOOLEAN_OFF=0"
+    flags << "-DMRUBY_YAML_BOOLEAN_NO=0"
+    flags << "-DMRUBY_YAML_BOOLEAN_SHORTHAND_NO=0"
 
     # required system includes
-    c.include_paths << File.join(vd, 'glm')
+    c.include_paths << File.expand_path('glm', vd)
     # required graphics includes
-    c.include_paths << File.join(vd, 'glfw/include')
-    c.include_paths << File.join(vd, 'soil/include')
-    c.include_paths << File.join(vd, 'sil/include')
-    c.include_paths << File.join(vd, 'freetype-gl')
+    c.include_paths << File.expand_path('glfw/include', vd)
+    c.include_paths << File.expand_path('glfw/src', bvd) # has the glfw_config.h
+    c.include_paths << File.expand_path('glfw/include', vd)
+    c.include_paths << File.expand_path('soil/include', vd)
+    c.include_paths << File.expand_path('sil/include', vd)
+    c.include_paths << File.expand_path('freetype-gl', vd)
     # required audio includes
-    c.include_paths << File.join(vd, 'gorilla-audio/include')
+    c.include_paths << File.expand_path('gorilla-audio/include', vd)
+    c.include_paths.uniq!
+
+    c.flags = flags.to_a
   end
 
   conf.linker do |l|
-    l.library_paths << File.join(bvd, 'glfw/src')
-    l.library_paths << File.join(bvd, 'freetype-gl')
-    l.library_paths << File.join(bvd, 'gorilla-audio/build')
-    l.library_paths << File.join(bvd, 'sil')
-    l.library_paths << File.join(bvd, 'soil')
+    l.library_paths << File.expand_path('glfw/src', bvd)
+    l.library_paths << File.expand_path('freetype-gl', bvd)
+    l.library_paths << File.expand_path('gorilla-audio/build', bvd)
+    l.library_paths << File.expand_path('sil', bvd)
+    l.library_paths << File.expand_path('soil', bvd)
+    l.library_paths.uniq!
 
-    l.libraries << 'glfw'
-    l.libraries << 'freetype-gl'
     l.libraries << 'gorilla'
+    l.libraries << 'freetype-gl'
     l.libraries << 'freetype'
     l.libraries << 'SOIL'
     l.libraries << 'SIL'
 
-    if Platform.darwin?
+    if use_static_glfw
+      l.libraries << ':libglfw3.a'
+      if Platform.linux?
+        l.libraries << 'Xrandr'
+        l.libraries << 'Xxf86vm'
+        l.libraries << 'Xinerama'
+        l.libraries << 'Xcursor'
+        l.libraries << 'Xi'
+        l.libraries << 'X11'
+        l.libraries << 'rt'
+      end
+    else
+      l.libraries << 'glfw'
+    end
+
+    if Platform.linux?
+      l.libraries << 'GL'
+      l.libraries << 'openal'
+    elsif Platform.windows?
+      l.libraries << 'opengl32'
+      l.libraries << 'OpenAL32'
+    elsif Platform.darwin?
       l.flags_after_libraries << '-framework OpenGL'
       l.flags_after_libraries << '-framework OpenAL'
       l.flags_after_libraries << '-framework CoreFoundation'
-    else
-      l.libraries << 'GL'
-      l.libraries << 'openal'
     end
+
     if Platform.unix?
       l.libraries << 'pthread'
+    end
+
+    puts "Linking these libraries:"
+    l.libraries.each do |lib|
+      puts "\t#{lib}"
     end
   end
 end

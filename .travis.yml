@@ -2,10 +2,14 @@ language: cpp
 matrix:
   include:
     - compiler: gcc
-      env: MOON_MRUBY_TOOLCHAIN=gcc
+      env:
+        - MOON_STATIC_GLFW=ON
+        - MOON_MRUBY_TOOLCHAIN=gcc
 
     - compiler: clang
-      env: MOON_MRUBY_TOOLCHAIN=clang
+      env:
+        - MOON_STATIC_GLFW=ON
+        - MOON_MRUBY_TOOLCHAIN=clang
 
   allow_failures:
     - compiler: clang
@@ -37,6 +41,6 @@ before_script:
   - ruby --version
 
 script:
-  - bundle exec rake build
+  - bundle exec rake --verbose build
   - ruby travis/check_libs.rb
-  - bundle exec rake test
+  - bundle exec rake --verbose test

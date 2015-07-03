@@ -12,13 +12,18 @@ namespace :mruby do
     FileUtils::Verbose.rm_rf(File.join(dir, 'build/mrbgems'))
   end
 
-  task :hard_clean do
+  task :deep_clean do
     FileUtils::Verbose.rm_rf(File.join(dir, 'build'))
   end
 
+  task hard_clean: :deep_clean
+
   task :test do
     Dir.chdir dir do
-      sh %(./minirake MRUBY_CONFIG="#{rootdir}/mrb_config.rb" test)
+      cmd = [%(MRUBY_CONFIG="#{rootdir}/mrb_config.rb"), "test"]
+      cmd.unshift("--verbose") if Rake.verbose
+      cmd.unshift("rake")
+      sh cmd.join(" ")
     end
   end
 end
