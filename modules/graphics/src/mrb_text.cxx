@@ -21,23 +21,26 @@
 static mrb_value
 text_add_text(mrb_state *mrb, mrb_value self)
 {
+  char *str;
+  mrb_float x, y;
+  mrb_get_args(mrb, "zff", &str, &x, &y);
   // string will be deleted at the end
   mrb_int outline = mrb_int(mrb, IVget("@outline"));
   mrb_float line_height = mrb_to_flo(mrb, IVget("@line_height"));
-  Moon::String string(mrb_str_to_cstr(mrb, IVget("@string")));
   Moon::VertexBuffer *vbo = get_vbo(mrb, IVget(KEY_VBO));
   Moon::Font *font = get_font(mrb, IVget("@font"));
   Moon::Vector4 color = *get_vector4(mrb, IVget("@color"));
   Moon::Vector4 outline_color = *get_vector4(mrb, IVget("@outline_color"));
+  Moon::String string(str);
 
   if (outline > 0) {
     font->font->outline_type = 2;
     font->font->outline_thickness = outline;
-    font->FillTextBuffer(vbo, string, outline_color, line_height);
+    font->FillTextBuffer(vbo, string, outline_color, x, y, line_height);
   }
   font->font->outline_type = 0;
   font->font->outline_thickness = 0;
-  font->FillTextBuffer(vbo, string, color, line_height);
+  font->FillTextBuffer(vbo, string, color, x, y, line_height);
 }
 
 /**

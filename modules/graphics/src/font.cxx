@@ -24,7 +24,8 @@ namespace Moon {
     texture_atlas_delete(atlas);
   }
 
-  void Font::FillTextBuffer(VertexBuffer *vbo, const String &text, const Vector4 &c, const float line_height) {
+  void Font::FillTextBuffer(VertexBuffer *vbo, const String &text, const Vector4 &c,
+   const float x, const float y, const float line_height) {
     const float line_space = line_height * font->size;
     float cursor = 0; // position of the write cursor
     float line = 0;
@@ -42,8 +43,8 @@ namespace Moon {
           kerning = texture_glyph_get_kerning(glyph, text[i - 1]);
         }
         cursor += kerning;
-        float x0 = cursor + glyph->offset_x;
-        float y0 = line - glyph->offset_y;
+        float x0 = x + cursor + glyph->offset_x;
+        float y0 = y + line - glyph->offset_y;
         float x1 = x0 + glyph->width;
         float y1 = y0 + glyph->height;
 

@@ -22,7 +22,7 @@ namespace Moon {
 
     int GetSize();
     Vector2 ComputeStringBbox(const String &text, const float line_height);
-    void FillTextBuffer(VertexBuffer *vbo, const String &text, const Vector4 &c, const float line_height);
+    void FillTextBuffer(VertexBuffer *vbo, const String &text, const Vector4 &c, const float x, const float y, const float line_height);
     void Bind();
   private:
   };

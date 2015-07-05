@@ -51,8 +51,8 @@ module Moon
         when :center
           -@font.calc_bounds(line)[0] / 2
         end.to_i
-
-        add_text(line, x, index * @line_height)
+        y = (index * @font.size * @line_height).to_i
+        add_text(line, x, y)
       end
 
       @w, @h = @font.calc_bounds(@string, @line_height)
