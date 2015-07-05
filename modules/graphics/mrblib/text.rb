@@ -21,6 +21,7 @@ module Moon
     # @option options [Integer] :outline
     # @option options [Float] :line_height
     # @option options [Symbol] :align  either :left, :right, or :center
+    # @option options [Shader] :shader
     # @option options [Vector4] :color
     # @option options [Vector4] :outline_color
     def initialize(font, string = "", options = {})
@@ -33,6 +34,7 @@ module Moon
       @h = 0
       @shader = self.class.default_shader
       @vbo = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
+      self.shader = options.fetch(:shader) { self.class.default_shader }
       set_color options.fetch(:color) { Vector4.new(1, 1, 1, 1) }
       set_outline_color options.fetch(:outline_color) { Vector4.new(0, 0, 0, 1) }
       generate_buffers
