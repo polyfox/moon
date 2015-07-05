@@ -9,11 +9,13 @@
 #include "moon/shader.hxx"
 #include "moon/texture.hxx"
 #include "moon/transform.hxx"
+#include "moon/font.hxx"
 #include "moon/vector2.hxx"
 #include "moon/vector3.hxx"
 #include "moon/vector4.hxx"
 #include "moon/vertex_buffer.hxx"
 #include "moon/mrb/rect.hxx"
+#include "moon/mrb/font.hxx"
 #include "moon/mrb/shader.hxx"
 #include "moon/mrb/texture.hxx"
 #include "moon/mrb/transform.hxx"
@@ -78,6 +80,12 @@ static inline Moon::VertexBuffer*
 get_vbo(mrb_state *mrb, mrb_value self)
 {
   return static_cast<Moon::VertexBuffer*>(mrb_data_get_ptr(mrb, self, &vbo_data_type));
+}
+
+static inline Moon::Font*
+get_font(mrb_state *mrb, mrb_value self)
+{
+  return static_cast<Moon::Font*>(mrb_data_get_ptr(mrb, self, &font_data_type));
 }
 
 static inline Moon::Texture*

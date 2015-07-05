@@ -14,36 +14,17 @@
 namespace Moon {
   class Font {
   public:
-    struct RenderState {
-      GLfloat outline;
-      Vector4 color;
-      Vector4 outline_color;
-      Transform transform;
+    texture_font_t *font;
+    texture_atlas_t *atlas;
 
-      RenderState() :
-        outline(0.0),
-        color(1.0, 1.0, 1.0, 1.0),
-        outline_color(0.0, 0.0, 0.0, 0.9)
-      {
-      };
-    };
-
-    static Vector4 DefaultColor;
-    Shader *shader;
-
-    Font(std::string name, int font_size);
+    Font(const std::string &name, const int font_size);
     ~Font();
 
-    void DrawText(const float x, const float y, const float z, const Moon::String &text); /* white text */
-    void DrawText(const float x, const float y, const float z, const Moon::String &text, const Vector4 &color);
-    void DrawText(const float x, const float y, const float z, const Moon::String &text, const RenderState &options);
     int GetSize();
-    Vector2 ComputeStringBbox(const Moon::String &text);
+    Vector2 ComputeStringBbox(const String &text, const float line_height);
+    void FillTextBuffer(VertexBuffer *vbo, const String &text, const Vector4 &c, const float x, const float y, const float line_height);
+    void Bind();
   private:
-    texture_font_t *m_font;
-    texture_atlas_t *m_atlas;
-    VertexBuffer m_buffer;
-    void AddText(const Moon::String &text, const Vector4 &c);
   };
 };
 

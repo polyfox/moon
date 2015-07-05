@@ -7,19 +7,16 @@
 #include <wchar.h>
 
 static inline wchar_t*
-char_to_utf8(char* str)
+chars_to_utf8(const char* str)
 {
 #ifdef _WIN32
-  int length;
-
   // get length of converted string in characters
-  length = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, str, sizeof(str), NULL, 0);
-
+  const int length = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, str, sizeof(str), NULL, 0);
   wchar_t *name = new wchar_t[length];
   MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, str, sizeof(str), name, length);
   return name;
 #else
-  int length = mbstowcs(0, str, 0);
+  const int length = mbstowcs(0, str, 0);
   wchar_t *text = new wchar_t[length+1];
   mbstowcs(text, str, length+1);
   return text;
@@ -39,7 +36,7 @@ namespace Moon {
     }
 
     String(char *str) {
-      m_str = char_to_utf8(str);
+      m_str = chars_to_utf8(str);
       m_length = wcslen(m_str);
     }
 
