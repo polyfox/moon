@@ -26,6 +26,7 @@ module Moon
       set_string string
       set_outline options.fetch(:outline, 0)
       set_line_height options.fetch(:line_height, 1.2)
+      @align = options.fetch(:align, :left)
       @w = 0
       @h = 0
       @shader = self.class.default_shader
@@ -33,6 +34,26 @@ module Moon
       set_color options.fetch(:color) { Vector4.new(1, 1, 1, 1) }
       set_outline_color options.fetch(:outline_color) { Vector4.new(0, 0, 0, 1) }
       generate_buffers
+    end
+
+    def generate_buffers
+      @vbo.clear
+      lines = @string.split("\n")
+      lines.each_with_index do |line, index|
+        case @align
+        when :left
+          # do nothing
+        when :right
+          x -= @font.calc_bounds(line)[0]
+        when :center
+          x -= @font.calc_bounds(line)[0] / 2
+        end
+
+        add_text(line, x, y + index * @line_height)
+      end
+
+      # HAXX: does this work? we use the entire string to calculate bbox once
+      @w, @h = @font.calc_bounds(@string)
     end
 
     alias :set_string :string=

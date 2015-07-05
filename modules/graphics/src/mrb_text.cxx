@@ -16,10 +16,10 @@
 #include "moon/mrb/helpers.hxx"
 
 /**
- * @method Font#generate_buffers
+ * @method Font#add_text(text, x, y)
  */
 static mrb_value
-text_generate_buffers(mrb_state *mrb, mrb_value self)
+text_add_text(mrb_state *mrb, mrb_value self)
 {
   // string will be deleted at the end
   mrb_int outline = mrb_int(mrb, IVget("@outline"));
@@ -30,7 +30,6 @@ text_generate_buffers(mrb_state *mrb, mrb_value self)
   Moon::Vector4 color = *get_vector4(mrb, IVget("@color"));
   Moon::Vector4 outline_color = *get_vector4(mrb, IVget("@outline_color"));
 
-  vbo->Clear();
   if (outline > 0) {
     font->font->outline_type = 2;
     font->font->outline_thickness = outline;
@@ -39,10 +38,6 @@ text_generate_buffers(mrb_state *mrb, mrb_value self)
   font->font->outline_type = 0;
   font->font->outline_thickness = 0;
   font->FillTextBuffer(vbo, string, color, line_height);
-  // cache size
-  glm::vec2 bb = font->ComputeStringBbox(string, line_height);
-  IVset("@w", mrb_fixnum_value(bb.x));
-  IVset("@h", mrb_fixnum_value(bb.y));
 }
 
 /**
@@ -80,6 +75,6 @@ mmrb_text_init(mrb_state *mrb, struct RClass* mod)
 {
   struct RClass *text_cls = mrb_define_class_under(mrb, mod, "Text", mrb->object_class);
 
-  mrb_define_method(mrb, text_cls, "generate_buffers", text_generate_buffers, MRB_ARGS_NONE());
-  mrb_define_method(mrb, text_cls, "render",           text_render,           MRB_ARGS_REQ(3));
+  mrb_define_method(mrb, text_cls, "add_text", text_add_text, MRB_ARGS_REQ(3));
+  mrb_define_method(mrb, text_cls, "render",   text_render,   MRB_ARGS_REQ(3));
 }
