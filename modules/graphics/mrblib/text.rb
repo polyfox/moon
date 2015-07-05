@@ -25,18 +25,17 @@ module Moon
     # @option options [Vector4] :color
     # @option options [Vector4] :outline_color
     def initialize(font, string = "", options = {})
+      @w = 0
+      @h = 0
       set_font font
       set_string string
       set_outline options.fetch(:outline, 0)
       set_line_height options.fetch(:line_height, 1.2)
-      @align = options.fetch(:align, :left)
-      @w = 0
-      @h = 0
-      @shader = self.class.default_shader
-      @vbo = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
+      set_align options.fetch(:align, :left)
       self.shader = options.fetch(:shader) { self.class.default_shader }
       set_color options.fetch(:color) { Vector4.new(1, 1, 1, 1) }
       set_outline_color options.fetch(:outline_color) { Vector4.new(0, 0, 0, 1) }
+      @vbo = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
       generate_buffers
     end
 
