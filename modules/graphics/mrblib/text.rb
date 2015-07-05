@@ -6,6 +6,7 @@ module Moon
     attr_reader :w
     attr_reader :h
 
+    attribute :align,         Symbol
     attribute :shader,        Shader
     attribute :string,        String
     attribute :font,          Font
@@ -19,6 +20,7 @@ module Moon
     # @param [Hash<Symbol, Object>] options
     # @option options [Integer] :outline
     # @option options [Float] :line_height
+    # @option options [Symbol] :align  either :left, :right, or :center
     # @option options [Vector4] :color
     # @option options [Vector4] :outline_color
     def initialize(font, string = "", options = {})
@@ -40,20 +42,19 @@ module Moon
       @vbo.clear
       lines = @string.split("\n")
       lines.each_with_index do |line, index|
-        case @align
+        x = case @align
         when :left
-          # do nothing
+          0 # do nothing
         when :right
-          x -= @font.calc_bounds(line)[0]
+          -@font.calc_bounds(line)[0]
         when :center
-          x -= @font.calc_bounds(line)[0] / 2
-        end
+          -@font.calc_bounds(line)[0] / 2
+        end.to_i
 
-        add_text(line, x, y + index * @line_height)
+        add_text(line, x, index * @line_height)
       end
 
-      # HAXX: does this work? we use the entire string to calculate bbox once
-      @w, @h = @font.calc_bounds(@string)
+      @w, @h = @font.calc_bounds(@string, @line_height)
     end
 
     alias :set_string :string=
@@ -107,6 +108,15 @@ module Moon
     # @param [Float] line_height
     def line_height=(line_height)
       set_line_height(line_height)
+      generate_buffers
+    end
+
+    alias :set_align :align=
+    # Sets a new align size for the text
+    #
+    # @param [Float] align
+    def align=(align)
+      set_align(align)
       generate_buffers
     end
   end
