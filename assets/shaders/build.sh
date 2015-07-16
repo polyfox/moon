@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+builddir="build"
 
 if [ -z $PP ]; then
   if type gcc > /dev/null ; then
@@ -39,9 +40,9 @@ compile_shader() {
   ###
   #sed "/^#\s/d" "${tmpfile}" | sed "s/^\s\b//g" > "${outfile}"
   # replace lines with only a semicolon on it
-  sed "s/^\s\b//g" "${tmpfile}" |
+  (sed "s/^\s\b//g" "${tmpfile}" |
     sed "s/^\s*;//g" |
-    astyle --mode=c --style=linux --indent=spaces=4 > "${outfile}"
+    astyle --mode=c --style=linux --indent=spaces=4) > "${outfile}"
 
   ##
   # remove the tmpfile
@@ -49,10 +50,12 @@ compile_shader() {
 }
 
 build_for_gl_es=0
-for glsl in 120 330 ; do
-  rm -rf "${glsl}" && mkdir -p "${glsl}"
-  for shader in "quad.frag" "quad.vert" "text.vert" "text.frag" ; do
-    compile_shader $glsl "src/${shader}" "${glsl}/${shader}"
+for glsl in "120" "330" ; do
+  targetdir="./${builddir}/${glsl}"
+  rm -vrf "${targetdir}"
+  mkdir -vp "${targetdir}"
+  for shader in src/*.frag src/*.vert ; do
+    compile_shader $glsl "${shader}" "${targetdir}/$(basename "${shader}")"
   done
 done
 
