@@ -1,11 +1,11 @@
-#version 120
+#version 330
 
-varying vec2 f_texcoord;
+in vec2 f_texcoord;
 uniform sampler2D tex;
 uniform float opacity;
 uniform vec4 color;
 uniform vec4 tone;
-
+out vec4 fragColor;
 vec3 rgb2hsv(vec3 c)
 {
     vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -24,13 +24,13 @@ vec3 hsv2rgb(vec3 c)
 void main(void)
 {
     const vec3 white = vec3(1.0, 1.0, 1.0);
-    vec4 basecolor = texture2D(tex, f_texcoord);
-    if(basecolor.a == 0.0) discard;
+    vec4 basecolor = texture(tex, f_texcoord);
+    if (basecolor.a == 0.0) discard;
     vec3 blendcolor = mix(basecolor.rgb, white, tone.rgb);
     if (tone.a != 1.0) {
-        gl_FragColor = vec4(hsv2rgb(rgb2hsv(blendcolor) * vec3(1.0, tone.a, 1.0)),
-                            basecolor.a * opacity) * color;
+        fragColor = vec4(hsv2rgb(rgb2hsv(blendcolor) * vec3(1.0, tone.a, 1.0)),
+                         basecolor.a * opacity) * color;
     } else {
-        gl_FragColor = vec4(blendcolor, basecolor.a * opacity) * color;
+        fragColor = vec4(blendcolor, basecolor.a * opacity) * color;
     }
 }
