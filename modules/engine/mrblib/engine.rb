@@ -115,14 +115,12 @@ module Moon
 
     def setup_default_shaders
       @shaders = {}
-      shader_path = if Moon::Shader.is_legacy
-        'resources/shaders/120/'
-      else
-        'resources/shaders/330/'
-      end
-
-      @shaders[:quad] = Moon::Shader.load(shader_path + 'quad.vert', shader_path + 'quad.frag')
-      @shaders[:text] = Moon::Shader.load(shader_path + 'text.vert', shader_path + 'text.frag')
+      dfs = Moon::DEFAULT_SHADERS
+      shader_path = Moon::Shader.is_legacy ? '120/' : '330/'
+      @shaders[:quad] = Moon::Shader.new(dfs.fetch(shader_path + 'quad.vert'),
+        dfs.fetch(shader_path + 'quad.frag'))
+      @shaders[:text] = Moon::Shader.new(dfs.fetch(shader_path + 'text.vert'),
+        dfs.fetch(shader_path + 'text.frag'))
 
       Moon::Sprite.default_shader = @shaders[:quad]
       Moon::Spritesheet.default_shader = @shaders[:quad]
