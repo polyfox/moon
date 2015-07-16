@@ -18,7 +18,7 @@ namespace :shaders do
 # DO NOT MODIFY THIS FILE, ALL CHANGES WILL BE LOST.
 #
 module Moon
-  DEFAULT_SHADERS = {
+  Shader::DEFAULTS = {
 __EOS__
       Dir.chdir File.join(dir, 'build') do
         Dir.glob("**/*.{frag,vert}") do |filename|
