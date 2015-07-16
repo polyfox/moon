@@ -3,13 +3,14 @@ require 'yard/rake/yardoc_task'
 require_relative 'lib/platform'
 
 load 'tasks/mruby.rake'
+load 'tasks/shaders.rake'
 
 YARD::Rake::YardocTask.new do |t|
   t.files = ['docstub/**/*.rb',
              'modules/**/*.rb']
 end
 
-task :clean do
+task :cmake_clean do
   if Dir.exist?('build')
     Dir.chdir 'build' do
       sh 'make clean'
@@ -17,13 +18,15 @@ task :clean do
   end
 end
 
+task clean: ['shaders:clean', :cmake_clean]
+
 task :remove_build_dir do
   FileUtils::Verbose.rm_rf 'build'
 end
 
-task hard_clean: :remove_build_dir
+task hard_clean: ['shaders:clean', :remove_build_dir]
 
-task :build do
+task :cmake_build do
   FileUtils.mkdir_p 'build'
   Dir.chdir 'build' do
     cmd = 'cmake ..'
@@ -33,7 +36,8 @@ task :build do
   end
 end
 
-task clean_build: ['mruby:hard_clean', 'remove_build_dir']
+task build: ['shaders:build', :cmake_build]
+task clean_build: ['mruby:hard_clean', :hard_clean]
 task rebuild: [:clean_build, :build]
 
 task test: 'mruby:test'
