@@ -1,6 +1,8 @@
 module Moon
   # This may need to be rewritten in C/++
   class Tilemap
+    attr_reader :w
+    attr_reader :h
     # @return [Moon::Spritesheet]
     attr_accessor :tileset
     # @return [Moon::DataMatrix]
@@ -38,7 +40,7 @@ module Moon
     end
 
     def refresh_size
-      resize @datasize.x * @tilesize.x, @datasize.y * @tilesize.y
+      @w, @h = @datasize.x * @tilesize.x, @datasize.y * @tilesize.y
     end
 
     def refresh_data
