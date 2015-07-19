@@ -70,7 +70,7 @@ module Moon
     end
 
     private def create_input
-      @input = Input.new self
+      @input = Input.new @screen.window
       @log.puts 'Input initialized'
     end
 
