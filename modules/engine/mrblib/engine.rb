@@ -103,10 +103,9 @@ module Moon
     # @return [self]
     def setup
       setup_glfw
-      reset_gl_flags
-      create_screen
-      create_input
       setup_glew
+      reset_gl_flags
+      create_input
       setup_default_shaders
       self
     end
