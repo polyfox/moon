@@ -40,7 +40,23 @@ module Moon
     private def gl_assert
       error = GL2.glGetError
       if error != GL2::GL_NO_ERROR
-        fail "Error initializing OpenGL! glGetError: 0x%08x" % error
+        if error == 0x500
+          # just ignore, invalid enums for now
+          return
+        end
+        begin
+          fail "Error initializing OpenGL! glGetError: 0x%08x" % error
+        # mruby generates backtraces based on the current backtrace, and
+        # it avoids copying the backtrace into the exception, so an exception's
+        # backtrace will be based on the CURRENT stack trace rather than
+        # the stack trace it was raised from. -.- pain in the a__ I know.
+        rescue => ex
+          STDERR.puts ex.inspect
+          ex.backtrace.each do |line|
+            STDERR.puts "\t#{line}"
+          end
+          raise ex
+        end
       end
     end
 
