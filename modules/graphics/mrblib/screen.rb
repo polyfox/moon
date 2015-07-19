@@ -7,12 +7,35 @@ module Moon
     attr_reader :window
     attr_reader :clear_color
 
-    # @param [GLFW::Window] window
-    def initialize(window)
-      @window = window
+    # @param [Integer] w
+    # @param [Integer] h
+    def initialize(w, h)
+      GLFW.window_hint GLFW::RESIZABLE, GL2::GL_FALSE
+      GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 3
+      GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 3
+      GLFW.window_hint GLFW::OPENGL_FORWARD_COMPAT, GL2::GL_TRUE # for 3.0
+      GLFW.window_hint GLFW::OPENGL_PROFILE, GLFW::OPENGL_CORE_PROFILE # for 3.0 and on
+      Moon::Shader.is_legacy = false
+
+      begin
+        @window = GLFW::Window.new w, h, 'Moon Player'
+      rescue GLFWError
+        GLFW.default_window_hints
+        GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 2
+        GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 1
+        Moon::Shader.is_legacy = true
+
+        @window = GLFW::Window.new w, h, 'Moon Player'
+      end
+
       @scale = 1.0
       init_clear_color
       init_shader
+    end
+
+    def close
+      @window.destroy if @window
+      @window = nil
     end
 
     private def init_clear_color

@@ -11,7 +11,6 @@ module Moon
     attr_accessor :config
 
     attr_accessor :log
-    attr_reader :window
     attr_reader :screen
     attr_reader :input
 
@@ -19,7 +18,6 @@ module Moon
     # @yieldparam [Float] delta
     def initialize(&block)
       @config = { width: 800, height: 600 }
-      @window = nil
       @screen = nil
       @input = nil
       @fps = Moon::Clock.new
@@ -59,46 +57,16 @@ module Moon
       gl_assert
     end
 
-    private def setup_opengl
-      reset_gl_flags
-    end
-
     private def setup_glfw
-      GLFW.default_window_hints
-      GLFW.window_hint GLFW::RESIZABLE, GL2::GL_FALSE
-      GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 3
-      GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 3
-      GLFW.window_hint GLFW::OPENGL_FORWARD_COMPAT, GL2::GL_TRUE # for 3.0
-      GLFW.window_hint GLFW::OPENGL_PROFILE, GLFW::OPENGL_CORE_PROFILE # for 3.0 and on
-      Moon::Shader.is_legacy = false
-
       w, h = @config.fetch(:width), @config.fetch(:height)
-      begin
-        @window = GLFW::Window.new w, h, 'Moon Player'
-      rescue GLFWError
-        GLFW.default_window_hints
-        GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 2
-        GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 1
-        Moon::Shader.is_legacy = true
+      @screen = Screen.new(w, h)
+      @screen.window.make_current
 
-        @window = GLFW::Window.new w, h, 'Moon Player'
-      end
-
-      @log.puts 'GLFW initialized'
-    end
-
-    private def setup_window
-      @window.make_current
-      printf "OpenGL v%d.%d\n", @window.window_attrib(GLFW::CONTEXT_VERSION_MAJOR),
-                                @window.window_attrib(GLFW::CONTEXT_VERSION_MINOR)
+      printf "OpenGL v%d.%d\n", @screen.window.window_attrib(GLFW::CONTEXT_VERSION_MAJOR),
+                                @screen.window.window_attrib(GLFW::CONTEXT_VERSION_MINOR)
       puts "GLSL v" + GL2.glGetString(GL2::GL_SHADING_LANGUAGE_VERSION)
       puts "GLFW v" + GLFW.version_string
       self
-    end
-
-    private def create_screen
-      @screen = Screen.new @window
-      @log.puts 'Screen initialized'
     end
 
     private def create_input
@@ -135,8 +103,7 @@ module Moon
     # @return [self]
     def setup
       setup_glfw
-      setup_window
-      setup_opengl
+      reset_gl_flags
       create_screen
       create_input
       setup_glew
@@ -146,8 +113,7 @@ module Moon
 
     # Destroys the current window and cleans up.
     def shutdown
-      @window.destroy if @window
-      @window = nil
+      @screen.close
       self
     end
 
