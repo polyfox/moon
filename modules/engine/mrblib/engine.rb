@@ -120,12 +120,12 @@ module Moon
     def main
       @log.puts 'Starting main loop'
       clear_bits = GL2::GL_COLOR_BUFFER_BIT | GL2::GL_DEPTH_BUFFER_BIT
-      until @window.should_close?
+      until @screen.window.should_close?
         GL2.glClear clear_bits
         Audio.update
         @step.call self, @fps.restart
-        @window.title = sprintf "FPS: %d", @fps.fps
-        @window.swap_buffers
+        @screen.window.title = sprintf "FPS: %d", @fps.fps
+        @screen.window.swap_buffers
         GLFW.poll_events
       end
     rescue EngineQuit
