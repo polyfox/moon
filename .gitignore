@@ -38,8 +38,5 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 
-# gems
-Gemfile.lock
-
 # auto-generated files
 /modules/graphics/mrblib/shaders.rb
