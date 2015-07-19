@@ -1,40 +1,49 @@
 language: cpp
+sudo: false
+addons:
+  apt:
+    sources:
+    - kalakris-cmake
+    packages:
+    - libopenal-dev
+    - libdevil-dev
+    - libglew-dev
+    - libgles2-mesa-dev
+    - freeglut3-dev
+    - libx11-dev
+    - libxmu-dev
+    - libxi-dev
+    - libyaml-dev
+    - xorg-dev
+    - libglu1-mesa-dev
+    - cmake
 matrix:
   include:
     - compiler: gcc
       env: MOON_MRUBY_TOOLCHAIN=gcc
 
     - compiler: clang
-      env: MOON_MRUBY_TOOLCHAIN=clang
+      env:
+      - MOON_MRUBY_TOOLCHAIN=clang
+      - LD_LIBRARY_PATH: "${TRAVIS_BUILD_DIR}/build/vendor/glfw/src"
 
-  allow_failures:
-    - compiler: clang
+branches:
+  only:
+  - master
 
 before_install:
-  - sudo apt-get update -qq
   - git submodule update --init --recursive --depth=1
-  # build.cmake-data
-  - wget http://ftp.us.debian.org/debian/pool/main/c/cmake/cmake-data_2.8.9-1_all.deb
-  - sudo dpkg -i ./cmake-data_2.8.9-1_all.deb
-  - rm -v ./cmake-data_2.8.9-1_all.deb
-  # build.cmake
-  - wget http://ftp.us.debian.org/debian/pool/main/c/cmake/cmake_2.8.9-1_amd64.deb
-  - sudo dpkg -i ./cmake_2.8.9-1_amd64.deb
-  - rm -v ./cmake_2.8.9-1_amd64.deb
 
 install:
-  # deps.moon
-  - sudo apt-get install -qq libopenal-dev libdevil-dev libglew-dev libgles2-mesa-dev freeglut3-dev libx11-dev libxmu-dev libxi-dev libyaml-dev
-  # deps.glfw3
-  - sudo apt-get install -qq xorg-dev libglu1-mesa-dev
-  # ruby bundler
-  - ruby --version
   - gem install bundler
-  - bundle install
+  - bundle install --without development --deployment  --jobs=3 --retry=3
 
 before_script:
-  - cmake --version
   - ruby --version
+
+cache:
+  directories:
+  - vendor/bundle
 
 script:
   - bundle exec rake --verbose build
