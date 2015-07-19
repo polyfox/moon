@@ -30,24 +30,17 @@ matrix:
 
 before_install:
   - git submodule update --init --recursive --depth=1
-  # build.cmake-data
-  #- wget http://ftp.us.debian.org/debian/pool/main/c/cmake/cmake-data_2.8.9-1_all.deb
-  #- dpkg -i --force-not-root --root=$HOME ./cmake-data_2.8.9-1_all.deb
-  #- rm -v ./cmake-data_2.8.9-1_all.deb
-  # build.cmake
-  #- wget http://ftp.us.debian.org/debian/pool/main/c/cmake/cmake_2.8.9-1_amd64.deb
-  #- dpkg -i --force-not-root --root=$HOME ./cmake_2.8.9-1_amd64.deb
-  #- rm -v ./cmake_2.8.9-1_amd64.deb
 
 install:
-  # ruby bundler
-  - ruby --version
   - gem install bundler
-  - bundle install
+  - bundle install --without development --deployment  --jobs=3 --retry=3
 
 before_script:
-  - cmake --version
   - ruby --version
+
+cache:
+  directories:
+  - vendor/bundle
 
 script:
   - bundle exec rake --verbose build
