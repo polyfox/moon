@@ -23,10 +23,9 @@ matrix:
       env: MOON_MRUBY_TOOLCHAIN=gcc
 
     - compiler: clang
-      env: MOON_MRUBY_TOOLCHAIN=clang
-
-  allow_failures:
-    - compiler: clang
+      env:
+      - MOON_MRUBY_TOOLCHAIN=clang
+      - LD_LIBRARY_PATH: "${TRAVIS_BUILD_DIR}/build/vendor/glfw/src"
 
 before_install:
   - git submodule update --init --recursive --depth=1
