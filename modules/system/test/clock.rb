@@ -1,5 +1,3 @@
-GLFW.init
-
 assert 'Clock type' do
   assert_kind_of(Class, Moon::Clock)
 end
@@ -28,5 +26,3 @@ assert 'Clock#delta' do
   clock = Moon::Clock.new
   assert_kind_of(Float, clock.delta)
 end
-
-GLFW.terminate

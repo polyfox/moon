@@ -3,6 +3,7 @@
 #include <mruby/class.h>
 #include <mruby/data.h>
 #include "moon/engine.hxx"
+#include "moon/time.hxx"
 #include "moon/mrb/clock.hxx"
 #include "moon/mrb/context.hxx"
 #include "moon/mrb/rect.hxx"
@@ -19,6 +20,7 @@ const struct mrb_data_type engine_data_type = { "Engine", NULL };
 extern "C" void
 mrb_mruby_moon_system_gem_init(mrb_state* mrb)
 {
+  moon_time_init();
   moon_module = mrb_define_module(mrb, "Moon");
   mmrb_clock_init(mrb, moon_module);
   mmrb_rect_init(mrb, moon_module);

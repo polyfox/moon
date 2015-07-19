@@ -20,6 +20,4 @@ MRuby::Gem::Specification.new('mruby-moon-system') do |spec|
   #spec.cxx do |cxx|
   #  cxx.flags << '-std=c++11'
   #end
-
-  spec.add_dependency 'mruby-glfw3'
 end
