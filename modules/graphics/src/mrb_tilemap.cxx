@@ -40,7 +40,8 @@ tilemap_render(mrb_state *mrb, mrb_value self)
   shader->SetUniform("color", Moon::Vector4(1, 1, 1, 1));
   shader->SetUniform("tone", Moon::Vector4(0, 0, 0, 1));
   shader->SetUniform("tex", /*GL_TEXTURE*/0);
-  vbo->Render(GL_TRIANGLE_STRIP);
+  // TRIANGLE_STRIPS aren't very friendly with multiple quads
+  vbo->Render(GL_TRIANGLES, 0);
   return self;
 }
 
