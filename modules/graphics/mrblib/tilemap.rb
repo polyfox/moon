@@ -1,5 +1,6 @@
 module Moon
   class Tilemap
+    extend TypedAttributes
     include Shadable
     include OriginCoords
 
@@ -42,9 +43,21 @@ module Moon
     #   @return [Shader]
     attribute :shader, Shader
 
+    # @!attribute :texture
+    #   @return [Texture]
+    attribute :texture, Texture
+
+    # @!attribute :opacity
+    #   @return [Float]
+    attribute :opacity, Float
+
+    # @!attribute :angle
+    #   @return [Numeric]
+    attribute :angle, Numeric
+
     # (see #set)
     def initialize(options = {})
-      @vbo = VertexBuffer.new
+      @vbo           = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
       @tilesize      = Vector2.new(0, 0)
       @w             = 0
       @h             = 0
@@ -55,7 +68,7 @@ module Moon
       @tileset       = nil
       @layer_opacity = nil
       @origin        = Vector2.new(0, 0)
-      @angle         = 0
+      @angle         = 0.0
       @opacity       = 1.0
       set options unless options.empty?
     end
@@ -65,11 +78,7 @@ module Moon
     end
 
     private def refresh_tileset
-      if @tileset
-        @tilesize = Vector2.new(@tileset.w, @tileset.h)
-      else
-        @tilesize = Vector2.new
-      end
+      @tilesize = Vector2.new(@tileset.w, @tileset.h)
       refresh_size
     end
 
@@ -82,17 +91,19 @@ module Moon
       rows = @datasize.y.to_i
       layers = @datasize.z.to_i
 
+      @vbo.clear
+
       # we loop by layer
       layers.times do |dz|
         # recalculate the layer opacity
         opacity = (@layer_opacity ? @layer_opacity[dz] : 1.0)
         render_state = { opacity: opacity }
-        rnz = z
-        layer = dz * @cols * @rows
+        rnz = 0
+        layer = dz * cols * rows
         # and then by row
         rows.times do |dy|
-          rny = y + dy * cell_h
-          row = dy * @cols
+          rny = dy * cell_h
+          row = dy * cols
           rwl = row + layer
           # and then render by column
           cols.times do |dx|
@@ -101,12 +112,13 @@ module Moon
             # if the tile_id is -1 or less, then this tile is disabled
             # and therefore should not be rendered.
             next if tile_id < 0
-            rnx = x + j * cell_w
+            rnx = dx * cell_w
             cell_z = @data_zmap ? @data_zmap[data_index] : 0
-            @tileset.push_into @vbo, rnx, rny, rnz + cell_z, tile_id, render_state
+            @tileset.push_quad @vbo, rnx, rny, rnz + cell_z, tile_id, render_state
           end
         end
       end
+      self
     end
 
     alias :set_tileset :tileset=
@@ -146,6 +158,7 @@ module Moon
       self.data      = options.fetch(:data,      @data)
       self.data_zmap = options.fetch(:data_zmap, @data_zmap)
 
+      self.texture = tileset.texture
       # check data lengths
       @datalength = datasize.x.to_i * datasize.y.to_i * datasize.z.to_i
       if @datalength != @data.size
