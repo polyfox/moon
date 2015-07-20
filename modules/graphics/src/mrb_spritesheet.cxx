@@ -12,8 +12,8 @@
 #include "moon/mrb/vector4.hxx"
 #include "moon/mrb/transform.hxx"
 #include "moon/mrb/texture.hxx"
-#include "moon/mrb/renderable.hxx"
 #include "moon/mrb_err.hxx"
+#include "moon/mrb/helpers.hxx"
 #include "moon/glm.h"
 
 static mrb_sym id_opacity;
@@ -43,10 +43,10 @@ struct RenderState {
 static mrb_value
 spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
 {
-  Moon::Texture *texture = get_valid_texture(mrb, IVget(KEY_TEXTURE));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, IVget(KEY_VBO));
-  const GLuint tile_width = mrb_fixnum(IVget("@w"));
-  const GLuint tile_height = mrb_fixnum(IVget("@h"));
+  Moon::Texture *texture = get_valid_texture(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_TEXTURE));
+  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_VBO));
+  const GLuint tile_width = mrb_fixnum(moon_mrb_iv_get_no_nil(mrb, self, "@w"));
+  const GLuint tile_height = mrb_fixnum(moon_mrb_iv_get_no_nil(mrb, self, "@h"));
   const GLfloat tiles_per_row = texture->GetWidth() / tile_width;
   const GLfloat tiles_per_column = texture->GetHeight() / tile_height;
   const GLuint total_sprites = tiles_per_row * tiles_per_column;
@@ -84,14 +84,14 @@ spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
 static void
 render(mrb_state *mrb, mrb_value self, const glm::vec3 position,
     const int index, const RenderState &render_ops) {
-  const int total_sprites = mrb_int(mrb, IVget("@cell_count"));
+  const int total_sprites = mrb_int(mrb, moon_mrb_iv_get_no_nil(mrb, self, "@cell_count"));
   if ((index < 0) || (index >= total_sprites)) {
     mrb_raisef(mrb, E_ARGUMENT_ERROR, "sprite index is out of range.");
   }
   const int offset = index * 4;
-  Moon::Texture *texture = get_texture(mrb, IVget(KEY_TEXTURE));
-  Moon::Shader *shader = get_shader(mrb, IVget(KEY_SHADER));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, IVget(KEY_VBO));
+  Moon::Texture *texture = get_texture(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_TEXTURE));
+  Moon::Shader *shader = get_shader(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_SHADER));
+  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_VBO));
 
   shader->Use();
 
@@ -115,6 +115,49 @@ render(mrb_state *mrb, mrb_value self, const glm::vec3 position,
   vbo->Render(GL_TRIANGLE_STRIP, offset);
 };
 
+static void
+set_render_options(mrb_state *mrb, mrb_value options, RenderState *render_state)
+{
+  mrb_value keys = mrb_hash_keys(mrb, options);
+  int len = mrb_ary_len(mrb, keys);
+  const mrb_value *keys_ary = RARRAY_PTR(keys);
+
+  for (int i = 0; i < len; ++i) {
+    mrb_value key = keys_ary[i];
+    if (!mrb_symbol_p(key)) continue;
+
+    mrb_value val = mrb_hash_get(mrb, options, key);
+    // :opacity
+    if (mrb_symbol(key) == id_opacity) {
+      render_state->opacity = mrb_to_flo(mrb, val);
+
+    // :color
+    } else if (mrb_symbol(key) == id_color) {
+      render_state->color = mmrb_to_vector4(mrb, val);
+
+    // :tone
+    } else if (mrb_symbol(key) == id_tone) {
+      render_state->tone = mmrb_to_vector4(mrb, val);
+
+    // :ox
+    } else if (mrb_symbol(key) == id_ox) {
+      render_state->origin.x = mrb_to_flo(mrb, val);
+
+    // :oy
+    } else if (mrb_symbol(key) == id_oy) {
+      render_state->origin.y = mrb_to_flo(mrb, val);
+
+    // :angle
+    } else if (mrb_symbol(key) == id_angle) {
+      render_state->angle = mrb_to_flo(mrb, val);
+
+    // :transform
+    } else if (mrb_symbol(key) == id_transform) {
+      render_state->transform = mmrb_to_transform(mrb, val);
+    }
+  }
+}
+
 /*
  * @overload Spritesheet#render(x: float, y: float, z: float, index: int)
  * @overload Spritesheet#render(x: float, y: float, z: float, index: int, options: Hash<Symbol, Object>)
@@ -125,60 +168,60 @@ spritesheet_render(mrb_state *mrb, mrb_value self)
   mrb_int index;
   mrb_float x, y, z;
   mrb_value options = mrb_nil_value();
-  RenderState render_op;
+  RenderState render_state;
   mrb_get_args(mrb, "fffi|H", &x, &y, &z, &index, &options);
   if (!mrb_nil_p(options)) {
-    mrb_value keys = mrb_hash_keys(mrb, options);
-    int len = mrb_ary_len(mrb, keys);
-    const mrb_value *keys_ary = RARRAY_PTR(keys);
-
-    for (int i = 0; i < len; ++i) {
-      mrb_value key = keys_ary[i];
-
-      if (mrb_symbol_p(key)) {
-        mrb_value val = mrb_hash_get(mrb, options, key);
-        // :opacity
-        if (mrb_symbol(key) == id_opacity) {
-          render_op.opacity = mrb_to_flo(mrb, val);
-
-        // :color
-        } else if (mrb_symbol(key) == id_color) {
-          render_op.color = mmrb_to_vector4(mrb, val);
-
-        // :tone
-        } else if (mrb_symbol(key) == id_tone) {
-          render_op.tone = mmrb_to_vector4(mrb, val);
-
-        // :ox
-        } else if (mrb_symbol(key) == id_ox) {
-          render_op.origin.x = mrb_to_flo(mrb, val);
-
-        // :oy
-        } else if (mrb_symbol(key) == id_oy) {
-          render_op.origin.y = mrb_to_flo(mrb, val);
-
-        // :angle
-        } else if (mrb_symbol(key) == id_angle) {
-          render_op.angle = mrb_to_flo(mrb, val);
-
-        // :transform
-        } else if (mrb_symbol(key) == id_transform) {
-          render_op.transform = mmrb_to_transform(mrb, val);
-        }
-      }
-    }
+    set_render_options(mrb, options, &render_state);
   }
-  render(mrb, self, glm::vec3(x, y, z), index, render_op);
+  render(mrb, self, glm::vec3(x, y, z), index, render_state);
+  return self;
+}
+
+static mrb_value
+spritesheet_push_quad(mrb_state *mrb, mrb_value self)
+{
+  RenderState render_state;
+  Moon::VertexBuffer *dest_vbo;
+  Moon::VertexBuffer *vbo;
+  mrb_float x, y, z;
+  mrb_value options = mrb_nil_value();
+  mrb_int offset = 0;
+  GLuint index;
+  Moon::Vertex vertices[4];
+  GLuint indices[] = { 0, 1, 3, 2, 3, 1 };
+  int i;
+  mrb_get_args(mrb, "dfffi|H",
+    &dest_vbo, &vbo_data_type,
+    &x, &y, &z, &offset,
+    &options
+  );
+  if (!mrb_nil_p(options)) {
+    set_render_options(mrb, options, &render_state);
+  }
+
+  vbo = get_vbo(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_VBO));
+  Moon::Vector2 pos(x, y);
+  render_state.opacity = 1.0;
+  index = offset * 4;
+  // now apply render state changes
+  for (int i = 0; i < 4; ++i) {
+    vertices[i] = vbo->GetVertex(index + i);
+    vertices[i].pos += pos;
+    vertices[i].color.a *= render_state.opacity;
+  }
+
+  dest_vbo->PushBack(vertices, 4, indices, 6);
   return self;
 }
 
 MOON_C_API void
 mmrb_spritesheet_init(mrb_state *mrb, struct RClass* mod)
 {
-  struct RClass *spritesheet_class = mrb_define_class_under(mrb, mod, "Spritesheet", mrb->object_class);
+  struct RClass *ss_cls = mrb_define_class_under(mrb, mod, "Spritesheet", mrb->object_class);
 
-  mrb_define_method(mrb, spritesheet_class, "render",           spritesheet_render,         MRB_ARGS_ARG(4,1));
-  mrb_define_method(mrb, spritesheet_class, "generate_buffers", spritesheet_generate_buffers,    MRB_ARGS_NONE());
+  mrb_define_method(mrb, ss_cls, "render",           spritesheet_render,           MRB_ARGS_ARG(4,1));
+  mrb_define_method(mrb, ss_cls, "generate_buffers", spritesheet_generate_buffers, MRB_ARGS_NONE());
+  mrb_define_method(mrb, ss_cls, "push_quad",        spritesheet_push_quad,        MRB_ARGS_ARG(5,1));
 
   id_opacity   = mrb_intern_cstr(mrb, "opacity");
   id_tone      = mrb_intern_cstr(mrb, "tone");
