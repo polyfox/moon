@@ -1,58 +1,69 @@
 module Moon
-  # This may need to be rewritten in C/++
   class Tilemap
-    attr_reader :w
-    attr_reader :h
-    # @return [Moon::Spritesheet]
-    attr_accessor :tileset
-    # @return [Moon::DataMatrix]
-    attr_accessor :data
-    # @return [Moon::DataMatrix]
-    attr_accessor :data_zmap
-    # @return [Array<Float>]
-    attr_accessor :layer_opacity
-    # @return [Boolean]
-    attr_accessor :repeat_map
-    # restricts rendering inside view
-    # @return [Moon::Rect]
-    attr_accessor :view
-    # selects a section of the map_data to render
-    # @return [Moon::Cuboid]
-    attr_accessor :selection
-    # @return [Vector2]
-    attr_reader :tilesize
-    # @return [Vector2]
-    attr_reader :datasize
+    include Shadable
 
-    ##
-    #
-    private def initialize
+    # @!attribute [r] :w
+    #   @return [Float]
+    attr_reader :w
+
+    # @!attribute [r] :h
+    #   @return [Float]
+    attr_reader :h
+
+    # @!attribute :tilesize
+    #   @return [Vector2] Taken from the tileset #w and #h
+    attr_reader :tilesize
+
+    # @!attribute :datasize
+    #   @return [Vector3] Used for denoting the size of the data and data_zmap
+    attribute :datasize, Moon::Vector3
+    private :datasize=
+
+    # @!attribute :tileset
+    #   @return [Spritesheet]
+    attribute :tileset, Spritesheet
+
+    # @!attribute [r] :data
+    #   @return [Array<Integer>]
+    attribute :data, Array
+    private :data=
+
+    # @!attribute :data_zmap
+    #   @return [Array<Float>]
+    attribute :data_zmap, Array, nil
+    private :data_zmap=
+
+    # @!attribute :layer_opacity
+    #   @return [Array<Float>]
+    attribute :layer_opacity, Array, nil
+
+    # @!attribute :shader
+    #   @return [Shader]
+    attribute :shader, Shader
+
+    # (see #set)
+    def initialize(options = {})
       @vbo = VertexBuffer.new
-      @tileset       = nil
-      @data          = nil
-      @data_zmap     = nil
-      @layer_opacity = nil
-      @repeat_map    = false
-      @view          = nil
-      @selection     = nil
       @tilesize      = Vector2.new(0, 0)
-      @datasize      = Vector2.new(0, 0)
+      @w             = 0
+      @h             = 0
+      @datasize      = Vector3.new(0, 0, 0)
+      @data          = []
+      @data_zmap     = nil
+      @shader        = self.class.default_shader
+      @tileset       = nil
+      @layer_opacity = nil
+      @origin        = Vector2.new(0, 0)
+      @angle         = 0
+      @opacity       = 1.0
+      set options unless options.empty?
     end
 
-    def refresh_size
+    private def refresh_size
       @w, @h = @datasize.x * @tilesize.x, @datasize.y * @tilesize.y
     end
 
-    def refresh_data
-      if @data
-        @datasize = Vector2.new(@data.xsize, @data.ysize)
-      else
-        @datasize = Vector2.new
-      end
-      refresh_size
-    end
-
-    def refresh_tileset
+    private def refresh_tileset
       if @tileset
         @tilesize = Vector2.new(@tileset.w, @tileset.h)
       else
@@ -61,103 +72,90 @@ module Moon
       refresh_size
     end
 
-    # @param [Moon::DataMatrix] data
-    def data=(data)
-      @data = data
-      refresh_data
-    end
-
-    # @param [Moon::Spritesheet] tileset
-    def tileset=(tileset)
-      @tileset = tileset
+    private def generate_buffers
       refresh_tileset
-    end
-
-    ##
-    # @param [Integer] x
-    # @param [Integer] y
-    # @param [Integer] z
-    # @param [Hash<Symbol, Object>] options
-    private def render_content(x, y, z, options)
-      return unless @data
-      return unless @tileset
-
-      cell_w = @tilesize.x
-      cell_h = @tilesize.y
-
-      dox = 0
-      doy = 0
-      doz = 0
-      cols = @data.xsize
-      rows = @data.ysize
-      layers = @data.zsize
-
-      vx  = nil
-      vx2 = nil
-      vy  = nil
-      vy2 = nil
-
-      dox, doy, doz, cols, rows, layers = *@selection if @selection
-
-      if @view
-        vx = @view.x
-        vx2 = @view.x2
-        vy = @view.y
-        vy2 = @view.y2
-      end
+      refresh_size
+      cell_w = @tilesize.x.to_i
+      cell_h = @tilesize.y.to_i
+      cols = @datasize.x.to_i
+      rows = @datasize.y.to_i
+      layers = @datasize.z.to_i
 
       # we loop by layer
-      layers.times do |l|
-
-        dz = l + doz # offset data z index
-        if @repeat_map
-          dz %= @data.zsize
-        else
-          next if dz < 0 || dz >= @data.zsize
-        end
-
-        opacity = @layer_opacity ? @layer_opacity[dz] : 1.0
-        opacity *= options.fetch(:opacity, 1.0)
-        render_ops = options.merge(opacity: opacity)
-
+      layers.times do |dz|
+        # recalculate the layer opacity
+        opacity = (@layer_opacity ? @layer_opacity[dz] : 1.0)
+        render_state = { opacity: opacity }
         rnz = z
-
+        layer = dz * @cols * @rows
         # and then by row
-        rows.times do |i|
-
-          dy = i + doy # offset data y index
-          if @repeat_map
-            dy %= @data.ysize
-          else
-            next if dy < 0 || dy >= @data.ysize
-          end
-
-          rny = y + i * cell_h
-          next if rny < vy || rny > vy2 if vy && vy2
-
-          # and then render by cell
-          cols.times do |j|
-
-            dx = j + dox # offset data x index
-            if @repeat_map
-              dx %= @data.xsize
-            else
-              next if dx < 0 || dx >= @data.xsize
-            end
-
-            tile_id = @data[dx, dy, dz]
-            # if -1 or less, then its a negative tile
-            # and therefore should not be rendered
+        rows.times do |dy|
+          rny = y + dy * cell_h
+          row = dy * @cols
+          rwl = row + layer
+          # and then render by column
+          cols.times do |dx|
+            data_index = dx + rwl
+            tile_id = @data[data_index]
+            # if the tile_id is -1 or less, then this tile is disabled
+            # and therefore should not be rendered.
             next if tile_id < 0
-
             rnx = x + j * cell_w
-            next if rnx < vx || rnx > vx2 if vx && vx2
-
-            zm = @data_zmap ? @data_zmap[dx, dy, dz] : 0
-            @tileset.render rnx, rny, rnz + zm, tile_id, render_ops
+            cell_z = @data_zmap ? @data_zmap[data_index] : 0
+            @tileset.push_into @vbo, rnx, rny, rnz + cell_z, tile_id, render_state
           end
         end
       end
+    end
+
+    alias :set_tileset :tileset=
+    # @param [Spritesheet] tileset
+    def tileset=(tileset)
+      set_tileset tileset
+      generate_buffers
+    end
+
+    alias :set_layer_opacity :layer_opacity=
+    # @param [Array<Float>] layer_opacity
+    def layer_opacity=(layer_opacity)
+      set_layer_opacity layer_opacity
+      generate_buffers
+    end
+
+    # @param [Hash<Symbol>] options
+    # @option options [Spritesheet] :tileset
+    # @option options [Array<Float>] :layer_opacity
+    # @option options [Shader] :shader
+    # @option options [Vector2] :origin
+    # @option options [Float] :angle
+    # @option options [Float] :opacity
+    # @option options [Vector3] :datasize
+    # @option options [Array<Integer>] :data
+    # @option options [Array<Float>] :data_zmap
+    # @return [self]
+    def set(options)
+      # set attributes
+      set_tileset options.fetch(:tileset, @tileset)
+      set_layer_opacity options.fetch(:layer_opacity, @layer_opacity)
+      self.shader    = options.fetch(:shader,        @shader)
+      self.origin    = options.fetch(:origin,    @origin)
+      self.angle     = options.fetch(:angle,     @angle)
+      self.opacity   = options.fetch(:opacity,   @opacity)
+      self.datasize  = options.fetch(:datasize,  @datasize)
+      self.data      = options.fetch(:data,      @data)
+      self.data_zmap = options.fetch(:data_zmap, @data_zmap)
+
+      # check data lengths
+      @datalength = datasize.x.to_i * datasize.y.to_i * datasize.z.to_i
+      if @datalength != @data.size
+        raise SizeError, "data size mismatch."
+      end
+      if @data_zmap && @datalength != @data_zmap.size
+        raise SizeError, "data_zmap size mismatch."
+      end
+
+      # regenerate buffers
+      generate_buffers
     end
   end
 end
