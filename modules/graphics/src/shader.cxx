@@ -98,7 +98,7 @@ namespace Moon {
   GLint Shader::InitAttribute(const char *name) {
     GLint attribute = glGetAttribLocation(m_program, name);
     if (attribute == -1) {
-      fprintf(stderr, "Shader(%i): Could not bind attribute %s: %x\n", m_program, name, glGetError());
+      fprintf(stderr, "Shader(program_id: %i): OpenGL Error 0x%04x: Could not bind attribute %s\n", m_program, glGetError(), name);
       abort();
     }
     m_attributeList[name] = attribute;
@@ -108,7 +108,7 @@ namespace Moon {
   GLint Shader::InitUniform(const char *name) {
     GLint uniform = glGetUniformLocation(m_program, name);
     if (uniform == -1) {
-      fprintf(stderr, "Shader(%i): Could not bind uniform %s: %x\n", m_program, name, glGetError());
+      fprintf(stderr, "Shader(program_id: %i): OpenGL Error 0x%04x: Could not bind uniform %s\n", m_program, glGetError(), name);
       abort();
     }
     m_uniformLocationList[name] = uniform;
