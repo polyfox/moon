@@ -16,7 +16,6 @@
 #include "moon/mrb/helpers.hxx"
 #include "moon/mrb_err.hxx"
 #include "moon/glm.h"
-#include "moon/mrb/renderable.hxx"
 
 static mrb_value
 sprite_generate_buffers(mrb_state *mrb, mrb_value self)
