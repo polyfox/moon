@@ -7,6 +7,7 @@
 #include "moon/intern.h"
 #include "moon/gl.h"
 #include "moon/graphics.hxx"
+#include "moon/vector3.hxx"
 
 namespace Moon {
   class VertexBuffer {
@@ -19,6 +20,10 @@ namespace Moon {
     void PushBackVertices(Vertex *v, int vertex_count);
     void PushBackIndices(GLuint i[], int index_count);
     void PushBack(Vertex *v, int vertex_count, GLuint i[], int index_count); // indices need to be relative to the vertices pushed in
+    Vertex GetVertex(const int index);
+    GLuint GetIndex(const int index);
+    GLuint GetVertexCount();
+    GLuint GetIndexCount();
     void Clear();
     void Upload();
   private:

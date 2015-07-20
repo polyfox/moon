@@ -9,6 +9,13 @@ namespace Moon {
     Vector2 pos;
     Vector2 tex_coord;
     Vector4 color;
+
+    Vertex() {};
+    Vertex(Vector2 _pos, Vector2 _tex_coord, Vector4 _color) :
+      pos(_pos),
+      tex_coord(_tex_coord),
+      color(_color)
+    {};
   };
 }
 #endif

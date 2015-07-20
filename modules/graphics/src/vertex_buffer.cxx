@@ -91,6 +91,28 @@ namespace Moon {
     m_dirty = true;
   }
 
+  GLuint VertexBuffer::GetVertexCount() {
+    return m_vertices.size();
+  }
+
+  GLuint VertexBuffer::GetIndexCount() {
+    return m_indices.size();
+  }
+
+  Vertex VertexBuffer::GetVertex(const int index) {
+    // we should probably handle errors more graciously...
+    assert(index < m_vertices.size());
+    assert(index > 0);
+    return m_vertices[index];
+  }
+
+  GLuint VertexBuffer::GetIndex(const int index) {
+    // we should probably handle errors more graciously...
+    assert(index < m_indices.size());
+    assert(index > 0);
+    return m_indices[index];
+  }
+
   void VertexBuffer::Clear() {
     m_vertices.clear();
     m_indices.clear();
