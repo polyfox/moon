@@ -1,6 +1,7 @@
 module Moon
   class Tilemap
     include Shadable
+    include OriginCoords
 
     # @!attribute [r] :w
     #   @return [Float]

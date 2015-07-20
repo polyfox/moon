@@ -2,10 +2,10 @@ module Moon
   class Sprite
     extend TypedAttributes
     include Shadable
+    include OriginCoords
 
     attribute :opacity, Float
     attribute :angle,   Float
-    attribute :origin,  Vector2
     attribute :color,   Vector4
     attribute :tone,    Vector4
     attribute :shader,  Shader
@@ -44,23 +44,6 @@ module Moon
     def clip_rect= rect
       set_clip_rect rect
       generate_buffers
-    end
-
-    # TODO: make sure origin is never nil, but Vec(0,0)
-    def ox
-      origin.x
-    end
-
-    def oy
-      origin.y
-    end
-
-    def ox= x
-      origin.x = x
-    end
-
-    def oy= y
-      origin.y = y
     end
   end
 end
