@@ -41,6 +41,7 @@ text_add_text(mrb_state *mrb, mrb_value self)
   font->font->outline_type = 0;
   font->font->outline_thickness = 0;
   font->FillTextBuffer(vbo, string, color, x, y, line_height);
+  return self;
 }
 
 /**
