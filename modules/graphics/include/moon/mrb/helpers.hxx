@@ -30,9 +30,21 @@
 #define KEY_TEXTURE "@texture"
 #define KEY_SHADER "@shader"
 #define KEY_VBO "@vbo"
+#define KEY_ORIGIN "@origin"
 
-#define TEXTURE_CLASS mrb_module_get_under(mrb, mrb_module_get(mrb, "Moon"), "Texture")
+#define MOON_GET_CLASS(__name__) mrb_module_get_under(mrb, mrb_module_get(mrb, "Moon"), __name__)
+#define TEXTURE_CLASS MOON_GET_CLASS("Texture")
 ;
+
+static inline mrb_value
+moon_mrb_iv_get_no_nil(mrb_state *mrb, mrb_value self, const char *name)
+{
+  mrb_value iv_value = mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, name));
+  if (mrb_nil_p(iv_value)) {
+    mrb_raisef(mrb, E_ARGUMENT_ERROR, "Cannot use a nil %S", mrb_str_new_cstr(mrb, name));
+  }
+  return iv_value;
+}
 
 static inline Moon::IntRect*
 get_rect(mrb_state *mrb, mrb_value self)
