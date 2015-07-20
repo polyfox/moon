@@ -128,6 +128,7 @@ module Moon
 
       Moon::Sprite.default_shader = @shaders[:quad]
       Moon::Spritesheet.default_shader = @shaders[:quad]
+      Moon::Tilemap.default_shader = @shaders[:quad]
       Moon::Text.default_shader = @shaders[:text]
     end
 
