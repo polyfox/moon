@@ -15,6 +15,13 @@ if [ -z $PP ]; then
   fi
 fi
 
+has_astyle=$(type astyle > /dev/null)
+if ${has_astyle} ; then
+  echo "Using astyle for shader formatting"
+else
+  echo "Shaders will not be formatted."
+fi
+
 compile_shader() {
   local glslv=${1}
   local infile=${2}
@@ -42,7 +49,11 @@ compile_shader() {
   # replace lines with only a semicolon on it
   (sed "s/^\s\b//g" "${tmpfile}" |
     sed "s/^\s*;//g" |
-    astyle --mode=c --style=linux --indent=spaces=4) > "${outfile}"
+    sed "s/^\s+#/#/g") > "${outfile}"
+
+  if ${has_astyle} ; then
+    astyle --suffix=none --mode=c --style=linux --indent=spaces=4 "${outfile}"
+  fi
 
   ##
   # remove the tmpfile
