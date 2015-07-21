@@ -45,11 +45,7 @@ compile_shader() {
   # This is done for the layout args in 120, since they leave an extra
   # space before the varying/attribute declarations.
   ###
-  #sed "/^#\s/d" "${tmpfile}" | sed "s/^\s\b//g" > "${outfile}"
-  # replace lines with only a semicolon on it
-  (sed "s/^\s\b//g" "${tmpfile}" |
-    sed "s/^\s*;//g" |
-    sed "s/^\s+#/#/g") > "${outfile}"
+  ruby ./post_process.rb "${tmpfile}" > "${outfile}"
 
   if ${has_astyle} ; then
     astyle --suffix=none --mode=c --style=linux --indent=spaces=4 "${outfile}"
