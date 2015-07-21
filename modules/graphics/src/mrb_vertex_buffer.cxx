@@ -80,6 +80,7 @@ vbo_push_indices(mrb_state *mrb, mrb_value self)
     GLuint index = mrb_int(mrb, values[i]);
     get_vbo(mrb, self)->PushBackIndices(&index, 1);
   }
+  return self;
 }
 
 static mrb_value

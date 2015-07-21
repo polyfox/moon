@@ -58,7 +58,7 @@ spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
   // note: this is only called once in initialize, so it never needs clearing
   // right now
 
-  for(int i = 0; i < total_sprites; ++i) {
+  for (GLuint i = 0; i < total_sprites; ++i) {
     GLfloat ox = (float)(i % (int)tiles_per_row);
     GLfloat oy = (float)(i / (int)tiles_per_row);
 

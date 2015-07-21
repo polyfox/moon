@@ -55,7 +55,6 @@ text_render(mrb_state *mrb, mrb_value self)
 {
   mrb_float x, y, z;
   mrb_get_args(mrb, "fff", &x, &y, &z);
-  const GLfloat opacity = 1.0;
   Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
   Moon::Shader *shader = get_shader(mrb, moon_iv_get(mrb, self, KEY_SHADER));
   Moon::Font *font = get_font(mrb, moon_iv_get(mrb, self, "@font"));
