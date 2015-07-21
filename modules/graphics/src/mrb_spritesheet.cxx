@@ -43,10 +43,10 @@ struct RenderState {
 static mrb_value
 spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
 {
-  Moon::Texture *texture = get_valid_texture(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_TEXTURE));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_VBO));
-  const GLuint tile_width = mrb_fixnum(moon_mrb_iv_get_no_nil(mrb, self, "@w"));
-  const GLuint tile_height = mrb_fixnum(moon_mrb_iv_get_no_nil(mrb, self, "@h"));
+  Moon::Texture *texture = get_valid_texture(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
+  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  const GLuint tile_width = mrb_fixnum(moon_iv_get(mrb, self, "@w"));
+  const GLuint tile_height = mrb_fixnum(moon_iv_get(mrb, self, "@h"));
   const GLfloat tiles_per_row = texture->GetWidth() / tile_width;
   const GLfloat tiles_per_column = texture->GetHeight() / tile_height;
   const GLuint total_sprites = tiles_per_row * tiles_per_column;
@@ -84,14 +84,14 @@ spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
 static void
 render(mrb_state *mrb, mrb_value self, const glm::vec3 position,
     const int index, const RenderState &render_ops) {
-  const int total_sprites = mrb_int(mrb, moon_mrb_iv_get_no_nil(mrb, self, "@cell_count"));
+  const int total_sprites = mrb_int(mrb, moon_iv_get(mrb, self, "@cell_count"));
   if ((index < 0) || (index >= total_sprites)) {
     mrb_raisef(mrb, E_ARGUMENT_ERROR, "sprite index is out of range.");
   }
   const int offset = index * 4;
-  Moon::Texture *texture = get_texture(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_TEXTURE));
-  Moon::Shader *shader = get_shader(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_SHADER));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_VBO));
+  Moon::Texture *texture = get_texture(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
+  Moon::Shader *shader = get_shader(mrb, moon_iv_get(mrb, self, KEY_SHADER));
+  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
 
   shader->Use();
 
@@ -189,7 +189,6 @@ spritesheet_push_quad(mrb_state *mrb, mrb_value self)
   GLuint index;
   Moon::Vertex vertices[4];
   GLuint indices[] = { 0, 1, 3, 2, 3, 1 };
-  int i;
   mrb_get_args(mrb, "dfffi|H",
     &dest_vbo, &vbo_data_type,
     &x, &y, &z, &offset,
@@ -199,7 +198,7 @@ spritesheet_push_quad(mrb_state *mrb, mrb_value self)
     set_render_options(mrb, options, &render_state);
   }
 
-  vbo = get_vbo(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_VBO));
+  vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
   Moon::Vector2 pos(x, y);
   render_state.opacity = 1.0;
   index = offset * 4;

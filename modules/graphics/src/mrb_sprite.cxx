@@ -20,8 +20,8 @@
 static mrb_value
 sprite_generate_buffers(mrb_state *mrb, mrb_value self)
 {
-  Moon::Texture *texture = get_valid_texture(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_TEXTURE));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_VBO));
+  Moon::Texture *texture = get_valid_texture(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
+  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
   mrb_value clip = IVget("@clip_rect");
 
   vbo->Clear();
@@ -67,14 +67,14 @@ sprite_render(mrb_state *mrb, mrb_value self)
 {
   mrb_float x, y, z;
   mrb_get_args(mrb, "fff", &x, &y, &z);
-  const GLfloat opacity = mrb_to_flo(mrb, moon_mrb_iv_get_no_nil(mrb, self, "@opacity"));
-  const GLfloat angle = mrb_to_flo(mrb, moon_mrb_iv_get_no_nil(mrb, self, "@angle"));
-  Moon::Texture *texture = get_valid_texture(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_TEXTURE));
-  Moon::Shader *shader = get_shader(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_SHADER));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_VBO));
-  Moon::Vector2 origin(*get_vector2(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_ORIGIN)));
-  Moon::Vector4 color(*get_vector4(mrb, moon_mrb_iv_get_no_nil(mrb, self, "@color")));
-  Moon::Vector4 tone(*get_vector4(mrb, moon_mrb_iv_get_no_nil(mrb, self, "@tone")));
+  const GLfloat opacity = mrb_to_flo(mrb, moon_iv_get(mrb, self, "@opacity"));
+  const GLfloat angle = mrb_to_flo(mrb, moon_iv_get(mrb, self, "@angle"));
+  Moon::Texture *texture = get_valid_texture(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
+  Moon::Shader *shader = get_shader(mrb, moon_iv_get(mrb, self, KEY_SHADER));
+  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  Moon::Vector2 origin(*get_vector2(mrb, moon_iv_get(mrb, self, KEY_ORIGIN)));
+  Moon::Vector4 color(*get_vector4(mrb, moon_iv_get(mrb, self, "@color")));
+  Moon::Vector4 tone(*get_vector4(mrb, moon_iv_get(mrb, self, "@tone")));
 
   shader->Use();
 

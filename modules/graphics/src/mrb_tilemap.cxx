@@ -18,12 +18,12 @@ tilemap_render(mrb_state *mrb, mrb_value self)
 {
   mrb_float x, y, z;
   mrb_get_args(mrb, "fff", &x, &y, &z);
-  const GLfloat opacity = mrb_to_flo(mrb, moon_mrb_iv_get_no_nil(mrb, self, "@opacity"));
-  const GLfloat angle = mrb_to_flo(mrb, moon_mrb_iv_get_no_nil(mrb, self, "@angle"));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_VBO));
-  Moon::Shader *shader = get_shader(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_SHADER));
-  Moon::Texture *texture = get_valid_texture(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_TEXTURE));
-  Moon::Vector2 origin(*get_vector2(mrb, moon_mrb_iv_get_no_nil(mrb, self, KEY_ORIGIN)));
+  const GLfloat opacity = mrb_to_flo(mrb, moon_iv_get(mrb, self, "@opacity"));
+  const GLfloat angle = mrb_to_flo(mrb, moon_iv_get(mrb, self, "@angle"));
+  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  Moon::Shader *shader = get_shader(mrb, moon_iv_get(mrb, self, KEY_SHADER));
+  Moon::Texture *texture = get_valid_texture(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
+  Moon::Vector2 origin(*get_vector2(mrb, moon_iv_get(mrb, self, KEY_ORIGIN)));
   Moon::Vector3 position(x, y, z);
 
   glm::mat4 rotation_matrix = moon_rotate(angle, origin);

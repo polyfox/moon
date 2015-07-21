@@ -37,7 +37,7 @@
 ;
 
 static inline mrb_value
-moon_mrb_iv_get_no_nil(mrb_state *mrb, mrb_value self, const char *name)
+moon_iv_get(mrb_state *mrb, mrb_value self, const char *name)
 {
   mrb_value iv_value = mrb_iv_get(mrb, self, mrb_intern_cstr(mrb, name));
   if (mrb_nil_p(iv_value)) {
