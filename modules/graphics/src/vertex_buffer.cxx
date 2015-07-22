@@ -102,14 +102,14 @@ namespace Moon {
   Vertex VertexBuffer::GetVertex(const int index) {
     // we should probably handle errors more graciously...
     assert(index < m_vertices.size());
-    assert(index > 0);
+    assert(index >= 0);
     return m_vertices[index];
   }
 
   GLuint VertexBuffer::GetIndex(const int index) {
     // we should probably handle errors more graciously...
     assert(index < m_indices.size());
-    assert(index > 0);
+    assert(index >= 0);
     return m_indices[index];
   }
 
