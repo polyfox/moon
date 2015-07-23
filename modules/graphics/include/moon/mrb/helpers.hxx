@@ -19,7 +19,7 @@
 #include "moon/mrb/shader.hxx"
 #include "moon/mrb/texture.hxx"
 #include "moon/mrb/matrix4.hxx"
-#include "moon/mrb/vbo.hxx"
+#include "moon/mrb/vertex_buffer.hxx"
 #include "moon/mrb/vector2.hxx"
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"

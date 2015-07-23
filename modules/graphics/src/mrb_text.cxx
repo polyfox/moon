@@ -8,7 +8,7 @@
 #include "moon/glm.h"
 #include "moon/font.hxx"
 #include "moon/shader.hxx"
-#include "moon/mrb/vbo.hxx"
+#include "moon/mrb/vertex_buffer.hxx"
 #include "moon/mrb/shader.hxx"
 #include "moon/mrb/font.hxx"
 #include "moon/mrb/text.hxx"

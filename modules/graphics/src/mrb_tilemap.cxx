@@ -6,7 +6,7 @@
 #include "moon/api.h"
 #include "moon/mrb/helpers.hxx"
 #include "moon/mrb/texture.hxx"
-#include "moon/mrb/vbo.hxx"
+#include "moon/mrb/vertex_buffer.hxx"
 #include "moon/shader.hxx"
 #include "moon/texture.hxx"
 #include "moon/vector2.hxx"

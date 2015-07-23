@@ -3,7 +3,7 @@
 #include <mruby/data.h>
 #include <mruby/numeric.h>
 #include <mruby/string.h>
-#include "moon/mrb/vbo.hxx"
+#include "moon/mrb/vertex_buffer.hxx"
 #include "moon/mrb/helpers.hxx"
 #include "moon/vertex_buffer.hxx"
 #include "moon/api.h"
