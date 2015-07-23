@@ -1,5 +1,4 @@
 #include <SOIL.h>
-#include "moon/engine.hxx"
 #include "moon/texture.hxx"
 #include "moon/gl.h"
 

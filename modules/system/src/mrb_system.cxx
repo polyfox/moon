@@ -14,8 +14,6 @@
 
 static struct RClass *moon_module;
 
-const struct mrb_data_type engine_data_type = { "Engine", NULL };
-
 extern "C" void
 mrb_mruby_moon_system_gem_init(mrb_state* mrb)
 {
