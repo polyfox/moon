@@ -11,17 +11,11 @@
  */
 /* BASENAME, TYPE, CLASS, MRUBY_TYPE */
 #define DEF_VEC_HELPERS(N, T, C, MT)                                           \
-/* get_BASENAME(mrb_state *mrb, mrb_value self) */                             \
-static inline T*                                                               \
-get_ ## N(mrb_state *mrb, mrb_value self)                                      \
-{                                                                              \
-  return (T*)mrb_data_get_ptr(mrb, self, MT);                                  \
-}                                                                              \
 /* get_BASENAME_value(mrb_state *mrb, mrb_value self) */                       \
 static inline T                                                                \
 get_ ## N ## _value(mrb_state *mrb, mrb_value self)                            \
 {                                                                              \
-  return *get_ ## N(mrb, self);                                                \
+  return *mmrb_ ## N ## _ptr(mrb, self);                                       \
 }                                                                              \
 /* get_BASENAME_from_args(mrb_state *mrb) */                                   \
 static inline T*                                                               \
@@ -48,7 +42,7 @@ set_ ## N(mrb_state *mrb, mrb_value self, T v)                                 \
 static inline mrb_value                                                        \
 new_ ## N(mrb_state *mrb)                                                      \
 {                                                                              \
-  return mrb_obj_new(mrb,  N ## _class, 0, NULL);                              \
+  return mrb_obj_new(mrb, C, 0, NULL);                              \
 }                                                                              \
 /* cleanup_BASENAME(mrb_state *mrb, mrb_value self) */                         \
 static inline void                                                             \

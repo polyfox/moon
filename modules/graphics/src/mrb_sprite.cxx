@@ -6,22 +6,23 @@
 #include <mruby/numeric.h>
 #include <mruby/variable.h>
 #include <mruby/string.h>
+#include "moon/glm.h"
 #include "moon/api.h"
-#include "moon/mrb/sprite.hxx"
-#include "moon/mrb/texture.hxx"
 #include "moon/mrb/rect.hxx"
+#include "moon/mrb/shader.hxx"
+#include "moon/mrb/texture.hxx"
 #include "moon/mrb/vector2.hxx"
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"
+#include "moon/mrb/vertex_buffer.hxx"
 #include "moon/mrb/helpers.hxx"
 #include "moon/mrb_err.hxx"
-#include "moon/glm.h"
 
 static mrb_value
 sprite_generate_buffers(mrb_state *mrb, mrb_value self)
 {
-  Moon::Texture *texture = get_valid_texture(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  Moon::Texture *texture = mmrb_valid_texture_ptr(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
+  Moon::VertexBuffer *vbo = mmrb_vertex_buffer_ptr(mrb, moon_iv_get(mrb, self, KEY_VBO));
   mrb_value clip = IVget("@clip_rect");
 
   vbo->Clear();
@@ -38,7 +39,7 @@ sprite_generate_buffers(mrb_state *mrb, mrb_value self)
   //Handle clipping
   if (!mrb_nil_p(clip)) {
     // TODO: get C++ clip rect from mrb rect
-    Moon::IntRect *clip_rect = get_rect(mrb, clip);
+    Moon::IntRect *clip_rect = mmrb_rect_ptr(mrb, clip);
 
     //Texture coordinates
     s0 = (float)clip_rect->x / texture->GetWidth();
@@ -69,12 +70,12 @@ sprite_render(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "fff", &x, &y, &z);
   const GLfloat opacity = mrb_to_flo(mrb, moon_iv_get(mrb, self, "@opacity"));
   const GLfloat angle = mrb_to_flo(mrb, moon_iv_get(mrb, self, "@angle"));
-  Moon::Texture *texture = get_valid_texture(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
-  Moon::Shader *shader = get_shader(mrb, moon_iv_get(mrb, self, KEY_SHADER));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
-  Moon::Vector2 origin(*get_vector2(mrb, moon_iv_get(mrb, self, KEY_ORIGIN)));
-  Moon::Vector4 color(*get_vector4(mrb, moon_iv_get(mrb, self, "@color")));
-  Moon::Vector4 tone(*get_vector4(mrb, moon_iv_get(mrb, self, "@tone")));
+  Moon::Texture *texture = mmrb_valid_texture_ptr(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
+  Moon::Shader *shader = mmrb_shader_ptr(mrb, moon_iv_get(mrb, self, KEY_SHADER));
+  Moon::VertexBuffer *vbo = mmrb_vertex_buffer_ptr(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  Moon::Vector2 origin(*mmrb_vector2_ptr(mrb, moon_iv_get(mrb, self, KEY_ORIGIN)));
+  Moon::Vector4 color(*mmrb_vector4_ptr(mrb, moon_iv_get(mrb, self, "@color")));
+  Moon::Vector4 tone(*mmrb_vector4_ptr(mrb, moon_iv_get(mrb, self, "@tone")));
 
   shader->Use();
 

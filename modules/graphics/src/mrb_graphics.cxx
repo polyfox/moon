@@ -1,14 +1,15 @@
 #include <mruby.h>
 #include <mruby/class.h>
-#include "moon/mrb/vbo.hxx"
+#include "moon/mrb/vertex_buffer.hxx"
 #include "moon/mrb/font.hxx"
 #include "moon/mrb/shader.hxx"
-#include "moon/mrb/sprite.hxx"
-#include "moon/mrb/spritesheet.hxx"
 #include "moon/mrb/texture.hxx"
-#include "moon/mrb/text.hxx"
 
+MOON_C_API void mmrb_sprite_init(mrb_state *mrb, struct RClass* mod);
+MOON_C_API void mmrb_spritesheet_init(mrb_state *mrb, struct RClass* mod);
+MOON_C_API void mmrb_text_init(mrb_state *mrb, struct RClass* mod);
 MOON_C_API void mmrb_tilemap_init(mrb_state *mrb, struct RClass* mod);
+
 MOON_C_API void
 mrb_mruby_moon_graphics_gem_init(mrb_state* mrb)
 {

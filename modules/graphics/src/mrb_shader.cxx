@@ -3,7 +3,7 @@
 #include <mruby/numeric.h>
 #include "moon/shader.hxx"
 #include "moon/mrb/shader.hxx"
-#include "moon/mrb/transform.hxx"
+#include "moon/mrb/matrix4.hxx"
 #include "moon/mrb/helpers.hxx"
 
 static void
@@ -48,14 +48,14 @@ shader_s_is_legacy_set(mrb_state *mrb, mrb_value klass)
 static mrb_value
 shader_s_projection_matrix_get(mrb_state *mrb, mrb_value klass)
 {
-  return mmrb_transform_value(mrb, Moon::Shader::projection_matrix);
+  return mmrb_matrix4_value(mrb, Moon::Shader::projection_matrix);
 }
 
 static mrb_value
 shader_s_projection_matrix_set(mrb_state *mrb, mrb_value klass)
 {
-  Moon::Transform *mat;
-  mrb_get_args(mrb, "d", &mat, &transform_data_type);
+  Moon::Matrix4 *mat;
+  mrb_get_args(mrb, "d", &mat, &matrix4_data_type);
   Moon::Shader::projection_matrix = *mat;
   return klass;
 }

@@ -3,7 +3,7 @@
 #include <mruby/data.h>
 #include <mruby/numeric.h>
 #include <mruby/string.h>
-#include "moon/mrb/vbo.hxx"
+#include "moon/mrb/vertex_buffer.hxx"
 #include "moon/mrb/helpers.hxx"
 #include "moon/vertex_buffer.hxx"
 #include "moon/api.h"
@@ -37,7 +37,7 @@ vbo_initialize(mrb_state *mrb, mrb_value self)
 static mrb_value
 vbo_clear(mrb_state *mrb, mrb_value self)
 {
-  get_vbo(mrb, self)->Clear();
+  mmrb_vertex_buffer_ptr(mrb, self)->Clear();
   return self;
 }
 
@@ -49,7 +49,7 @@ vbo_render(mrb_state *mrb, mrb_value self)
   offset = 0;
   mrb_get_args(mrb, "i|i", &mode, &offset);
 
-  get_vbo(mrb, self)->Render(mode, offset);
+  mmrb_vertex_buffer_ptr(mrb, self)->Render(mode, offset);
   return self;
 }
 
@@ -64,7 +64,7 @@ vbo_push_back(mrb_state *mrb, mrb_value self)
     &tex_coord, &vbo_data_type,
     &color, &vbo_data_type
   );
-  get_vbo(mrb, self)->PushBack(Moon::Vertex(*pos, *tex_coord, *color));
+  mmrb_vertex_buffer_ptr(mrb, self)->PushBack(Moon::Vertex(*pos, *tex_coord, *color));
   return self;
 }
 
@@ -78,7 +78,7 @@ vbo_push_indices(mrb_state *mrb, mrb_value self)
   // its a bit ugly to be resizing it each time though...
   for (int i = 0; i < length; ++i) {
     GLuint index = mrb_int(mrb, values[i]);
-    get_vbo(mrb, self)->PushBackIndices(&index, 1);
+    mmrb_vertex_buffer_ptr(mrb, self)->PushBackIndices(&index, 1);
   }
   return self;
 }
@@ -86,13 +86,13 @@ vbo_push_indices(mrb_state *mrb, mrb_value self)
 static mrb_value
 vbo_vertex_count(mrb_state *mrb, mrb_value self)
 {
-  return mrb_fixnum_value(get_vbo(mrb, self)->GetVertexCount());
+  return mrb_fixnum_value(mmrb_vertex_buffer_ptr(mrb, self)->GetVertexCount());
 }
 
 static mrb_value
 vbo_index_count(mrb_state *mrb, mrb_value self)
 {
-  return mrb_fixnum_value(get_vbo(mrb, self)->GetIndexCount());
+  return mrb_fixnum_value(mmrb_vertex_buffer_ptr(mrb, self)->GetIndexCount());
 }
 
 MOON_C_API void

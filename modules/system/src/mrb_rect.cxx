@@ -6,8 +6,6 @@
 #include "moon/mrb/rect.hxx"
 #include "moon/rect.hxx"
 
-static struct RClass *rect_class;
-
 static void
 rect_free(mrb_state *mrb, void *p)
 {
@@ -18,12 +16,6 @@ rect_free(mrb_state *mrb, void *p)
 }
 
 MOON_C_API const struct mrb_data_type rect_data_type = { "Moon::IntRect", rect_free };
-
-static inline Moon::IntRect*
-get_rect(mrb_state *mrb, mrb_value self)
-{
-  return (Moon::IntRect*)mrb_data_get_ptr(mrb, self, &rect_data_type);
-}
 
 static inline void
 cleanup_rect(mrb_state *mrb, mrb_value self)
@@ -57,8 +49,8 @@ mmrb_rect_value(mrb_state *mrb, Moon::IntRect rect)
 {
   Moon::IntRect *target;
   mrb_value result;
-  result = mrb_obj_new(mrb, rect_class, 0, NULL);
-  target = get_rect(mrb, result);
+  result = mrb_obj_new(mrb, mmrb_get_rect_class(mrb), 0, NULL);
+  target = mmrb_rect_ptr(mrb, result);
   *target = rect;
   return result;
 }
@@ -90,14 +82,14 @@ rect_set_x(mrb_state *mrb, mrb_value self)
 {
   mrb_int x;
   mrb_get_args(mrb, "i", &x);
-  get_rect(mrb, self)->x = x;
+  mmrb_rect_ptr(mrb, self)->x = x;
   return mrb_nil_value();
 }
 
 static mrb_value
 rect_get_x(mrb_state *mrb, mrb_value self)
 {
-  return mrb_fixnum_value(get_rect(mrb, self)->x);
+  return mrb_fixnum_value(mmrb_rect_ptr(mrb, self)->x);
 }
 
 static mrb_value
@@ -105,14 +97,14 @@ rect_set_y(mrb_state *mrb, mrb_value self)
 {
   mrb_int y;
   mrb_get_args(mrb, "i", &y);
-  get_rect(mrb, self)->y = y;
+  mmrb_rect_ptr(mrb, self)->y = y;
   return mrb_nil_value();
 }
 
 static mrb_value
 rect_get_y(mrb_state *mrb, mrb_value self)
 {
-  return mrb_fixnum_value(get_rect(mrb, self)->y);
+  return mrb_fixnum_value(mmrb_rect_ptr(mrb, self)->y);
 }
 
 /*
@@ -124,7 +116,7 @@ rect_set_w(mrb_state *mrb, mrb_value self)
 {
   mrb_int w;
   mrb_get_args(mrb, "i", &w);
-  get_rect(mrb, self)->w = w;
+  mmrb_rect_ptr(mrb, self)->w = w;
   return self;
 }
 
@@ -135,7 +127,7 @@ rect_set_w(mrb_state *mrb, mrb_value self)
 static mrb_value
 rect_get_w(mrb_state *mrb, mrb_value self)
 {
-  return mrb_fixnum_value(get_rect(mrb, self)->w);
+  return mrb_fixnum_value(mmrb_rect_ptr(mrb, self)->w);
 }
 
 /*
@@ -147,7 +139,7 @@ rect_set_h(mrb_state *mrb, mrb_value self)
 {
   mrb_int h;
   mrb_get_args(mrb, "i", &h);
-  get_rect(mrb, self)->h = h;
+  mmrb_rect_ptr(mrb, self)->h = h;
   return self;
 }
 
@@ -158,13 +150,13 @@ rect_set_h(mrb_state *mrb, mrb_value self)
 static mrb_value
 rect_get_h(mrb_state *mrb, mrb_value self)
 {
-  return mrb_fixnum_value(get_rect(mrb, self)->h);
+  return mrb_fixnum_value(mmrb_rect_ptr(mrb, self)->h);
 }
 
 MOON_C_API void
 mmrb_rect_init(mrb_state *mrb, struct RClass *mod)
 {
-  rect_class = mrb_define_class_under(mrb, mod, "Rect", mrb->object_class);
+  struct RClass *rect_class = mrb_define_class_under(mrb, mod, "Rect", mrb->object_class);
   MRB_SET_INSTANCE_TT(rect_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, rect_class, "initialize",      rect_initialize,      MRB_ARGS_REQ(4));

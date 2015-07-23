@@ -17,8 +17,6 @@
 #define m_vector_int_operator(__op__) \
   return mmrb_vector2_value(mrb, Moon::Vector2(glm::ivec2(get_vector2_value(mrb, self)) __op__ glm::ivec2(vector2_from_mrb_args(mrb))));
 
-static struct RClass *vector2_class = NULL;
-
 static void
 vector2_free(mrb_state *mrb, void *p)
 {
@@ -28,9 +26,9 @@ vector2_free(mrb_state *mrb, void *p)
   }
 }
 
-MOON_C_API const struct mrb_data_type vector2_data_type = { "Vector2", vector2_free };
+MOON_C_API const struct mrb_data_type vector2_data_type = { "Moon::Vector2", vector2_free };
 
-DEF_VEC_HELPERS(vector2, Moon::Vector2, vector2_class, &vector2_data_type);
+DEF_VEC_HELPERS(vector2, Moon::Vector2, mmrb_get_vector2_class(mrb), &vector2_data_type);
 
 static Moon::Vector2
 mmrb_vector2_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
@@ -94,8 +92,8 @@ vector2_eq(mrb_state *mrb, mrb_value self)
 {
   mrb_value other;
   mrb_get_args(mrb, "o", &other);
-  if (mrb_obj_is_kind_of(mrb, other, vector2_class)) {
-    return mrb_bool_value((*get_vector2(mrb, self)) == (*get_vector2(mrb, other)));
+  if (mrb_obj_is_kind_of(mrb, other, mmrb_get_vector2_class(mrb))) {
+    return mrb_bool_value((*mmrb_vector2_ptr(mrb, self)) == (*mmrb_vector2_ptr(mrb, other)));
   }
   return mrb_bool_value(false);
 }
@@ -103,13 +101,13 @@ vector2_eq(mrb_state *mrb, mrb_value self)
 static mrb_value
 vector2_get_x(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_vector2(mrb, self)->x);
+  return mrb_float_value(mrb, mmrb_vector2_ptr(mrb, self)->x);
 }
 
 static mrb_value
 vector2_get_y(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_vector2(mrb, self)->y);
+  return mrb_float_value(mrb, mmrb_vector2_ptr(mrb, self)->y);
 }
 
 static mrb_value
@@ -117,7 +115,7 @@ vector2_set_x(mrb_state *mrb, mrb_value self)
 {
   mrb_float x;
   mrb_get_args(mrb, "f", &x);
-  get_vector2(mrb, self)->x = x;
+  mmrb_vector2_ptr(mrb, self)->x = x;
   return mrb_nil_value();
 }
 
@@ -126,7 +124,7 @@ vector2_set_y(mrb_state *mrb, mrb_value self)
 {
   mrb_float y;
   mrb_get_args(mrb, "f", &y);
-  get_vector2(mrb, self)->y = y;
+  mmrb_vector2_ptr(mrb, self)->y = y;
   return mrb_nil_value();
 }
 
@@ -169,7 +167,7 @@ vector2_div(mrb_state *mrb, mrb_value self)
 static mrb_value
 vector2_not(mrb_state *mrb, mrb_value self)
 {
-  return mmrb_vector2_value(mrb, Moon::Vector2(~(glm::ivec2(*get_vector2(mrb, self)))));
+  return mmrb_vector2_value(mrb, Moon::Vector2(~(glm::ivec2(*mmrb_vector2_ptr(mrb, self)))));
 }
 
 static mrb_value
@@ -260,7 +258,7 @@ vector2_set(mrb_state *mrb, mrb_value self)
 static mrb_value
 vector2_to_a(mrb_state *mrb, mrb_value self)
 {
-  Moon::Vector2 *mvec2 = get_vector2(mrb, self);
+  Moon::Vector2 *mvec2 = mmrb_vector2_ptr(mrb, self);
   mrb_value argv[2] = { mrb_float_value(mrb, mvec2->x),
                         mrb_float_value(mrb, mvec2->y) };
   return mrb_ary_new_from_values(mrb, 2, argv);
@@ -300,7 +298,7 @@ vector2_s_disk_rand(mrb_state *mrb, mrb_value klass)
 MOON_C_API void
 mmrb_vector2_init(mrb_state *mrb, struct RClass *mod)
 {
-  vector2_class = mrb_define_class_under(mrb, mod, "Vector2", mrb->object_class);
+  struct RClass *vector2_class = mrb_define_class_under(mrb, mod, "Vector2", mrb->object_class);
   MRB_SET_INSTANCE_TT(vector2_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, vector2_class, "initialize",      vector2_initialize,      MRB_ARGS_OPT(2));

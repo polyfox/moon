@@ -18,8 +18,6 @@
 #define m_vector_int_operator(__op__) \
   return mmrb_vector3_value(mrb, Moon::Vector3(glm::ivec3(get_vector3_value(mrb, self)) __op__ glm::ivec3(vector3_from_mrb_args(mrb))));
 
-static struct RClass *vector3_class = NULL;
-
 static void
 vector3_free(mrb_state *mrb, void *p)
 {
@@ -29,9 +27,9 @@ vector3_free(mrb_state *mrb, void *p)
   }
 }
 
-MOON_C_API const struct mrb_data_type vector3_data_type = { "Vector3", vector3_free };
+MOON_C_API const struct mrb_data_type vector3_data_type = { "Moon::Vector3", vector3_free };
 
-DEF_VEC_HELPERS(vector3, Moon::Vector3, vector3_class, &vector3_data_type);
+DEF_VEC_HELPERS(vector3, Moon::Vector3, mmrb_get_vector3_class(mrb), &vector3_data_type);
 
 static Moon::Vector3
 mmrb_vector3_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
@@ -96,8 +94,8 @@ vector3_eq(mrb_state *mrb, mrb_value self)
 {
   mrb_value other;
   mrb_get_args(mrb, "o", &other);
-  if (mrb_obj_is_kind_of(mrb, other, vector3_class)) {
-    return mrb_bool_value((*get_vector3(mrb, self)) == (*get_vector3(mrb, other)));
+  if (mrb_obj_is_kind_of(mrb, other, mmrb_get_vector3_class(mrb))) {
+    return mrb_bool_value((*mmrb_vector3_ptr(mrb, self)) == (*mmrb_vector3_ptr(mrb, other)));
   }
   return mrb_bool_value(false);
 }
@@ -105,19 +103,19 @@ vector3_eq(mrb_state *mrb, mrb_value self)
 static mrb_value
 vector3_get_x(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_vector3(mrb, self)->x);
+  return mrb_float_value(mrb, mmrb_vector3_ptr(mrb, self)->x);
 }
 
 static mrb_value
 vector3_get_y(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_vector3(mrb, self)->y);
+  return mrb_float_value(mrb, mmrb_vector3_ptr(mrb, self)->y);
 }
 
 static mrb_value
 vector3_get_z(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_vector3(mrb, self)->z);
+  return mrb_float_value(mrb, mmrb_vector3_ptr(mrb, self)->z);
 }
 
 static mrb_value
@@ -125,7 +123,7 @@ vector3_set_x(mrb_state *mrb, mrb_value self)
 {
   mrb_float x;
   mrb_get_args(mrb, "f", &x);
-  get_vector3(mrb, self)->x = x;
+  mmrb_vector3_ptr(mrb, self)->x = x;
   return mrb_nil_value();
 }
 
@@ -134,7 +132,7 @@ vector3_set_y(mrb_state *mrb, mrb_value self)
 {
   mrb_float y;
   mrb_get_args(mrb, "f", &y);
-  get_vector3(mrb, self)->y = y;
+  mmrb_vector3_ptr(mrb, self)->y = y;
   return mrb_nil_value();
 }
 
@@ -143,7 +141,7 @@ vector3_set_z(mrb_state *mrb, mrb_value self)
 {
   mrb_float z;
   mrb_get_args(mrb, "f", &z);
-  get_vector3(mrb, self)->z = z;
+  mmrb_vector3_ptr(mrb, self)->z = z;
   return mrb_nil_value();
 }
 
@@ -198,7 +196,7 @@ vector3_div(mrb_state *mrb, mrb_value self)
 static mrb_value
 vector3_not(mrb_state *mrb, mrb_value self)
 {
-  return mmrb_vector3_value(mrb, Moon::Vector3(~(glm::ivec3(*get_vector3(mrb, self)))));
+  return mmrb_vector3_value(mrb, Moon::Vector3(~(glm::ivec3(*mmrb_vector3_ptr(mrb, self)))));
 }
 
 static mrb_value
@@ -269,7 +267,7 @@ vector3_rotate(mrb_state *mrb, mrb_value self)
   Moon::Vector3 *other;
   mrb_float angle;
   mrb_get_args(mrb, "df", &other, &vector3_data_type, &angle);
-  return mmrb_vector3_value(mrb, glm::rotate(*get_vector3(mrb, self), (float)angle, *other));
+  return mmrb_vector3_value(mrb, glm::rotate(*mmrb_vector3_ptr(mrb, self), (float)angle, *other));
 }
 
 static mrb_value
@@ -277,7 +275,7 @@ vector3_rotate_x(mrb_state *mrb, mrb_value self)
 {
   mrb_float angle;
   mrb_get_args(mrb, "f", &angle);
-  return mmrb_vector3_value(mrb, glm::rotateX(*get_vector3(mrb, self), (float)angle));
+  return mmrb_vector3_value(mrb, glm::rotateX(*mmrb_vector3_ptr(mrb, self), (float)angle));
 }
 
 static mrb_value
@@ -285,7 +283,7 @@ vector3_rotate_y(mrb_state *mrb, mrb_value self)
 {
   mrb_float angle;
   mrb_get_args(mrb, "f", &angle);
-  return mmrb_vector3_value(mrb, glm::rotateY(*get_vector3(mrb, self), (float)angle));
+  return mmrb_vector3_value(mrb, glm::rotateY(*mmrb_vector3_ptr(mrb, self), (float)angle));
 }
 
 static mrb_value
@@ -293,7 +291,7 @@ vector3_rotate_z(mrb_state *mrb, mrb_value self)
 {
   mrb_float angle;
   mrb_get_args(mrb, "f", &angle);
-  return mmrb_vector3_value(mrb, glm::rotateZ(*get_vector3(mrb, self), (float)angle));
+  return mmrb_vector3_value(mrb, glm::rotateZ(*mmrb_vector3_ptr(mrb, self), (float)angle));
 }
 
 static mrb_value
@@ -302,7 +300,7 @@ vector3_lerp(mrb_state *mrb, mrb_value self)
   Moon::Vector3 *other;
   mrb_float delta;
   mrb_get_args(mrb, "df", &other, &vector3_data_type, &delta);
-  return mmrb_vector3_value(mrb, glm::lerp(*get_vector3(mrb, self), *other, (float)delta));
+  return mmrb_vector3_value(mrb, glm::lerp(*mmrb_vector3_ptr(mrb, self), *other, (float)delta));
 }
 
 static mrb_value
@@ -311,14 +309,14 @@ vector3_slerp(mrb_state *mrb, mrb_value self)
   Moon::Vector3 *other;
   mrb_float delta;
   mrb_get_args(mrb, "df", &other, &vector3_data_type, &delta);
-  return mmrb_vector3_value(mrb, glm::slerp(*get_vector3(mrb, self), *other, (float)delta));
+  return mmrb_vector3_value(mrb, glm::slerp(*mmrb_vector3_ptr(mrb, self), *other, (float)delta));
 }
 
 static mrb_value
 vector3_set(mrb_state *mrb, mrb_value self)
 {
   Moon::Vector3 *v3;
-  v3 = get_vector3(mrb, self);
+  v3 = mmrb_vector3_ptr(mrb, self);
   *v3 = vector3_from_mrb_args(mrb);
   return self;
 }
@@ -326,7 +324,7 @@ vector3_set(mrb_state *mrb, mrb_value self)
 static mrb_value
 vector3_to_a(mrb_state *mrb, mrb_value self)
 {
-  Moon::Vector3 *mvec3 = get_vector3(mrb, self);
+  Moon::Vector3 *mvec3 = mmrb_vector3_ptr(mrb, self);
   mrb_value argv[3] = { mrb_float_value(mrb, mvec3->x),
                         mrb_float_value(mrb, mvec3->y),
                         mrb_float_value(mrb, mvec3->z) };
@@ -352,7 +350,7 @@ vector3_s_cast(mrb_state *mrb, mrb_value klass)
 MOON_C_API void
 mmrb_vector3_init(mrb_state *mrb, struct RClass *mod)
 {
-  vector3_class = mrb_define_class_under(mrb, mod, "Vector3", mrb->object_class);
+  struct RClass *vector3_class = mrb_define_class_under(mrb, mod, "Vector3", mrb->object_class);
   MRB_SET_INSTANCE_TT(vector3_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, vector3_class, "initialize",      vector3_initialize,      MRB_ARGS_OPT(3));

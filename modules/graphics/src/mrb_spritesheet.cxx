@@ -6,15 +6,16 @@
 #include <mruby/hash.h>
 #include <mruby/numeric.h>
 #include <mruby/string.h>
+#include "moon/glm.h"
 #include "moon/api.h"
-#include "moon/mrb/spritesheet.hxx"
+#include "moon/mrb/matrix4.hxx"
+#include "moon/mrb/shader.hxx"
+#include "moon/mrb/texture.hxx"
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"
-#include "moon/mrb/transform.hxx"
-#include "moon/mrb/texture.hxx"
+#include "moon/mrb/vertex_buffer.hxx"
 #include "moon/mrb_err.hxx"
 #include "moon/mrb/helpers.hxx"
-#include "moon/glm.h"
 
 static mrb_sym id_opacity;
 static mrb_sym id_tone;
@@ -30,7 +31,7 @@ struct RenderState {
   Moon::Vector2 origin;
   Moon::Vector4 color;
   Moon::Vector4 tone;
-  Moon::Transform transform;
+  Moon::Matrix4 transform;
 
   RenderState() :
     opacity(1.0),
@@ -43,8 +44,8 @@ struct RenderState {
 static mrb_value
 spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
 {
-  Moon::Texture *texture = get_valid_texture(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  Moon::Texture *texture = mmrb_valid_texture_ptr(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
+  Moon::VertexBuffer *vbo = mmrb_vertex_buffer_ptr(mrb, moon_iv_get(mrb, self, KEY_VBO));
   const GLuint tile_width = mrb_fixnum(moon_iv_get(mrb, self, "@w"));
   const GLuint tile_height = mrb_fixnum(moon_iv_get(mrb, self, "@h"));
   const GLfloat tiles_per_row = texture->GetWidth() / tile_width;
@@ -89,9 +90,9 @@ render(mrb_state *mrb, mrb_value self, const glm::vec3 position,
     mrb_raisef(mrb, E_ARGUMENT_ERROR, "sprite index is out of range.");
   }
   const int offset = index * 4;
-  Moon::Texture *texture = get_texture(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
-  Moon::Shader *shader = get_shader(mrb, moon_iv_get(mrb, self, KEY_SHADER));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  Moon::Texture *texture = mmrb_valid_texture_ptr(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
+  Moon::Shader *shader = mmrb_shader_ptr(mrb, moon_iv_get(mrb, self, KEY_SHADER));
+  Moon::VertexBuffer *vbo = mmrb_vertex_buffer_ptr(mrb, moon_iv_get(mrb, self, KEY_VBO));
 
   shader->Use();
 
@@ -153,7 +154,7 @@ set_render_options(mrb_state *mrb, mrb_value options, RenderState *render_state)
 
     // :transform
     } else if (mrb_symbol(key) == id_transform) {
-      render_state->transform = mmrb_to_transform(mrb, val);
+      render_state->transform = mmrb_to_matrix4(mrb, val);
     }
   }
 }
@@ -198,7 +199,7 @@ spritesheet_push_quad(mrb_state *mrb, mrb_value self)
     set_render_options(mrb, options, &render_state);
   }
 
-  vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  vbo = mmrb_vertex_buffer_ptr(mrb, moon_iv_get(mrb, self, KEY_VBO));
   Moon::Vector2 pos(x, y);
   render_state.opacity = 1.0;
   index = offset * 4;

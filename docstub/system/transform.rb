@@ -1,6 +1,6 @@
 module Moon
   #
-  class Transform
+  class Matrix4
     def initialize(*args)
     end
 

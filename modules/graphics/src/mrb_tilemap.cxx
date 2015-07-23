@@ -3,15 +3,18 @@
 #include <mruby/data.h>
 #include <mruby/numeric.h>
 #include <mruby/string.h>
+#include "moon/glm.h"
 #include "moon/api.h"
-#include "moon/mrb/helpers.hxx"
-#include "moon/mrb/texture.hxx"
-#include "moon/mrb/vbo.hxx"
 #include "moon/shader.hxx"
 #include "moon/texture.hxx"
 #include "moon/vector2.hxx"
 #include "moon/vector3.hxx"
 #include "moon/vertex_buffer.hxx"
+#include "moon/mrb/vector2.hxx"
+#include "moon/mrb/shader.hxx"
+#include "moon/mrb/texture.hxx"
+#include "moon/mrb/vertex_buffer.hxx"
+#include "moon/mrb/helpers.hxx"
 
 static mrb_value
 tilemap_render(mrb_state *mrb, mrb_value self)
@@ -20,10 +23,10 @@ tilemap_render(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "fff", &x, &y, &z);
   const GLfloat opacity = mrb_to_flo(mrb, moon_iv_get(mrb, self, "@opacity"));
   const GLfloat angle = mrb_to_flo(mrb, moon_iv_get(mrb, self, "@angle"));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
-  Moon::Shader *shader = get_shader(mrb, moon_iv_get(mrb, self, KEY_SHADER));
-  Moon::Texture *texture = get_valid_texture(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
-  Moon::Vector2 origin(*get_vector2(mrb, moon_iv_get(mrb, self, KEY_ORIGIN)));
+  Moon::VertexBuffer *vbo = mmrb_vertex_buffer_ptr(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  Moon::Shader *shader = mmrb_shader_ptr(mrb, moon_iv_get(mrb, self, KEY_SHADER));
+  Moon::Texture *texture = mmrb_valid_texture_ptr(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
+  Moon::Vector2 origin(*mmrb_vector2_ptr(mrb, moon_iv_get(mrb, self, KEY_ORIGIN)));
   Moon::Vector3 position(x, y, z);
 
   glm::mat4 rotation_matrix = moon_rotate(angle, origin);

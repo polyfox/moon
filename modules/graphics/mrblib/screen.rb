@@ -36,7 +36,7 @@ module Moon
     end
 
     def update_projection
-      Shader.projection_matrix = Transform.ortho 0.0, w / scale, h / scale, 0.0, -1.0, 1.0
+      Shader.projection_matrix = Matrix4.ortho 0.0, w / scale, h / scale, 0.0, -1.0, 1.0
     end
 
     # @param [Integer] w
