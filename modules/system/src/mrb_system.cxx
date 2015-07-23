@@ -2,7 +2,6 @@
 #include <mruby.h>
 #include <mruby/class.h>
 #include <mruby/data.h>
-#include "moon/engine.hxx"
 #include "moon/mrb/clock.hxx"
 #include "moon/mrb/context.hxx"
 #include "moon/mrb/rect.hxx"
