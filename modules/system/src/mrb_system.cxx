@@ -6,7 +6,7 @@
 #include "moon/mrb/clock.hxx"
 #include "moon/mrb/context.hxx"
 #include "moon/mrb/rect.hxx"
-#include "moon/mrb/transform.hxx"
+#include "moon/mrb/matrix4.hxx"
 #include "moon/mrb/vector1.hxx"
 #include "moon/mrb/vector2.hxx"
 #include "moon/mrb/vector3.hxx"
@@ -26,7 +26,7 @@ mrb_mruby_moon_system_gem_init(mrb_state* mrb)
   mmrb_vector2_init(mrb, moon_module);
   mmrb_vector3_init(mrb, moon_module);
   mmrb_vector4_init(mrb, moon_module);
-  mmrb_transform_init(mrb, moon_module);
+  mmrb_matrix4_init(mrb, moon_module);
   mmrb_context_init(mrb, moon_module);
 }
 

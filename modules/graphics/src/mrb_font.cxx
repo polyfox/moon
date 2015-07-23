@@ -7,7 +7,7 @@
 #include <mruby/string.h>
 #include "moon/api.h"
 #include "moon/mrb/font.hxx"
-#include "moon/mrb/transform.hxx"
+#include "moon/mrb/matrix4.hxx"
 #include "moon/mrb/vector2.hxx"
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"

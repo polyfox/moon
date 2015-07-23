@@ -1,11 +1,11 @@
 module Moon
   # Shader object
   class Shader
-    # @return [Transform]
+    # @return [Matrix4]
     def self.projection_matrix
     end
 
-    # @param [Transform] mat
+    # @param [Matrix4] mat
     def self.projection_matrix=(mat)
     end
   end

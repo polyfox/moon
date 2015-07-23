@@ -10,7 +10,7 @@
 #include "moon/mrb/spritesheet.hxx"
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"
-#include "moon/mrb/transform.hxx"
+#include "moon/mrb/matrix4.hxx"
 #include "moon/mrb/texture.hxx"
 #include "moon/mrb_err.hxx"
 #include "moon/mrb/helpers.hxx"
@@ -30,7 +30,7 @@ struct RenderState {
   Moon::Vector2 origin;
   Moon::Vector4 color;
   Moon::Vector4 tone;
-  Moon::Transform transform;
+  Moon::Matrix4 transform;
 
   RenderState() :
     opacity(1.0),
@@ -153,7 +153,7 @@ set_render_options(mrb_state *mrb, mrb_value options, RenderState *render_state)
 
     // :transform
     } else if (mrb_symbol(key) == id_transform) {
-      render_state->transform = mmrb_to_transform(mrb, val);
+      render_state->transform = mmrb_to_matrix4(mrb, val);
     }
   }
 }

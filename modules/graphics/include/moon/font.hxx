@@ -8,7 +8,6 @@
 #include "moon/vertex_buffer.hxx"
 #include "moon/vector2.hxx"
 #include "moon/vector4.hxx"
-#include "moon/transform.hxx"
 #include "moon/string.hxx"
 
 namespace Moon {

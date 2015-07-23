@@ -8,7 +8,7 @@
 #include "moon/rect.hxx"
 #include "moon/shader.hxx"
 #include "moon/texture.hxx"
-#include "moon/transform.hxx"
+#include "moon/matrix4.hxx"
 #include "moon/font.hxx"
 #include "moon/vector2.hxx"
 #include "moon/vector3.hxx"
@@ -18,7 +18,7 @@
 #include "moon/mrb/font.hxx"
 #include "moon/mrb/shader.hxx"
 #include "moon/mrb/texture.hxx"
-#include "moon/mrb/transform.hxx"
+#include "moon/mrb/matrix4.hxx"
 #include "moon/mrb/vbo.hxx"
 #include "moon/mrb/vector2.hxx"
 #include "moon/mrb/vector3.hxx"
@@ -70,10 +70,10 @@ get_vector4(mrb_state *mrb, mrb_value self)
   return static_cast<Moon::Vector4*>(mrb_data_get_ptr(mrb, self, &vector4_data_type));
 }
 
-static inline Moon::Transform*
-get_transform(mrb_state *mrb, mrb_value self)
+static inline Moon::Matrix4*
+get_matrix4(mrb_state *mrb, mrb_value self)
 {
-  return static_cast<Moon::Transform*>(mrb_data_get_ptr(mrb, self, &transform_data_type));
+  return static_cast<Moon::Matrix4*>(mrb_data_get_ptr(mrb, self, &matrix4_data_type));
 }
 
 static inline Moon::Texture*
