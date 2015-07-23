@@ -14,7 +14,6 @@
 #include "moon/glm.h"
 #include "moon/string.hxx"
 #include "moon/font.hxx"
-#include "moon/mrb/renderable.hxx"
 #include "moon/mrb/helpers.hxx"
 
 static void

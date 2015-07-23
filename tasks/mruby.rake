@@ -5,7 +5,10 @@ namespace :mruby do
   dir = File.expand_path('vendor/mruby', rootdir)
 
   task :clean do
-    sh %(make -C "#{dir}" clean)
+    cmd = [%(MRUBY_CONFIG="#{rootdir}/mrb_config.rb"), "clean"]
+    cmd.unshift("--verbose") if Rake.verbose
+    cmd.unshift("rake")
+    sh cmd.join(" ")
   end
 
   task :clean_gems do

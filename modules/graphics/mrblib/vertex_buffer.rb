@@ -5,5 +5,7 @@ module Moon
     STATIC_DRAW  = GL2::GL_STATIC_DRAW
     STREAM_DRAW  = GL2::GL_STREAM_DRAW
     # @!endgroup
+
+    alias :push :push_back
   end
 end

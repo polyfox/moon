@@ -45,22 +45,5 @@ module Moon
       set_clip_rect rect
       generate_buffers
     end
-
-    # TODO: make sure origin is never nil, but Vec(0,0)
-    def ox
-      origin.x
-    end
-
-    def oy
-      origin.y
-    end
-
-    def ox= x
-      origin.x = x
-    end
-
-    def oy= y
-      origin.y = y
-    end
   end
 end

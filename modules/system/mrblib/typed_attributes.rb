@@ -19,7 +19,7 @@ module Moon
       define_method((name.to_s + "=").to_sym) do |value|
         unless klasses.any? { |klass| klass === value }
           raise TypeError,
-            "wrong argument type #{value.class} (expected #{klasses.join(" or ")})"
+            "wrong argument type #{value.class} for #{name} attribute (expected #{klasses.join(" or ")})"
         end
         instance_variable_set(varname, value)
       end

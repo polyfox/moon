@@ -25,12 +25,12 @@ text_add_text(mrb_state *mrb, mrb_value self)
   mrb_float x, y;
   mrb_get_args(mrb, "zff", &str, &x, &y);
   // string will be deleted at the end
-  mrb_int outline = mrb_int(mrb, IVget("@outline"));
-  mrb_float line_height = mrb_to_flo(mrb, IVget("@line_height"));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, IVget(KEY_VBO));
-  Moon::Font *font = get_font(mrb, IVget("@font"));
-  Moon::Vector4 color = *get_vector4(mrb, IVget("@color"));
-  Moon::Vector4 outline_color = *get_vector4(mrb, IVget("@outline_color"));
+  mrb_int outline = mrb_int(mrb, moon_iv_get(mrb, self, "@outline"));
+  mrb_float line_height = mrb_to_flo(mrb, moon_iv_get(mrb, self, "@line_height"));
+  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  Moon::Font *font = get_font(mrb, moon_iv_get(mrb, self, "@font"));
+  Moon::Vector4 color = *get_vector4(mrb, moon_iv_get(mrb, self, "@color"));
+  Moon::Vector4 outline_color = *get_vector4(mrb, moon_iv_get(mrb, self, "@outline_color"));
   Moon::String string(str);
 
   if (outline > 0) {
@@ -41,6 +41,7 @@ text_add_text(mrb_state *mrb, mrb_value self)
   font->font->outline_type = 0;
   font->font->outline_thickness = 0;
   font->FillTextBuffer(vbo, string, color, x, y, line_height);
+  return self;
 }
 
 /**
@@ -54,9 +55,9 @@ text_render(mrb_state *mrb, mrb_value self)
 {
   mrb_float x, y, z;
   mrb_get_args(mrb, "fff", &x, &y, &z);
-  Moon::VertexBuffer *vbo = get_vbo(mrb, IVget(KEY_VBO));
-  Moon::Shader *shader = get_shader(mrb, IVget(KEY_SHADER));
-  Moon::Font *font = get_font(mrb, IVget("@font"));
+  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  Moon::Shader *shader = get_shader(mrb, moon_iv_get(mrb, self, KEY_SHADER));
+  Moon::Font *font = get_font(mrb, moon_iv_get(mrb, self, "@font"));
 
   shader->Use();
   // model matrix - move it to the correct position in the world
