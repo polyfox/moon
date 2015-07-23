@@ -12,12 +12,10 @@
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"
 
-static struct RClass *moon_module;
-
 extern "C" void
 mrb_mruby_moon_system_gem_init(mrb_state* mrb)
 {
-  moon_module = mrb_define_module(mrb, "Moon");
+  struct RClass *moon_module = mrb_define_module(mrb, "Moon");
   mmrb_clock_init(mrb, moon_module);
   mmrb_rect_init(mrb, moon_module);
   mmrb_vector1_init(mrb, moon_module);
