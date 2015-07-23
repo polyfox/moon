@@ -2,7 +2,6 @@ module Moon
   class Tilemap
     extend TypedAttributes
     include Shadable
-    include OriginCoords
 
     # @!attribute [r] :w
     #   @return [Float]
@@ -54,6 +53,10 @@ module Moon
     # @!attribute :angle
     #   @return [Numeric]
     attribute :angle, Numeric
+
+    # @!attribute :origin
+    #   @return [Vector2]
+    attribute :origin,  Vector2
 
     # (see #set)
     def initialize(options = {})

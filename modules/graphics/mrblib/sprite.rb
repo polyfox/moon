@@ -2,10 +2,10 @@ module Moon
   class Sprite
     extend TypedAttributes
     include Shadable
-    include OriginCoords
 
     attribute :opacity, Float
     attribute :angle,   Float
+    attribute :origin,  Vector2
     attribute :color,   Vector4
     attribute :tone,    Vector4
     attribute :shader,  Shader
