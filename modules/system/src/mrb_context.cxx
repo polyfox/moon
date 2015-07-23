@@ -5,8 +5,6 @@
 #include "moon/api.h"
 #include "moon/mrb/context.hxx"
 
-static struct RClass* context_class;
-
 static void
 context_free(mrb_state *mrb, void *p)
 {
@@ -65,7 +63,7 @@ context_each_symbol(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_context_init(mrb_state *mrb, struct RClass *mod)
 {
-  context_class = mrb_define_class_under(mrb, mod, "Context", mrb->object_class);
+  struct RClass *context_class = mrb_define_class_under(mrb, mod, "Context", mrb->object_class);
   MRB_SET_INSTANCE_TT(context_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, context_class, "initialize",  context_initialize,  MRB_ARGS_NONE());

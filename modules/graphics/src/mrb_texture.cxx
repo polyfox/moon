@@ -7,8 +7,6 @@
 #include "moon/texture.hxx"
 #include "moon/api.h"
 
-static struct RClass *texture_class;
-
 static void
 texture_free(mrb_state *mrb, void *p)
 {
@@ -30,7 +28,7 @@ MOON_C_API mrb_value
 mmrb_texture_load_file(mrb_state *mrb, const char *filename)
 {
   mrb_value fn = mrb_str_new_cstr(mrb, filename);
-  return mrb_obj_new(mrb, texture_class, 1, &fn);
+  return mrb_obj_new(mrb, mmrb_get_texture_class(mrb), 1, &fn);
 }
 
 static mrb_value
@@ -73,7 +71,7 @@ texture_height(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_texture_init(mrb_state *mrb, struct RClass* mod)
 {
-  texture_class = mrb_define_class_under(mrb, mod, "Texture", mrb->object_class);
+  struct RClass *texture_class = mrb_define_class_under(mrb, mod, "Texture", mrb->object_class);
   MRB_SET_INSTANCE_TT(texture_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, texture_class, "initialize", texture_initialize, MRB_ARGS_REQ(1));

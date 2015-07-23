@@ -3,16 +3,15 @@
 #include <mruby/data.h>
 #include <mruby/numeric.h>
 #include <mruby/variable.h>
-#include "moon/vertex_buffer.hxx"
-#include "moon/api.h"
 #include "moon/glm.h"
+#include "moon/api.h"
 #include "moon/font.hxx"
 #include "moon/shader.hxx"
-#include "moon/mrb/vertex_buffer.hxx"
-#include "moon/mrb/shader.hxx"
+#include "moon/vertex_buffer.hxx"
 #include "moon/mrb/font.hxx"
-#include "moon/mrb/text.hxx"
+#include "moon/mrb/shader.hxx"
 #include "moon/mrb/vector4.hxx"
+#include "moon/mrb/vertex_buffer.hxx"
 #include "moon/mrb/helpers.hxx"
 
 /**
@@ -27,10 +26,10 @@ text_add_text(mrb_state *mrb, mrb_value self)
   // string will be deleted at the end
   mrb_int outline = mrb_int(mrb, moon_iv_get(mrb, self, "@outline"));
   mrb_float line_height = mrb_to_flo(mrb, moon_iv_get(mrb, self, "@line_height"));
-  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
-  Moon::Font *font = get_font(mrb, moon_iv_get(mrb, self, "@font"));
-  Moon::Vector4 color = *get_vector4(mrb, moon_iv_get(mrb, self, "@color"));
-  Moon::Vector4 outline_color = *get_vector4(mrb, moon_iv_get(mrb, self, "@outline_color"));
+  Moon::VertexBuffer *vbo = mmrb_vertex_buffer_ptr(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  Moon::Font *font = mmrb_font_ptr(mrb, moon_iv_get(mrb, self, "@font"));
+  Moon::Vector4 color = *mmrb_vector4_ptr(mrb, moon_iv_get(mrb, self, "@color"));
+  Moon::Vector4 outline_color = *mmrb_vector4_ptr(mrb, moon_iv_get(mrb, self, "@outline_color"));
   Moon::String string(str);
 
   if (outline > 0) {
@@ -55,9 +54,9 @@ text_render(mrb_state *mrb, mrb_value self)
 {
   mrb_float x, y, z;
   mrb_get_args(mrb, "fff", &x, &y, &z);
-  Moon::VertexBuffer *vbo = get_vbo(mrb, moon_iv_get(mrb, self, KEY_VBO));
-  Moon::Shader *shader = get_shader(mrb, moon_iv_get(mrb, self, KEY_SHADER));
-  Moon::Font *font = get_font(mrb, moon_iv_get(mrb, self, "@font"));
+  Moon::VertexBuffer *vbo = mmrb_vertex_buffer_ptr(mrb, moon_iv_get(mrb, self, KEY_VBO));
+  Moon::Shader *shader = mmrb_shader_ptr(mrb, moon_iv_get(mrb, self, KEY_SHADER));
+  Moon::Font *font = mmrb_font_ptr(mrb, moon_iv_get(mrb, self, "@font"));
 
   shader->Use();
   // model matrix - move it to the correct position in the world

@@ -63,7 +63,7 @@ font_initialize(mrb_state *mrb, mrb_value self)
 static mrb_value
 font_size(mrb_state *mrb, mrb_value self)
 {
-  return mrb_fixnum_value(get_font(mrb, self)->GetSize());
+  return mrb_fixnum_value(mmrb_font_ptr(mrb, self)->GetSize());
 }
 
 /*
@@ -82,7 +82,7 @@ font_calc_bounds(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "z|f", &str, &line_height);
   // convert to wide char (UTF-8)
   Moon::String text(str);
-  Moon::Font *font = get_font(mrb, self);
+  Moon::Font *font = mmrb_font_ptr(mrb, self);
   Moon::Vector2 bounds = font->ComputeStringBbox(text, line_height);
   mrb_value argv[2] = { mrb_fixnum_value(bounds.x), mrb_fixnum_value(bounds.y) };
   return mrb_ary_new_from_values(mrb, 2, argv);

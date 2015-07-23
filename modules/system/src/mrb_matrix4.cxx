@@ -38,8 +38,6 @@
   }                                                                       \
   return rtarget; /* */
 
-static struct RClass *matrix4_class = NULL;
-
 static void
 matrix4_free(mrb_state *mrb, void *p)
 {
@@ -66,7 +64,7 @@ mmrb_to_matrix4(mrb_state *mrb, mrb_value self)
 MOON_C_API mrb_value
 mmrb_matrix4_value(mrb_state *mrb, Moon::Matrix4 mat)
 {
-  mrb_value rsult = mrb_obj_new(mrb, matrix4_class, 0, NULL);
+  mrb_value rsult = mrb_obj_new(mrb, mmrb_get_matrix4_class(mrb), 0, NULL);
   Moon::Matrix4 *trns = get_matrix4(mrb, rsult);
   *trns = mat;
   return rsult;
@@ -186,7 +184,7 @@ matrix4_eq(mrb_state *mrb, mrb_value self)
 {
   mrb_value other;
   mrb_get_args(mrb, "o", &other);
-  if (mrb_obj_is_kind_of(mrb, other, matrix4_class)) {
+  if (mrb_obj_is_kind_of(mrb, other, mmrb_get_matrix4_class(mrb))) {
     return mrb_bool_value((*get_matrix4(mrb, self)) == (*get_matrix4(mrb, other)));
   }
   return mrb_bool_value(false);
@@ -532,7 +530,7 @@ matrix4_s_cast(mrb_state *mrb, mrb_value self)
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
 
-  return mrb_obj_new(mrb, matrix4_class, len, vals);
+  return mrb_obj_new(mrb, mmrb_get_matrix4_class(mrb), len, vals);
 }
 
 static mrb_value
@@ -550,7 +548,7 @@ matrix4_s_ortho(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_matrix4_init(mrb_state *mrb, struct RClass* mod)
 {
-  matrix4_class = mrb_define_class_under(mrb, mod, "Matrix4", mrb->object_class);
+  struct RClass *matrix4_class = mrb_define_class_under(mrb, mod, "Matrix4", mrb->object_class);
   MRB_SET_INSTANCE_TT(matrix4_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, matrix4_class, "initialize",      matrix4_initialize,      MRB_ARGS_ANY());

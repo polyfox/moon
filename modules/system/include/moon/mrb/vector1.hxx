@@ -7,11 +7,18 @@
 #include <mruby/numeric.h>
 #include "moon/api.h"
 #include "moon/vector1.hxx"
+#include "moon/mrb/helpers.hxx"
 
 MOON_C_API const struct mrb_data_type vector1_data_type;
 MOON_C_API void mmrb_vector1_init(mrb_state *mrb, struct RClass *mod);
 MOON_C_API Moon::Vector1 mmrb_to_vector1(mrb_state *mrb, mrb_value obj);
 MOON_C_API mrb_value mmrb_vector1_value(mrb_state *mrb, Moon::Vector1 v1);
+
+static inline struct RClass*
+mmrb_get_vector1_class(mrb_state *mrb)
+{
+  return MOON_GET_CLASS("Vector1");
+}
 
 static inline Moon::Vector1*
 mmrb_vector1_ptr(mrb_state *mrb, mrb_value self)

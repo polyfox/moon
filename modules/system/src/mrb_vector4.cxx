@@ -19,8 +19,6 @@
 #define m_vector_int_operator(__op__) \
   return mmrb_vector4_value(mrb, Moon::Vector4(glm::ivec4(get_vector4_value(mrb, self)) __op__ glm::ivec4(vector4_from_mrb_args(mrb))));
 
-static struct RClass *vector4_class = NULL;
-
 static void
 vector4_free(mrb_state *mrb, void *p)
 {
@@ -32,7 +30,7 @@ vector4_free(mrb_state *mrb, void *p)
 
 MOON_C_API const struct mrb_data_type vector4_data_type = { "Moon::Vector4", vector4_free };
 
-DEF_VEC_HELPERS(vector4, Moon::Vector4, vector4_class, &vector4_data_type);
+DEF_VEC_HELPERS(vector4, Moon::Vector4, mmrb_get_vector4_class(mrb), &vector4_data_type);
 
 static Moon::Vector4
 mmrb_vector4_extract_args(mrb_state *mrb, int argc, mrb_value *vals)
@@ -98,8 +96,8 @@ vector4_eq(mrb_state *mrb, mrb_value self)
 {
   mrb_value other;
   mrb_get_args(mrb, "o", &other);
-  if (mrb_obj_is_kind_of(mrb, other, vector4_class)) {
-    return mrb_bool_value((*get_vector4(mrb, self)) == (*get_vector4(mrb, other)));
+  if (mrb_obj_is_kind_of(mrb, other, mmrb_get_vector4_class(mrb))) {
+    return mrb_bool_value((*mmrb_vector4_ptr(mrb, self)) == (*mmrb_vector4_ptr(mrb, other)));
   }
   return mrb_bool_value(false);
 }
@@ -107,25 +105,25 @@ vector4_eq(mrb_state *mrb, mrb_value self)
 static mrb_value
 vector4_get_x(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_vector4(mrb, self)->x);
+  return mrb_float_value(mrb, mmrb_vector4_ptr(mrb, self)->x);
 }
 
 static mrb_value
 vector4_get_y(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_vector4(mrb, self)->y);
+  return mrb_float_value(mrb, mmrb_vector4_ptr(mrb, self)->y);
 }
 
 static mrb_value
 vector4_get_z(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_vector4(mrb, self)->z);
+  return mrb_float_value(mrb, mmrb_vector4_ptr(mrb, self)->z);
 }
 
 static mrb_value
 vector4_get_w(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_vector4(mrb, self)->w);
+  return mrb_float_value(mrb, mmrb_vector4_ptr(mrb, self)->w);
 }
 
 static mrb_value
@@ -133,7 +131,7 @@ vector4_set_x(mrb_state *mrb, mrb_value self)
 {
   mrb_float x;
   mrb_get_args(mrb, "f", &x);
-  get_vector4(mrb, self)->x = x;
+  mmrb_vector4_ptr(mrb, self)->x = x;
   return self;
 }
 
@@ -142,7 +140,7 @@ vector4_set_y(mrb_state *mrb, mrb_value self)
 {
   mrb_float y;
   mrb_get_args(mrb, "f", &y);
-  get_vector4(mrb, self)->y = y;
+  mmrb_vector4_ptr(mrb, self)->y = y;
   return self;
 }
 
@@ -151,7 +149,7 @@ vector4_set_z(mrb_state *mrb, mrb_value self)
 {
   mrb_float z;
   mrb_get_args(mrb, "f", &z);
-  get_vector4(mrb, self)->z = z;
+  mmrb_vector4_ptr(mrb, self)->z = z;
   return self;
 }
 
@@ -160,7 +158,7 @@ vector4_set_w(mrb_state *mrb, mrb_value self)
 {
   mrb_float w;
   mrb_get_args(mrb, "f", &w);
-  get_vector4(mrb, self)->w = w;
+  mmrb_vector4_ptr(mrb, self)->w = w;
   return self;
 }
 
@@ -215,7 +213,7 @@ vector4_div(mrb_state *mrb, mrb_value self)
 static mrb_value
 vector4_not(mrb_state *mrb, mrb_value self)
 {
-  return mmrb_vector4_value(mrb, Moon::Vector4(~(glm::ivec4(*get_vector4(mrb, self)))));
+  return mmrb_vector4_value(mrb, Moon::Vector4(~(glm::ivec4(*mmrb_vector4_ptr(mrb, self)))));
 }
 
 static mrb_value
@@ -276,7 +274,7 @@ vector4_set(mrb_state *mrb, mrb_value self)
 static mrb_value
 vector4_to_a(mrb_state *mrb, mrb_value self)
 {
-  Moon::Vector4* mvec4 = get_vector4(mrb, self);
+  Moon::Vector4* mvec4 = mmrb_vector4_ptr(mrb, self);
   mrb_value argv[4] = { mrb_float_value(mrb, mvec4->x),
                         mrb_float_value(mrb, mvec4->y),
                         mrb_float_value(mrb, mvec4->z),
@@ -304,7 +302,7 @@ vector4_s_cast(mrb_state *mrb, mrb_value klass)
 MOON_C_API void
 mmrb_vector4_init(mrb_state *mrb, struct RClass *mod)
 {
-  vector4_class = mrb_define_class_under(mrb, mod, "Vector4", mrb->object_class);
+  struct RClass *vector4_class = mrb_define_class_under(mrb, mod, "Vector4", mrb->object_class);
   MRB_SET_INSTANCE_TT(vector4_class, MRB_TT_DATA);
 
   mrb_define_method(mrb, vector4_class, "initialize",      vector4_initialize,      MRB_ARGS_OPT(4));
