@@ -1,11 +1,25 @@
 require 'set'
 require_relative 'lib/platform'
 
+rootdir = File.dirname(__FILE__)
+buildir = File.expand_path("build", rootdir)
 toolchain_name = (ENV['MOON_MRUBY_TOOLCHAIN'] || :gcc).to_sym
 
-rootdir = File.dirname(__FILE__)
-MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
-  toolchain toolchain_name
+load File.expand_path("tasks/mruby/toolchains/w64-mingw32.rake", rootdir)
+
+[ Platform.new(nil, toolchain_name),
+  Platform.new('i686-mingw32',   :i686_w64_mingw32),
+  Platform.new('x86_64-mingw32', :x86_64_w64_mingw32),
+].each do |platform|
+build_config = proc do |conf|
+  $linker_libraries ||= {}
+  $linker_libraries['glew'] = if platform.windows?
+    'glew32'
+  else
+    'GLEW'
+  end
+
+  toolchain platform.toolchain
 
   puts "\t\\\\ Using #{toolchain_name} Toolchain \\\\"
 
@@ -25,24 +39,25 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
   conf.gem github: 'iij/mruby-require'           # require
 
   # nice things
-  #conf.gem github: 'AndrewBelt/mruby-yaml'                          # YAML :3
-  conf.gem github: 'IceDragon200/mruby-yaml', branch: 'args_req-fix' # YAML :3
+  conf.gem github: 'AndrewBelt/mruby-yaml'                          # YAML :3
   conf.gem github: 'IceDragon200/mruby-glew'                         # GLEW
   conf.gem github: 'IceDragon200/mruby-gles', branch: 'args_req-fix' # GL ES
   conf.gem github: 'IceDragon200/mruby-glfw3'                        # GLFW
 
   conf.cxx do |c|
     std = 'c++11'
-    comp = toolchain_name == :clang ? 'clang' : 'gcc'
-    result = `#{comp} -dumpversion`.chomp
-    case toolchain_name
-    when :clang
-      # nothing yet
-      #if ver < '2.9'
-      #  end
-    when :gcc
-      if result < '4.7'
-        std = 'c++0x'
+    if platform.native?
+      comp = toolchain_name == :clang ? 'clang' : 'gcc'
+      result = `#{comp} -dumpversion`.chomp
+      case toolchain_name
+      when :clang
+        # nothing yet
+        #if ver < '2.9'
+        #  end
+      when :gcc
+        if result < '4.7'
+          std = 'c++0x'
+        end
       end
     end
     puts "\t\\\\ Using #{comp}(#{result}) c++ std: #{std} \\\\"
@@ -74,7 +89,7 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
 
     c.defines << 'ENABLE_DEBUG'
 
-    if Platform.darwin?
+    if platform.darwin?
       # GLFW
       c.defines << 'MOON_GL_GLFW'
     else
@@ -95,9 +110,8 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
     # required system includes
     c.include_paths << File.expand_path('glm', vd)
     # required graphics includes
-    c.include_paths << File.expand_path('glfw/include', vd)
-    c.include_paths << File.expand_path('glfw/src', bvd) # has the glfw_config.h
-    c.include_paths << File.expand_path('glfw/include', vd)
+    #c.include_paths << File.expand_path('glfw/include', vd)
+    #c.include_paths << File.expand_path('glfw/src', bvd) # has the glfw_config.h
     c.include_paths << File.expand_path('soil/include', vd)
     c.include_paths << File.expand_path('sil/include', vd)
     c.include_paths << File.expand_path('freetype-gl', vd)
@@ -109,7 +123,7 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
   end
 
   conf.linker do |l|
-    l.library_paths << File.expand_path('glfw/src', bvd)
+    #l.library_paths << File.expand_path('glfw/src', bvd)
     l.library_paths << File.expand_path('freetype-gl', bvd)
     l.library_paths << File.expand_path('gorilla-audio/build', bvd)
     l.library_paths << File.expand_path('sil', bvd)
@@ -139,7 +153,7 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
       l.flags_after_libraries << '-framework CoreFoundation'
     end
 
-    if Platform.unix?
+    if platform.unix?
       l.libraries << 'pthread'
     end
 
@@ -149,3 +163,11 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
     end
   end
 end
+
+if platform.native?
+  MRuby::Build.new 'host', buildir, &build_config
+else
+  MRuby::CrossBuild.new platform.platform_name, buildir, &build_config
+end
+
+end # platforms
