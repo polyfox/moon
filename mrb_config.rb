@@ -117,11 +117,13 @@ build_config = proc do |conf|
   end
 
   conf.linker do |l|
-    #l.library_paths << File.expand_path('glfw/src', bvd)
-    l.library_paths << File.expand_path('freetype-gl', bvd)
-    l.library_paths << File.expand_path('gorilla-audio/build', bvd)
-    l.library_paths << File.expand_path('sil', bvd)
-    l.library_paths << File.expand_path('soil', bvd)
+    if platform.native?
+      l.library_paths << File.expand_path('glfw/src', bvd)
+      l.library_paths << File.expand_path('freetype-gl', bvd)
+      l.library_paths << File.expand_path('gorilla-audio/build', bvd)
+      l.library_paths << File.expand_path('sil', bvd)
+      l.library_paths << File.expand_path('soil', bvd)
+    end
     l.library_paths.uniq!
 
     if platform.windows?
