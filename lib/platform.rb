@@ -1,29 +1,42 @@
-module Platform
-  def self.cygwin?
-    RUBY_PLATFORM.include?('cygwin')
+class Platform
+  attr_reader :platform_name
+  attr_reader :toolchain
+
+  def initialize(platform_name, toolchain)
+    @native = platform_name == nil
+    @platform_name = platform_name || RUBY_PLATFORM
+    @toolchain = toolchain
   end
 
-  def self.mingw?
-    RUBY_PLATFORM.include?('mingw')
+  def native?
+    @native
   end
 
-  def self.msvcr?
-    RUBY_PLATFORM.include?('msvcr')
+  def cygwin?
+    platform_name.include?('cygwin')
   end
 
-  def self.windows?
+  def mingw?
+    platform_name.include?('mingw')
+  end
+
+  def msvcr?
+    platform_name.include?('msvcr')
+  end
+
+  def windows?
     cygwin? || mingw? || msvcr?
   end
 
-  def self.linux?
-    RUBY_PLATFORM.include?('linux')
+  def linux?
+    platform_name.include?('linux')
   end
 
-  def self.darwin?
-    RUBY_PLATFORM.include?('darwin')
+  def darwin?
+    platform_name.include?('darwin')
   end
 
-  def self.unix?
+  def unix?
     linux? || darwin?
   end
 end
