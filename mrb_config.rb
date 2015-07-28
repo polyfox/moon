@@ -124,7 +124,11 @@ build_config = proc do |conf|
     l.library_paths << File.expand_path('soil', bvd)
     l.library_paths.uniq!
 
-    l.libraries << 'glfw'
+    if platform.windows?
+      l.libraries << 'glfw3'
+    else
+      l.libraries << 'glfw'
+    end
     l.libraries << 'freetype-gl'
     l.libraries << 'gorilla'
     l.libraries << 'freetype'
