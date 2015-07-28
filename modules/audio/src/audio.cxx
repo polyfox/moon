@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "moon/audio.hxx"
 
 namespace Moon {
