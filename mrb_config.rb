@@ -112,6 +112,7 @@ build_config = proc do |conf|
     # required graphics includes
     #c.include_paths << File.expand_path('glfw/include', vd)
     #c.include_paths << File.expand_path('glfw/src', bvd) # has the glfw_config.h
+    c.include_paths << File.expand_path('include', vd)
     c.include_paths << File.expand_path('soil/include', vd)
     c.include_paths << File.expand_path('sil/include', vd)
     c.include_paths << File.expand_path('freetype-gl', vd)
