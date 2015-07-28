@@ -12,13 +12,6 @@ load File.expand_path("tasks/mruby/toolchains/w64-mingw32.rake", rootdir)
   Platform.new('x86_64-mingw32', :x86_64_w64_mingw32),
 ].each do |platform|
 build_config = proc do |conf|
-  $linker_libraries ||= {}
-  $linker_libraries['glew'] = if platform.windows?
-    'glew32'
-  else
-    'GLEW'
-  end
-
   toolchain platform.toolchain
 
   puts "\t\\\\ Using #{toolchain_name} Toolchain \\\\"
@@ -142,6 +135,7 @@ build_config = proc do |conf|
     if Platform.linux?
       l.libraries << 'GLEW'
       l.libraries << 'GL'
+      l.libraries << 'GLEW'
       l.libraries << 'openal'
     elsif Platform.windows?
       l.libraries << 'glew32'
