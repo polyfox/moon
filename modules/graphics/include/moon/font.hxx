@@ -1,6 +1,10 @@
 #ifndef MOON_FONT_H
 #define MOON_FONT_H
 
+#ifdef _WIN32
+#  include <windows.h>
+#endif
+
 #include <freetype-gl.h>
 #include "moon/glm.h"
 #include "moon/intern.h"

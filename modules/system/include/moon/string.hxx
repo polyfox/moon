@@ -6,6 +6,10 @@
 #include <memory.h>
 #include <wchar.h>
 
+#ifdef _WIN32
+#  include <windows.h>
+#endif
+
 static inline wchar_t*
 chars_to_utf8(const char* str)
 {
