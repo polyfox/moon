@@ -8,8 +8,8 @@ toolchain_name = (ENV['MOON_MRUBY_TOOLCHAIN'] || :gcc).to_sym
 load File.expand_path("tasks/mruby/toolchains/w64-mingw32.rake", rootdir)
 
 [ Platform.new(nil, toolchain_name),
-  Platform.new('i686-mingw32',   :i686_w64_mingw32),
-  Platform.new('x86_64-mingw32', :x86_64_w64_mingw32),
+  Platform.new('i686-w64-mingw32',   :i686_w64_mingw32),
+  Platform.new('x86_64-w64-mingw32', :x86_64_w64_mingw32),
 ].each do |platform|
 build_config = proc do |conf|
   toolchain platform.toolchain
