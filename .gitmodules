@@ -4,7 +4,7 @@
 
 [submodule "vendor/freetype-gl"]
   path = vendor/freetype-gl
-  url = https://github.com/rougier/freetype-gl.git
+  url = https://github.com/polyfox/freetype-gl.git
 
 [submodule "vendor/glm"]
   path = vendor/glm
@@ -16,14 +16,14 @@
 
 [submodule "vendor/sil"]
   path = vendor/sil
-  url = https://github.com/IceDragon200/SIL.git
+  url = https://github.com/polyfox/SIL.git
   ignore = dirty
 
 [submodule "vendor/soil"]
   path = vendor/soil
-  url = https://github.com/IceDragon200/SOIL.git
+  url = https://github.com/polyfox/SOIL.git
   ignore = dirty
 
 [submodule "vendor/gorilla-audio"]
   path = vendor/gorilla-audio
-  url = https://github.com/IceDragon200/gorilla-audio.git
+  url = https://github.com/polyfox/gorilla-audio.git
