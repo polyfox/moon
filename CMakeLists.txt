@@ -25,21 +25,3 @@ set(BUILD_SHARED_LIBS ON)
 set(GLFW_BUILD_EXAMPLES OFF)
 set(GLFW_BUILD_TESTS OFF)
 add_subdirectory("vendor/glfw")
-
-option(RAKE_VERBOSE OFF)
-
-set(RAKE_VERBOSE_FLAG "")
-if(RAKE_VERBOSE)
-  set(RAKE_VERBOSE_FLAG "--verbose")
-endif(RAKE_VERBOSE)
-
-add_custom_target(moon-mruby ALL
-  DEPENDS SIL SOIL glfw freetype-gl gorilla
-  COMMAND rake ${RAKE_VERBOSE_FLAG} MRUBY_CONFIG="${CMAKE_SOURCE_DIR}/mrb_config.rb"
-  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/vendor/mruby"
-)
-
-add_custom_target(moon-docs ALL
-  COMMAND rake docs
-  DEPENDS moon-mruby
-)
