@@ -2,7 +2,8 @@ require 'set'
 require_relative 'lib/platform'
 
 rootdir = File.dirname(__FILE__)
-buildir = File.expand_path("build", rootdir)
+build_rootdir = File.expand_path("build", rootdir)
+buildir = File.expand_path("mruby", build_rootdir)
 toolchain_name = (ENV['MOON_MRUBY_TOOLCHAIN'] || :gcc).to_sym
 
 load File.expand_path("tasks/mruby/toolchains/w64-mingw32.rake", rootdir)
@@ -58,7 +59,11 @@ build_config = proc do |conf|
   end
 
   vd = File.expand_path('vendor', rootdir)
-  bvd = File.expand_path('build/vendor', rootdir)
+  bvd = if platform.native?
+    File.expand_path('host/vendor', build_rootdir)
+  else
+    File.expand_path(File.join(platform.platform_name, 'vendor'), build_rootdir)
+  end
   puts "VendorDir: #{vd}"
   puts "Build.VendorDir: #{bvd}"
   [conf.cc, conf.cxx].each do |c|
@@ -117,13 +122,11 @@ build_config = proc do |conf|
   end
 
   conf.linker do |l|
-    if platform.native?
-      l.library_paths << File.expand_path('glfw/src', bvd)
-      l.library_paths << File.expand_path('freetype-gl', bvd)
-      l.library_paths << File.expand_path('gorilla-audio/build', bvd)
-      l.library_paths << File.expand_path('sil', bvd)
-      l.library_paths << File.expand_path('soil', bvd)
-    end
+    l.library_paths << File.expand_path('glfw/src', bvd)
+    l.library_paths << File.expand_path('freetype-gl', bvd)
+    l.library_paths << File.expand_path('gorilla-audio/build', bvd)
+    l.library_paths << File.expand_path('sil', bvd)
+    l.library_paths << File.expand_path('soil', bvd)
     l.library_paths.uniq!
 
     if platform.windows?
@@ -132,22 +135,21 @@ build_config = proc do |conf|
       l.libraries << 'glfw'
     end
     l.libraries << 'freetype-gl'
-    l.libraries << 'gorilla'
     l.libraries << 'freetype'
+    l.libraries << 'gorilla'
     l.libraries << 'SOIL'
     l.libraries << 'SIL'
 
-
-    if Platform.linux?
+    if platform.linux?
       l.libraries << 'GLEW'
       l.libraries << 'GL'
-      l.libraries << 'GLEW'
       l.libraries << 'openal'
-    elsif Platform.windows?
+    elsif platform.windows?
       l.libraries << 'glew32'
       l.libraries << 'opengl32'
       l.libraries << 'OpenAL32'
-    elsif Platform.darwin?
+      l.libraries << 'ws2_32'
+    elsif platform.darwin?
       l.libraries << 'GLEW'
       l.flags_after_libraries << '-framework OpenGL'
       l.flags_after_libraries << '-framework OpenAL'
