@@ -125,12 +125,15 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
 
 
     if Platform.linux?
+      l.libraries << 'GLEW'
       l.libraries << 'GL'
       l.libraries << 'openal'
     elsif Platform.windows?
+      l.libraries << 'glew32'
       l.libraries << 'opengl32'
       l.libraries << 'OpenAL32'
     elsif Platform.darwin?
+      l.libraries << 'GLEW'
       l.flags_after_libraries << '-framework OpenGL'
       l.flags_after_libraries << '-framework OpenAL'
       l.flags_after_libraries << '-framework CoreFoundation'
