@@ -30,6 +30,7 @@ matrix:
 branches:
   only:
   - master
+  - coverity_scan
 
 before_install:
   - git submodule update --init --recursive --depth=1
