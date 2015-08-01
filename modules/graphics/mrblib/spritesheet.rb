@@ -19,6 +19,11 @@ module Moon
       end
       @w = tile_width
       @h = tile_height
+      if 0 >= @w
+        raise ArgumentError, "@w must be greater than 0"
+      elsif 0 >= @h
+        raise ArgumentError, "@h must be greater than 0"
+      end
       @cell_count = 0
       @shader = self.class.default_shader
       @vbo = VertexBuffer.new(VertexBuffer::STATIC_DRAW)

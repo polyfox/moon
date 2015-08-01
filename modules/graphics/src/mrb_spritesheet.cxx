@@ -46,8 +46,8 @@ spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
 {
   Moon::Texture *texture = mmrb_valid_texture_ptr(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
   Moon::VertexBuffer *vbo = mmrb_vertex_buffer_ptr(mrb, moon_iv_get(mrb, self, KEY_VBO));
-  const GLuint tile_width = mrb_fixnum(moon_iv_get(mrb, self, "@w"));
-  const GLuint tile_height = mrb_fixnum(moon_iv_get(mrb, self, "@h"));
+  const GLuint tile_width = mrb_int(mrb, moon_iv_get(mrb, self, "@w"));
+  const GLuint tile_height = mrb_int(mrb, moon_iv_get(mrb, self, "@h"));
   const GLfloat tiles_per_row = texture->GetWidth() / tile_width;
   const GLfloat tiles_per_column = texture->GetHeight() / tile_height;
   const GLuint total_sprites = tiles_per_row * tiles_per_column;
