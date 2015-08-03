@@ -37,50 +37,11 @@ module Moon
       raise EngineQuit
     end
 
-    private def gl_assert
-      error = GL2.glGetError
-      if error != GL2::GL_NO_ERROR
-        if error == 0x500
-          # just ignore, invalid enums for now
-          return
-        end
-        begin
-          fail "Error initializing OpenGL! glGetError: 0x%08x" % error
-        # mruby generates backtraces based on the current backtrace, and
-        # it avoids copying the backtrace into the exception, so an exception's
-        # backtrace will be based on the CURRENT stack trace rather than
-        # the stack trace it was raised from. -.- pain in the a__ I know.
-        rescue => ex
-          STDERR.puts ex.inspect
-          ex.backtrace.each do |line|
-            STDERR.puts "\t#{line}"
-          end
-          raise ex
-        end
-      end
-    end
-
-    # Resets Moon's required GL flags, since some external gems may change
-    # them for their own evil ;3
-    def reset_gl_flags
-      GL2.glDisable GL2::GL_DITHER
-      gl_assert
-      GL2.glDisable GL2::GL_CULL_FACE
-      gl_assert
-      GL2.glEnable GL2::GL_BLEND
-      gl_assert
-      GL2.glBlendFunc GL2::GL_SRC_ALPHA, GL2::GL_ONE_MINUS_SRC_ALPHA
-      gl_assert
-    end
-
     private def setup_glfw
-      @screen = Screen.new(@config.fetch(:width), @config.fetch(:height)).tap do |screen|
-        screen.make_current
-      end
-
+      @screen = Screen.new(@config.fetch(:width), @config.fetch(:height))
+      @screen.make_current
       # debugging
       @screen.print_versions
-
       self
     end
 
@@ -119,15 +80,15 @@ module Moon
     def setup
       setup_glfw
       setup_glew
-      reset_gl_flags
+      @screen.setup
       create_input
       setup_default_shaders
       self
     end
 
-    # Destroys the current window and cleans up.
+    # Destroys the current screen and cleans up.
     def shutdown
-      @screen.close
+      @screen.close if @screen
       self
     end
 
@@ -135,12 +96,12 @@ module Moon
     def main
       @log.puts 'Starting main loop'
       clear_bits = GL2::GL_COLOR_BUFFER_BIT | GL2::GL_DEPTH_BUFFER_BIT
-      until @screen.window.should_close?
+      until @screen.should_close?
         GL2.glClear clear_bits
         Audio.update
         @step.call self, @fps.restart
-        @screen.window.title = sprintf "FPS: %d", @fps.fps
-        @screen.window.swap_buffers
+        @screen.title = sprintf "FPS: %d", @fps.fps
+        @screen.swap
         GLFW.poll_events
       end
     rescue EngineQuit
