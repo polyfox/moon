@@ -22,4 +22,7 @@ MRuby::Gem::Specification.new('mruby-moon-graphics') do |spec|
   #end
 
   spec.add_dependency 'mruby-moon-system'
+  spec.add_dependency 'mruby-glew', github: 'IceDragon200/mruby-glew'                         # GLEW
+  spec.add_dependency 'mruby-gles', github: 'IceDragon200/mruby-gles', branch: 'args_req-fix' # GL ES
+  spec.add_dependency 'mruby-glfw3', github: 'IceDragon200/mruby-glfw3'                        # GLFW
 end

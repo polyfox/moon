@@ -27,9 +27,6 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
   # nice things
   #conf.gem github: 'AndrewBelt/mruby-yaml'                          # YAML :3
   conf.gem github: 'IceDragon200/mruby-yaml', branch: 'args_req-fix' # YAML :3
-  conf.gem github: 'IceDragon200/mruby-glew'                         # GLEW
-  conf.gem github: 'IceDragon200/mruby-gles', branch: 'args_req-fix' # GL ES
-  conf.gem github: 'IceDragon200/mruby-glfw3'                        # GLFW
 
   conf.cxx do |c|
     std = 'c++11'
