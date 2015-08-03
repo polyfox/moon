@@ -74,14 +74,13 @@ module Moon
     end
 
     private def setup_glfw
-      w, h = @config.fetch(:width), @config.fetch(:height)
-      @screen = Screen.new(w, h)
-      @screen.window.make_current
+      @screen = Screen.new(@config.fetch(:width), @config.fetch(:height)).tap do |screen|
+        screen.make_current
+      end
 
-      printf "OpenGL v%d.%d\n", @screen.window.window_attrib(GLFW::CONTEXT_VERSION_MAJOR),
-                                @screen.window.window_attrib(GLFW::CONTEXT_VERSION_MINOR)
-      puts "GLSL v" + GL2.glGetString(GL2::GL_SHADING_LANGUAGE_VERSION)
-      puts "GLFW v" + GLFW.version_string
+      # debugging
+      @screen.print_versions
+
       self
     end
 

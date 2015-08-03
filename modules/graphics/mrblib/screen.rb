@@ -4,8 +4,8 @@ module Moon
     attr_reader :h
     attr_reader :rect
     attr_reader :scale
-    attr_reader :window
     attr_reader :clear_color
+    attr_accessor :log
 
     # @param [Integer] w
     # @param [Integer] h
@@ -17,20 +17,41 @@ module Moon
       GLFW.window_hint GLFW::OPENGL_PROFILE, GLFW::OPENGL_CORE_PROFILE # for 3.0 and on
       Moon::Shader.is_legacy = false
 
+      title = 'Moon Player'
       begin
-        @window = GLFW::Window.new w, h, 'Moon Player'
+        @window = GLFW::Window.new w, h, title
       rescue GLFWError
         GLFW.default_window_hints
         GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 2
         GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 1
         Moon::Shader.is_legacy = true
 
-        @window = GLFW::Window.new w, h, 'Moon Player'
+        @window = GLFW::Window.new w, h, title
       end
 
       @scale = 1.0
+      @log = STDERR
       init_clear_color
       init_shader
+    end
+
+    def gl_version
+      '' << @window.window_attrib(GLFW::CONTEXT_VERSION_MAJOR) <<
+      '.' << @window.window_attrib(GLFW::CONTEXT_VERSION_MINOR)
+    end
+
+    def glsl_version
+      GL2.glGetString(GL2::GL_SHADING_LANGUAGE_VERSION)
+    end
+
+    def print_versions
+      @log.puts "OpenGL v" + @screen.gl_version
+      @log.puts "GLSL v" + @screen.glsl_version
+      @log.puts "GLFW v" + GLFW.version_string
+    end
+
+    def make_current
+      @window.make_current
     end
 
     def close
