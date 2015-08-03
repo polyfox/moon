@@ -47,11 +47,6 @@ module Moon
       resize(*@window.window_size)
     end
 
-    def refresh_size
-      @w, @h = *@window.window_size
-      @rect = Rect.new(0, 0, @w, @h)
-    end
-
     # @param [Vector4] color
     def clear_color=(color)
       @clear_color = Vector4[color]
@@ -66,7 +61,8 @@ module Moon
     # @param [Integer] h
     def resize(w, h)
       @window.window_size = [w, h]
-      refresh_size
+      @w, @h = *@window.window_size
+      @rect = Rect.new(0, 0, @w, @h)
       update_projection
     end
 
