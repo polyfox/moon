@@ -144,35 +144,34 @@ module Moon
     MOD_ALT = GLFW::MOD_ALT
     MOD_SUPER = GLFW::MOD_SUPER
 
-    attr_reader :engine
+    attr_reader :window
     attr_reader :mouse
     #attr_reader :keyboard
 
-    def initialize(engine)
-      @engine = engine
+    def initialize(window)
+      @window = window
       init_mouse
       register_callbacks
     end
 
     private def init_mouse
-      @mouse = Mouse.new @engine
+      @mouse = Mouse.new @window
     end
 
     private def register_callbacks
-      win = @engine.window
-      win.set_key_callback do |_, key_id, scancode, action, mods|
+      @window.set_key_callback do |_, key_id, scancode, action, mods|
         on_key KEY_MAP.fetch(key_id), scancode, STATE_MAP.fetch(action), mods unless key_id == -1
       end
 
-      win.set_mouse_button_callback do |_, button_id, action, mods|
+      @window.set_mouse_button_callback do |_, button_id, action, mods|
         on_button KEY_MAP.fetch(button_id), STATE_MAP.fetch(action), mods
       end
 
-      win.set_char_callback do |_, char|
+      @window.set_char_callback do |_, char|
         on_type char.chr
       end
 
-      win.set_cursor_pos_callback do |_, x, y|
+      @window.set_cursor_pos_callback do |_, x, y|
         on_mousemove x, y
       end
     end
@@ -191,22 +190,22 @@ module Moon
   end
 
   class Input::Mouse
-    attr_reader :engine
+    attr_reader :window
 
-    def initialize(engine)
-      @engine = engine
+    def initialize(window)
+      @window = window
     end
 
     def x
-      @engine.window.cursor_pos[0]
+      @window.cursor_pos[0]
     end
 
     def y
-      @engine.window.cursor_pos[1]
+      @window.cursor_pos[1]
     end
 
     def position
-      Vector2[@engine.window.cursor_pos]
+      Vector2[@window.cursor_pos]
     end
   end
 end

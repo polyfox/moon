@@ -11,7 +11,6 @@ module Moon
     attr_accessor :config
 
     attr_accessor :log
-    attr_reader :window
     attr_reader :screen
     attr_reader :input
 
@@ -19,7 +18,6 @@ module Moon
     # @yieldparam [Float] delta
     def initialize(&block)
       @config = { width: 800, height: 600 }
-      @window = nil
       @screen = nil
       @input = nil
       @fps = Moon::Clock.new
@@ -39,70 +37,16 @@ module Moon
       raise EngineQuit
     end
 
-    private def gl_assert
-      error = GL2.glGetError
-      if error != GL2::GL_NO_ERROR
-        fail "Error initializing OpenGL! glGetError: 0x%08x" % error
-      end
-    end
-
-    # Resets Moon's required GL flags, since some external gems may change
-    # them for their own evil ;3
-    def reset_gl_flags
-      GL2.glDisable GL2::GL_DITHER
-      gl_assert
-      GL2.glDisable GL2::GL_CULL_FACE
-      gl_assert
-      GL2.glEnable GL2::GL_BLEND
-      gl_assert
-      GL2.glBlendFunc GL2::GL_SRC_ALPHA, GL2::GL_ONE_MINUS_SRC_ALPHA
-      gl_assert
-    end
-
-    private def setup_opengl
-      reset_gl_flags
-    end
-
     private def setup_glfw
-      GLFW.default_window_hints
-      GLFW.window_hint GLFW::RESIZABLE, GL2::GL_FALSE
-      GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 3
-      GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 3
-      GLFW.window_hint GLFW::OPENGL_FORWARD_COMPAT, GL2::GL_TRUE # for 3.0
-      GLFW.window_hint GLFW::OPENGL_PROFILE, GLFW::OPENGL_CORE_PROFILE # for 3.0 and on
-      Moon::Shader.is_legacy = false
-
-      w, h = @config.fetch(:width), @config.fetch(:height)
-      begin
-        @window = GLFW::Window.new w, h, 'Moon Player'
-      rescue GLFWError
-        GLFW.default_window_hints
-        GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 2
-        GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 1
-        Moon::Shader.is_legacy = true
-
-        @window = GLFW::Window.new w, h, 'Moon Player'
-      end
-
-      @log.puts 'GLFW initialized'
-    end
-
-    private def setup_window
-      @window.make_current
-      printf "OpenGL v%d.%d\n", @window.window_attrib(GLFW::CONTEXT_VERSION_MAJOR),
-                                @window.window_attrib(GLFW::CONTEXT_VERSION_MINOR)
-      puts "GLSL v" + GL2.glGetString(GL2::GL_SHADING_LANGUAGE_VERSION)
-      puts "GLFW v" + GLFW.version_string
+      @screen = Screen.new(@config.fetch(:width), @config.fetch(:height))
+      @screen.make_current
+      # debugging
+      @screen.print_versions
       self
     end
 
-    private def create_screen
-      @screen = Screen.new @window
-      @log.puts 'Screen initialized'
-    end
-
     private def create_input
-      @input = Input.new self
+      @input = Input.new @screen.window
       @log.puts 'Input initialized'
     end
 
@@ -135,19 +79,16 @@ module Moon
     # @return [self]
     def setup
       setup_glfw
-      setup_window
-      setup_opengl
-      create_screen
-      create_input
       setup_glew
+      @screen.setup
+      create_input
       setup_default_shaders
       self
     end
 
-    # Destroys the current window and cleans up.
+    # Destroys the current screen and cleans up.
     def shutdown
-      @window.destroy if @window
-      @window = nil
+      @screen.close if @screen
       self
     end
 
@@ -155,12 +96,12 @@ module Moon
     def main
       @log.puts 'Starting main loop'
       clear_bits = GL2::GL_COLOR_BUFFER_BIT | GL2::GL_DEPTH_BUFFER_BIT
-      until @window.should_close?
+      until @screen.should_close?
         GL2.glClear clear_bits
         Audio.update
         @step.call self, @fps.restart
-        @window.title = sprintf "FPS: %d", @fps.fps
-        @window.swap_buffers
+        @screen.title = sprintf "FPS: %d", @fps.fps
+        @screen.swap
         GLFW.poll_events
       end
     rescue EngineQuit
