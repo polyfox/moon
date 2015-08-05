@@ -27,13 +27,19 @@ mmrb_texture_ptr(mrb_state *mrb, mrb_value self)
   return static_cast<Moon::Texture*>(mrb_data_get_ptr(mrb, self, &texture_data_type));
 }
 
+static void
+mmrb_check_texture(mrb_state *mrb, Moon::Texture *texture)
+{
+  if (!texture->GetID()) {
+    mrb_raisef(mrb, E_ARGUMENT_ERROR, "invalid texture handle.");
+  }
+}
+
 static inline Moon::Texture*
 mmrb_valid_texture_ptr(mrb_state *mrb, mrb_value obj)
 {
   Moon::Texture *texture = mmrb_texture_ptr(mrb, obj);
-  if (!texture->GetID()) {
-    mrb_raisef(mrb, E_ARGUMENT_ERROR, "invalid texture handle.");
-  }
+  mmrb_check_texture(mrb, texture);
   return texture;
 }
 
