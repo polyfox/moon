@@ -19,7 +19,7 @@ namespace Moon {
     };
   };
   typedef Rect<int> IntRect;
+  typedef Rect<float> FloatRect;
 };
-
 
 #endif

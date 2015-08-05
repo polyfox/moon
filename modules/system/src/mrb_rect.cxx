@@ -1,7 +1,9 @@
 #include <mruby.h>
 #include <mruby/array.h>
 #include <mruby/class.h>
+#include <mruby/numeric.h>
 #include <mruby/object.h>
+#include <mruby/string.h>
 #include <mruby/value.h>
 #include "moon/mrb/rect.hxx"
 #include "moon/rect.hxx"
@@ -30,18 +32,72 @@ MOON_C_API Moon::IntRect
 mmrb_to_rect(mrb_state *mrb, mrb_value self)
 {
   const mrb_vtype type = mrb_type(self);
-  if (type == MRB_TT_DATA) {
-    const mrb_data_type *dt = DATA_TYPE(self);
-    if (dt == &rect_data_type) {
-      return *(Moon::IntRect*)DATA_PTR(self);
-    }
-  } else if (type == MRB_TT_ARRAY) {
-    //
-  } else if (type == MRB_TT_FIXNUM) {
-    //
+  switch (type) {
+    case MRB_TT_DATA: {
+      Moon::IntRect *rect = static_cast<Moon::IntRect*>(mrb_data_check_get_ptr(mrb, self, &rect_data_type));
+      if (rect) return *rect;
+    }; break;
+    case MRB_TT_ARRAY: {
+      mrb_int alen = mrb_ary_len(mrb, self);
+      if (alen != 4) {
+        mrb_raisef(mrb, E_ARGUMENT_ERROR,
+          "wrong Array size %S (expected %S)",
+          mrb_fixnum_to_str(mrb, mrb_fixnum_value(alen), 10), mrb_str_new_cstr(mrb, "4"));
+      } else {
+        return Moon::IntRect(
+          mrb_int(mrb, mrb_ary_entry(self, 0)),
+          mrb_int(mrb, mrb_ary_entry(self, 1)),
+          mrb_int(mrb, mrb_ary_entry(self, 2)),
+          mrb_int(mrb, mrb_ary_entry(self, 3))
+        );
+      }
+    }; break;
+    case MRB_TT_FIXNUM:
+    case MRB_TT_FLOAT: {
+      mrb_int val = mrb_int(mrb, self);
+      return Moon::IntRect(0, 0, val, val);
+    }; break;
+    default:
+      break;
   }
   mrb_raise(mrb, E_TYPE_ERROR, "unexpected type");
   return Moon::IntRect{0, 0, 0, 0};
+}
+
+MOON_C_API Moon::FloatRect
+mmrb_to_float_rect(mrb_state *mrb, mrb_value obj)
+{
+  const mrb_vtype type = mrb_type(obj);
+  switch (type) {
+    case MRB_TT_DATA: {
+      Moon::IntRect *rect = static_cast<Moon::IntRect*>(mrb_data_check_get_ptr(mrb, obj, &rect_data_type));
+      if (rect) return Moon::FloatRect(rect->x, rect->y, rect->w, rect->h);
+    }; break;
+    case MRB_TT_ARRAY: {
+      mrb_int alen = mrb_ary_len(mrb, obj);
+      if (alen != 4) {
+        mrb_raisef(mrb, E_ARGUMENT_ERROR,
+          "wrong Array size %S (expected %S)",
+          mrb_fixnum_to_str(mrb, mrb_fixnum_value(alen), 10), mrb_str_new_cstr(mrb, "4"));
+      } else {
+        return Moon::FloatRect(
+          mrb_to_flo(mrb, mrb_ary_entry(obj, 0)),
+          mrb_to_flo(mrb, mrb_ary_entry(obj, 1)),
+          mrb_to_flo(mrb, mrb_ary_entry(obj, 2)),
+          mrb_to_flo(mrb, mrb_ary_entry(obj, 3))
+        );
+      }
+    }; break;
+    case MRB_TT_FIXNUM:
+    case MRB_TT_FLOAT: {
+      mrb_float val = mrb_to_flo(mrb, obj);
+      return Moon::FloatRect(0, 0, val, val);
+    }; break;
+    default:
+      break;
+  }
+  mrb_raise(mrb, E_TYPE_ERROR, "unexpected type");
+  return Moon::FloatRect{0, 0, 0, 0};
 }
 
 MOON_C_API mrb_value
