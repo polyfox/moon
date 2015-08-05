@@ -63,12 +63,12 @@ text_render(mrb_state *mrb, mrb_value self)
   glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y + font->font->ascender, z));
   // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
   glm::mat4 mvp_matrix = Moon::Shader::projection_matrix * Moon::Shader::view_matrix * model_matrix;
-  shader->SetUniform("mvp_matrix", mvp_matrix);
+  shader->SetUniform(std::string("mvp_matrix"), mvp_matrix);
 
   // Set texture ID
   glActiveTexture(GL_TEXTURE0);
   font->Bind();
-  shader->SetUniform("tex", /*GL_TEXTURE*/0);
+  shader->SetUniform(std::string("tex"), /*GL_TEXTURE*/0);
   vbo->Render(GL_TRIANGLES);
   return self;
 }

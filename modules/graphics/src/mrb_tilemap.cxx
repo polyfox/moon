@@ -38,11 +38,11 @@ tilemap_render(mrb_state *mrb, mrb_value self)
   glActiveTexture(GL_TEXTURE0);
   texture->Bind();
   shader->Use();
-  shader->SetUniform("mvp_matrix", mvp_matrix);
-  shader->SetUniform("opacity", opacity);
-  shader->SetUniform("color", Moon::Vector4(1, 1, 1, 1));
-  shader->SetUniform("tone", Moon::Vector4(0, 0, 0, 1));
-  shader->SetUniform("tex", /*GL_TEXTURE*/0);
+  shader->SetUniform(std::string("mvp_matrix"), mvp_matrix);
+  shader->SetUniform(std::string("opacity"), opacity);
+  shader->SetUniform(std::string("color"), Moon::Vector4(1, 1, 1, 1));
+  shader->SetUniform(std::string("tone"), Moon::Vector4(0, 0, 0, 1));
+  shader->SetUniform(std::string("tex"), /*GL_TEXTURE*/0);
   // TRIANGLE_STRIPS aren't very friendly with multiple quads
   vbo->Render(GL_TRIANGLES, 0);
   return self;
