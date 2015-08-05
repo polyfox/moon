@@ -120,9 +120,6 @@ vbo_add_quad(mrb_state *mrb, mrb_value self)
   color = mmrb_to_vector4(mrb, tex_rect_obj);
   vbo = mmrb_vertex_buffer_ptr(mrb, self);
 
-  printf("quad: x=%i y=%i w=%i h=%i\n", quad_rect.x, quad_rect.y, quad_rect.w, quad_rect.h);
-  printf("tex_quad: x=%f y=%f w=%f h=%f\n", quad_texture_rect.x, quad_texture_rect.y, quad_texture_rect.w, quad_texture_rect.h);
-
   vertices[i].pos = Moon::Vector2(quad_rect.x, quad_rect.y);
   vertices[i].tex_coord = Moon::Vector2(quad_texture_rect.x, quad_texture_rect.y);
   vertices[i].color = color;
