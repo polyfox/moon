@@ -70,6 +70,10 @@ mmrb_vector_unroll(mrb_state *mrb, size_t argc, mrb_value *vals, size_t result_s
           result[index++] = v4[2]; if (index >= result_size) break;
           result[index++] = v4[3];
           break;
+        } else {
+          mrb_raisef(mrb, E_TYPE_ERROR,
+                     "wrong type %S (expected a Vector*)",
+                     mrb_str_new_cstr(mrb, mrb_obj_classname(mrb, val)));
         }
       }
       default: {
