@@ -18,12 +18,12 @@
   mrb_value rother;                                                       \
   mrb_get_args(mrb, "o", &rother);                                        \
   mrb_value rtarget = mrb_obj_dup(mrb, self);                             \
-  Moon::Matrix4 *target_mat4 = get_matrix4(mrb, rtarget);             \
+  Moon::Matrix4 *target_mat4 = mmrb_matrix4_ptr(mrb, rtarget);             \
   const mrb_vtype t = mrb_type(rother);                                   \
   if (t == MRB_TT_DATA) {                                                 \
     const mrb_data_type *dt = DATA_TYPE(rother);                          \
     if (dt == &matrix4_data_type) { /* Matrix4 */                     \
-      Moon::Matrix4 *source_mat4 = get_matrix4(mrb, rother);          \
+      Moon::Matrix4 *source_mat4 = mmrb_matrix4_ptr(mrb, rother);          \
       *target_mat4 __op__ ## = *source_mat4;                              \
     } else if (dt == &vector4_data_type) { /* Vector4 */                  \
       *target_mat4 __op__ ## = mmrb_to_vector4(mrb, rother);              \
@@ -49,23 +49,17 @@ matrix4_free(mrb_state *mrb, void *p)
 
 MOON_C_API const struct mrb_data_type matrix4_data_type = { "Moon::Matrix4", matrix4_free };
 
-static inline Moon::Matrix4*
-get_matrix4(mrb_state *mrb, mrb_value self)
-{
-  return (Moon::Matrix4*)mrb_data_get_ptr(mrb, self, &matrix4_data_type);
-}
-
 MOON_C_API Moon::Matrix4
 mmrb_to_matrix4(mrb_state *mrb, mrb_value self)
 {
-  return *get_matrix4(mrb, self);
+  return *mmrb_matrix4_ptr(mrb, self);
 }
 
 MOON_C_API mrb_value
 mmrb_matrix4_value(mrb_state *mrb, Moon::Matrix4 mat)
 {
   mrb_value rsult = mrb_obj_new(mrb, mmrb_get_matrix4_class(mrb), 0, NULL);
-  Moon::Matrix4 *trns = get_matrix4(mrb, rsult);
+  Moon::Matrix4 *trns = mmrb_matrix4_ptr(mrb, rsult);
   *trns = mat;
   return rsult;
 }
@@ -185,7 +179,7 @@ matrix4_eq(mrb_state *mrb, mrb_value self)
   mrb_value other;
   mrb_get_args(mrb, "o", &other);
   if (mrb_obj_is_kind_of(mrb, other, mmrb_get_matrix4_class(mrb))) {
-    return mrb_bool_value((*get_matrix4(mrb, self)) == (*get_matrix4(mrb, other)));
+    return mrb_bool_value((*mmrb_matrix4_ptr(mrb, self)) == (*mmrb_matrix4_ptr(mrb, other)));
   }
   return mrb_bool_value(false);
 }
