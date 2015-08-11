@@ -1,5 +1,9 @@
 module Moon
   module OpenGL
+    TRIANGLES = GL2::GL_TRIANGLES
+    TRIANGLE_STRIP = GL2::GL_TRIANGLE_STRIP
+    TRIANGLE_FAN = GL2::GL_TRIANGLE_FAN
+
     def self.check_error!
       error = GL2.glGetError
       if error != GL2::GL_NO_ERROR
