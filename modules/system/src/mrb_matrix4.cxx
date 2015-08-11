@@ -364,6 +364,14 @@ matrix4_op_div(mrb_state *mrb, mrb_value self)
 //  math_op(%)
 //}
 
+static mrb_value
+matrix4_clear(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *mat4 = mmrb_matrix4_ptr(mrb, self);
+  *mat4 = Moon::Matrix4(1.0f);
+  return self;
+}
+
 /*
  * @return [Matrix4]
  */
@@ -563,6 +571,8 @@ mmrb_matrix4_init(mrb_state *mrb, struct RClass* mod)
   mrb_define_method(mrb, matrix4_class, "*",               matrix4_op_mul,          MRB_ARGS_REQ(1));
   mrb_define_method(mrb, matrix4_class, "/",               matrix4_op_div,          MRB_ARGS_REQ(1));
   //mrb_define_method(mrb, matrix4_class, "%",               op_mod,          MRB_ARGS_REQ(1));
+
+  mrb_define_method(mrb, matrix4_class, "clear",           matrix4_clear,           MRB_ARGS_NONE());
 
   mrb_define_method(mrb, matrix4_class, "translate",       matrix4_translate,       MRB_ARGS_ANY());
   mrb_define_method(mrb, matrix4_class, "rotate",          matrix4_rotate,          MRB_ARGS_ANY());
