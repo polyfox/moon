@@ -375,23 +375,19 @@ matrix4_clear(mrb_state *mrb, mrb_value self)
 /*
  * @return [Matrix4]
  */
-static mrb_value
-matrix4_translate(mrb_state *mrb, mrb_value self)
+static Moon::Matrix4
+matrix4_translate_m(mrb_state *mrb, mrb_value self)
 {
   mrb_value *vals;
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
-
-  mrb_value rtarget = mrb_obj_dup(mrb, self);
-  Moon::Matrix4 *target_mat4;
-  target_mat4 = (Moon::Matrix4*)mrb_data_get_ptr(mrb, rtarget, &matrix4_data_type);
-
+  Moon::Matrix4 *mat4 = mmrb_matrix4_ptr(mrb, self);
+  Moon::Matrix4 target_mat4;
   if (len == 1) {
     glm::vec3 v3 = mmrb_to_vector3(mrb, vals[0]);
-
-    *target_mat4 = glm::translate(*target_mat4, v3);
+    target_mat4 = glm::translate(*mat4, v3);
   } else if (len == 3) {
-    *target_mat4 = glm::translate(*target_mat4, glm::vec3(
+    target_mat4 = glm::translate(*mat4, glm::vec3(
       mrb_to_flo(mrb, vals[0]),
       mrb_to_flo(mrb, vals[1]),
       mrb_to_flo(mrb, vals[2])));
@@ -400,30 +396,52 @@ matrix4_translate(mrb_state *mrb, mrb_value self)
                "wrong argument count %d (expected 1 or 3)",
                len);
   }
-  return rtarget;
+  return target_mat4;
 };
 
 /*
  * @return [Matrix4]
  */
 static mrb_value
-matrix4_rotate(mrb_state *mrb, mrb_value self)
+matrix4_translate(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *target_mat4;
+  Moon::Matrix4 mat4 = matrix4_translate_m(mrb, self);
+  mrb_value rtarget = mrb_obj_dup(mrb, self);
+  target_mat4 = mmrb_matrix4_ptr(mrb, rtarget);
+  *target_mat4 = mat4;
+  return rtarget;
+};
+
+static mrb_value
+matrix4_translate_bang(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *target_mat4;
+  Moon::Matrix4 mat4 = matrix4_translate_m(mrb, self);
+  target_mat4 = mmrb_matrix4_ptr(mrb, self);
+  *target_mat4 = mat4;
+  return self;
+};
+
+/*
+ * @return [Matrix4]
+ */
+static Moon::Matrix4
+matrix4_rotate_m(mrb_state *mrb, mrb_value self)
 {
   mrb_value *vals;
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
-
-  mrb_value rtarget = mrb_obj_dup(mrb, self);
-  Moon::Matrix4 *target_mat4;
-  target_mat4 = (Moon::Matrix4*)mrb_data_get_ptr(mrb, rtarget, &matrix4_data_type);
+  Moon::Matrix4 *mat4 = mmrb_matrix4_ptr(mrb, self);
+  Moon::Matrix4 target_mat4;
 
   if (len == 2) {
     mrb_float angle = mrb_to_flo(mrb, vals[0]);
     glm::vec3 rotate_v3 = mmrb_to_vector3(mrb, vals[1]);
 
-    *target_mat4 = glm::rotate(*target_mat4, glm::radians((float)angle), rotate_v3);
+    target_mat4 = glm::rotate(*mat4, glm::radians((float)angle), rotate_v3);
   } else if (len == 4) {
-    *target_mat4 = glm::rotate(*target_mat4,
+    target_mat4 = glm::rotate(*mat4,
       glm::radians((float)mrb_to_flo(mrb, vals[0])),
       glm::vec3(mrb_to_flo(mrb, vals[1]),
                 mrb_to_flo(mrb, vals[2]),
@@ -433,29 +451,52 @@ matrix4_rotate(mrb_state *mrb, mrb_value self)
                "wrong argument count %d (expected 2 or 4)",
                len);
   }
-  return rtarget;
+  return target_mat4;
 }
 
 /*
  * @return [Matrix4]
  */
 static mrb_value
-matrix4_scale(mrb_state *mrb, mrb_value self)
+matrix4_rotate(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *target_mat4;
+  Moon::Matrix4 mat4 = matrix4_rotate_m(mrb, self);
+  mrb_value rtarget = mrb_obj_dup(mrb, self);
+  target_mat4 = mmrb_matrix4_ptr(mrb, rtarget);
+  *target_mat4 = mat4;
+  return rtarget;
+};
+
+static mrb_value
+matrix4_rotate_bang(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *target_mat4;
+  Moon::Matrix4 mat4 = matrix4_rotate_m(mrb, self);
+  target_mat4 = mmrb_matrix4_ptr(mrb, self);
+  *target_mat4 = mat4;
+  return self;
+};
+
+/*
+ * @return [Matrix4]
+ */
+static Moon::Matrix4
+matrix4_scale_m(mrb_state *mrb, mrb_value self)
 {
   mrb_value *vals;
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
 
-  mrb_value rtarget = mrb_obj_dup(mrb, self);
-  Moon::Matrix4 *target_mat4;
-  target_mat4 = (Moon::Matrix4*)mrb_data_get_ptr(mrb, rtarget, &matrix4_data_type);
+  Moon::Matrix4 *mat4 = mmrb_matrix4_ptr(mrb, self);
+  Moon::Matrix4 target_mat4;
 
   if (len == 1) {
     glm::vec3 v3 = mmrb_to_vector3(mrb, vals[0]);
 
-    *target_mat4 = glm::scale(*target_mat4, v3);
+    target_mat4 = glm::scale(*mat4, v3);
   } else if (len == 3) {
-    *target_mat4 = glm::scale(*target_mat4, glm::vec3(
+    target_mat4 = glm::scale(*mat4, glm::vec3(
       mrb_to_flo(mrb, vals[0]),
       mrb_to_flo(mrb, vals[1]),
       mrb_to_flo(mrb, vals[2])));
@@ -464,8 +505,32 @@ matrix4_scale(mrb_state *mrb, mrb_value self)
                "wrong argument count %d (expected 1 or 3)",
                len);
   }
-  return rtarget;
+  return target_mat4;
 }
+
+/*
+ * @return [Matrix4]
+ */
+static mrb_value
+matrix4_scale(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *target_mat4;
+  Moon::Matrix4 mat4 = matrix4_scale_m(mrb, self);
+  mrb_value rtarget = mrb_obj_dup(mrb, self);
+  target_mat4 = mmrb_matrix4_ptr(mrb, rtarget);
+  *target_mat4 = mat4;
+  return rtarget;
+};
+
+static mrb_value
+matrix4_scale_bang(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *target_mat4;
+  Moon::Matrix4 mat4 = matrix4_scale_m(mrb, self);
+  target_mat4 = mmrb_matrix4_ptr(mrb, self);
+  *target_mat4 = mat4;
+  return self;
+};
 
 /*
  * @return [Array<Numeric>]
@@ -577,6 +642,10 @@ mmrb_matrix4_init(mrb_state *mrb, struct RClass* mod)
   mrb_define_method(mrb, matrix4_class, "translate",       matrix4_translate,       MRB_ARGS_ANY());
   mrb_define_method(mrb, matrix4_class, "rotate",          matrix4_rotate,          MRB_ARGS_ANY());
   mrb_define_method(mrb, matrix4_class, "scale",           matrix4_scale,           MRB_ARGS_ANY());
+
+  mrb_define_method(mrb, matrix4_class, "translate!",      matrix4_translate_bang,  MRB_ARGS_ANY());
+  mrb_define_method(mrb, matrix4_class, "rotate!",         matrix4_rotate_bang,     MRB_ARGS_ANY());
+  mrb_define_method(mrb, matrix4_class, "scale!",          matrix4_scale_bang,      MRB_ARGS_ANY());
 
   mrb_define_method(mrb, matrix4_class, "to_a16",          matrix4_to_a16,          MRB_ARGS_NONE());
   mrb_define_method(mrb, matrix4_class, "to_a",            matrix4_to_a,            MRB_ARGS_NONE());
