@@ -5,6 +5,9 @@ module Moon
       bind_texture shader, texture
       vbo.render mode, index
     end
+
+    class << self
+      attr_accessor :instance
     end
   end
 end
