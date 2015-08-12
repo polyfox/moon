@@ -94,29 +94,28 @@ namespace Moon {
     return program;
   }
 
-  GLint Shader::InitAttribute(const char *name) {
-    GLint attribute = glGetAttribLocation(m_program, name);
+  GLint Shader::InitAttribute(std::string name) {
+    GLint attribute = glGetAttribLocation(m_program, name.c_str());
     if (attribute == -1) {
-      fprintf(stderr, "Shader(program_id: %i): OpenGL Error 0x%04x: Could not bind attribute %s\n", m_program, glGetError(), name);
+      fprintf(stderr, "Shader(program_id: %i): OpenGL Error 0x%04x: Could not bind attribute %s\n", m_program, glGetError(), name.c_str());
       abort();
     }
     m_attributeList[name] = attribute;
     return attribute;
   }
 
-  GLint Shader::InitUniform(const char *name) {
-    GLint uniform = glGetUniformLocation(m_program, name);
+  GLint Shader::InitUniform(std::string name) {
+    GLint uniform = glGetUniformLocation(m_program, name.c_str());
     if (uniform == -1) {
-      fprintf(stderr, "Shader(program_id: %i): OpenGL Error 0x%04x: Could not bind uniform %s\n", m_program, glGetError(), name);
+      fprintf(stderr, "Shader(program_id: %i): OpenGL Error 0x%04x: Could not bind uniform %s\n", m_program, glGetError(), name.c_str());
       abort();
     }
     m_uniformLocationList[name] = uniform;
     return uniform;
   }
 
-  GLint Shader::Attribute(const char *name) {
+  GLint Shader::Attribute(std::string name) {
     assert(m_program);
-    assert(name);
     AttributeMap::iterator iter = m_attributeList.find(name);
     if (iter == m_attributeList.end()) {
       return InitAttribute(name);
@@ -125,9 +124,8 @@ namespace Moon {
     }
   }
 
-  GLint Shader::Uniform(const char *name) {
+  GLint Shader::Uniform(std::string name) {
     assert(m_program);
-    assert(name);
     AttributeMap::iterator iter = m_uniformLocationList.find(name);
     if (iter == m_uniformLocationList.end()) {
       return InitUniform(name);
@@ -136,19 +134,31 @@ namespace Moon {
     }
   }
 
-  void Shader::SetUniform(const char *name, const GLint v1) {
+  void Shader::SetUniform(std::string name, const GLint v1) {
     glUniform1i(Uniform(name), v1);
   }
 
-  void Shader::SetUniform(const char *name, const GLfloat v1) {
+  void Shader::SetUniform(std::string name, const GLfloat v1) {
     glUniform1f(Uniform(name), v1);
   }
 
-  void Shader::SetUniform(const char *name, const Moon::Vector4 &vec) {
+  //void Shader::SetUniform(std::string name, const Moon::Vector1 &vec) {
+  //  glUniform1fv(Uniform(name), 1, glm::value_ptr(vec));
+  //}
+
+  void Shader::SetUniform(std::string name, const Moon::Vector2 &vec) {
+    glUniform2fv(Uniform(name), 1, glm::value_ptr(vec));
+  }
+
+  void Shader::SetUniform(std::string name, const Moon::Vector3 &vec) {
+    glUniform3fv(Uniform(name), 1, glm::value_ptr(vec));
+  }
+
+  void Shader::SetUniform(std::string name, const Moon::Vector4 &vec) {
     glUniform4fv(Uniform(name), 1, glm::value_ptr(vec));
   }
 
-  void Shader::SetUniform(const char *name, const glm::mat4 &mat) {
+  void Shader::SetUniform(std::string name, const Moon::Matrix4 &mat) {
     glUniformMatrix4fv(Uniform(name), 1, GL_FALSE, glm::value_ptr(mat));
   }
 

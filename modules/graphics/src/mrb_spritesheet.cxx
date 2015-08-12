@@ -83,40 +83,6 @@ spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
 }
 
 static void
-render(mrb_state *mrb, mrb_value self, const glm::vec3 position,
-    const int index, const RenderState &render_ops) {
-  const int total_sprites = mrb_int(mrb, moon_iv_get(mrb, self, "@cell_count"));
-  if ((index < 0) || (index >= total_sprites)) {
-    mrb_raisef(mrb, E_ARGUMENT_ERROR, "sprite index is out of range.");
-  }
-  const int offset = index * 4;
-  Moon::Texture *texture = mmrb_valid_texture_ptr(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
-  Moon::Shader *shader = mmrb_shader_ptr(mrb, moon_iv_get(mrb, self, KEY_SHADER));
-  Moon::VertexBuffer *vbo = mmrb_vertex_buffer_ptr(mrb, moon_iv_get(mrb, self, KEY_VBO));
-
-  shader->Use();
-
-  glm::mat4 rotation_matrix = moon_rotate(render_ops.angle, render_ops.origin);
-  //model matrix - move it to the correct position in the world
-  glm::mat4 model_matrix = glm::translate(render_ops.transform, position);
-
-  // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
-  glm::mat4 mvp_matrix = Moon::Shader::projection_matrix * Moon::Shader::view_matrix * model_matrix * rotation_matrix;
-  shader->SetUniform("mvp_matrix", mvp_matrix);
-
-  shader->SetUniform("opacity", render_ops.opacity);
-  shader->SetUniform("color", render_ops.color);
-  shader->SetUniform("tone", render_ops.tone);
-
-  //Set texture ID
-  glActiveTexture(GL_TEXTURE0);
-  texture->Bind();
-  shader->SetUniform("tex", /*GL_TEXTURE*/0);
-
-  vbo->Render(GL_TRIANGLE_STRIP, offset);
-};
-
-static void
 set_render_options(mrb_state *mrb, mrb_value options, RenderState *render_state)
 {
   mrb_value keys = mrb_hash_keys(mrb, options);
@@ -157,25 +123,6 @@ set_render_options(mrb_state *mrb, mrb_value options, RenderState *render_state)
       render_state->transform = mmrb_to_matrix4(mrb, val);
     }
   }
-}
-
-/*
- * @overload Spritesheet#render(x: float, y: float, z: float, index: int)
- * @overload Spritesheet#render(x: float, y: float, z: float, index: int, options: Hash<Symbol, Object>)
- */
-static mrb_value
-spritesheet_render(mrb_state *mrb, mrb_value self)
-{
-  mrb_int index;
-  mrb_float x, y, z;
-  mrb_value options = mrb_nil_value();
-  RenderState render_state;
-  mrb_get_args(mrb, "fffi|H", &x, &y, &z, &index, &options);
-  if (!mrb_nil_p(options)) {
-    set_render_options(mrb, options, &render_state);
-  }
-  render(mrb, self, glm::vec3(x, y, z), index, render_state);
-  return self;
 }
 
 static mrb_value
@@ -219,7 +166,6 @@ mmrb_spritesheet_init(mrb_state *mrb, struct RClass* mod)
 {
   struct RClass *ss_cls = mrb_define_class_under(mrb, mod, "Spritesheet", mrb->object_class);
 
-  mrb_define_method(mrb, ss_cls, "render",           spritesheet_render,           MRB_ARGS_ARG(4,1));
   mrb_define_method(mrb, ss_cls, "generate_buffers", spritesheet_generate_buffers, MRB_ARGS_NONE());
   mrb_define_method(mrb, ss_cls, "push_quad",        spritesheet_push_quad,        MRB_ARGS_ARG(5,1));
 

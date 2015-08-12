@@ -3,6 +3,10 @@
 #include <mruby/numeric.h>
 #include "moon/shader.hxx"
 #include "moon/mrb/shader.hxx"
+#include "moon/mrb/vector1.hxx"
+#include "moon/mrb/vector2.hxx"
+#include "moon/mrb/vector3.hxx"
+#include "moon/mrb/vector4.hxx"
 #include "moon/mrb/matrix4.hxx"
 #include "moon/mrb/helpers.hxx"
 
@@ -27,6 +31,58 @@ shader_initialize(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "zz", &vertexShader, &fragmentShader);
   shader = new Moon::Shader(vertexShader, fragmentShader);
   mrb_data_init(self, shader, &shader_data_type);
+  return self;
+}
+
+static mrb_value
+shader_use(mrb_state *mrb, mrb_value self)
+{
+  mmrb_shader_ptr(mrb, self)->Use();
+  return self;
+}
+
+static mrb_value
+shader_set_uniform(mrb_state *mrb, mrb_value self)
+{
+  char *cname;
+  mrb_value obj;
+  Moon::Shader *shader;
+  mrb_get_args(mrb, "zo", &cname, &obj);
+  shader = mmrb_shader_ptr(mrb, self);
+  std::string name(cname);
+
+  switch (mrb_type(obj)) {
+    case MRB_TT_FIXNUM: {
+      shader->SetUniform(name, static_cast<GLint>(mrb_int(mrb, obj)));
+    } break;
+    case MRB_TT_FLOAT: {
+      shader->SetUniform(name, static_cast<GLfloat>(mrb_to_flo(mrb, obj)));
+    } break;
+    case MRB_TT_DATA: {
+      void *ptr;
+      /*if ((ptr = mrb_data_check_get_ptr(mrb, obj, &vector1_data_type))) {
+        shader->SetUniform(name, *static_cast<Moon::Vector1*>(ptr));
+
+      } else */if ((ptr = mrb_data_check_get_ptr(mrb, obj, &vector2_data_type))) {
+        shader->SetUniform(name, *static_cast<Moon::Vector2*>(ptr));
+
+      } else if ((ptr = mrb_data_check_get_ptr(mrb, obj, &vector3_data_type))) {
+        shader->SetUniform(name, *static_cast<Moon::Vector3*>(ptr));
+
+      } else if ((ptr = mrb_data_check_get_ptr(mrb, obj, &vector4_data_type))) {
+        shader->SetUniform(name, *static_cast<Moon::Vector4*>(ptr));
+
+      } else if ((ptr = mrb_data_check_get_ptr(mrb, obj, &matrix4_data_type))) {
+        shader->SetUniform(name, *static_cast<Moon::Matrix4*>(ptr));
+
+      } else {
+        mrb_raisef(mrb, E_TYPE_ERROR, "unexpected object %S (expected Vector4 or Matrix4)", mrb_obj_classname(mrb, obj));
+      }
+    } break;
+    default:
+      mrb_raisef(mrb, E_TYPE_ERROR, "unexpected object %S", mrb_obj_classname(mrb, obj));
+      break;
+  }
   return self;
 }
 
@@ -66,7 +122,10 @@ mmrb_shader_init(mrb_state *mrb, struct RClass* mod)
   struct RClass *shader_class = mrb_define_class_under(mrb, mod, "Shader", mrb->object_class);
   MRB_SET_INSTANCE_TT(shader_class, MRB_TT_DATA);
 
-  mrb_define_method(mrb, shader_class, "initialize", shader_initialize, MRB_ARGS_REQ(2));
+  mrb_define_method(mrb, shader_class, "initialize",  shader_initialize,  MRB_ARGS_REQ(2));
+  mrb_define_method(mrb, shader_class, "use",         shader_use,         MRB_ARGS_NONE());
+  mrb_define_method(mrb, shader_class, "set_uniform", shader_set_uniform, MRB_ARGS_REQ(2));
+
   mrb_define_class_method(mrb, shader_class, "is_legacy",  shader_s_is_legacy_get, MRB_ARGS_NONE());
   mrb_define_class_method(mrb, shader_class, "is_legacy=", shader_s_is_legacy_set, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, shader_class, "projection_matrix",  shader_s_projection_matrix_get, MRB_ARGS_NONE());

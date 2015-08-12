@@ -16,6 +16,7 @@ module Moon
       create_window w, h
       initialize_clear_color
       initialize_screen_size
+      initialize_renderer
     end
 
     def create_window(w, h)
@@ -83,6 +84,10 @@ module Moon
 
     private def initialize_screen_size
       resize(*@window.window_size)
+    end
+
+    private def initialize_renderer
+      Moon::Renderer.instance = Moon::Renderer.new
     end
 
     # @param [Vector4] color

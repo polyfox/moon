@@ -3,6 +3,10 @@
 #include <mruby/data.h>
 #include <mruby/numeric.h>
 #include <mruby/string.h>
+#include "moon/mrb/rect.hxx"
+#include "moon/mrb/vector2.hxx"
+#include "moon/mrb/vector3.hxx"
+#include "moon/mrb/vector4.hxx"
 #include "moon/mrb/vertex_buffer.hxx"
 #include "moon/mrb/helpers.hxx"
 #include "moon/vertex_buffer.hxx"
@@ -95,6 +99,49 @@ vbo_index_count(mrb_state *mrb, mrb_value self)
   return mrb_fixnum_value(mmrb_vertex_buffer_ptr(mrb, self)->GetIndexCount());
 }
 
+static mrb_value
+vbo_add_quad(mrb_state *mrb, mrb_value self)
+{
+  Moon::IntRect quad_rect;
+  Moon::FloatRect quad_texture_rect;
+  Moon::Vector4 color;
+  Moon::VertexBuffer *vbo = NULL;
+  GLuint indices[] = { 0, 1, 3, 2, 3, 1 };
+
+  mrb_value rect_obj;
+  mrb_value tex_rect_obj;
+  mrb_value color_obj;
+
+  GLfloat x0, x1, y0, y1;
+  GLfloat tx0, tx1, ty0, ty1;
+
+  mrb_get_args(mrb, "ooo", &rect_obj, &tex_rect_obj, &color_obj);
+  quad_rect = mmrb_to_rect(mrb, rect_obj);
+  quad_texture_rect = mmrb_to_float_rect(mrb, tex_rect_obj);
+  color = mmrb_to_vector4(mrb, color_obj);
+  vbo = mmrb_vertex_buffer_ptr(mrb, self);
+
+  x0 = quad_rect.x;
+  y0 = quad_rect.y;
+  x1 = quad_rect.x + quad_rect.w;
+  y1 = quad_rect.y + quad_rect.h;
+
+  tx0 = quad_texture_rect.x;
+  ty0 = quad_texture_rect.y;
+  tx1 = quad_texture_rect.x + quad_texture_rect.w;
+  ty1 = quad_texture_rect.y + quad_texture_rect.h;
+
+  Moon::Vertex vertices[4] = {
+    { { x0, y0 }, { tx0, ty0 }, color },
+    { { x1, y0 }, { tx1, ty0 }, color },
+    { { x1, y1 }, { tx1, ty1 }, color },
+    { { x0, y1 }, { tx0, ty1 }, color }
+  };
+
+  vbo->PushBack(vertices, 4, indices, 6);
+  return self;
+}
+
 MOON_C_API void
 mmrb_vbo_init(mrb_state *mrb, struct RClass* mod)
 {
@@ -108,11 +155,5 @@ mmrb_vbo_init(mrb_state *mrb, struct RClass* mod)
   mrb_define_method(mrb, vbo_class, "push_indices", vbo_push_indices, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, vbo_class, "vertex_count", vbo_vertex_count, MRB_ARGS_NONE());
   mrb_define_method(mrb, vbo_class, "index_count",  vbo_index_count,  MRB_ARGS_NONE());
-
-  // vbo.render(mode, {offset: [default: 0]})
-  // vbo.flush // vbo.upload
-
-  // vbo.push(vertices, indices)
-  // vbo.push_vertices(v)
-  // vbo.push_indices(i)
+  mrb_define_method(mrb, vbo_class, "add_quad",     vbo_add_quad,     MRB_ARGS_REQ(3));
 }

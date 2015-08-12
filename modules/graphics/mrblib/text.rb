@@ -7,13 +7,15 @@ module Moon
     attr_reader :h
 
     attribute :align,         Symbol
-    attribute :shader,        Shader
-    attribute :string,        String
-    attribute :font,          Font
+    attribute :angle,         Float
     attribute :color,         Vector4
+    attribute :font,          Font
+    attribute :line_height,   Float
+    attribute :origin,        Vector2
     attribute :outline,       Integer
     attribute :outline_color, Vector4
-    attribute :line_height,   Float
+    attribute :shader,        Shader
+    attribute :string,        String
 
     # @param [Font] font
     # @param [String] string
@@ -29,13 +31,18 @@ module Moon
       @h = 0
       set_font font
       set_string string
+      self.angle = options.fetch(:angle, 0.0)
       set_outline options.fetch(:outline, 0)
       set_line_height options.fetch(:line_height, 1.2)
       set_align options.fetch(:align, :left)
       self.shader = options.fetch(:shader) { self.class.default_shader }
+      self.origin = options.fetch(:origin) { Vector2.new(0, 0) }
       set_color options.fetch(:color) { Vector4.new(1, 1, 1, 1) }
       set_outline_color options.fetch(:outline_color) { Vector4.new(0, 0, 0, 1) }
       @vbo = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
+      @transform = Matrix4.new
+      @rotation_matrix = Matrix4.new
+      @mode = OpenGL::TRIANGLES
       generate_buffers
     end
 
@@ -119,6 +126,18 @@ module Moon
     def align=(align)
       set_align(align)
       generate_buffers
+    end
+
+    def render(x, y, z)
+      @rotation_matrix.clear
+      @rotation_matrix.rotate!(@angle, [0, 0, 1])
+      @rotation_matrix.translate!(-@origin.x, -@origin.y, 0)
+      @transform.clear
+      @transform.translate!(x, y + @font.ascender, z)
+      transform = @transform * @rotation_matrix
+
+      @shader.use
+      Renderer.instance.render(@shader, @vbo, @font, transform, @mode)
     end
   end
 end

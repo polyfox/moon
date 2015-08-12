@@ -63,45 +63,9 @@ sprite_generate_buffers(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-static mrb_value
-sprite_render(mrb_state *mrb, mrb_value self)
-{
-  mrb_float x, y, z;
-  mrb_get_args(mrb, "fff", &x, &y, &z);
-  const GLfloat opacity = mrb_to_flo(mrb, moon_iv_get(mrb, self, "@opacity"));
-  const GLfloat angle = mrb_to_flo(mrb, moon_iv_get(mrb, self, "@angle"));
-  Moon::Texture *texture = mmrb_valid_texture_ptr(mrb, moon_iv_get(mrb, self, KEY_TEXTURE));
-  Moon::Shader *shader = mmrb_shader_ptr(mrb, moon_iv_get(mrb, self, KEY_SHADER));
-  Moon::VertexBuffer *vbo = mmrb_vertex_buffer_ptr(mrb, moon_iv_get(mrb, self, KEY_VBO));
-  Moon::Vector2 origin(*mmrb_vector2_ptr(mrb, moon_iv_get(mrb, self, KEY_ORIGIN)));
-  Moon::Vector4 color(*mmrb_vector4_ptr(mrb, moon_iv_get(mrb, self, "@color")));
-  Moon::Vector4 tone(*mmrb_vector4_ptr(mrb, moon_iv_get(mrb, self, "@tone")));
-
-  shader->Use();
-
-  glm::mat4 rotation_matrix = moon_rotate(angle, origin);
-  // model matrix - move it to the correct position in the world
-  glm::mat4 model_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, z));
-  // calculate the ModelViewProjection matrix (faster to do on CPU, once for all vertices instead of per vertex)
-  glm::mat4 mvp_matrix = Moon::Shader::projection_matrix * Moon::Shader::view_matrix * model_matrix * rotation_matrix;
-  shader->SetUniform("mvp_matrix", mvp_matrix);
-
-  shader->SetUniform("opacity", opacity);
-  shader->SetUniform("color",  color);
-  shader->SetUniform("tone", tone);
-
-  //Set texture ID
-  glActiveTexture(GL_TEXTURE0);
-  texture->Bind();
-  shader->SetUniform("tex", /*GL_TEXTURE*/0);
-  vbo->Render(GL_TRIANGLE_STRIP);
-  return self;
-}
-
 MOON_C_API void
 mmrb_sprite_init(mrb_state *mrb, struct RClass* mod)
 {
   struct RClass *sprite_class = mrb_define_class_under(mrb, mod, "Sprite", mrb->object_class);
   mrb_define_method(mrb, sprite_class, "generate_buffers", sprite_generate_buffers, MRB_ARGS_NONE());
-  mrb_define_method(mrb, sprite_class, "render",           sprite_render,           MRB_ARGS_REQ(3));
 }

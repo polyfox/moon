@@ -8,11 +8,15 @@
 #include "moon/intern.h"
 #include "moon/gl.h"
 #include "moon/glm.h"
+#include "moon/vector1.hxx"
+#include "moon/vector2.hxx"
+#include "moon/vector3.hxx"
 #include "moon/vector4.hxx"
+#include "moon/matrix4.hxx"
 
 namespace Moon {
   class Shader {
-    typedef std::unordered_map<const char *, GLint> AttributeMap;
+    typedef std::unordered_map<std::string, GLint> AttributeMap;
   public:
     static glm::mat4 projection_matrix; // TEMPORARY LOCATION, TODO MOVE TO RENDERER
     static glm::mat4 view_matrix; // camera. TEMPORARY LOCATION, TODO MOVE TO RENDERER
@@ -21,13 +25,16 @@ namespace Moon {
     Shader(const std::string vertexShader, const std::string fragmentShader);
     ~Shader();
     void   Use();
-    GLint  Attribute(const char *name);
-    GLint  Uniform(const char *name);
+    GLint  Attribute(std::string name);
+    GLint  Uniform(std::string name);
 
-    void SetUniform(const char *name, const GLint v1);
-    void SetUniform(const char *name, const GLfloat v1);
-    void SetUniform(const char *name, const Moon::Vector4 &vec);
-    void SetUniform(const char *name, const glm::mat4 &mat);
+    void SetUniform(std::string name, const GLint v1);
+    void SetUniform(std::string name, const GLfloat v1);
+    //void SetUniform(std::string name, const Moon::Vector1 &vec);
+    void SetUniform(std::string name, const Moon::Vector2 &vec);
+    void SetUniform(std::string name, const Moon::Vector3 &vec);
+    void SetUniform(std::string name, const Moon::Vector4 &vec);
+    void SetUniform(std::string name, const Moon::Matrix4 &mat);
   private:
     GLuint  m_program;
     AttributeMap m_attributeList;
@@ -36,8 +43,8 @@ namespace Moon {
     void   PrintLog(GLuint object);
     GLuint CreateShader(const std::string contents, GLenum type);
     GLuint CreateProgram(const std::string vertexShader, const std::string fragmentShader);
-    GLint  InitAttribute(const char *name);
-    GLint  InitUniform(const char *name);
+    GLint  InitAttribute(std::string name);
+    GLint  InitUniform(std::string name);
   };
 };
 #endif

@@ -18,12 +18,12 @@
   mrb_value rother;                                                       \
   mrb_get_args(mrb, "o", &rother);                                        \
   mrb_value rtarget = mrb_obj_dup(mrb, self);                             \
-  Moon::Matrix4 *target_mat4 = get_matrix4(mrb, rtarget);             \
+  Moon::Matrix4 *target_mat4 = mmrb_matrix4_ptr(mrb, rtarget);             \
   const mrb_vtype t = mrb_type(rother);                                   \
   if (t == MRB_TT_DATA) {                                                 \
     const mrb_data_type *dt = DATA_TYPE(rother);                          \
     if (dt == &matrix4_data_type) { /* Matrix4 */                     \
-      Moon::Matrix4 *source_mat4 = get_matrix4(mrb, rother);          \
+      Moon::Matrix4 *source_mat4 = mmrb_matrix4_ptr(mrb, rother);          \
       *target_mat4 __op__ ## = *source_mat4;                              \
     } else if (dt == &vector4_data_type) { /* Vector4 */                  \
       *target_mat4 __op__ ## = mmrb_to_vector4(mrb, rother);              \
@@ -49,23 +49,17 @@ matrix4_free(mrb_state *mrb, void *p)
 
 MOON_C_API const struct mrb_data_type matrix4_data_type = { "Moon::Matrix4", matrix4_free };
 
-static inline Moon::Matrix4*
-get_matrix4(mrb_state *mrb, mrb_value self)
-{
-  return (Moon::Matrix4*)mrb_data_get_ptr(mrb, self, &matrix4_data_type);
-}
-
 MOON_C_API Moon::Matrix4
 mmrb_to_matrix4(mrb_state *mrb, mrb_value self)
 {
-  return *get_matrix4(mrb, self);
+  return *mmrb_matrix4_ptr(mrb, self);
 }
 
 MOON_C_API mrb_value
 mmrb_matrix4_value(mrb_state *mrb, Moon::Matrix4 mat)
 {
   mrb_value rsult = mrb_obj_new(mrb, mmrb_get_matrix4_class(mrb), 0, NULL);
-  Moon::Matrix4 *trns = get_matrix4(mrb, rsult);
+  Moon::Matrix4 *trns = mmrb_matrix4_ptr(mrb, rsult);
   *trns = mat;
   return rsult;
 }
@@ -185,7 +179,7 @@ matrix4_eq(mrb_state *mrb, mrb_value self)
   mrb_value other;
   mrb_get_args(mrb, "o", &other);
   if (mrb_obj_is_kind_of(mrb, other, mmrb_get_matrix4_class(mrb))) {
-    return mrb_bool_value((*get_matrix4(mrb, self)) == (*get_matrix4(mrb, other)));
+    return mrb_bool_value((*mmrb_matrix4_ptr(mrb, self)) == (*mmrb_matrix4_ptr(mrb, other)));
   }
   return mrb_bool_value(false);
 }
@@ -370,26 +364,30 @@ matrix4_op_div(mrb_state *mrb, mrb_value self)
 //  math_op(%)
 //}
 
+static mrb_value
+matrix4_clear(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *mat4 = mmrb_matrix4_ptr(mrb, self);
+  *mat4 = Moon::Matrix4(1.0f);
+  return self;
+}
+
 /*
  * @return [Matrix4]
  */
-static mrb_value
-matrix4_translate(mrb_state *mrb, mrb_value self)
+static Moon::Matrix4
+matrix4_translate_m(mrb_state *mrb, mrb_value self)
 {
   mrb_value *vals;
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
-
-  mrb_value rtarget = mrb_obj_dup(mrb, self);
-  Moon::Matrix4 *target_mat4;
-  target_mat4 = (Moon::Matrix4*)mrb_data_get_ptr(mrb, rtarget, &matrix4_data_type);
-
+  Moon::Matrix4 *mat4 = mmrb_matrix4_ptr(mrb, self);
+  Moon::Matrix4 target_mat4;
   if (len == 1) {
     glm::vec3 v3 = mmrb_to_vector3(mrb, vals[0]);
-
-    *target_mat4 = glm::translate(*target_mat4, v3);
+    target_mat4 = glm::translate(*mat4, v3);
   } else if (len == 3) {
-    *target_mat4 = glm::translate(*target_mat4, glm::vec3(
+    target_mat4 = glm::translate(*mat4, glm::vec3(
       mrb_to_flo(mrb, vals[0]),
       mrb_to_flo(mrb, vals[1]),
       mrb_to_flo(mrb, vals[2])));
@@ -398,30 +396,52 @@ matrix4_translate(mrb_state *mrb, mrb_value self)
                "wrong argument count %d (expected 1 or 3)",
                len);
   }
-  return rtarget;
+  return target_mat4;
 };
 
 /*
  * @return [Matrix4]
  */
 static mrb_value
-matrix4_rotate(mrb_state *mrb, mrb_value self)
+matrix4_translate(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *target_mat4;
+  Moon::Matrix4 mat4 = matrix4_translate_m(mrb, self);
+  mrb_value rtarget = mrb_obj_dup(mrb, self);
+  target_mat4 = mmrb_matrix4_ptr(mrb, rtarget);
+  *target_mat4 = mat4;
+  return rtarget;
+};
+
+static mrb_value
+matrix4_translate_bang(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *target_mat4;
+  Moon::Matrix4 mat4 = matrix4_translate_m(mrb, self);
+  target_mat4 = mmrb_matrix4_ptr(mrb, self);
+  *target_mat4 = mat4;
+  return self;
+};
+
+/*
+ * @return [Matrix4]
+ */
+static Moon::Matrix4
+matrix4_rotate_m(mrb_state *mrb, mrb_value self)
 {
   mrb_value *vals;
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
-
-  mrb_value rtarget = mrb_obj_dup(mrb, self);
-  Moon::Matrix4 *target_mat4;
-  target_mat4 = (Moon::Matrix4*)mrb_data_get_ptr(mrb, rtarget, &matrix4_data_type);
+  Moon::Matrix4 *mat4 = mmrb_matrix4_ptr(mrb, self);
+  Moon::Matrix4 target_mat4;
 
   if (len == 2) {
     mrb_float angle = mrb_to_flo(mrb, vals[0]);
     glm::vec3 rotate_v3 = mmrb_to_vector3(mrb, vals[1]);
 
-    *target_mat4 = glm::rotate(*target_mat4, glm::radians((float)angle), rotate_v3);
+    target_mat4 = glm::rotate(*mat4, glm::radians((float)angle), rotate_v3);
   } else if (len == 4) {
-    *target_mat4 = glm::rotate(*target_mat4,
+    target_mat4 = glm::rotate(*mat4,
       glm::radians((float)mrb_to_flo(mrb, vals[0])),
       glm::vec3(mrb_to_flo(mrb, vals[1]),
                 mrb_to_flo(mrb, vals[2]),
@@ -431,29 +451,52 @@ matrix4_rotate(mrb_state *mrb, mrb_value self)
                "wrong argument count %d (expected 2 or 4)",
                len);
   }
-  return rtarget;
+  return target_mat4;
 }
 
 /*
  * @return [Matrix4]
  */
 static mrb_value
-matrix4_scale(mrb_state *mrb, mrb_value self)
+matrix4_rotate(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *target_mat4;
+  Moon::Matrix4 mat4 = matrix4_rotate_m(mrb, self);
+  mrb_value rtarget = mrb_obj_dup(mrb, self);
+  target_mat4 = mmrb_matrix4_ptr(mrb, rtarget);
+  *target_mat4 = mat4;
+  return rtarget;
+};
+
+static mrb_value
+matrix4_rotate_bang(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *target_mat4;
+  Moon::Matrix4 mat4 = matrix4_rotate_m(mrb, self);
+  target_mat4 = mmrb_matrix4_ptr(mrb, self);
+  *target_mat4 = mat4;
+  return self;
+};
+
+/*
+ * @return [Matrix4]
+ */
+static Moon::Matrix4
+matrix4_scale_m(mrb_state *mrb, mrb_value self)
 {
   mrb_value *vals;
   int len;
   mrb_get_args(mrb, "*", &vals, &len);
 
-  mrb_value rtarget = mrb_obj_dup(mrb, self);
-  Moon::Matrix4 *target_mat4;
-  target_mat4 = (Moon::Matrix4*)mrb_data_get_ptr(mrb, rtarget, &matrix4_data_type);
+  Moon::Matrix4 *mat4 = mmrb_matrix4_ptr(mrb, self);
+  Moon::Matrix4 target_mat4;
 
   if (len == 1) {
     glm::vec3 v3 = mmrb_to_vector3(mrb, vals[0]);
 
-    *target_mat4 = glm::scale(*target_mat4, v3);
+    target_mat4 = glm::scale(*mat4, v3);
   } else if (len == 3) {
-    *target_mat4 = glm::scale(*target_mat4, glm::vec3(
+    target_mat4 = glm::scale(*mat4, glm::vec3(
       mrb_to_flo(mrb, vals[0]),
       mrb_to_flo(mrb, vals[1]),
       mrb_to_flo(mrb, vals[2])));
@@ -462,8 +505,32 @@ matrix4_scale(mrb_state *mrb, mrb_value self)
                "wrong argument count %d (expected 1 or 3)",
                len);
   }
-  return rtarget;
+  return target_mat4;
 }
+
+/*
+ * @return [Matrix4]
+ */
+static mrb_value
+matrix4_scale(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *target_mat4;
+  Moon::Matrix4 mat4 = matrix4_scale_m(mrb, self);
+  mrb_value rtarget = mrb_obj_dup(mrb, self);
+  target_mat4 = mmrb_matrix4_ptr(mrb, rtarget);
+  *target_mat4 = mat4;
+  return rtarget;
+};
+
+static mrb_value
+matrix4_scale_bang(mrb_state *mrb, mrb_value self)
+{
+  Moon::Matrix4 *target_mat4;
+  Moon::Matrix4 mat4 = matrix4_scale_m(mrb, self);
+  target_mat4 = mmrb_matrix4_ptr(mrb, self);
+  *target_mat4 = mat4;
+  return self;
+};
 
 /*
  * @return [Array<Numeric>]
@@ -570,9 +637,15 @@ mmrb_matrix4_init(mrb_state *mrb, struct RClass* mod)
   mrb_define_method(mrb, matrix4_class, "/",               matrix4_op_div,          MRB_ARGS_REQ(1));
   //mrb_define_method(mrb, matrix4_class, "%",               op_mod,          MRB_ARGS_REQ(1));
 
+  mrb_define_method(mrb, matrix4_class, "clear",           matrix4_clear,           MRB_ARGS_NONE());
+
   mrb_define_method(mrb, matrix4_class, "translate",       matrix4_translate,       MRB_ARGS_ANY());
   mrb_define_method(mrb, matrix4_class, "rotate",          matrix4_rotate,          MRB_ARGS_ANY());
   mrb_define_method(mrb, matrix4_class, "scale",           matrix4_scale,           MRB_ARGS_ANY());
+
+  mrb_define_method(mrb, matrix4_class, "translate!",      matrix4_translate_bang,  MRB_ARGS_ANY());
+  mrb_define_method(mrb, matrix4_class, "rotate!",         matrix4_rotate_bang,     MRB_ARGS_ANY());
+  mrb_define_method(mrb, matrix4_class, "scale!",          matrix4_scale_bang,      MRB_ARGS_ANY());
 
   mrb_define_method(mrb, matrix4_class, "to_a16",          matrix4_to_a16,          MRB_ARGS_NONE());
   mrb_define_method(mrb, matrix4_class, "to_a",            matrix4_to_a,            MRB_ARGS_NONE());
