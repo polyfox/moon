@@ -88,6 +88,12 @@ font_calc_bounds(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 2, argv);
 }
 
+static mrb_value
+font_ascender_get(mrb_state *mrb, mrb_value self)
+{
+  return mrb_float_value(mrb, mmrb_font_ptr(mrb, self)->font->ascender);
+}
+
 MOON_C_API void
 mmrb_font_init(mrb_state *mrb, struct RClass* mod)
 {
@@ -97,4 +103,5 @@ mmrb_font_init(mrb_state *mrb, struct RClass* mod)
   mrb_define_method(mrb, font_class, "initialize",  font_initialize,  MRB_ARGS_REQ(2));
   mrb_define_method(mrb, font_class, "size",        font_size,        MRB_ARGS_NONE());
   mrb_define_method(mrb, font_class, "calc_bounds", font_calc_bounds, MRB_ARGS_ARG(1,1));
+  mrb_define_method(mrb, font_class, "ascender",    font_ascender_get,    MRB_ARGS_NONE());
 }
