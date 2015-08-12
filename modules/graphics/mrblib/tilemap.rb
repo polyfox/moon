@@ -58,21 +58,34 @@ module Moon
     #   @return [Vector2]
     attribute :origin,  Vector2
 
+    # @!attribute :color
+    #   @return [Vector4]
+    attribute :color,  Vector4
+
+    # @!attribute :tone
+    #   @return [Vector4]
+    attribute :tone,  Vector4
+
     # (see #set)
     def initialize(options = {})
-      @vbo           = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
-      @tilesize      = Vector2.new(0, 0)
-      @w             = 0
-      @h             = 0
-      @datasize      = Vector3.new(0, 0, 0)
-      @data          = []
-      @data_zmap     = nil
-      @shader        = self.class.default_shader
-      @tileset       = nil
-      @layer_opacity = nil
-      @origin        = Vector2.new(0, 0)
-      @angle         = 0.0
-      @opacity       = 1.0
+      @vbo             = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
+      @tilesize        = Vector2.new(0, 0)
+      @w               = 0
+      @h               = 0
+      @datasize        = Vector3.new(0, 0, 0)
+      @data            = []
+      @data_zmap       = nil
+      @shader          = self.class.default_shader
+      @tileset         = nil
+      @layer_opacity   = nil
+      @origin          = Vector2.new(0, 0)
+      @angle           = 0.0
+      @opacity         = 1.0
+      @color           = Vector4.new(1, 1, 1, 1)
+      @tone            = Vector4.new(0, 0, 0, 1)
+      @transform       = Matrix4.new
+      @rotation_matrix = Matrix4.new
+      @mode = OpenGL::TRIANGLES
       set options unless options.empty?
     end
 
@@ -154,6 +167,8 @@ module Moon
       set_tileset options.fetch(:tileset, @tileset)
       set_layer_opacity options.fetch(:layer_opacity, @layer_opacity)
       self.shader    = options.fetch(:shader,        @shader)
+      self.tone      = options.fetch(:tone,      @tone)
+      self.color     = options.fetch(:color,     @color)
       self.origin    = options.fetch(:origin,    @origin)
       self.angle     = options.fetch(:angle,     @angle)
       self.opacity   = options.fetch(:opacity,   @opacity)
@@ -173,6 +188,21 @@ module Moon
 
       # regenerate buffers
       generate_buffers
+    end
+
+    def render(x, y, z)
+      @rotation_matrix.clear
+      @rotation_matrix.rotate!(@angle, [0, 0, 1])
+      @rotation_matrix.translate!(-@origin.x, -@origin.y, 0)
+      @transform.clear
+      @transform.translate!(x, y, z)
+      transform = @transform * @rotation_matrix
+
+      @shader.use
+      @shader.set_uniform 'opacity', @opacity
+      @shader.set_uniform 'color', @color
+      @shader.set_uniform 'tone', @tone
+      Renderer.instance.render(@shader, @vbo, @texture, transform, @mode)
     end
   end
 end
