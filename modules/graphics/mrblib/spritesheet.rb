@@ -51,7 +51,7 @@ module Moon
       @shader.set_uniform 'opacity', opacity
       @shader.set_uniform 'color', color
       @shader.set_uniform 'tone', tone
-      Renderer.instance.render(@shader, @vbo, @texture, transform, @mode, index)
+      Renderer.instance.render(@shader, @vbo, @texture, transform, @mode, index * 4)
     end
   end
 end
