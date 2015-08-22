@@ -18,12 +18,6 @@ texture_free(mrb_state *mrb, void *p)
 
 MOON_C_API const struct mrb_data_type texture_data_type = { "Texture", texture_free };
 
-static inline Moon::Texture*
-get_texture(mrb_state *mrb, mrb_value self)
-{
-  return (Moon::Texture*)mrb_data_get_ptr(mrb, self, &texture_data_type);
-}
-
 MOON_C_API mrb_value
 mmrb_texture_load_file(mrb_state *mrb, const char *filename)
 {
@@ -59,13 +53,26 @@ texture_initialize(mrb_state *mrb, mrb_value self)
 static mrb_value
 texture_width(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_texture(mrb, self)->GetWidth());
+  return mrb_float_value(mrb, mmrb_texture_ptr(mrb, self)->GetWidth());
 }
 
 static mrb_value
 texture_height(mrb_state *mrb, mrb_value self)
 {
-  return mrb_float_value(mrb, get_texture(mrb, self)->GetHeight());
+  return mrb_float_value(mrb, mmrb_texture_ptr(mrb, self)->GetHeight());
+}
+
+static mrb_value
+texture_id(mrb_state *mrb, mrb_value self)
+{
+  return mrb_fixnum_value(mmrb_texture_ptr(mrb, self)->GetID());
+}
+
+static mrb_value
+texture_bind(mrb_state *mrb, mrb_value self)
+{
+  mmrb_texture_ptr(mrb, self)->Bind();
+  return self;
 }
 
 MOON_C_API void
@@ -77,4 +84,6 @@ mmrb_texture_init(mrb_state *mrb, struct RClass* mod)
   mrb_define_method(mrb, texture_class, "initialize", texture_initialize, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, texture_class, "w",          texture_width,      MRB_ARGS_NONE());
   mrb_define_method(mrb, texture_class, "h",          texture_height,     MRB_ARGS_NONE());
+  mrb_define_method(mrb, texture_class, "id",         texture_id,         MRB_ARGS_NONE());
+  mrb_define_method(mrb, texture_class, "bind",       texture_bind,       MRB_ARGS_NONE());
 }

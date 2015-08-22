@@ -94,14 +94,22 @@ font_ascender_get(mrb_state *mrb, mrb_value self)
   return mrb_float_value(mrb, mmrb_font_ptr(mrb, self)->font->ascender);
 }
 
+static mrb_value
+font_bind(mrb_state *mrb, mrb_value self)
+{
+  mmrb_font_ptr(mrb, self)->Bind();
+  return self;
+}
+
 MOON_C_API void
 mmrb_font_init(mrb_state *mrb, struct RClass* mod)
 {
   struct RClass *font_class = mrb_define_class_under(mrb, mod, "Font", mrb->object_class);
   MRB_SET_INSTANCE_TT(font_class, MRB_TT_DATA);
 
-  mrb_define_method(mrb, font_class, "initialize",  font_initialize,  MRB_ARGS_REQ(2));
-  mrb_define_method(mrb, font_class, "size",        font_size,        MRB_ARGS_NONE());
-  mrb_define_method(mrb, font_class, "calc_bounds", font_calc_bounds, MRB_ARGS_ARG(1,1));
-  mrb_define_method(mrb, font_class, "ascender",    font_ascender_get,    MRB_ARGS_NONE());
+  mrb_define_method(mrb, font_class, "initialize",  font_initialize,   MRB_ARGS_REQ(2));
+  mrb_define_method(mrb, font_class, "size",        font_size,         MRB_ARGS_NONE());
+  mrb_define_method(mrb, font_class, "calc_bounds", font_calc_bounds,  MRB_ARGS_ARG(1,1));
+  mrb_define_method(mrb, font_class, "ascender",    font_ascender_get, MRB_ARGS_NONE());
+  mrb_define_method(mrb, font_class, "bind",        font_bind,         MRB_ARGS_NONE());
 }
