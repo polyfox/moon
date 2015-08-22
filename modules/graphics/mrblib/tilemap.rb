@@ -130,7 +130,7 @@ module Moon
             next if tile_id < 0
             rnx = dx * cell_w
             cell_z = @data_zmap ? @data_zmap[data_index] : 0
-            @tileset.push_quad @vbo, rnx, rny, rnz + cell_z, tile_id, render_state
+            @tileset.copy_quad_to @vbo, rnx, rny, rnz + cell_z, tile_id, render_state
           end
         end
       end

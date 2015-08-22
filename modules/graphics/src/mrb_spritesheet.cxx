@@ -126,7 +126,7 @@ set_render_options(mrb_state *mrb, mrb_value options, RenderState *render_state)
 }
 
 static mrb_value
-spritesheet_push_quad(mrb_state *mrb, mrb_value self)
+spritesheet_copy_quad_to(mrb_state *mrb, mrb_value self)
 {
   RenderState render_state;
   Moon::VertexBuffer *dest_vbo;
@@ -167,7 +167,7 @@ mmrb_spritesheet_init(mrb_state *mrb, struct RClass* mod)
   struct RClass *ss_cls = mrb_define_class_under(mrb, mod, "Spritesheet", mrb->object_class);
 
   mrb_define_method(mrb, ss_cls, "generate_buffers", spritesheet_generate_buffers, MRB_ARGS_NONE());
-  mrb_define_method(mrb, ss_cls, "push_quad",        spritesheet_push_quad,        MRB_ARGS_ARG(5,1));
+  mrb_define_method(mrb, ss_cls, "copy_quad_to",     spritesheet_copy_quad_to,     MRB_ARGS_ARG(5,1));
 
   id_opacity   = mrb_intern_cstr(mrb, "opacity");
   id_tone      = mrb_intern_cstr(mrb, "tone");
