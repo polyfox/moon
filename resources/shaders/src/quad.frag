@@ -1,7 +1,7 @@
 shader_version
 var_precision;
 invar vec2 f_texcoord;
-uniform sampler2D tex;
+uniform sampler2D tex0;
 uniform float opacity;
 uniform vec4 color;
 invar vec4 f_color;
@@ -27,7 +27,7 @@ vec3 hsv2rgb(vec3 c) {
 void main(void) {
   const vec3 white = vec3(1.0, 1.0, 1.0);
 
-  vec4 basecolor = texture(tex, f_texcoord);
+  vec4 basecolor = texture(tex0, f_texcoord);
   if (basecolor.a == 0.0) discard; // alpha testing
 
   vec3 blendcolor = mix(basecolor.rgb, white, tone.rgb);

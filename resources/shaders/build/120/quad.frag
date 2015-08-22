@@ -1,7 +1,7 @@
 #version 120
 
 varying vec2 f_texcoord;
-uniform sampler2D tex;
+uniform sampler2D tex0;
 uniform float opacity;
 uniform vec4 color;
 varying vec4 f_color;
@@ -25,7 +25,7 @@ vec3 hsv2rgb(vec3 c)
 void main(void)
 {
     const vec3 white = vec3(1.0, 1.0, 1.0);
-    vec4 basecolor = texture2D(tex, f_texcoord);
+    vec4 basecolor = texture2D(tex0, f_texcoord);
     if (basecolor.a == 0.0) discard;
     vec3 blendcolor = mix(basecolor.rgb, white, tone.rgb);
     if (tone.a != 1.0) {
