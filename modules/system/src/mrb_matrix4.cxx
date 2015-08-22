@@ -14,28 +14,40 @@
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"
 
+#define math_op_base(__op__, __target_mat4__)                                  \
+  const mrb_vtype t = mrb_type(rother);                                        \
+  if (t == MRB_TT_DATA) {                                                      \
+    const mrb_data_type *dt = DATA_TYPE(rother);                               \
+    if (dt == &matrix4_data_type) { /* Matrix4 */                              \
+      Moon::Matrix4 *source_mat4 = mmrb_matrix4_ptr(mrb, rother);              \
+      *__target_mat4__ __op__ ## = *source_mat4;                               \
+    } else if (dt == &vector4_data_type) { /* Vector4 */                       \
+      *__target_mat4__ __op__ ## = mmrb_to_vector4(mrb, rother);               \
+    }                                                                          \
+                                                                               \
+  } else if (t == MRB_TT_FIXNUM || t == MRB_TT_FLOAT) { /* Scalar */           \
+                                                                               \
+    *__target_mat4__ __op__ ## = mrb_to_flo(mrb, rother);                      \
+  } else {                                                                     \
+    mrb_raisef(mrb, E_TYPE_ERROR,                                              \
+               "wrong argument type %s (expected Matrix4, Vector4 or Numeric)",\
+               mrb_obj_classname(mrb, rother));                                \
+  }
+
+#define math_op_inline(__op__)                                            \
+  Moon::Matrix4 *target_mat4;                                             \
+  mrb_value rother;                                                       \
+  mrb_get_args(mrb, "o", &rother);                                        \
+  target_mat4 = mmrb_matrix4_ptr(mrb, self);                              \
+  math_op_base(__op__, target_mat4)                                       \
+  return self;
+
 #define math_op(__op__)                                                   \
   mrb_value rother;                                                       \
   mrb_get_args(mrb, "o", &rother);                                        \
   mrb_value rtarget = mrb_obj_dup(mrb, self);                             \
-  Moon::Matrix4 *target_mat4 = mmrb_matrix4_ptr(mrb, rtarget);             \
-  const mrb_vtype t = mrb_type(rother);                                   \
-  if (t == MRB_TT_DATA) {                                                 \
-    const mrb_data_type *dt = DATA_TYPE(rother);                          \
-    if (dt == &matrix4_data_type) { /* Matrix4 */                     \
-      Moon::Matrix4 *source_mat4 = mmrb_matrix4_ptr(mrb, rother);          \
-      *target_mat4 __op__ ## = *source_mat4;                              \
-    } else if (dt == &vector4_data_type) { /* Vector4 */                  \
-      *target_mat4 __op__ ## = mmrb_to_vector4(mrb, rother);              \
-    }                                                                     \
-  } else if (t == MRB_TT_FIXNUM || t == MRB_TT_FLOAT) { /* Scalar */      \
-                                                                          \
-    *target_mat4 __op__ ## = mrb_to_flo(mrb, rother);                     \
-  } else {                                                                \
-    mrb_raisef(mrb, E_TYPE_ERROR,                                         \
-               "wrong argument type %s (expected Matrix4, Vector4 or Numeric)", \
-               mrb_obj_classname(mrb, rother));                           \
-  }                                                                       \
+  Moon::Matrix4 *target_mat4 = mmrb_matrix4_ptr(mrb, rtarget);            \
+  math_op_base(__op__, target_mat4)                                       \
   return rtarget; /* */
 
 static void
@@ -328,6 +340,12 @@ matrix4_op_add(mrb_state *mrb, mrb_value self)
   math_op(+)
 }
 
+static mrb_value
+matrix4_add(mrb_state *mrb, mrb_value self)
+{
+  math_op_inline(+)
+}
+
 /*
  * @return [Matrix4]
  */
@@ -335,6 +353,12 @@ static mrb_value
 matrix4_op_sub(mrb_state *mrb, mrb_value self)
 {
   math_op(-)
+}
+
+static mrb_value
+matrix4_sub(mrb_state *mrb, mrb_value self)
+{
+  math_op_inline(-)
 }
 
 /*
@@ -346,6 +370,12 @@ matrix4_op_mul(mrb_state *mrb, mrb_value self)
   math_op(*)
 }
 
+static mrb_value
+matrix4_mul(mrb_state *mrb, mrb_value self)
+{
+  math_op_inline(*)
+}
+
 /*
  * @return [Matrix4]
  */
@@ -354,6 +384,12 @@ matrix4_op_div(mrb_state *mrb, mrb_value self)
 {
   math_op(/)
 };
+
+static mrb_value
+matrix4_div(mrb_state *mrb, mrb_value self)
+{
+  math_op_inline(/)
+}
 
 /*
  * @return [Matrix4]
@@ -636,6 +672,11 @@ mmrb_matrix4_init(mrb_state *mrb, struct RClass* mod)
   mrb_define_method(mrb, matrix4_class, "*",               matrix4_op_mul,          MRB_ARGS_REQ(1));
   mrb_define_method(mrb, matrix4_class, "/",               matrix4_op_div,          MRB_ARGS_REQ(1));
   //mrb_define_method(mrb, matrix4_class, "%",               op_mod,          MRB_ARGS_REQ(1));
+
+  mrb_define_method(mrb, matrix4_class, "add",             matrix4_add,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, matrix4_class, "sub",             matrix4_sub,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, matrix4_class, "mul",             matrix4_mul,             MRB_ARGS_REQ(1));
+  mrb_define_method(mrb, matrix4_class, "div",             matrix4_div,             MRB_ARGS_REQ(1));
 
   mrb_define_method(mrb, matrix4_class, "clear",           matrix4_clear,           MRB_ARGS_NONE());
 
