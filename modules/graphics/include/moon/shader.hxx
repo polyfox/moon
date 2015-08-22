@@ -18,8 +18,6 @@ namespace Moon {
   class Shader {
     typedef std::unordered_map<std::string, GLint> AttributeMap;
   public:
-    static glm::mat4 projection_matrix; // TEMPORARY LOCATION, TODO MOVE TO RENDERER
-    static glm::mat4 view_matrix; // camera. TEMPORARY LOCATION, TODO MOVE TO RENDERER
     static bool is_legacy;
 
     Shader(const std::string vertexShader, const std::string fragmentShader);

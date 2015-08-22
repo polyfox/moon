@@ -2,8 +2,6 @@
 #include "moon/shader.hxx"
 
 namespace Moon {
-  glm::mat4 Shader::projection_matrix = glm::mat4(1.0f);
-  glm::mat4 Shader::view_matrix = glm::mat4(1.0f);
   bool Shader::is_legacy = false;
 
   Shader::Shader(const std::string vertexShader, const std::string fragmentShader) {

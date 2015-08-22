@@ -4,6 +4,8 @@ module Moon
     TRIANGLE_STRIP = GL2::GL_TRIANGLE_STRIP
     TRIANGLE_FAN = GL2::GL_TRIANGLE_FAN
 
+    TEXTURE0 = GL2::GL_TEXTURE0
+
     def self.check_error!
       error = GL2.glGetError
       if error != GL2::GL_NO_ERROR
@@ -46,6 +48,10 @@ module Moon
 
     def self.clear_color=(color_ary)
       GL2.glClearColor(*color_ary)
+    end
+
+    def self.active_texture(id)
+      GL2.glActiveTexture(id)
     end
   end
 end

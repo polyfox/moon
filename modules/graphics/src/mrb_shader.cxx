@@ -101,21 +101,6 @@ shader_s_is_legacy_set(mrb_state *mrb, mrb_value klass)
   return klass;
 }
 
-static mrb_value
-shader_s_projection_matrix_get(mrb_state *mrb, mrb_value klass)
-{
-  return mmrb_matrix4_value(mrb, Moon::Shader::projection_matrix);
-}
-
-static mrb_value
-shader_s_projection_matrix_set(mrb_state *mrb, mrb_value klass)
-{
-  Moon::Matrix4 *mat;
-  mrb_get_args(mrb, "d", &mat, &matrix4_data_type);
-  Moon::Shader::projection_matrix = *mat;
-  return klass;
-}
-
 MOON_C_API void
 mmrb_shader_init(mrb_state *mrb, struct RClass* mod)
 {
@@ -128,6 +113,4 @@ mmrb_shader_init(mrb_state *mrb, struct RClass* mod)
 
   mrb_define_class_method(mrb, shader_class, "is_legacy",  shader_s_is_legacy_get, MRB_ARGS_NONE());
   mrb_define_class_method(mrb, shader_class, "is_legacy=", shader_s_is_legacy_set, MRB_ARGS_REQ(1));
-  mrb_define_class_method(mrb, shader_class, "projection_matrix",  shader_s_projection_matrix_get, MRB_ARGS_NONE());
-  mrb_define_class_method(mrb, shader_class, "projection_matrix=", shader_s_projection_matrix_set, MRB_ARGS_REQ(1));
 }
