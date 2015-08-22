@@ -66,7 +66,7 @@ module Moon
         sd.fetch(File.join(shader_path, 'quad.frag'))
       )
       @shaders[:text] = Moon::Shader.new(
-        sd.fetch(File.join(shader_path, 'text.vert')),
+        sd.fetch(File.join(shader_path, 'quad.vert')),
         sd.fetch(File.join(shader_path, 'text.frag'))
       )
 

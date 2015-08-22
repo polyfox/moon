@@ -4,6 +4,7 @@ invar vec2 f_texcoord;
 uniform sampler2D tex;
 uniform float opacity;
 uniform vec4 color;
+invar vec4 f_color;
 uniform vec4 tone;
 def_frag_color;
 
@@ -36,9 +37,9 @@ void main(void) {
    * it, as hsv.input == input
    */
   if (tone.a != 1.0) { // tone testing
-    frag_color = vec4(hsv2rgb(rgb2hsv(blendcolor) * vec3(1.0, tone.a, 1.0)),
-                        basecolor.a * opacity) * color;
+    frag_color = f_color * vec4(hsv2rgb(rgb2hsv(blendcolor) * vec3(1.0, tone.a, 1.0)),
+                                 basecolor.a * opacity) * color;
   } else { // yay, we saved some GPU
-    frag_color = vec4(blendcolor, basecolor.a * opacity) * color;
+    frag_color = f_color * vec4(blendcolor, basecolor.a * opacity) * color;
   }
 }
