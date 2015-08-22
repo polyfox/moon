@@ -52,10 +52,10 @@ sprite_generate_buffers(mrb_state *mrb, mrb_value self)
   }
 
   Moon::Vertex vertices[4] = {
-    { {0.f,   0.f},    {s0, t0}, Moon::Vector4(0, 0, 0, 0) },
-    { {width, 0.f},    {s1, t0}, Moon::Vector4(0, 0, 0, 0) },
-    { {width, height}, {s1, t1}, Moon::Vector4(0, 0, 0, 0) },
-    { {0.f,   height}, {s0, t1}, Moon::Vector4(0, 0, 0, 0) }
+    { {0.f,   0.f},    {s0, t0}, Moon::Vector4(1, 1, 1, 1) },
+    { {width, 0.f},    {s1, t0}, Moon::Vector4(1, 1, 1, 1) },
+    { {width, height}, {s1, t1}, Moon::Vector4(1, 1, 1, 1) },
+    { {0.f,   height}, {s0, t1}, Moon::Vector4(1, 1, 1, 1) }
   };
   GLuint indices[4] = {0, 1, 3, 2}; // rendering indices
   vbo->PushBack(vertices, 4, indices, 4);

@@ -69,10 +69,10 @@ spritesheet_generate_buffers(mrb_state *mrb, mrb_value self)
     float t1 = (oy + 1.0) / tiles_per_column;
 
     Moon::Vertex vertices[4] = {
-      { {0.f, 0.f},                {s0, t0}, Moon::Vector4(0, 0, 0, 0) },
-      { {tile_width, 0.f},         {s1, t0}, Moon::Vector4(0, 0, 0, 0) },
-      { {tile_width, tile_height}, {s1, t1}, Moon::Vector4(0, 0, 0, 0) },
-      { {0.f, tile_height},        {s0, t1}, Moon::Vector4(0, 0, 0, 0) }
+      { {0.f, 0.f},                {s0, t0}, Moon::Vector4(1, 1, 1, 1) },
+      { {tile_width, 0.f},         {s1, t0}, Moon::Vector4(1, 1, 1, 1) },
+      { {tile_width, tile_height}, {s1, t1}, Moon::Vector4(1, 1, 1, 1) },
+      { {0.f, tile_height},        {s0, t1}, Moon::Vector4(1, 1, 1, 1) }
     };
 
     vbo->PushBackVertices(vertices, 4);
@@ -148,12 +148,12 @@ spritesheet_push_quad(mrb_state *mrb, mrb_value self)
 
   vbo = mmrb_vertex_buffer_ptr(mrb, moon_iv_get(mrb, self, KEY_VBO));
   Moon::Vector2 pos(x, y);
-  render_state.opacity = 1.0;
   index = offset * 4;
   // now apply render state changes
   for (int i = 0; i < 4; ++i) {
     vertices[i] = vbo->GetVertex(index + i);
     vertices[i].pos += pos;
+    vertices[i].color *= render_state.color;
     vertices[i].color.a *= render_state.opacity;
   }
 
