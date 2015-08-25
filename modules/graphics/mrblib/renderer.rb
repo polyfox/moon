@@ -1,7 +1,8 @@
 module Moon
   class Renderer
-    attr_accessor :projection_matrix
-    attr_accessor :view_matrix
+    extend TypedAttributes
+    attribute :projection_matrix, Matrix4
+    attribute :view_matrix, Matrix4
 
     def initialize
       @view_matrix = Matrix4.new(1.0)
