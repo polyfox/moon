@@ -4,7 +4,7 @@ module Moon
     include Shadable
 
     attribute :opacity, Float
-    attribute :angle,   Float
+    attribute :angle,   Numeric
     attribute :origin,  Vector2
     attribute :color,   Vector4
     attribute :tone,    Vector4
