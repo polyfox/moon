@@ -6,6 +6,8 @@ module Moon
     STREAM_DRAW  = GL2::GL_STREAM_DRAW
     # @!endgroup
 
+    QUAD_INDICES = [0, 1, 3, 2, 3, 1]
+
     alias :push :push_back
   end
 end
