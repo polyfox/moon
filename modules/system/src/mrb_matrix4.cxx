@@ -76,45 +76,24 @@ mmrb_matrix4_value(mrb_state *mrb, Moon::Matrix4 mat)
   return rsult;
 }
 
-/*
- * @overload Matrix4#initialize()
- * @overload Matrix4#initialize(Numeric)
- * @overload Matrix4#initialize(Matrix4)
- * @overload Matrix4#initialize(Vector4, Vector4, Vector4, Vector4)
- * @overload Matrix4#initialize(n1, ..., n16)
- */
-static mrb_value
-matrix4_initialize(mrb_state *mrb, mrb_value self)
+static void
+matrix4_set_m(mrb_state *mrb, Moon::Matrix4 *mat, mrb_int argc, mrb_value *args)
 {
-  mrb_value *args;
-  int argc;
-  mrb_get_args(mrb, "*", &args, &argc);
-
-  Moon::Matrix4 *mat;
-
-  mat = (Moon::Matrix4*)DATA_PTR(self);
-  if (mat) {
-    matrix4_free(mrb, (void*)mat);
-  }
-
-  if (argc == 0){
-    mat = new Moon::Matrix4();
-  } else if (argc == 1) {
+  if (argc == 1) {
     mrb_value val = args[0];
     if (mrb_type(val) == MRB_TT_DATA) {
       if (DATA_TYPE(val) == &matrix4_data_type) { /* Matrix4 */
         Moon::Matrix4 *source_mat4;
         source_mat4 = (Moon::Matrix4*)mrb_data_get_ptr(mrb, val, &matrix4_data_type);
-        mat = new Moon::Matrix4(*source_mat4);
+        *mat = *source_mat4;
       } else {
         mrb_raisef(mrb, E_TYPE_ERROR,
                    "wrong argument type %s (expected Matrix4)",
                    mrb_obj_classname(mrb, args[0]));
-        return mrb_nil_value();
       }
     } else {
       double value = mrb_to_flo(mrb, args[0]);
-      mat = new Moon::Matrix4(value);
+      *mat = Moon::Matrix4(value);
     }
   } else if (argc == 4) {
     glm::vec4 row1 = mmrb_to_vector4(mrb, args[0]);
@@ -122,9 +101,9 @@ matrix4_initialize(mrb_state *mrb, mrb_value self)
     glm::vec4 row3 = mmrb_to_vector4(mrb, args[2]);
     glm::vec4 row4 = mmrb_to_vector4(mrb, args[3]);
 
-    mat = new Moon::Matrix4(row1, row2, row3, row4);
+    *mat = Moon::Matrix4(row1, row2, row3, row4);
   } else if (argc == 16) {
-    mat = new Moon::Matrix4(
+    *mat = Moon::Matrix4(
       mrb_to_flo(mrb, args[0]),
       mrb_to_flo(mrb, args[1]),
       mrb_to_flo(mrb, args[2]),
@@ -150,8 +129,45 @@ matrix4_initialize(mrb_state *mrb, mrb_value self)
                "wrong argument count %d (expected 0, 1, 4, or 16)",
                argc);
   }
+}
 
+static mrb_value
+matrix4_set(mrb_state *mrb, mrb_value self)
+{
+  mrb_value *args;
+  mrb_int argc;
+  mrb_get_args(mrb, "*", &args, &argc);
+  matrix4_set_m(mrb, mmrb_matrix4_ptr(mrb, self), argc, args);
+  return self;
+}
+
+/*
+ * @overload Matrix4#initialize()
+ * @overload Matrix4#initialize(Numeric)
+ * @overload Matrix4#initialize(Matrix4)
+ * @overload Matrix4#initialize(Vector4, Vector4, Vector4, Vector4)
+ * @overload Matrix4#initialize(n1, ..., n16)
+ */
+static mrb_value
+matrix4_initialize(mrb_state *mrb, mrb_value self)
+{
+  mrb_value *args;
+  mrb_int argc;
+  mrb_get_args(mrb, "*", &args, &argc);
+
+  Moon::Matrix4 *mat;
+
+  mat = (Moon::Matrix4*)DATA_PTR(self);
+  if (mat) {
+    matrix4_free(mrb, (void*)mat);
+  }
+  mat = new Moon::Matrix4();
   mrb_data_init(self, mat, &matrix4_data_type);
+
+  if (argc == 0) {
+  } else {
+    matrix4_set_m(mrb, mat, argc, args);
+  }
 
   return self;
 }
@@ -678,6 +694,7 @@ mmrb_matrix4_init(mrb_state *mrb, struct RClass* mod)
   mrb_define_method(mrb, matrix4_class, "mul",             matrix4_mul,             MRB_ARGS_REQ(1));
   mrb_define_method(mrb, matrix4_class, "div",             matrix4_div,             MRB_ARGS_REQ(1));
 
+  mrb_define_method(mrb, matrix4_class, "set",             matrix4_set,             MRB_ARGS_ANY());
   mrb_define_method(mrb, matrix4_class, "clear",           matrix4_clear,           MRB_ARGS_NONE());
 
   mrb_define_method(mrb, matrix4_class, "translate",       matrix4_translate,       MRB_ARGS_ANY());
