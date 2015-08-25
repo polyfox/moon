@@ -14,15 +14,7 @@ module Moon
     attribute :texture, Texture
 
     def initialize texture
-      @texture = case texture
-      when String
-        Texture.new(texture)
-      when Texture
-        texture
-      else
-        raise TypeError, "wrong argument type #{texture.class} (expected Moon::Texture or String)"
-      end
-
+      set_texture texture
       @opacity = 1.0
       @angle = 0.0
       @origin = Vector2.new(0, 0)
