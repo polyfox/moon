@@ -92,7 +92,8 @@ module Moon
 
     # @param [Vector4] color
     def clear_color=(color)
-      OpenGL.clear_color = Vector4[color].to_a
+      @clear_color = Vector4[color]
+      OpenGL.clear_color = @clear_color.to_a
     end
 
     def update_projection
