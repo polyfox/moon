@@ -10,6 +10,7 @@ add_subdirectory("vendor/sil")
 get_filename_component(SIL_INCLUDE_DIR "vendor/sil/include" ABSOLUTE)
 add_subdirectory("vendor/soil")
 add_subdirectory("vendor/gorilla-audio/build")
+add_subdirectory("vendor/libsoundio")
 #add_subdirectory("vendor/glm")
 
 option(freetype-gl_BUILD_DEMOS OFF)
