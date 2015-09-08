@@ -16,7 +16,7 @@ sound_free(mrb_state *mrb, void *p)
   }
 }
 
-MOON_C_API const struct mrb_data_type sound_data_type = { "Sound", sound_free };
+MOON_C_API const struct mrb_data_type sound_data_type = { "Moon::Sound", sound_free };
 
 static inline ga_Sound*
 get_sound(mrb_state *mrb, mrb_value self)

@@ -41,4 +41,3 @@ namespace Moon {
     return m_streamMgr;
   };
 }
-
