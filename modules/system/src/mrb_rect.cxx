@@ -114,9 +114,9 @@ mmrb_rect_value(mrb_state *mrb, Moon::IntRect rect)
 static mrb_value
 rect_initialize(mrb_state *mrb, mrb_value self)
 {
-  mrb_int x, y, w, h;
+  mrb_int x = 0, y = 0, w = 0, h = 0;
   Moon::IntRect *rect;
-  mrb_get_args(mrb, "iiii", &x, &y, &w, &h);
+  mrb_get_args(mrb, "|iiii", &x, &y, &w, &h);
   cleanup_rect(mrb, self);
   rect = new Moon::IntRect(x, y, w, h);
   mrb_data_init(self, rect, &rect_data_type);
@@ -215,7 +215,7 @@ mmrb_rect_init(mrb_state *mrb, struct RClass *mod)
   struct RClass *rect_class = mrb_define_class_under(mrb, mod, "Rect", mrb->object_class);
   MRB_SET_INSTANCE_TT(rect_class, MRB_TT_DATA);
 
-  mrb_define_method(mrb, rect_class, "initialize",      rect_initialize,      MRB_ARGS_REQ(4));
+  mrb_define_method(mrb, rect_class, "initialize",      rect_initialize,      MRB_ARGS_ARG(0,4));
   mrb_define_method(mrb, rect_class, "initialize_copy", rect_initialize_copy, MRB_ARGS_REQ(1));
   mrb_define_method(mrb, rect_class, "x=",              rect_set_x,           MRB_ARGS_REQ(1));
   mrb_define_method(mrb, rect_class, "x",               rect_get_x,           MRB_ARGS_NONE());
