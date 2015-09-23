@@ -17,6 +17,7 @@ module Moon
       initialize_renderer
       initialize_clear_color
       initialize_screen_size
+      @vsync = true
     end
 
     def create_window(w, h)
@@ -62,6 +63,8 @@ module Moon
 
     def make_current
       @window.make_current
+      Screen.current = self
+      self.vsync = @vsync
     end
 
     def should_close?
@@ -117,6 +120,17 @@ module Moon
 
     def title=(title)
       @window.title = title
+
+    attr_reader :vsync
+    # Sets the vsync state on / off
+    # @param [Boolean] bool
+    def vsync=(bool)
+      @vsync = bool
+      GLFW.swap_interval = @vsync ? 1 : 0
+    end
+
+    class << self
+      attr_accessor :current
     end
   end
 end
