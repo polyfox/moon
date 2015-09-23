@@ -3,6 +3,16 @@ module Moon
     extend TypedAttributes
     include Shadable
 
+    # default origin
+    # @return [Moon::Vector2]
+    ZERO_ORIGIN = Moon::Vector2.new(0, 0)
+    # default shader color
+    # @return [Moon::Vector4]
+    WHITE = Moon::Vector4.new(1, 1, 1, 1)
+    # default shader tone
+    # @return [Moon::Vector4]
+    BLACK = Moon::Vector4.new(0, 0, 0, 1)
+
     attribute :shader,  Shader
     attr_reader :cell_count
     attribute :texture, Texture
@@ -30,10 +40,10 @@ module Moon
 
     def render(x, y, z, index, options = {})
       angle = options.fetch(:angle, 0.0)
-      origin = options.fetch(:origin) { Moon::Vector2.new(0, 0) }
+      origin = options.fetch(:origin, ZERO_ORIGIN)
       opacity = options.fetch(:opacity, 1.0)
-      color = options.fetch(:color, 1.0) { Moon::Vector4.new(1, 1, 1, 1) }
-      tone = options.fetch(:tone, 1.0) { Moon::Vector4.new(0, 0, 0, 1) }
+      color = options.fetch(:color, 1.0, WHITE)
+      tone = options.fetch(:tone, 1.0, BLACK)
 
       @rotation_matrix.clear
       @rotation_matrix.rotate!(angle, [0, 0, 1])
