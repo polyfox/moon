@@ -20,6 +20,9 @@ module Moon
 
     private :texture=
 
+    # @param [Texture] texture
+    # @param [Integer] tile_width
+    # @param [Integer] tile_height
     def initialize texture, tile_width, tile_height
       self.texture = texture
       @w = tile_width
@@ -38,6 +41,16 @@ module Moon
       generate_buffers
     end
 
+    # @param [Integer] x
+    # @param [Integer] y
+    # @param [Integer] z
+    # @param [Integer] index
+    # @param [Hash<Symbol, Object>] options
+    # @option options [Float] angle
+    # @option options [Vector2] origin
+    # @option options [Float] opacity
+    # @option options [Vector4] color
+    # @option options [Vector4] tone
     def render(x, y, z, index, options = {})
       angle = options.fetch(:angle, 0.0)
       origin = options.fetch(:origin, ZERO_ORIGIN)

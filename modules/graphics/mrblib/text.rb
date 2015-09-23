@@ -153,6 +153,9 @@ module Moon
       generate_buffers
     end
 
+    # @param [Integer] x
+    # @param [Integer] y
+    # @param [Integer] z
     def render(x, y, z)
       @rotation_matrix.clear
       @rotation_matrix.rotate!(@angle, [0, 0, 1])
