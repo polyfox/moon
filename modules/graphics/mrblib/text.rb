@@ -71,7 +71,7 @@ module Moon
       self
     end
 
-    def generate_buffers
+    private def generate_buffers
       @vbo.clear
       lines = @string.split("\n")
       lines.each_with_index do |line, index|
