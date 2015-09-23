@@ -19,31 +19,56 @@ module Moon
 
     # @param [Font] font
     # @param [String] string
-    # @param [Hash<Symbol, Object>] options
-    # @option options [Integer] :outline
-    # @option options [Float] :line_height
-    # @option options [Symbol] :align  either :left, :right, or :center
-    # @option options [Shader] :shader
-    # @option options [Vector4] :color
-    # @option options [Vector4] :outline_color
+    # @param [Hash<Symbol, Object>] options  (see #set)
     def initialize(font, string = "", options = {})
       @w = 0
       @h = 0
       set_font font
       set_string string
-      self.angle = options.fetch(:angle, 0.0)
-      set_outline options.fetch(:outline, 0)
-      set_line_height options.fetch(:line_height, 1.2)
-      set_align options.fetch(:align, :left)
-      self.shader = options.fetch(:shader) { self.class.default_shader }
-      self.origin = options.fetch(:origin) { Vector2.new(0, 0) }
-      set_color options.fetch(:color) { Vector4.new(1, 1, 1, 1) }
-      set_outline_color options.fetch(:outline_color) { Vector4.new(0, 0, 0, 1) }
+      @angle = 0.0
+      @outline = 0
+      @line_height = 1.2
+      @align = :left
+      @shader = self.class.default_shader
+      @origin = Vector2.new(0, 0)
+      @color = Vector4.new(1, 1, 1, 1)
+      @outline_color = Vector4.new(0, 0, 0, 1)
       @vbo = VertexBuffer.new(VertexBuffer::DYNAMIC_DRAW)
       @transform = Matrix4.new
       @rotation_matrix = Matrix4.new
       @mode = OpenGL::TRIANGLES
+      set(options)
+    end
+
+    # Sets multiple properties at once, this will regenerate the buffers
+    #
+    # @param [Hash<Symbol, Object>] options
+    # @option options [Font] :font
+    # @option options [String] :string
+    # @option options [Float] :angle
+    # @option options [Integer] :outline
+    # @option options [Float] :line_height
+    # @option options [Symbol] :align  either :left, :right, or :center
+    # @option options [Shader] :shader
+    # @option options [Shader] :origin
+    # @option options [Vector4] :color
+    # @option options [Vector4] :outline_color
+    # @return [self]
+    def set(options)
+      unless options.empty?
+        set_font options.fetch(:font, @font)
+        set_string options.fetch(:string, @string)
+        self.angle = options.fetch(:angle, @angle)
+        set_outline options.fetch(:outline, @outline)
+        set_line_height options.fetch(:line_height, @line_height)
+        set_align options.fetch(:align, @align)
+        self.shader = options.fetch(:shader, @shader)
+        self.origin = options.fetch(:origin, @origin)
+        set_color options.fetch(:color, @color)
+        set_outline_color options.fetch(:outline_color, @outline_color)
+      end
       generate_buffers
+      self
     end
 
     def generate_buffers
