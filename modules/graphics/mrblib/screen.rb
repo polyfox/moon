@@ -17,8 +17,13 @@ module Moon
       initialize_renderer
       initialize_clear_color
       initialize_screen_size
+      @vsync = true
     end
 
+    # Creates the internal window
+    #
+    # @param [Integer] w  width of the window
+    # @param [Integer] h  height of the window
     def create_window(w, h)
       GLFW.window_hint GLFW::RESIZABLE, GL2::GL_FALSE
       GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 3
@@ -46,32 +51,45 @@ module Moon
       OpenGL.reset_flags
     end
 
+    # Returns the OpenGL context version
+    #
+    # @return [String]
     def gl_version
       "#{@window.window_attrib(GLFW::CONTEXT_VERSION_MAJOR).to_s}.#{@window.window_attrib(GLFW::CONTEXT_VERSION_MINOR).to_s}"
     end
 
+    # Returns the guestimated version of GLSL supported
+    #
+    # @return [String]
     def glsl_version
       OpenGL.glsl_version
     end
 
+    # Prints all the available version strings to the @log
     def print_versions
       @log.puts "OpenGL v" + gl_version
       @log.puts "GLSL v" + glsl_version
       @log.puts "GLFW v" + GLFW.version_string
     end
 
+    # Make the screen the current context
     def make_current
       @window.make_current
+      Screen.current = self
+      self.vsync = @vsync
     end
 
+    # Should the screen close?
     def should_close?
       @window.should_close?
     end
 
+    # Swaps buffers, call this once per frame
     def swap
       @window.swap_buffers
     end
 
+    # Closes the underlying window
     def close
       @window.destroy if @window
       @window = nil
@@ -115,8 +133,23 @@ module Moon
       update_projection
     end
 
+    attr_reader :title
+    # @param [String]
     def title=(title)
-      @window.title = title
+      @title = title
+      @window.title = @title
+    end
+
+    attr_reader :vsync
+    # Sets the vsync state on / off
+    # @param [Boolean] bool
+    def vsync=(bool)
+      @vsync = bool
+      GLFW.swap_interval = @vsync ? 1 : 0
+    end
+
+    class << self
+      attr_accessor :current
     end
   end
 end
