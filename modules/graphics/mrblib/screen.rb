@@ -118,8 +118,12 @@ module Moon
       update_projection
     end
 
+    attr_reader :title
+    # @param [String]
     def title=(title)
-      @window.title = title
+      @title = title
+      @window.title = @title
+    end
 
     attr_reader :vsync
     # Sets the vsync state on / off
