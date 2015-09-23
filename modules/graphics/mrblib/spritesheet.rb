@@ -55,8 +55,8 @@ module Moon
       angle = options.fetch(:angle, 0.0)
       origin = options.fetch(:origin, ZERO_ORIGIN)
       opacity = options.fetch(:opacity, 1.0)
-      color = options.fetch(:color, 1.0, WHITE)
-      tone = options.fetch(:tone, 1.0, BLACK)
+      color = options.fetch(:color, WHITE)
+      tone = options.fetch(:tone, BLACK)
 
       @rotation_matrix.clear
       @rotation_matrix.rotate!(angle, [0, 0, 1])
