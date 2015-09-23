@@ -134,7 +134,7 @@ module Moon
     end
 
     attr_reader :title
-    # @param [String]
+    # @param [String] title
     def title=(title)
       @title = title
       @window.title = @title
