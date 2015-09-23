@@ -29,6 +29,11 @@ namespace Moon {
     }
   };
 
+  Texture* Texture::Dup() {
+    // TODO
+    return this;
+  };
+
   GLint Texture::GetWidth() {
     return m_width;
   };

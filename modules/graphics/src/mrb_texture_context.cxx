@@ -4,6 +4,7 @@
 #include "moon/mrb/texture.hxx"
 #include "moon/mrb/texture_context.hxx"
 #include "moon/mrb/vector4.hxx"
+#include "moon/mrb/rect.hxx"
 #include "moon/rect.hxx"
 #include "moon/texture.hxx"
 #include "moon/vector4.hxx"
@@ -17,7 +18,7 @@ texture_ctx_free(mrb_state *mrb, void *p)
   }
 }
 
-MOON_C_API const struct mrb_data_type texture_ctx_data_type = { "TextureContext", texture_free };
+MOON_C_API const struct mrb_data_type texture_ctx_data_type = { "TextureContext", texture_ctx_free };
 
 static mrb_value
 texture_ctx_initialize(mrb_state *mrb, mrb_value self)
@@ -31,7 +32,7 @@ texture_ctx_initialize(mrb_state *mrb, mrb_value self)
   context = new Moon::TextureContext(texture);
   mrb_iv_set(mrb, self, mrb_intern_cstr(mrb, KEY_TEXTURE), tex);
 
-  mrb_data_init(self, context, &context_data_type);
+  mrb_data_init(self, context, &texture_ctx_data_type);
   return mrb_nil_value();
 }
 

@@ -6,7 +6,7 @@
 #include "moon/mrb/texture.hxx"
 #include "moon/texture.hxx"
 #include "moon/api.h"
-#include "moon/mrb/helpers.h"
+#include "moon/mrb/helpers.hxx"
 
 static void
 texture_free(mrb_state *mrb, void *p)
@@ -56,7 +56,7 @@ texture_initialize_copy(mrb_state *mrb, mrb_value self)
 {
   Moon::Texture *src_texture;
   mrb_get_args(mrb, "d", &src_texture, &texture_data_type);
-  mrb_data_init(self, src_texture->dup(), &texture_data_type);
+  mrb_data_init(self, src_texture->Dup(), &texture_data_type);
   return self;
 }
 

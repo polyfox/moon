@@ -6,6 +6,7 @@
 #include <mruby/data.h>
 #include "moon/api.h"
 #include "moon/texture.hxx"
+#include "moon/texture_context.hxx"
 #include "moon/mrb/helpers.hxx"
 
 MOON_C_API const struct mrb_data_type texture_ctx_data_type;

@@ -1,4 +1,5 @@
 #include "moon/texture.hxx"
+#include "moon/texture_context.hxx"
 #include "moon/vector4.hxx"
 #include "moon/rect.hxx"
 
