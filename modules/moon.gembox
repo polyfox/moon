@@ -1,5 +1,5 @@
 MRuby::GemBox.new do |conf|
-  conf.gem core: 'mruby-string-utf8'
+  conf.gem core: 'mruby-string-ext'
   # patches some core issues
   conf.gem github: 'IceDragon200/mruby-patch-core'
   conf.gem github: 'IceDragon200/mruby-catch-throw'
