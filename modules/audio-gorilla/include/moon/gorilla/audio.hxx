@@ -8,7 +8,7 @@
 namespace Moon {
   class Audio {
   public:
-    static void Initialize();
+    static bool Initialize();
     static void Update();
     static void Terminate();
     static ga_Mixer* GetMixer();

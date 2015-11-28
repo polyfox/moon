@@ -1,6 +1,6 @@
 #include <mruby.h>
 #include <mruby/class.h>
-#include "moon/audio.hxx"
+#include "moon/gorilla/audio.hxx"
 #include "moon/mrb/music.hxx"
 #include "moon/mrb/sound.hxx"
 

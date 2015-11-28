@@ -13,8 +13,8 @@ MRuby::GemBox.new do |conf|
   conf.gem File.join(d, 'system')
   # moon-graphics
   conf.gem File.join(d, 'graphics')
-  # moon-audio
-  conf.gem File.join(d, 'audio')
+  # moon-audio-gorilla
+  #conf.gem File.join(d, 'audio-gorilla')
   # moon-engine
   conf.gem File.join(d, 'engine')
 end
