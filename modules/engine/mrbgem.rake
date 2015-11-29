@@ -8,5 +8,5 @@ MRuby::Gem::Specification.new('mruby-moon-engine') do |spec|
   spec.homepage = 'https://github.com/polyfox/moon'
   spec.add_dependency 'mruby-moon-system'
   spec.add_dependency 'mruby-moon-graphics'
-  spec.add_dependency 'mruby-moon-audio'
+  #spec.add_dependency 'mruby-moon-audio'
 end

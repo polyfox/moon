@@ -94,6 +94,7 @@ module Moon
 
     # Starts the main loop, terminate the loop using {#quit}
     def main
+      @log.puts "Audio Module: #{Audio::NAME}"
       @log.puts 'Starting main loop'
       clear_bits = GL2::GL_COLOR_BUFFER_BIT | GL2::GL_DEPTH_BUFFER_BIT
       until @screen.should_close?
