@@ -1,8 +1,8 @@
 #include <mruby.h>
 #include <mruby/class.h>
 #include "moon/gorilla/audio.hxx"
-#include "moon/mrb/music.hxx"
-#include "moon/mrb/sound.hxx"
+#include "moon/gorilla/mrb/music.hxx"
+#include "moon/gorilla/mrb/sound.hxx"
 
 static mrb_value
 audio_update(mrb_state *mrb, mrb_value klass)
@@ -12,7 +12,7 @@ audio_update(mrb_state *mrb, mrb_value klass)
 }
 
 MOON_C_API void
-mrb_mruby_moon_audio_gem_init(mrb_state* mrb)
+mrb_mruby_moon_audio_gorilla_gem_init(mrb_state* mrb)
 {
   struct RClass *moon_module = mrb_define_module(mrb, "Moon");
   struct RClass *audio_module = mrb_define_module_under(mrb, moon_module, "Audio");
@@ -23,7 +23,7 @@ mrb_mruby_moon_audio_gem_init(mrb_state* mrb)
 }
 
 MOON_C_API void
-mrb_mruby_moon_audio_gem_final(mrb_state* mrb)
+mrb_mruby_moon_audio_gorilla_gem_final(mrb_state* mrb)
 {
   Moon::Audio::Terminate();
 }
