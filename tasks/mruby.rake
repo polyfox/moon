@@ -15,6 +15,12 @@ namespace :mruby do
     FileUtils::Verbose.rm_rf(File.join(dir, 'build/mrbgems'))
   end
 
+  task :clean_bin do
+    FileUtils::Verbose.rm_rf(File.join(dir, 'build/host/lib'))
+    FileUtils::Verbose.rm_rf(File.join(dir, 'build/host/bin'))
+    FileUtils::Verbose.rm_rf(File.join(dir, 'build/host/mrblib'))
+  end
+
   task :deep_clean do
     FileUtils::Verbose.rm_rf(File.join(dir, 'build'))
   end
