@@ -11,11 +11,11 @@
 namespace Moon {
   Font::Font(const std::string &filename, const int font_size)
   {
-    atlas = texture_atlas_new(512, 512, 1);
+    atlas = texture_atlas_new(1024, 1024, 1);
     font = texture_font_new_from_file(atlas, font_size, filename.c_str());
-    texture_font_load_glyphs(font, L" !\"#$%&'()*+,-./0123456789:;<=>?"
-                                   L"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
-                                   L"`abcdefghijklmnopqrstuvwxyz{|}~");
+    texture_font_load_glyphs(font, " !\"#$%&'()*+,-./0123456789:;<=>?"
+                                   "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
+                                   "`abcdefghijklmnopqrstuvwxyz{|}~");
   }
 
   Font::~Font() {
@@ -35,11 +35,11 @@ namespace Moon {
         continue;
       }
 
-      texture_glyph_t *glyph = texture_font_get_glyph(font, text[i]);
+      texture_glyph_t *glyph = texture_font_get_glyph(font, text.get_cptr(i));
       if (glyph != NULL) {
         float kerning = 0;
         if (i > 0) {
-          kerning = texture_glyph_get_kerning(glyph, text[i - 1]);
+          kerning = texture_glyph_get_kerning(glyph, text.get_cptr(i - 1));
         }
         cursor += kerning;
         float x0 = x + cursor + glyph->offset_x;
@@ -83,12 +83,12 @@ namespace Moon {
         continue;
       }
 
-      texture_glyph_t *glyph = texture_font_get_glyph(font, text[i]);
+      texture_glyph_t *glyph = texture_font_get_glyph(font, text.get_cptr(i));
 
       if (glyph != NULL) {
         float kerning = 0;
         if(i > 0) {
-          kerning = texture_glyph_get_kerning(glyph, text[i-1]);
+          kerning = texture_glyph_get_kerning(glyph, text.get_cptr(i - 1));
         }
         cursor += kerning;
         float x0 = cursor + glyph->offset_x;
