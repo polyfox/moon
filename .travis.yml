@@ -3,7 +3,7 @@ sudo: false
 addons:
   apt:
     sources:
-    - kalakris-cmake
+    - george-edison55-precise-backports
     packages:
     - libopenal-dev
     - libdevil-dev
@@ -17,6 +17,7 @@ addons:
     - xorg-dev
     - libglu1-mesa-dev
     - cmake
+    - cmake-data
 matrix:
   include:
     - compiler: gcc
