@@ -2,6 +2,7 @@ require 'set'
 require_relative 'lib/platform'
 
 toolchain_name = (ENV['MOON_MRUBY_TOOLCHAIN'] || :gcc).to_sym
+platform = Platform.new
 
 rootdir = File.dirname(__FILE__)
 MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
@@ -71,7 +72,7 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
 
     c.defines << 'ENABLE_DEBUG'
 
-    if Platform.darwin?
+    if platform.darwin?
       # GLFW
       c.defines << 'MOON_GL_GLFW'
     else
@@ -120,23 +121,22 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
     l.libraries << 'SOIL'
     l.libraries << 'SIL'
 
-
-    if Platform.linux?
+    if platform.linux?
       l.libraries << 'GLEW'
       l.libraries << 'GL'
       l.libraries << 'openal'
-    elsif Platform.windows?
+    elsif platform.windows?
       l.libraries << 'glew32'
       l.libraries << 'opengl32'
       l.libraries << 'OpenAL32'
-    elsif Platform.darwin?
+    elsif platform.darwin?
       l.libraries << 'GLEW'
       l.flags_after_libraries << '-framework OpenGL'
       l.flags_after_libraries << '-framework OpenAL'
       l.flags_after_libraries << '-framework CoreFoundation'
     end
 
-    if Platform.unix?
+    if platform.unix?
       l.libraries << 'pthread'
     end
 
