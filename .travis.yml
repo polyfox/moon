@@ -5,25 +5,34 @@ addons:
     sources:
     - george-edison55-precise-backports
     packages:
-    - libopenal-dev
-    - libdevil-dev
-    - libglew-dev
-    - libgles2-mesa-dev
-    - freeglut3-dev
-    - libx11-dev
-    - libxmu-dev
-    - libxi-dev
-    - libyaml-dev
-    - xorg-dev
-    - libglu1-mesa-dev
     - cmake
     - cmake-data
+    - freeglut3-dev
+    - freetype
+    - libdevil-dev
+    - libgles2-mesa-dev
+    - libglew-dev
+    - libglu1-mesa-dev
+    - libopenal-dev
+    - libx11-dev
+    - libxi-dev
+    - libxmu-dev
+    - libyaml-dev
+    - xorg-dev
 matrix:
   include:
-    - compiler: gcc
+    - os: linux
+      compiler: gcc
       env: MOON_MRUBY_TOOLCHAIN=gcc
 
-    - compiler: clang
+    - os: linux
+      compiler: clang
+      env:
+      - MOON_MRUBY_TOOLCHAIN=clang
+      - LD_LIBRARY_PATH: "${TRAVIS_BUILD_DIR}/build/vendor/glfw/src"
+
+    - os: osx
+      compiler: clang
       env:
       - MOON_MRUBY_TOOLCHAIN=clang
       - LD_LIBRARY_PATH: "${TRAVIS_BUILD_DIR}/build/vendor/glfw/src"
@@ -37,8 +46,7 @@ before_install:
   - git submodule update --init --recursive --depth=1
 
 install:
-  - gem install bundler
-  - bundle install --without development --deployment  --jobs=3 --retry=3
+  - ./.travis/install.sh
 
 before_script:
   - ruby --version
