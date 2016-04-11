@@ -37,9 +37,6 @@ matrix:
       - MOON_MRUBY_TOOLCHAIN=clang
       - LD_LIBRARY_PATH: "${TRAVIS_BUILD_DIR}/build/vendor/glfw/src"
 
-  allow_failures:
-    - os: osx
-
 branches:
   only:
   - master
