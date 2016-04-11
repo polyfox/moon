@@ -17,6 +17,7 @@ option(freetype-gl_BUILD_APIDOC OFF)
 add_subdirectory("vendor/freetype-gl")
 
 option(BUILD_SHARED_LIBS ON)
+set(BUILD_SHARED_LIBS ON)
 option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS OFF)
 add_subdirectory("vendor/glfw")
