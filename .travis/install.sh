@@ -6,6 +6,7 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
   done
 
   whereis libfreetype
+  brew link freetype
 fi
 
 gem update --system
