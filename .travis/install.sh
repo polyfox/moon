@@ -2,7 +2,7 @@
 if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
   brew update || exit
   brew upgrade libyaml cmake
-  brew install freetype glfw3
+  brew install freetype glfw3 glew
   brew link freetype
 fi
 
