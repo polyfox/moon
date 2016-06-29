@@ -23,4 +23,18 @@ exists(const std::string& name)
   return (stat(name.c_str(), &buffer) == 0);
 };
 
+static inline void*
+moon_mallocset(size_t len, int value)
+{
+	void* ptr = malloc(len);
+	memset(ptr, value, len);
+	return ptr;
+}
+
+static inline void*
+moon_malloczero(size_t len)
+{
+	return moon_mallocset(len, 0);
+}
+
 #endif
