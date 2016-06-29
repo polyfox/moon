@@ -1,10 +1,10 @@
 #encoding:UTF-8
-MRuby::Gem::Specification.new('mruby-moon-audio-portaudio') do |spec|
+MRuby::Gem::Specification.new('mruby-moon-audio-libsoundio') do |spec|
   spec.license = 'MIT'
   spec.authors = ['Blaž Hrastnik', 'Corey Powell']
   spec.version = '0.0.0'
   spec.summary = 'Moon audio modules'
-  spec.description = 'Moon Engine\'s audio module (using Port Audio)'
+  spec.description = 'Moon Engine\'s audio module (using SoundIO)'
   spec.homepage = 'https://github.com/polyfox/moon'
   # compiler config
   spec.cc.include_paths << ["#{build.root}/src", "#{build.root}/include"]
@@ -15,6 +15,10 @@ MRuby::Gem::Specification.new('mruby-moon-audio-portaudio') do |spec|
   [spec.cc, spec.cxx].each do |cc|
     cc.flags << '-Wall'
     cc.flags << '-Wextra'
+  end
+
+  spec.linker do |l|
+    l.libraries << 'soundio'
   end
 
   spec.add_dependency 'mruby-moon-system'
