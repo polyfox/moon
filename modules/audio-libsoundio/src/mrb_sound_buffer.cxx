@@ -38,7 +38,8 @@ sound_buffer_initialize_create(mrb_state *mrb, mrb_value self)
 {
 	mrb_int channels = 0;
 	mrb_int length = 0;
-	mrb_get_args(mrb, "ii", &channels, &length);
+	mrb_int sampleRate = 44100;
+	mrb_get_args(mrb, "ii|i", &channels, &length, &sampleRate);
 	if (channels <= 0) {
 		mrb_raise(mrb, E_ARGUMENT_ERROR, "channels must be 1 or more");
 		return self;
@@ -47,7 +48,11 @@ sound_buffer_initialize_create(mrb_state *mrb, mrb_value self)
 		mrb_raise(mrb, E_ARGUMENT_ERROR, "length must be 1 or more");
 		return self;
 	}
-	Moon::SoundBuffer *buffer = new Moon::SoundBuffer(channels, length);
+	if (sampleRate <= 0) {
+		mrb_raise(mrb, E_ARGUMENT_ERROR, "Sample rate MUST be greater than 0");
+		return self;
+	}
+	Moon::SoundBuffer *buffer = Moon::SoundBuffer::create(channels, length, sampleRate);
 	mrb_data_init(self, buffer, &sound_buffer_data_type);
 	return self;
 }
@@ -108,7 +113,7 @@ mmrb_sound_buffer_init(mrb_state *mrb, struct RClass *mod)
 	struct RClass* sound_buffer_class = mrb_define_class_under(mrb, mod, "SoundBuffer", mrb->object_class);
 
 	mrb_define_method(mrb, sound_buffer_class, "initialize_by_filename", sound_buffer_initialize_by_filename, MRB_ARGS_REQ(1));
-	mrb_define_method(mrb, sound_buffer_class, "initialize_create", sound_buffer_initialize_create, MRB_ARGS_REQ(2));
+	mrb_define_method(mrb, sound_buffer_class, "initialize_create", sound_buffer_initialize_create, MRB_ARGS_ARG(2,1));
 	mrb_define_method(mrb, sound_buffer_class, "[]", sound_buffer_aget, MRB_ARGS_REQ(2));
 	mrb_define_method(mrb, sound_buffer_class, "[]=", sound_buffer_aset, MRB_ARGS_REQ(3));
 }

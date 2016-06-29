@@ -6,21 +6,25 @@
 namespace Moon {
 	template<typename T> struct AbstractSoundBuffer {
 		// How many channels does the buffer contain
-		int channelCount;
+		size_t channelCount;
+		// sample rate 44100
+		int sampleRate;
 		// in samples
-		int length;
+		size_t length;
 		// Array[channel][index] == sample for channel
 		T** samples;
 
-		AbstractSoundBuffer() {}
-
-		AbstractSoundBuffer(size_t p_channels, size_t p_length)
+		static
+		AbstractSoundBuffer<T>* create(size_t p_channels, size_t p_length, int p_sampleRate)
 		{
-			channelCount = p_channels;
-			length = p_length;
-			samples = (T**)moon_malloczero(sizeof(samples) * channelCount);
-			for (int i = 0; i < length; ++i) {
-				samples[i] = (float*)moon_malloczero(sizeof(T) * length);
+			AbstractSoundBuffer<T>* buffer = new AbstractSoundBuffer<T>();
+			buffer->channelCount = p_channels;
+			buffer->length = p_length;
+			buffer->sampleRate = p_sampleRate;
+			buffer->samples = (T**)moon_malloczero(sizeof(buffer->samples) * buffer->channelCount);
+			assert(buffer->samples);
+			for (int i = 0; i < buffer->length; ++i) {
+				buffer->samples[i] = (float*)moon_malloczero(sizeof(T) * buffer->length);
 			}
 		}
 	};
