@@ -10,6 +10,7 @@ add_subdirectory("vendor/sil")
 get_filename_component(SIL_INCLUDE_DIR "vendor/sil/include" ABSOLUTE)
 add_subdirectory("vendor/soil")
 add_subdirectory("vendor/gorilla-audio/build")
+set(ENABLE_JACK OFF)
 add_subdirectory("vendor/libsoundio")
 #add_subdirectory("vendor/glm")
 
@@ -31,7 +32,7 @@ if(RAKE_VERBOSE)
 endif(RAKE_VERBOSE)
 
 add_custom_target(moon-mruby ALL
-  DEPENDS SIL SOIL glfw freetype-gl gorilla
+  DEPENDS SIL SOIL glfw freetype-gl gorilla libsoundio_static
   COMMAND rake ${RAKE_VERBOSE_FLAG} MRUBY_CONFIG="${CMAKE_SOURCE_DIR}/mrb_config.rb"
   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/vendor/mruby"
 )
