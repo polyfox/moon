@@ -1,5 +1,5 @@
 module Moon
   module Audio
-    NAME = 'moon-audio-portaudio'
+    NAME = 'moon-audio-libsoundio'
   end
 end
