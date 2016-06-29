@@ -2,8 +2,8 @@
 #include <mruby/class.h>
 #include <mruby/data.h>
 #include <mruby/numeric.h>
-#include "moon/gorilla/mrb/sound.hxx"
-#include "moon/gorilla/audio.hxx"
+#include "moon/audio/gorilla/mrb/sound.hxx"
+#include "moon/audio/gorilla/audio.hxx"
 #include "moon/api.h"
 #include "moon/intern.h"
 

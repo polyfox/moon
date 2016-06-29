@@ -1,8 +1,8 @@
 #include <mruby.h>
 #include <mruby/class.h>
-#include "moon/gorilla/audio.hxx"
-#include "moon/gorilla/mrb/music.hxx"
-#include "moon/gorilla/mrb/sound.hxx"
+#include "moon/audio/gorilla/audio.hxx"
+#include "moon/audio/gorilla/mrb/music.hxx"
+#include "moon/audio/gorilla/mrb/sound.hxx"
 
 static mrb_value
 audio_update(mrb_state *mrb, mrb_value klass)
