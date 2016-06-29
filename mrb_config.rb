@@ -126,6 +126,10 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
       l.libraries << 'GLEW'
       l.libraries << 'GL'
       l.libraries << 'openal'
+      l.libraries << 'asound'
+      # if you want to use jack, just enable it here
+      #l.libraries << 'jack'
+      l.libraries << 'pulse'
     elsif platform.windows?
       l.libraries << 'glew32'
       l.libraries << 'opengl32'
