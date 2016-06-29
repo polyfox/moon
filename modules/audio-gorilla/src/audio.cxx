@@ -1,7 +1,6 @@
 #include "moon/gorilla/audio.hxx"
 
 namespace Moon {
-  bool Audio::m_initialized = false;
   gau_Manager* Audio::m_mgr = NULL;
   ga_Mixer* Audio::m_mixer = NULL;
   ga_StreamManager* Audio::m_streamMgr = NULL;
@@ -25,8 +24,12 @@ namespace Moon {
   };
 
   void Audio::Terminate() {
-    if (m_initialized) {
-      Pa_Terminate();
+    if (m_mgr) {
+      gau_manager_destroy(m_mgr);
+      gc_shutdown();
+      m_mgr = NULL;
+      m_mixer = NULL;
+      m_streamMgr = NULL;
     }
   };
 
@@ -38,4 +41,3 @@ namespace Moon {
     return m_streamMgr;
   };
 }
-
