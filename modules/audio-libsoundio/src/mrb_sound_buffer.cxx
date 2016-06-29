@@ -38,7 +38,7 @@ sound_buffer_initialize_create(mrb_state *mrb, mrb_value self)
 {
 	mrb_int channels = 0;
 	mrb_int length = 0;
-	mrb_int sampleRate = 44100;
+	mrb_int sampleRate = 48000;
 	mrb_get_args(mrb, "ii|i", &channels, &length, &sampleRate);
 	if (channels <= 0) {
 		mrb_raise(mrb, E_ARGUMENT_ERROR, "channels must be 1 or more");
@@ -78,7 +78,7 @@ sound_buffer_aget(mrb_state *mrb, mrb_value self)
 		return mrb_float_value(mrb, 0.0f);
 	}
 
-	return mrb_float_value(mrb, buf->samples[channel][index]);
+	return mrb_float_value(mrb, buf->GetSample(channel, index));
 }
 
 static mrb_value
@@ -103,7 +103,7 @@ sound_buffer_aset(mrb_state *mrb, mrb_value self)
 		return mrb_float_value(mrb, 0.0f);
 	}
 
-	buf->samples[channel][index] = (float)value;
+	buf->SetSample(channel, index, (float)value);
 	return self;
 }
 

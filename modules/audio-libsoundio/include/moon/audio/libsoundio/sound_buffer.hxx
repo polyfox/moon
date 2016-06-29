@@ -11,8 +11,16 @@ namespace Moon {
 		int sampleRate;
 		// in samples
 		size_t length;
-		// Array[channel][index] == sample for channel
-		T** samples;
+		// Array[channel + index * channelCount] == sample for channel
+		T* samples;
+
+		T GetSample(int channel, int index) {
+			return samples[channel + index * channelCount];
+		}
+
+		void SetSample(int channel, int index, T sample) {
+			samples[channel + index * channelCount] = sample;
+		}
 
 		static
 		AbstractSoundBuffer<T>* create(size_t p_channels, size_t p_length, int p_sampleRate)
@@ -21,11 +29,8 @@ namespace Moon {
 			buffer->channelCount = p_channels;
 			buffer->length = p_length;
 			buffer->sampleRate = p_sampleRate;
-			buffer->samples = (T**)moon_malloczero(sizeof(buffer->samples) * buffer->channelCount);
+			buffer->samples = (T*)moon_malloczero(sizeof(T) * buffer->channelCount * buffer->length);
 			assert(buffer->samples);
-			for (int i = 0; i < buffer->length; ++i) {
-				buffer->samples[i] = (float*)moon_malloczero(sizeof(T) * buffer->length);
-			}
 		}
 	};
 
