@@ -1,4 +1,4 @@
-#include "moon/gorilla/audio.hxx"
+#include "moon/audio/gorilla/audio.hxx"
 
 namespace Moon {
   gau_Manager* Audio::m_mgr = NULL;

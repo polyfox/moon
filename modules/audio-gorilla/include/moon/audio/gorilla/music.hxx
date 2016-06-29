@@ -1,7 +1,7 @@
 #ifndef MOON_MUSIC_H
 #define MOON_MUSIC_H
 
-#include "moon/gorilla/audio.hxx"
+#include "moon/audio/gorilla/audio.hxx"
 
 namespace Moon {
   struct Music {
