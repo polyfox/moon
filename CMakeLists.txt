@@ -11,6 +11,8 @@ get_filename_component(SIL_INCLUDE_DIR "vendor/sil/include" ABSOLUTE)
 add_subdirectory("vendor/soil")
 add_subdirectory("vendor/gorilla-audio/build")
 set(ENABLE_JACK OFF)
+set(BUILD_EXAMPLE_PROGRAMS OFF)
+set(BUILD_TESTS OFF)
 add_subdirectory("vendor/libsoundio")
 #add_subdirectory("vendor/glm")
 
