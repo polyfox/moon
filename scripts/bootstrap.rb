@@ -10,7 +10,7 @@ begin
 
   begin
     GC.disable
-    require 'core/load'
+    require 'core/load' if Dir.exists? 'core'
     require 'scripts/load'
   ensure
     GC.enable
