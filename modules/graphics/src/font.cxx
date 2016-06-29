@@ -16,6 +16,7 @@ namespace Moon {
     texture_font_load_glyphs(font, " !\"#$%&'()*+,-./0123456789:;<=>?"
                                    "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
                                    "`abcdefghijklmnopqrstuvwxyz{|}~");
+    texture_atlas_upload(atlas);
   }
 
   Font::~Font() {
@@ -61,6 +62,8 @@ namespace Moon {
         cursor += glyph->advance_x;
       }
     }
+    // upload to the buffer, we might have loaded more glyphs
+    texture_atlas_upload(atlas);
   }
 
   Vector2 Font::ComputeStringBbox(const String &text, const float line_height) {
