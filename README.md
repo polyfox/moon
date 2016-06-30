@@ -32,6 +32,15 @@ doxygen
 
 # for mruby-yaml
 yaml
+
+# for libsndfile
+autogen
+autoconf
+automake
+
+flac
+libogg
+libvorbis
 ```
 
 ## Support
