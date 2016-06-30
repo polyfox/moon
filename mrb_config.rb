@@ -138,8 +138,13 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
     elsif platform.darwin?
       l.libraries << 'GLEW'
       l.flags_after_libraries << '-framework OpenGL'
+      # gorilla
       l.flags_after_libraries << '-framework OpenAL'
+      #
       l.flags_after_libraries << '-framework CoreFoundation'
+      # libsoundio
+      l.flags_after_libraries << '-framework CoreAudio'
+      l.flags_after_libraries << '-framework AudioUnit'
     end
 
     if platform.unix?
