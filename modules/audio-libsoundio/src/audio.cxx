@@ -124,7 +124,8 @@ namespace Moon
 		}
 		// create an output stream
 		m_outStream = soundio_outstream_create(m_device);
-		if (m_outStream)
+		// 100ms, I hope that's enough
+		m_outStream->software_latency = 0.01;
 		m_outStream->format = SoundIoFormatFloat32NE;
 		m_outStream->write_callback = Moon_AudioWrite;
 
@@ -134,17 +135,20 @@ namespace Moon
 			return Moon::Audio::ErrorCode::MOON_AUDIO_COULD_NOT_OPEN_STREAM;
 		}
 		if (m_outStream->layout_error) {
-			return Moon::Audio::ErrorCode::MOON_AUDIO_STREAM_CHANNEL_LAYOUT_ERROR;
-		}
-		err = soundio_outstream_start(m_outStream);
-		if (err) {
-			return Moon::Audio::ErrorCode::MOON_AUDIO_STREAM_START_ERROR;
-			// raise AudioError, "unable to start device"
+			// Could be a warning
+			//return Moon::Audio::ErrorCode::MOON_AUDIO_STREAM_CHANNEL_LAYOUT_ERROR;
+			printf("WARN: Requested channel could not be completed\n");
 		}
 		sineVoice.active = true;
 		sineVoice.velocity = 0.2;
 		sineVoice.frequency = 480;
 		voices.push_back(&sineVoice);
+
+		err = soundio_outstream_start(m_outStream);
+		if (err) {
+			return Moon::Audio::ErrorCode::MOON_AUDIO_STREAM_START_ERROR;
+			// raise AudioError, "unable to start device"
+		}
 		//for (int voiceIndex = 0; voiceIndex < AUDIO_VOICE_MAX; ++voiceIndex) {
 		//	moonVoices[voiceIndex].reset();
 		//}
@@ -154,7 +158,6 @@ namespace Moon
 
 	void Audio::Update()
 	{
-		soundio_flush_events(m_soundIO);
 	}
 
 	void Audio::Terminate()
