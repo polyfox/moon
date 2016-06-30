@@ -18,7 +18,7 @@ MRuby::Gem::Specification.new('mruby-moon-audio-libsoundio') do |spec|
   end
 
   spec.linker do |l|
-    l.libraries << ':libsoundio.a'
+    l.libraries << 'soundio'
   end
 
   spec.add_dependency 'mruby-moon-system'
