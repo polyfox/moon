@@ -30,3 +30,6 @@
 [submodule "vendor/libsoundio"]
 	path = vendor/libsoundio
 	url = https://github.com/andrewrk/libsoundio
+[submodule "vendor/libsndfile"]
+	path = vendor/libsndfile
+	url = https://github.com/erikd/libsndfile

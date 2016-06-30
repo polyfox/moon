@@ -4,6 +4,8 @@ project(moon)
 
 find_library(YAML yaml)
 
+include(cmake/BuildSndfile.cmake)
+
 add_subdirectory("vendor/sil")
 # cmake doesn't like relative paths for include dirs, so we'll need the absolute
 # path instead
@@ -34,7 +36,7 @@ if(RAKE_VERBOSE)
 endif(RAKE_VERBOSE)
 
 add_custom_target(moon-mruby ALL
-  DEPENDS SIL SOIL glfw freetype-gl gorilla libsoundio_static
+  DEPENDS SIL SOIL glfw freetype-gl gorilla libsoundio_static libsndfile
   COMMAND rake ${RAKE_VERBOSE_FLAG} MRUBY_CONFIG="${CMAKE_SOURCE_DIR}/mrb_config.rb"
   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/vendor/mruby"
 )
