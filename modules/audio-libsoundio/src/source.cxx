@@ -1,5 +1,6 @@
 #include "moon/intern.h"
 #include "moon/audio/libsoundio/source.hxx"
+#include <sstream>
 
 namespace Moon
 {
@@ -8,7 +9,7 @@ namespace Moon
     file = sf_open(filename.c_str(), SFM_READ, &info);
 
     if (!file) {
-      stringstream error;
+      std::stringstream error;
       error << "Unable to open audio file '"
         << filename <<  "'";
       throw error.str();
@@ -21,7 +22,7 @@ namespace Moon
   }
 
 
-  sf_count_t Source::seekable() {
+  bool Source::seekable() {
     return info.seekable == SF_TRUE;
   }
 
