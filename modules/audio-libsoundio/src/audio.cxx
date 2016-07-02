@@ -127,6 +127,11 @@ namespace Moon
 		// 100ms, I hope that's enough
 		m_outStream->software_latency = 0.01;
 		m_outStream->format = SoundIoFormatFloat32NE;
+
+        m_outStream.sample_rate = 44100; // defaults to 48khz,but most audiofiles are 44.1
+        // would be lovely to be able to specify bits per sample
+        //ret->format.bitsPerSample = 16;
+
 		m_outStream->write_callback = Moon_AudioWrite;
 
 		// open the stream
