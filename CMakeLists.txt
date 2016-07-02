@@ -15,6 +15,7 @@ add_subdirectory("vendor/gorilla-audio/build")
 set(ENABLE_JACK OFF)
 set(BUILD_EXAMPLE_PROGRAMS OFF)
 set(BUILD_TESTS OFF)
+set(BUILD_DYNAMIC_LIBS OFF)
 add_subdirectory("vendor/libsoundio")
 #add_subdirectory("vendor/glm")
 
