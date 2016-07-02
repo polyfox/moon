@@ -223,5 +223,6 @@ namespace Moon
 		soundio_outstream_destroy(m_outStream);
 		soundio_device_unref(m_device);
 		soundio_destroy(m_soundIO);
+		cacheBuffer.freeBuffer();
 	}
 }
