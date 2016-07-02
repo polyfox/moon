@@ -2,18 +2,53 @@
 #include "moon/audio/libsoundio/audio.hxx"
 #include <vector>
 
+struct FrameData {
+	// Some kind of internal counter to help with timing
+	int counter;
+	int channels;
+	// how many frames are actually needed by the request, this is ALWAYS half the length of the actual data size
+	// Note that a single frame is equal to `sizeof(float) * channels`
+	size_t frameCount;
+	// actual data size, do not use this
+	size_t dataLength;
+	float* frames;
+	float sampleRate;
+
+	FrameData() {
+		channels = 0;
+		frameCount = 0;
+		dataLength = 0;
+		frames = NULL;
+		sampleRate = 0;
+	};
+
+	void freeBuffer() {
+		if (frames) {
+			free(frames);
+			frames = NULL;
+		}
+	}
+
+	void refreshBuffer(int minimumBufferLength) {
+		if (!frames || dataLength < minimumBufferLength) {
+			freeBuffer();
+			dataLength = minimumBufferLength;
+			frames = (float*)moon_malloczero(sizeof(float) * dataLength);
+		}
+	}
+};
+
 class AbstractVoice {
 public:
 	bool active;
-	int frame;
+	int frameCounter;
 
-	virtual float getSample(float sampleRate) {
-		return 0.0f;
+	virtual void getFrame(const FrameData& data) {
 	};
 
 	virtual void reset() {
 		active = false;
-		frame = 0;
+		frameCounter = 0;
 	}
 };
 
@@ -22,12 +57,16 @@ public:
 	float frequency;
 	float velocity;
 
-	float getSample(float sampleRate) {
+	void getFrame(const FrameData& data) {
 		if (frequency > 0)
 		{
-			return sinf((2 * M_PI * frame * frequency) / sampleRate) * velocity;
+			for (size_t i = 0; i < data.frameCount; ++i) {
+				const float result = sinf((2 * M_PI * frameCounter * frequency) / data.sampleRate) * velocity;
+				for (int channel = 0; channel < data.channels; ++channel) {
+					data.frames[i + channel] = result;
+				}
+			}
 		}
-		return 0.0f;
 	}
 
 	void reset() {
@@ -37,15 +76,16 @@ public:
 	}
 };
 
-class SampleVoice : public AbstractVoice {
-	float getSample(float sampleRate) {
-		// TODO
-		return 0.0f;
-	}
-};
+//class SampleVoice : public AbstractVoice {
+//	float getSample(float sampleRate) {
+//		// TODO
+//		return 0.0f;
+//	}
+//};
 
 static std::vector<AbstractVoice*> voices;
 static SineVoice sineVoice;
+static struct FrameData cacheBuffer;
 
 static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMin, int frameCountMax) {
 	struct SoundIoChannelArea *areas;
@@ -55,7 +95,12 @@ static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMi
 	int framesLeft = frameCountMax;
 	printf("Doing an audio write: %d\n", frameCountMax);
 	// iterate all the active voices, mix them together and then output to the stream, or something like that
-	printf("Voices %d\n", voices.size());
+	printf("Voices %l\n", voices.size());
+	const int minimumBufferLength = framesLeft * layout->channel_count;
+	cacheBuffer.refreshBuffer(minimumBufferLength);
+	cacheBuffer.channels = layout->channel_count;
+	cacheBuffer.sampleRate = sampleRate;
+
 	while (framesLeft > 0) {
 		int frameCount = framesLeft;
 		int err = soundio_outstream_begin_write(outstream, &areas, &frameCount);
@@ -69,18 +114,31 @@ static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMi
 			break;
 		}
 
-		for (int frame = 0; frame < frameCount; ++frame) {
-			for (size_t channel = 0; channel < layout->channel_count; ++channel) {
-				float* buffer = (float*)(areas[channel].ptr + areas[channel].step * frame);
-				float sample = 0.0f;
-				for (size_t voiceIndex = 0; voiceIndex < voices.size(); ++voiceIndex) {
-					if (voices[voiceIndex]->active) {
-						sample += voices[voiceIndex]->getSample(sampleRate);
-						voices[voiceIndex]->frame += 1;
+		cacheBuffer.frameCount = frameCount;
+
+		// silence output buffer first
+		for (size_t channel = 0; channel < layout->channel_count; ++channel) {
+			memset(areas[channel].ptr, 0, areas[channel].step * cacheBuffer.frameCount);
+		}
+
+		// apply each voice sequentially adding to the output buffer
+		for (size_t voiceIndex = 0; voiceIndex < voices.size(); ++voiceIndex) {
+			if (voices[voiceIndex]->active) {
+				voices[voiceIndex]->getFrame(cacheBuffer);
+				// increment the voice's counter so next time it will provide a different stream
+				voices[voiceIndex]->frameCounter += cacheBuffer.frameCount;
+				// write cached frames to output buffer
+				// one idea would be to store the frames as slices, though it would be one continous buffer
+				// llllll rrrrrr
+				// Here we've gone for interleaved (lr lr lr), might perform terribly because of switching back and forth between channels.
+				for (int frameIndex = 0; frameIndex < cacheBuffer.frameCount; ++frameIndex) {
+					for (size_t channel = 0; channel < layout->channel_count; ++channel) {
+						float* buffer = (float*)(areas[channel].ptr + areas[channel].step * frameIndex);
+						float sample = *buffer + cacheBuffer.frames[frameIndex + channel];
+						// clipping, to avoid overdrive
+						*buffer = sample > 1.0f ? 1.0f : (sample < -1.0f ? -1.0f : sample);
 					}
 				}
-				// clipping, to avoid overdrive
-				*buffer = sample > 1.0f ? 1.0f : (sample < -1.0f ? -1.0f : sample);
 			}
 		}
 
