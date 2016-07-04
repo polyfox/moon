@@ -18,6 +18,11 @@ class AbstractVoice {
     }
 };
 
+class AbstractSource {
+  public:
+    virtual void mix(struct SoundIoChannelArea *areas, const struct SoundIoChannelLayout &layout, const float sampleRate, unsigned int frames) {};
+};
+
 namespace Moon
 {
   class Mixer {
@@ -25,7 +30,7 @@ namespace Moon
       Mixer();
 
       void mix(struct SoundIoChannelArea *areas, const struct SoundIoChannelLayout &layout, const float sampleRate, unsigned int frames);
-      std::vector<AbstractVoice*> voices;
+      std::vector<AbstractSource*> handles;
     private:
   };
 }

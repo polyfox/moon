@@ -3,7 +3,6 @@
 #include "moon/audio/libsoundio/audio.hxx"
 #include "moon/audio/libsoundio/mrb/music.hxx"
 #include "moon/audio/libsoundio/mrb/sound.hxx"
-#include "moon/audio/libsoundio/mrb/sound_buffer.hxx"
 
 static mrb_value
 audio_update(mrb_state *mrb, mrb_value klass)
@@ -19,7 +18,7 @@ mrb_mruby_moon_audio_libsoundio_gem_init(mrb_state* mrb)
   struct RClass *audio_module = mrb_define_module_under(mrb, moon_module, "Audio");
   struct RClass *audio_error = mrb_define_class_under(mrb, moon_module, "AudioError", E_RUNTIME_ERROR);
   mrb_define_class_method(mrb, audio_module, "update", audio_update, MRB_ARGS_NONE());
-  mmrb_sound_buffer_init(mrb, moon_module);
+  //mmrb_sound_buffer_init(mrb, moon_module);
   mmrb_music_init(mrb, moon_module);
   mmrb_sound_init(mrb, moon_module);
 
