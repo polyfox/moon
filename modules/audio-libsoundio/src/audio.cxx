@@ -76,16 +76,59 @@ public:
 	}
 };
 
+class PulseVoice : public AbstractVoice {
+public:
+	float frequency;
+	float velocity;
+
+	void getFrames(const FrameBuffer& data) {
+		if (frequency > 0)
+		{
+			int phase = 0;
+			const int duty = 2;
+			bool signal = false;
+			const int framesPerPulse = data.sampleRate / (2 * M_PI * frequency);
+			int period = frameCounter % (framesPerPulse * 2);
+			for (uint32_t i = 0; i < data.frameCount; ++i) {
+				if (period && --period == 0) {
+					period = framesPerPulse * 2;
+					phase++;
+					switch(duty) {
+						case 0: signal = (phase == 6); break;  //_____-_
+						case 1: signal = (phase >= 6); break;  //______--
+						case 2: signal = (phase >= 4); break;  //____----
+						case 3: signal = (phase <= 5); break;  //------__
+					}
+				}
+				const float result = signal ? velocity : 0.0f;
+				//if (result) {
+					for (int channel = 0; channel < data.channels; ++channel) {
+						data.frames[i + channel] = result;
+					}
+				//}
+			}
+		}
+	}
+
+	void reset() {
+		AbstractVoice::reset();
+		frequency = 0.0f;
+		velocity = 0.0f;
+	}
+};
+
 //class SampleVoice : public AbstractVoice {
-//	float getSample(float sampleRate) {
+//	void getFrames(const FrameBuffer& data) {
 //		// TODO
 //		return 0.0f;
 //	}
 //};
 
 static std::vector<AbstractVoice*> voices;
-static SineVoice sineVoice;
-static struct FrameData cacheBuffer;
+static SineVoice sineVoice1;
+static PulseVoice sineVoice2;
+static SineVoice sineVoice3;
+static struct FrameBuffer frameBuffer;
 
 static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMin, int frameCountMax) {
 	struct SoundIoChannelArea *areas;
@@ -195,10 +238,20 @@ namespace Moon
 			//return Moon::Audio::ErrorCode::MOON_AUDIO_STREAM_CHANNEL_LAYOUT_ERROR;
 			printf("WARN: Requested channel could not be completed\n");
 		}
-		sineVoice.active = true;
-		sineVoice.velocity = 0.2;
-		sineVoice.frequency = 480;
-		voices.push_back(&sineVoice);
+		sineVoice1.active = true;
+		sineVoice1.velocity = 0.2f;
+		sineVoice1.frequency = 480.0f;
+		//voices.push_back(&sineVoice1);
+
+		sineVoice2.active = true;
+		sineVoice2.velocity = 0.2f;
+		sineVoice2.frequency = 261.6f;
+		voices.push_back(&sineVoice2);
+
+		sineVoice3.active = true;
+		sineVoice3.velocity = 0.2f;
+		sineVoice3.frequency = 329.628f;
+		//voices.push_back(&sineVoice3);
 
 		err = soundio_outstream_start(m_outStream);
 		if (err) {
