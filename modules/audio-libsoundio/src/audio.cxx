@@ -2,21 +2,6 @@
 #include "moon/audio/libsoundio/audio.hxx"
 #include <vector>
 
-class AbstractVoice {
-public:
-	bool active;
-	int frame;
-
-	virtual float getSample(float sampleRate) {
-		return 0.0f;
-	};
-
-	virtual void reset() {
-		active = false;
-		frame = 0;
-	}
-};
-
 class SineVoice : public AbstractVoice {
 public:
 	float frequency;
@@ -44,7 +29,6 @@ class SampleVoice : public AbstractVoice {
 	}
 };
 
-static std::vector<AbstractVoice*> voices;
 static SineVoice sineVoice;
 
 static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMin, int frameCountMax) {
@@ -54,8 +38,6 @@ static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMi
 	const float secondsPerFrame = 1.0f / sampleRate;
 	int framesLeft = frameCountMax;
 	printf("Doing an audio write: %d\n", frameCountMax);
-	// iterate all the active voices, mix them together and then output to the stream, or something like that
-	printf("Voices %d\n", voices.size());
 	while (framesLeft > 0) {
 		int frameCount = framesLeft;
 		int err = soundio_outstream_begin_write(outstream, &areas, &frameCount);
@@ -69,20 +51,8 @@ static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMi
 			break;
 		}
 
-		for (int frame = 0; frame < frameCount; ++frame) {
-			for (size_t channel = 0; channel < layout->channel_count; ++channel) {
-				float* buffer = (float*)(areas[channel].ptr + areas[channel].step * frame);
-				float sample = 0.0f;
-				for (size_t voiceIndex = 0; voiceIndex < voices.size(); ++voiceIndex) {
-					if (voices[voiceIndex]->active) {
-						sample += voices[voiceIndex]->getSample(sampleRate);
-						voices[voiceIndex]->frame += 1;
-					}
-				}
-				// clipping, to avoid overdrive
-				*buffer = sample > 1.0f ? 1.0f : (sample < -1.0f ? -1.0f : sample);
-			}
-		}
+        // let mixer fill the buffer!
+        Moon::Audio::m_mixer->mix(areas, *layout, sampleRate, frameCount);
 
 		err = soundio_outstream_end_write(outstream);
 		if (err) {
@@ -99,6 +69,8 @@ namespace Moon
 	struct SoundIo* Audio::m_soundIO = NULL;
 	struct SoundIoDevice* Audio::m_device = NULL;
 	struct SoundIoOutStream* Audio::m_outStream = NULL;
+
+    Mixer* Audio::m_mixer = NULL;
 
 	Audio::ErrorCode Audio::Initialize()
 	{
@@ -128,7 +100,7 @@ namespace Moon
 		m_outStream->software_latency = 0.01;
 		m_outStream->format = SoundIoFormatFloat32NE;
 
-        m_outStream.sample_rate = 44100; // defaults to 48khz,but most audiofiles are 44.1
+        m_outStream->sample_rate = 44100; // defaults to 48khz,but most audiofiles are 44.1
         // would be lovely to be able to specify bits per sample
         //ret->format.bitsPerSample = 16;
 
@@ -144,10 +116,14 @@ namespace Moon
 			//return Moon::Audio::ErrorCode::MOON_AUDIO_STREAM_CHANNEL_LAYOUT_ERROR;
 			printf("WARN: Requested channel could not be completed\n");
 		}
+
+        // create a new mixer
+        m_mixer = new Mixer();
+
 		sineVoice.active = true;
 		sineVoice.velocity = 0.2;
 		sineVoice.frequency = 480;
-		voices.push_back(&sineVoice);
+        m_mixer->voices.push_back(&sineVoice);
 
 		err = soundio_outstream_start(m_outStream);
 		if (err) {
@@ -170,5 +146,6 @@ namespace Moon
 		soundio_outstream_destroy(m_outStream);
 		soundio_device_unref(m_device);
 		soundio_destroy(m_soundIO);
+        delete m_mixer;
 	}
 }

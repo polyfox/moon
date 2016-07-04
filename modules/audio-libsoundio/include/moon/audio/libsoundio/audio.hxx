@@ -5,6 +5,7 @@
 #include <vector>
 #include <soundio/soundio.h>
 #define MOON_AUDIO_BACKEND "libsoundio"
+#include "moon/audio/libsoundio/mixer.hxx"
 
 namespace Moon {
 	class Audio {
@@ -30,6 +31,7 @@ namespace Moon {
 			static ErrorCode Initialize();
 			static void Update();
 			static void Terminate();
+            static Mixer* m_mixer;
 		protected:
 			static bool m_initialized;
 			static struct SoundIo* m_soundIO;
