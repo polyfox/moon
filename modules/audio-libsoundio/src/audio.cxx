@@ -31,7 +31,7 @@ class SampleVoice : public AbstractVoice {
 
 static SineVoice sineVoice;
 
-static Moon::Music handle("GoSleepAlready.ogg");
+static Moon::Music handle("medusa.wav");
 
 static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMin, int frameCountMax) {
 	struct SoundIoChannelArea *areas;
@@ -39,7 +39,7 @@ static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMi
 	const float sampleRate = outstream->sample_rate;
 	const float secondsPerFrame = 1.0f / sampleRate;
 	int framesLeft = frameCountMax;
-	printf("Doing an audio write: %d\n", frameCountMax);
+	//printf("Doing an audio write: %d\n", frameCountMax);
 	while (framesLeft > 0) {
 		int frameCount = framesLeft;
 		int err = soundio_outstream_begin_write(outstream, &areas, &frameCount);
