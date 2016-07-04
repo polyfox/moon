@@ -26,7 +26,7 @@ namespace Moon
 
     printf("file channels: %d\n", channels);
     for (int frame = 0; frame < frames; ++frame) {
-      for (size_t channel = 0; channel < channel; ++channel) {
+      for (size_t channel = 0; channel < channels; ++channel) {
         float* buffer = (float*)(areas[channel].ptr + areas[channel].step * frame);
 
         float sample = cache[frame * channels + channel];
