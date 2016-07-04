@@ -34,10 +34,6 @@ doxygen
 yaml
 
 # for libsndfile
-autogen
-autoconf
-automake
-
 flac
 libogg
 libvorbis
