@@ -42,4 +42,17 @@ moon_malloczero(size_t len)
 	return moon_mallocset(len, 0);
 }
 
+static inline int
+moon_power2(int value)
+{
+	uint32_t result = value;
+	result--;
+	result |= result >> 1;
+	result |= result >> 2;
+	result |= result >> 4;
+	result |= result >> 8;
+	result |= result >> 16;
+	result++;
+	return result;
+}
 #endif
