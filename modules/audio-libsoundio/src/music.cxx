@@ -21,7 +21,7 @@ namespace Moon
     // handle mono to stereo, vice versa
     int channels = file.channels();
     float* cache = new float[frames * channels * file.samplerate()];
-    auto bytes = file.read(cache, frames);
+    auto bytes = file.readf(cache, frames);
     printf("Read n bytes: %d\n", bytes);
 
     printf("file channels: %d\n", channels);
@@ -35,7 +35,7 @@ namespace Moon
         *buffer = sample > 1.0f ? 1.0f : (sample < -1.0f ? -1.0f : sample);
       }
     }
-    file.seek(frames, SEEK_CUR);
+    //file.seek(frames, SEEK_CUR);
     delete cache;
   }
 }
