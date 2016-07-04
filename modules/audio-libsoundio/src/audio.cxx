@@ -2,9 +2,9 @@
 #include "moon/audio/libsoundio/audio.hxx"
 #include <vector>
 
-struct FrameData {
+struct FrameBuffer {
 	// Some kind of internal counter to help with timing
-	int counter;
+	uint32_t counter;
 	int channels;
 	// how many frames are actually needed by the request, this is ALWAYS half the length of the actual data size
 	// Note that a single frame is equal to `sizeof(float) * channels`
@@ -14,7 +14,7 @@ struct FrameData {
 	float* frames;
 	float sampleRate;
 
-	FrameData() {
+	FrameBuffer() {
 		channels = 0;
 		frameCount = 0;
 		dataLength = 0;
@@ -29,7 +29,7 @@ struct FrameData {
 		}
 	}
 
-	void refreshBuffer(int minimumBufferLength) {
+	void refreshBuffer(size_t minimumBufferLength) {
 		if (!frames || dataLength < minimumBufferLength) {
 			freeBuffer();
 			dataLength = minimumBufferLength;
@@ -43,7 +43,7 @@ public:
 	bool active;
 	int frameCounter;
 
-	virtual void getFrame(const FrameData& data) {
+	virtual void getFrames(const FrameBuffer& data) {
 	};
 
 	virtual void reset() {
@@ -57,12 +57,12 @@ public:
 	float frequency;
 	float velocity;
 
-	void getFrame(const FrameData& data) {
+	void getFrames(const FrameBuffer& data) {
 		if (frequency > 0)
 		{
 			for (size_t i = 0; i < data.frameCount; ++i) {
-				const float result = sinf((2 * M_PI * frameCounter * frequency) / data.sampleRate) * velocity;
-				for (int channel = 0; channel < data.channels; ++channel) {
+				const float result = sinf((2 * M_PI * (frameCounter + i) * frequency) / data.sampleRate) * velocity;
+				for (size_t channel = 0; channel < data.channels; ++channel) {
 					data.frames[i + channel] = result;
 				}
 			}
@@ -91,15 +91,13 @@ static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMi
 	struct SoundIoChannelArea *areas;
 	const struct SoundIoChannelLayout *layout = &outstream->layout;
 	const float sampleRate = outstream->sample_rate;
-	const float secondsPerFrame = 1.0f / sampleRate;
-	int framesLeft = frameCountMax;
-	printf("Doing an audio write: %d\n", frameCountMax);
-	// iterate all the active voices, mix them together and then output to the stream, or something like that
-	printf("Voices %l\n", voices.size());
-	const int minimumBufferLength = framesLeft * layout->channel_count;
-	cacheBuffer.refreshBuffer(minimumBufferLength);
-	cacheBuffer.channels = layout->channel_count;
-	cacheBuffer.sampleRate = sampleRate;
+	uint32_t framesLeft = frameCountMax;
+	//printf("Doing an audio write: %d\n", frameCountMax);
+	//printf("Voices %ld\n", voices.size());
+	const size_t minimumBufferLength = framesLeft * layout->channel_count;
+	frameBuffer.refreshBuffer(minimumBufferLength);
+	frameBuffer.channels = layout->channel_count;
+	frameBuffer.sampleRate = sampleRate;
 
 	while (framesLeft > 0) {
 		int frameCount = framesLeft;
@@ -114,27 +112,27 @@ static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMi
 			break;
 		}
 
-		cacheBuffer.frameCount = frameCount;
+		frameBuffer.frameCount = frameCount;
 
 		// silence output buffer first
-		for (size_t channel = 0; channel < layout->channel_count; ++channel) {
-			memset(areas[channel].ptr, 0, areas[channel].step * cacheBuffer.frameCount);
+		for (int channel = 0; channel < layout->channel_count; ++channel) {
+			memset(areas[channel].ptr, 0, areas[channel].step * frameBuffer.frameCount);
 		}
 
 		// apply each voice sequentially adding to the output buffer
-		for (size_t voiceIndex = 0; voiceIndex < voices.size(); ++voiceIndex) {
+		for (uint32_t voiceIndex = 0; voiceIndex < voices.size(); ++voiceIndex) {
 			if (voices[voiceIndex]->active) {
-				voices[voiceIndex]->getFrame(cacheBuffer);
+				voices[voiceIndex]->getFrames(frameBuffer);
 				// increment the voice's counter so next time it will provide a different stream
-				voices[voiceIndex]->frameCounter += cacheBuffer.frameCount;
+				voices[voiceIndex]->frameCounter += frameBuffer.frameCount;
 				// write cached frames to output buffer
 				// one idea would be to store the frames as slices, though it would be one continous buffer
 				// llllll rrrrrr
 				// Here we've gone for interleaved (lr lr lr), might perform terribly because of switching back and forth between channels.
-				for (int frameIndex = 0; frameIndex < cacheBuffer.frameCount; ++frameIndex) {
-					for (size_t channel = 0; channel < layout->channel_count; ++channel) {
+				for (uint32_t frameIndex = 0; frameIndex < frameBuffer.frameCount; ++frameIndex) {
+					for (int channel = 0; channel < layout->channel_count; ++channel) {
 						float* buffer = (float*)(areas[channel].ptr + areas[channel].step * frameIndex);
-						float sample = *buffer + cacheBuffer.frames[frameIndex + channel];
+						float sample = *buffer + frameBuffer.frames[frameIndex + channel];
 						// clipping, to avoid overdrive
 						*buffer = sample > 1.0f ? 1.0f : (sample < -1.0f ? -1.0f : sample);
 					}
@@ -223,6 +221,6 @@ namespace Moon
 		soundio_outstream_destroy(m_outStream);
 		soundio_device_unref(m_device);
 		soundio_destroy(m_soundIO);
-		cacheBuffer.freeBuffer();
+		frameBuffer.freeBuffer();
 	}
 }
