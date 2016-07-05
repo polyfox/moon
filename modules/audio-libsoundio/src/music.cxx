@@ -6,9 +6,9 @@ namespace Moon
   Music::Music(const std::string filename) :
     file(filename, SFM_READ)
   {
-  	printf ("Opened file '%s'\n", filename.c_str()) ;
-	printf ("    Sample rate : %d\n", file.samplerate ()) ;
-  printf ("    Channels    : %d\n", file.channels ()) ;
+  	printf("Opened file '%s'\n", filename.c_str());
+	printf("    Sample rate : %d\n", file.samplerate ());
+    printf("    Channels    : %d\n", file.channels ());
   };
 
 
@@ -24,12 +24,12 @@ namespace Moon
     auto bytes = file.readf(cache, frames);
     printf("Read n bytes: %d\n", bytes);
 
-    printf("file channels: %d\n", channels);
     for (int frame = 0; frame < frames; ++frame) {
       for (size_t channel = 0; channel < channels; ++channel) {
         float* buffer = (float*)(areas[channel].ptr + areas[channel].step * frame);
 
-        float sample = cache[frame * channels + channel];
+        // mix the sample!
+        float sample = *buffer + cache[frame * channels + channel];
 
         // clipping, to avoid overdrive
         *buffer = sample > 1.0f ? 1.0f : (sample < -1.0f ? -1.0f : sample);
