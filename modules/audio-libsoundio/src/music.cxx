@@ -30,12 +30,8 @@ namespace Moon
 
         // mix the sample!
         float sample = *buffer + cache[frame * channels + channel];
-
-        // clipping, to avoid overdrive
-        *buffer = sample > 1.0f ? 1.0f : (sample < -1.0f ? -1.0f : sample);
       }
     }
-    //file.seek(frames, SEEK_CUR);
     delete cache;
   }
 }
