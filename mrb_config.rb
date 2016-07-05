@@ -125,6 +125,11 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
     l.libraries << 'SOIL'
     l.libraries << 'SIL'
 
+    l.libraries << 'ogg'
+    l.libraries << 'vorbis'
+    l.libraries << 'vorbisenc'
+    l.libraries << 'flac'
+
     if platform.linux?
       l.libraries << 'GLEW'
       l.libraries << 'GL'
