@@ -33,9 +33,8 @@ namespace Moon
     for (int frame = 0; frame < framesRead; ++frame) {
       for (size_t channel = 0; channel < channels; ++channel) {
         float* buffer = (float*)(areas[channel].ptr + areas[channel].step * frame);
-
         // mix the sample!
-        float sample = *buffer + chunk[frame * channels + channel];
+        *buffer += chunk[frame * channels + channel];
       }
     }
     delete chunk;
