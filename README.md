@@ -4,11 +4,11 @@
 [![Coverity Scan Build Status](https://img.shields.io/coverity/scan/5666.svg)](https://scan.coverity.com/projects/5666)
 
 ## Introduction
-Moon is a experimental prototyping 2D Game Engine written in C++ and scripted using [mruby](https://github.com/mruby/mruby).
+Moon is a experimental 2D game engine prototype written in C++ and scripted using [mruby](https://github.com/mruby/mruby).
 
 
 ## Supported
-Currently testing is done linux, moon may not run or even compile on other systems. If you managed to get Moon running on your system, please open a PR and share your changes to get it built.
+Currently we have builds fo Linux and OS X. Moon may not run or even compile on other systems. If you managed to get Moon running on your system, please open a PR and share your changes to get it built.
 
 
 ## Requirements
@@ -24,7 +24,7 @@ ruby >= 1.9.2
   yard (for docs)
 
 # runtime
-OpenAL
+OpenAL # for gorilla audio
 OpenGL
 
 # For dependency docs
