@@ -20,18 +20,24 @@ namespace Moon
     // TODO: compare file.channels() with layout.channel_count
     // handle mono to stereo, vice versa
     int channels = file.channels();
-    float* cache = new float[frames * channels * file.samplerate()];
-    auto bytes = file.readf(cache, frames);
-    printf("Read n bytes: %d\n", bytes);
+    int totalSamples = frames * channels * file.samplerate();
+    float* chunk = new float[totalSamples];
+    // clear the array (in case we read less data than available)
+    memset(chunk, 0, totalSamples);
 
-    for (int frame = 0; frame < frames; ++frame) {
+    int framesRead = file.readf(cache, frames);
+    printf("Read n frames: %d\n", framesRead);
+
+    // TODO: compare frames with framesRead
+
+    for (int frame = 0; frame < framesRead; ++frame) {
       for (size_t channel = 0; channel < channels; ++channel) {
         float* buffer = (float*)(areas[channel].ptr + areas[channel].step * frame);
 
         // mix the sample!
-        float sample = *buffer + cache[frame * channels + channel];
+        float sample = *buffer + chunk[frame * channels + channel];
       }
     }
-    delete cache;
+    delete chunk;
   }
 }
