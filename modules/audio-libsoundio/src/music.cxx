@@ -25,7 +25,7 @@ namespace Moon
     // clear the array (in case we read less data than available)
     memset(chunk, 0, totalSamples);
 
-    int framesRead = file.readf(cache, frames);
+    int framesRead = file.readf(chunk, frames);
     printf("Read n frames: %d\n", framesRead);
 
     // TODO: compare frames with framesRead
@@ -37,6 +37,6 @@ namespace Moon
         *buffer += chunk[frame * channels + channel];
       }
     }
-    delete chunk;
+    delete[] chunk;
   }
 }

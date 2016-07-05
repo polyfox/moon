@@ -10,12 +10,12 @@ namespace Moon
 {
   class Music : public AbstractSource {
     public:
-      SndfileHandle file;
-
       Music(const std::string filename);
       ~Music();
 
       void mix(struct SoundIoChannelArea *areas, const struct SoundIoChannelLayout &layout, const float sampleRate, unsigned int frames);
+    private:
+      SndfileHandle file;
   };
 };
 

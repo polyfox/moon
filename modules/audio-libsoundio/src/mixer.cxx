@@ -16,8 +16,9 @@ namespace Moon {
 
     // clipping, to avoid overdrive
     for (int frame = 0; frame < frames; ++frame) {
-      for (size_t channel = 0; channel < channels; ++channel) {
+      for (size_t channel = 0; channel < layout.channel_count; ++channel) {
         float* buffer = (float*)(areas[channel].ptr + areas[channel].step * frame);
+        float sample = *buffer;
         *buffer = sample > 1.0f ? 1.0f : (sample < -1.0f ? -1.0f : sample);
       }
     }

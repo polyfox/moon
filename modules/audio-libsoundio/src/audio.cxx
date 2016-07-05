@@ -31,8 +31,9 @@ class SampleVoice : public AbstractVoice {
 
 static SineVoice sineVoice;
 
-static Moon::Music handle("GoSleepAlready.ogg");
-static Moon::Music handle2("medusa.wav");
+static Moon::Sound handle("sfx.wav");
+//static Moon::Music handle("GoSleepAlready.ogg");
+//static Moon::Music handle2("medusa.wav");
 
 static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMin, int frameCountMax) {
 	struct SoundIoChannelArea *areas;
@@ -128,7 +129,7 @@ namespace Moon
 		sineVoice.frequency = 480;
         //m_mixer->voices.push_back(&sineVoice);
         m_mixer->handles.push_back(&handle);
-        m_mixer->handles.push_back(&handle2);
+        //m_mixer->handles.push_back(&handle2);
 
 		err = soundio_outstream_start(m_outStream);
 		if (err) {

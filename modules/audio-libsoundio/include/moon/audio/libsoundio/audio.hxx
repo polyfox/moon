@@ -7,6 +7,7 @@
 #define MOON_AUDIO_BACKEND "libsoundio"
 #include "moon/audio/libsoundio/mixer.hxx"
 #include "moon/audio/libsoundio/music.hxx"
+#include "moon/audio/libsoundio/sound.hxx"
 
 namespace Moon {
 	class Audio {
