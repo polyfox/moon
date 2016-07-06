@@ -128,9 +128,9 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
     l.libraries << 'ogg'
     l.libraries << 'vorbis'
     l.libraries << 'vorbisenc'
-    l.libraries << 'flac'
 
     if platform.linux?
+      l.libraries << 'FLAC'
       l.libraries << 'GLEW'
       l.libraries << 'GL'
       l.libraries << 'openal'
@@ -143,6 +143,7 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
       l.libraries << 'opengl32'
       l.libraries << 'OpenAL32'
     elsif platform.darwin?
+      l.libraries << 'flac'
       l.libraries << 'GLEW'
       l.flags_after_libraries << '-framework OpenGL'
       # gorilla
