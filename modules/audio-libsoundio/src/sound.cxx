@@ -21,7 +21,7 @@ namespace Moon
     memset(source, 0, totalSamples);
 
     totalFrames = file.readf(source, file.frames());
-    printf("Read n frames: %d\n", totalFrames);
+    printf("total frames: %d\n", totalFrames);
     // TODO: shout if totalFrames didn't match file.frames()
   };
 
@@ -44,8 +44,9 @@ namespace Moon
     if(currentFrame > totalFrames) { return 0; }
     // handle buffer edges (don't point past edge)
     int actual = (currentFrame > totalFrames) ? totalFrames - currentFrame : frames;
-    memcpy(dst, &source[currentFrame * m_channels], actual * m_channels * m_sampleRate);
+    memcpy(dst, &source[currentFrame * m_channels], sizeof(float) * actual * m_channels * m_sampleRate);
 
     currentFrame += actual;
+    return actual;
   }
 }

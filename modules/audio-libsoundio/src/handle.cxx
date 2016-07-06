@@ -17,16 +17,13 @@ namespace Moon
     // TODO: compare source.channels() with layout.channel_count
     // handle mono to stereo, vice versa
     int channels = source->channels();
-    printf("    yy    : %d\n", channels);
     int totalSamples = frames * channels * source->sampleRate();
-    printf("    totl    : %d\n", totalSamples);
-    printf("    aal    : %d\n", source->sampleRate());
     float* chunk = new float[totalSamples];
     // clear the array (in case we read less data than available)
     //memset(chunk, 0, totalSamples);
 
     int actual = source->read(chunk, frames);
-    printf("Read n frames: %d\n", actual);
+    //printf("Read n frames: %d\n", actual);
 
     // TODO: compare frames with framesRead
 
