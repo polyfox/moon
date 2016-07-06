@@ -43,7 +43,7 @@ namespace Moon
     if(currentFrame > totalFrames) { return 0; }
     // handle buffer edges (don't point past edge)
     int actual = (currentFrame + frames > totalFrames) ? totalFrames - currentFrame : frames;
-    memcpy(dst, &source[currentFrame], sizeof(float) * actual * m_channels * m_sampleRate);
+    memcpy(dst, &source[currentFrame * m_channels], sizeof(float) * actual * m_channels);
 
     currentFrame += actual;
     return actual;
