@@ -23,7 +23,7 @@ namespace Moon
     printf("    aal    : %d\n", source->sampleRate());
     float* chunk = new float[totalSamples];
     // clear the array (in case we read less data than available)
-    memset(chunk, 0, totalSamples);
+    //memset(chunk, 0, totalSamples);
 
     int actual = source->read(chunk, frames);
     printf("Read n frames: %d\n", actual);
