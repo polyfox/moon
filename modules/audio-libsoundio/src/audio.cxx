@@ -6,7 +6,6 @@
 //static Moon::Music music("GoSleepAlready.ogg");
 static Moon::Music music("medusa.wav");
 static Moon::Handle handle(&music);
-//static Moon::Music handle("GoSleepAlready.ogg");
 
 static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMin, int frameCountMax) {
 	struct SoundIoChannelArea *areas;

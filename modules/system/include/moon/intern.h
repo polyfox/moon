@@ -29,6 +29,15 @@ exists(const std::string& name)
 };
 
 static inline void*
+moon_memzerof(float* ptr, size_t len)
+{
+	for (size_t i = 0; i < len; ++i) {
+		ptr[i] = 0.0f;
+	}
+	return ptr;
+}
+
+static inline void*
 moon_mallocset(size_t len, int value)
 {
 	void* ptr = malloc(len);

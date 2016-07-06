@@ -6,9 +6,9 @@ namespace Moon
   Music::Music(const std::string filename) :
     file(filename, SFM_READ)
   {
-  	printf("Opened file '%s'\n", filename.c_str());
-	printf("    Sample rate : %d\n", file.samplerate ());
-    printf("    Channels    : %d\n", file.channels ());
+    printf("Opened file '%s'\n", filename.c_str());
+    printf("    Sample rate : %d\n", file.samplerate());
+    printf("    Channels    : %d\n", file.channels());
   };
 
 
@@ -16,11 +16,11 @@ namespace Moon
   }
 
   int Music::channels() {
-    return file.channels(); 
+    return file.channels();
   }
 
   int Music::sampleRate() {
-    return file.samplerate(); 
+    return file.samplerate();
   }
 
   // returns how many frames we actually read

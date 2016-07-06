@@ -1,5 +1,7 @@
 #ifndef MOON_AUDIO_LIBSOUNDIO_MIXER_H
 #define MOON_AUDIO_LIBSOUNDIO_MIXER_H
+
+#include "moon/intern.h"
 #include <soundio/soundio.h>
 #include <vector>
 #include "moon/audio/libsoundio/handle.hxx"

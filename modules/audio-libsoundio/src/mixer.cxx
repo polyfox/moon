@@ -10,7 +10,7 @@ namespace Moon {
     for (size_t channel = 0; channel < layout.channel_count; ++channel) {
       memset(areas[channel].ptr, 0, areas[channel].step * frames);
     }
-    for(auto const& handle: handles) { 
+    for(auto const& handle: handles) {
       handle->mix(areas, layout, sampleRate, frames);
     }
 
