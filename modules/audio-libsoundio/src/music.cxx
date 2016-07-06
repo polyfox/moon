@@ -15,28 +15,17 @@ namespace Moon
   Music::~Music() {
   }
 
+  int Music::channels() {
+    return file.channels(); 
+  }
 
-  void Music::mix(struct SoundIoChannelArea *areas, const struct SoundIoChannelLayout &layout, const float sampleRate, unsigned int frames) {
-    // TODO: compare file.channels() with layout.channel_count
-    // handle mono to stereo, vice versa
-    int channels = file.channels();
-    int totalSamples = frames * channels * file.samplerate();
-    float* chunk = new float[totalSamples];
-    // clear the array (in case we read less data than available)
-    memset(chunk, 0, totalSamples);
+  int Music::sampleRate() {
+    return file.samplerate(); 
+  }
 
-    int framesRead = file.readf(chunk, frames);
-    printf("Read n frames: %d\n", framesRead);
-
-    // TODO: compare frames with framesRead
-
-    for (int frame = 0; frame < framesRead; ++frame) {
-      for (size_t channel = 0; channel < channels; ++channel) {
-        float* buffer = (float*)(areas[channel].ptr + areas[channel].step * frame);
-        // mix the sample!
-        *buffer += chunk[frame * channels + channel];
-      }
-    }
-    delete[] chunk;
+  // returns how many frames we actually read
+  int Music::read(float* dst, int frames)
+  {
+    return file.readf(dst, frames);
   }
 }

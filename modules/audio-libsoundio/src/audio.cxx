@@ -2,38 +2,11 @@
 #include "moon/audio/libsoundio/audio.hxx"
 #include <vector>
 
-class SineVoice : public AbstractVoice {
-public:
-	float frequency;
-	float velocity;
-
-	float getSample(float sampleRate) {
-		if (frequency > 0)
-		{
-			return sinf((2 * M_PI * frame * frequency) / sampleRate) * velocity;
-		}
-		return 0.0f;
-	}
-
-	void reset() {
-		AbstractVoice::reset();
-		frequency = 0.0f;
-		velocity = 0.0f;
-	}
-};
-
-class SampleVoice : public AbstractVoice {
-	float getSample(float sampleRate) {
-		// TODO
-		return 0.0f;
-	}
-};
-
-static SineVoice sineVoice;
-
-static Moon::Sound handle("sfx.wav");
+//static Moon::Sound sfx("sfx.wav");
+//static Moon::Music music("GoSleepAlready.ogg");
+static Moon::Music music("medusa.wav");
+static Moon::Handle handle(&music);
 //static Moon::Music handle("GoSleepAlready.ogg");
-//static Moon::Music handle2("medusa.wav");
 
 static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMin, int frameCountMax) {
 	struct SoundIoChannelArea *areas;
@@ -124,10 +97,6 @@ namespace Moon
         // create a new mixer
         m_mixer = new Mixer();
 
-		sineVoice.active = true;
-		sineVoice.velocity = 0.2;
-		sineVoice.frequency = 480;
-        //m_mixer->voices.push_back(&sineVoice);
         m_mixer->handles.push_back(&handle);
         //m_mixer->handles.push_back(&handle2);
 

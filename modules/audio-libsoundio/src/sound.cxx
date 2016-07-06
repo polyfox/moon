@@ -11,12 +11,12 @@ namespace Moon
     printf("    Channels    : %d\n", file.channels ());
     printf("    Frames    : %d\n", file.frames());
 
-    channels = file.channels();
-    sampleRate = file.samplerate();
+    m_channels = file.channels();
+    m_sampleRate = file.samplerate();
 
     currentFrame = 0;
 
-    int totalSamples = file.frames() * channels * sampleRate;
+    int totalSamples = file.frames() * m_channels * m_sampleRate;
     source = new float[totalSamples];
     memset(source, 0, totalSamples);
 
@@ -30,20 +30,22 @@ namespace Moon
     delete[] source;
   }
 
+  int Sound::channels() {
+    return m_channels; 
+  }
 
-  void Sound::mix(struct SoundIoChannelArea *areas, const struct SoundIoChannelLayout &layout, const float sampleRate, unsigned int frames) {
-    // TODO: compare file.channels() with layout.channel_count
-    // handle mono to stereo, vice versa
+  int Sound::sampleRate() {
+    return m_sampleRate; 
+  }
 
-    // compare how many frames we still have
+  // returns how many frames we actually read
+  int Sound::read(float* dst, int frames)
+  {
+    if(currentFrame > totalFrames) { return 0; }
+    // handle buffer edges (don't point past edge)
+    int actual = (currentFrame > totalFrames) ? totalFrames - currentFrame : frames;
+    memcpy(dst, &source[currentFrame * m_channels], actual * m_channels * m_sampleRate);
 
-    for (int frame = 0; frame < frames; ++frame) {
-      for (size_t channel = 0; channel < channels; ++channel) {
-        float* buffer = (float*)(areas[channel].ptr + areas[channel].step * frame);
-        // mix the sample!
-        *buffer += source[(currentFrame + frame) * channels + channel];
-      }
-    }
-    currentFrame += frames;
+    currentFrame += actual;
   }
 }

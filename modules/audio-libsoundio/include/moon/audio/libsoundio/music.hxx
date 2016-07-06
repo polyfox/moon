@@ -4,16 +4,20 @@
 #include "moon/intern.h"
 #include <string>
 #include <sndfile.hh>
+#include "moon/audio/libsoundio/source.hxx"
 #include "moon/audio/libsoundio/mixer.hxx"
 
 namespace Moon
 {
-  class Music : public AbstractSource {
+  class Music : public Source {
     public:
       Music(const std::string filename);
       ~Music();
 
-      void mix(struct SoundIoChannelArea *areas, const struct SoundIoChannelLayout &layout, const float sampleRate, unsigned int frames);
+      int read(float* dst, int frames);
+
+      int channels();
+      int sampleRate();
     private:
       SndfileHandle file;
   };
