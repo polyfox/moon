@@ -2,11 +2,6 @@
 #include "moon/audio/libsoundio/audio.hxx"
 #include <vector>
 
-static Moon::Sound sfx("sfx.wav");
-static Moon::Music music("GoSleepAlready.ogg");
-//static Moon::Music music("medusa.wav");
-static Moon::Handle handle(&music);
-
 static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMin, int frameCountMax) {
 	struct SoundIoChannelArea *areas;
 	const struct SoundIoChannelLayout *layout = &outstream->layout;
@@ -96,17 +91,10 @@ namespace Moon
         // create a new mixer
         m_mixer = new Mixer();
 
-        m_mixer->handles.push_back(&handle);
-        //m_mixer->handles.push_back(&handle2);
-
 		err = soundio_outstream_start(m_outStream);
 		if (err) {
 			return Moon::Audio::ErrorCode::MOON_AUDIO_STREAM_START_ERROR;
-			// raise AudioError, "unable to start device"
 		}
-		//for (int voiceIndex = 0; voiceIndex < AUDIO_VOICE_MAX; ++voiceIndex) {
-		//	moonVoices[voiceIndex].reset();
-		//}
 		// Finally, after bashing your head against the table, you can finally have audio?
 		return Moon::Audio::ErrorCode::MOON_AUDIO_OK;
 	}
