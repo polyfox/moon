@@ -6,10 +6,10 @@ namespace Moon
   Sound::Sound(const std::string filename)
   {
     SndfileHandle file(filename, SFM_READ);
-  	printf("Opened file '%s'\n", filename.c_str());
-	printf("    Sample rate : %d\n", file.samplerate ());
+    printf("Opened file '%s'\n", filename.c_str());
+    printf("    Sample rate : %d\n", file.samplerate ());
     printf("    Channels    : %d\n", file.channels ());
-    printf("    Frames    : %d\n", file.frames());
+    printf("    Frames    : %ld\n", file.frames());
 
     m_channels = file.channels();
     m_sampleRate = file.samplerate();
@@ -30,11 +30,11 @@ namespace Moon
   }
 
   int Sound::channels() {
-    return m_channels; 
+    return m_channels;
   }
 
   int Sound::sampleRate() {
-    return m_sampleRate; 
+    return m_sampleRate;
   }
 
   // returns how many frames we actually read

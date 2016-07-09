@@ -12,7 +12,7 @@ namespace Moon
   class Sound : public Source {
     public:
       Sound(const std::string filename);
-      ~Sound();
+      virtual ~Sound();
 
       int read(float* dst, int frames);
 

@@ -12,7 +12,7 @@ namespace Moon
   class Music : public Source {
     public:
       Music(const std::string filename);
-      ~Music();
+      virtual ~Music();
 
       int read(float* dst, int frames);
 
