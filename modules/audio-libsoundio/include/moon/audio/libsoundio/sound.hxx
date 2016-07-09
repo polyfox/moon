@@ -23,8 +23,8 @@ namespace Moon
       int m_channels;
       int m_sampleRate;
 
-      int totalFrames;
-      int currentFrame;
+      std::uint32_t totalFrames;
+      std::uint32_t currentFrame;
   };
 };
 

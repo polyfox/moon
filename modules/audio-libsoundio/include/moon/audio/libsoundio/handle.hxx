@@ -15,6 +15,10 @@ namespace Moon {
       ~Handle();
 
       void mix(struct SoundIoChannelArea *areas, const struct SoundIoChannelLayout &layout, const float sampleRate, unsigned int frames);
+
+      float pan;
+      float pitch;
+      float gain;
     private:
       Moon::Source* source; // TODO:mrb_sound/music sources will need to be wrapped... if a source deallocates, the handle will be broken (shared_ptr)
   };

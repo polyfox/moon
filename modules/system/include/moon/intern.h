@@ -12,6 +12,9 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
+#include <cstdint>
+#include <algorithm>
+
 // _WIN32 is set for both 32 and 64 bit
 #ifdef _WIN32
 #  define stat _stat

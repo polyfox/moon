@@ -3,9 +3,9 @@
 #include <vector>
 
 static Moon::Sound sfx("sfx.wav");
-//static Moon::Music music("GoSleepAlready.ogg");
-static Moon::Music music("medusa.wav");
-static Moon::Handle handle(&sfx);
+static Moon::Music music("GoSleepAlready.ogg");
+//static Moon::Music music("medusa.wav");
+static Moon::Handle handle(&music);
 
 static void Moon_AudioWrite(struct SoundIoOutStream *outstream, int frameCountMin, int frameCountMax) {
 	struct SoundIoChannelArea *areas;
