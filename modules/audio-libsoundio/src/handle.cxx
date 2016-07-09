@@ -1,3 +1,4 @@
+#include "moon/glm.h"
 #include "moon/intern.h"
 #include "moon/audio/libsoundio/music.hxx"
 
@@ -19,7 +20,7 @@ namespace Moon
   void Handle::mix(struct SoundIoChannelArea *areas, const struct SoundIoChannelLayout &layout, const float sampleRate, unsigned int frames) {
     float pan = this->pan;
     pan = (pan + 1.0f) / 2.0f;
-    pan = std::clamp(pan, 0.0f, 1.0f);
+    pan = glm::clamp(pan, 0.0f, 1.0f);
 
     // resample and pitch
     float sampleScale = source->sampleRate() / sampleRate * pitch;
