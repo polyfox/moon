@@ -15,14 +15,14 @@ extern "C" void
 mrb_mruby_moon_system_gem_init(mrb_state* mrb)
 {
   struct RClass *moon_module = mrb_define_module(mrb, "Moon");
-  mmrb_clock_init(mrb, moon_module);
-  mmrb_rect_init(mrb, moon_module);
-  mmrb_vector1_init(mrb, moon_module);
-  mmrb_vector2_init(mrb, moon_module);
-  mmrb_vector3_init(mrb, moon_module);
-  mmrb_vector4_init(mrb, moon_module);
-  mmrb_matrix4_init(mrb, moon_module);
-  mmrb_context_init(mrb, moon_module);
+  mmrb_clock_init(mrb);
+  mmrb_rect_init(mrb);
+  mmrb_vector1_init(mrb);
+  mmrb_vector2_init(mrb);
+  mmrb_vector3_init(mrb);
+  mmrb_vector4_init(mrb);
+  mmrb_matrix4_init(mrb);
+  mmrb_context_init(mrb);
 }
 
 extern "C" void

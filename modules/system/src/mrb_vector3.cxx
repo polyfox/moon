@@ -366,8 +366,9 @@ vector3_s_cast(mrb_state *mrb, mrb_value klass)
 }
 
 MOON_C_API void
-mmrb_vector3_init(mrb_state *mrb, struct RClass *mod)
+mmrb_vector3_init(mrb_state *mrb)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *vector3_class = mrb_define_class_under(mrb, mod, "Vector3", mrb->object_class);
   MRB_SET_INSTANCE_TT(vector3_class, MRB_TT_DATA);
 

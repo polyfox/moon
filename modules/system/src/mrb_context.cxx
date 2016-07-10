@@ -63,8 +63,9 @@ context_each_symbol(mrb_state *mrb, mrb_value self)
 }
 
 MOON_C_API void
-mmrb_context_init(mrb_state *mrb, struct RClass *mod)
+mmrb_context_init(mrb_state *mrb)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *context_class = mrb_define_class_under(mrb, mod, "Context", mrb->object_class);
   MRB_SET_INSTANCE_TT(context_class, MRB_TT_DATA);
 

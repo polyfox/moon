@@ -81,8 +81,9 @@ texture_bind(mrb_state *mrb, mrb_value self)
 }
 
 MOON_C_API void
-mmrb_texture_init(mrb_state *mrb, struct RClass* mod)
+mmrb_texture_init(mrb_state *mrb)
 {
+  struct RClass* mod = mrb_define_module(mrb, "Moon");
   // A storage class for pixel data on the GPU.
   struct RClass *texture_class = mrb_define_class_under(mrb, mod, "Texture", mrb->object_class);
   MRB_SET_INSTANCE_TT(texture_class, MRB_TT_DATA);

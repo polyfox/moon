@@ -143,8 +143,9 @@ music_clear_loop(mrb_state *mrb, mrb_value self)
 }
 
 MOON_C_API void
-mmrb_music_init(mrb_state *mrb, struct RClass *mod)
+mmrb_music_init(mrb_state *mrb)
 {
+  struct RClass* mod = mrb_define_module(mrb, "Moon");
   struct RClass *music_class = mrb_define_class_under(mrb, mod, "Music", mrb->object_class);
   MRB_SET_INSTANCE_TT(music_class, MRB_TT_DATA);
 

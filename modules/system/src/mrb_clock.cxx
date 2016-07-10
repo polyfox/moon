@@ -85,8 +85,9 @@ clock_fps(mrb_state *mrb, mrb_value self)
 }
 
 MOON_C_API void
-mmrb_clock_init(mrb_state *mrb, struct RClass *mod)
+mmrb_clock_init(mrb_state *mrb)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   /* Utility class for tracking time. Internally uses glfw to get high precision
    * time.
    */

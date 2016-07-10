@@ -300,8 +300,9 @@ vector4_s_cast(mrb_state *mrb, mrb_value klass)
 }
 
 MOON_C_API void
-mmrb_vector4_init(mrb_state *mrb, struct RClass *mod)
+mmrb_vector4_init(mrb_state *mrb)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *vector4_class = mrb_define_class_under(mrb, mod, "Vector4", mrb->object_class);
   MRB_SET_INSTANCE_TT(vector4_class, MRB_TT_DATA);
 

@@ -29,9 +29,9 @@ MOON_C_API const struct mrb_data_type font_data_type = { "Moon::Font", font_free
 
 /*
  * Calculates the string's width and height in pixel using the font.
- * 
+ *
  * @param [String] filename Path to the font file
- * @param [Integer] font_size Desired font size 
+ * @param [Integer] font_size Desired font size
  */
 static mrb_value
 font_initialize(mrb_state *mrb, mrb_value self)
@@ -69,7 +69,7 @@ font_size(mrb_state *mrb, mrb_value self)
   return mrb_fixnum_value(mmrb_font_ptr(mrb, self)->GetSize());
 }
 
-/*
+/**
  * Calculates the string's width and height in pixel using the font.
  *
  * @param [String] str
@@ -90,12 +90,22 @@ font_calc_bounds(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 2, argv);
 }
 
+/**
+ * Returns the font's ascender value
+ *
+ * @return [Float]
+ */
 static mrb_value
 font_ascender_get(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, mmrb_font_ptr(mrb, self)->font->ascender);
 }
 
+/**
+ * Binds the font's texture for drawing
+ *
+ * @return [self]
+ */
 static mrb_value
 font_bind(mrb_state *mrb, mrb_value self)
 {
@@ -104,7 +114,7 @@ font_bind(mrb_state *mrb, mrb_value self)
 }
 
 MOON_C_API void
-mmrb_font_init(mrb_state *mrb, struct RClass* mod)
+mmrb_font_init(mrb_state *mrb)
 {
   struct RClass *mod = mrb_define_module(mrb, "Moon");
   /* Class for loading and rendering font files

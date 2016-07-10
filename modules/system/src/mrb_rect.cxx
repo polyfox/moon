@@ -199,7 +199,7 @@ rect_get_h(mrb_state *mrb, mrb_value self)
 }
 
 MOON_C_API void
-mmrb_rect_init(mrb_state *mrb, struct RClass *mod)
+mmrb_rect_init(mrb_state *mrb)
 {
   struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *rect_class = mrb_define_class_under(mrb, mod, "Rect", mrb->object_class);
@@ -208,12 +208,12 @@ mmrb_rect_init(mrb_state *mrb, struct RClass *mod)
   mrb_define_method(mrb, rect_class, "initialize",      rect_initialize,      MRB_ARGS_ARG(0,4));
   mrb_define_method(mrb, rect_class, "initialize_copy", rect_initialize_copy, MRB_ARGS_REQ(1));
   /* @!attribute [rw] x
-   *   @return [Integer] x coordinate 
+   *   @return [Integer] x coordinate
    */
   mrb_define_method(mrb, rect_class, "x=",              rect_set_x,           MRB_ARGS_REQ(1));
   mrb_define_method(mrb, rect_class, "x",               rect_get_x,           MRB_ARGS_NONE());
   /* @!attribute [rw] y
-   *   @return [Integer] y coordinate 
+   *   @return [Integer] y coordinate
    */
   mrb_define_method(mrb, rect_class, "y=",              rect_set_y,           MRB_ARGS_REQ(1));
   mrb_define_method(mrb, rect_class, "y",               rect_get_y,           MRB_ARGS_NONE());

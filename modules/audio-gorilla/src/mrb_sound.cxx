@@ -69,8 +69,9 @@ sound_play(mrb_state *mrb, mrb_value self)
 }
 
 MOON_C_API void
-mmrb_sound_init(mrb_state *mrb, struct RClass *mod)
+mmrb_sound_init(mrb_state *mrb)
 {
+  struct RClass* mod = mrb_define_module(mrb, "Moon");
   struct RClass *sound_class = mrb_define_class_under(mrb, mod, "Sound", mrb->object_class);
   MRB_SET_INSTANCE_TT(sound_class, MRB_TT_DATA);
 
