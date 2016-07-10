@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/archSeer/yard-mruby
-  revision: 76f6c19f51ce1c2cee4388f896ec233e478ba68b
+  revision: 231298ba349202b1a007adb016cf506285421c1c
   specs:
     yard-mruby (0.2.2)
       yard
