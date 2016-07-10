@@ -35,6 +35,8 @@ GEM
     slop (3.6.0)
     thor (0.19.1)
     yard (0.8.7.6)
+    yard-mruby (0.2.2)
+      yard
 
 PLATFORMS
   ruby
@@ -44,6 +46,7 @@ DEPENDENCIES
   rake
   redcarpet
   yard
+  yard-mruby
 
 BUNDLED WITH
-   1.11.2
+   1.12.3
