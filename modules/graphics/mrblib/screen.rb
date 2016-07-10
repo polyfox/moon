@@ -1,13 +1,23 @@
 module Moon
+  # Screen represents the actual game window.
   class Screen
+    # Screen width
     attr_reader :w
+    # Screen height
     attr_reader :h
     attr_reader :rect
+    # Scale of the screen coordinates.
+    # By default, we map 1:1, each unit is 1px.
     attr_reader :scale
+    # The color with which the screen is cleared at the start of every frame.
+    # Black by default.
     attr_reader :clear_color
+    # Underlying window implementation (in default case GLFW).
     attr_reader :window
     attr_accessor :log
 
+    # Creates a new game window with the given width and height.
+    #
     # @param [Integer] w
     # @param [Integer] h
     def initialize(w, h)
@@ -58,7 +68,7 @@ module Moon
       "#{@window.window_attrib(GLFW::CONTEXT_VERSION_MAJOR).to_s}.#{@window.window_attrib(GLFW::CONTEXT_VERSION_MINOR).to_s}"
     end
 
-    # Returns the guestimated version of GLSL supported
+    # Returns the guesstimated version of GLSL supported
     #
     # @return [String]
     def glsl_version
@@ -114,10 +124,14 @@ module Moon
       OpenGL.clear_color = @clear_color.to_a
     end
 
+    # Updates the Renderer's projection_matrix to match the screen resolution.
+    # This is called any time the window is resized.
     def update_projection
       Renderer.instance.projection_matrix = Matrix4.ortho 0.0, w / scale, h / scale, 0.0, -1.0, 1.0
     end
 
+    # Resize the game window to a certain size.
+    #
     # @param [Integer] w
     # @param [Integer] h
     def resize(w, h)
@@ -134,6 +148,7 @@ module Moon
     end
 
     attr_reader :title
+    # Sets the window title.
     # @param [String] title
     def title=(title)
       @title = title
