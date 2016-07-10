@@ -3,67 +3,39 @@ module Moon
     extend TypedAttributes
     include Shadable
 
-    # @!attribute [r] :w
-    #   @return [Float]
+    # @return [Float]
     attr_reader :w
 
-    # @!attribute [r] :h
-    #   @return [Float]
+    # @return [Float]
     attr_reader :h
 
-    # @!attribute :tilesize
-    #   @return [Vector2] Taken from the tileset #w and #h
+    # @return [Vector2] Taken from the tileset #w and #h
     attr_reader :tilesize
 
-    # @!attribute :datasize
-    #   @return [Vector3] Used for denoting the size of the data and data_zmap
+    # @return [Vector3] Used for denoting the size of the data and data_zmap
     attribute :datasize, Moon::Vector3
     private :datasize=
 
-    # @!attribute :tileset
-    #   @return [Spritesheet]
+    # @return [Spritesheet]
     attribute :tileset, Spritesheet
 
-    # @!attribute [r] :data
-    #   @return [Array<Integer>]
+    # @return [Array<Integer>]
     attribute :data, Array
     private :data=
 
-    # @!attribute :data_zmap
-    #   @return [Array<Float>]
+    # @return [Array<Float>]
     attribute :data_zmap, Array, nil
     private :data_zmap=
 
-    # @!attribute :layer_opacity
-    #   @return [Array<Float>]
+    # @return [Array<Float>]
     attribute :layer_opacity, Array, nil
 
-    # @!attribute :shader
-    #   @return [Shader]
     attribute :shader, Shader
-
-    # @!attribute :texture
-    #   @return [Texture]
     attribute :texture, Texture
-
-    # @!attribute :opacity
-    #   @return [Float]
     attribute :opacity, Float
-
-    # @!attribute :angle
-    #   @return [Numeric]
     attribute :angle, Numeric
-
-    # @!attribute :origin
-    #   @return [Vector2]
     attribute :origin,  Vector2
-
-    # @!attribute :color
-    #   @return [Vector4]
     attribute :color,  Vector4
-
-    # @!attribute :tone
-    #   @return [Vector4]
     attribute :tone,  Vector4
 
     # (see #set)
