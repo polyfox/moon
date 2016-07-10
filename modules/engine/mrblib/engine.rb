@@ -3,6 +3,8 @@ module Moon
   class EngineQuit < Exception
   end
 
+  # Engine wraps all the components with a bow. It's responsible for
+  # bootstrapping a new Screen window, setting up OpenGL and Audio.
   class Engine
     # @!attribute step
     #   @return [Proc] per frame step function
@@ -14,8 +16,11 @@ module Moon
     attr_reader :screen
     attr_reader :input
 
+    # Initializes the engine. The block should be a step function to be called
+    # on every frame.
+    #
     # @yieldparam [Engine] engine
-    # @yieldparam [Float] delta
+    # @yieldparam [Float] delta time since last frame
     def initialize(&block)
       @config = { width: 800, height: 600 }
       @screen = nil
@@ -25,7 +30,7 @@ module Moon
       @log = STDERR
     end
 
-    # @return [Float]
+    # @return [Float] Returns the time since the engine has started.
     def uptime
       GLFW.time
     end
@@ -57,7 +62,7 @@ module Moon
       @log.puts 'GLEW initialized'
     end
 
-    def setup_default_shaders
+    private def setup_default_shaders
       @shaders = {}
       sd = Moon::Shader::DEFAULTS
       shader_path = Moon::Shader.is_legacy ? '120' : '330'
@@ -108,6 +113,8 @@ module Moon
     rescue EngineQuit
     end
 
+    # Sets everything up, runs the main loop, and ensures we take care of
+    # cleanup on quit.
     def run
       setup
       main
