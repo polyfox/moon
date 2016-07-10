@@ -47,7 +47,8 @@ module Moon
       set(options)
     end
 
-    # Sets multiple properties at once, this will regenerate the buffers
+    # Sets multiple properties at once, this will regenerate the buffers just
+    # once after setting all the values.
     #
     # @param [Hash<Symbol, Object>] options
     # @option options [Font] :font

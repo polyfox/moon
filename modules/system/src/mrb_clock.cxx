@@ -44,14 +44,20 @@ clock_initialize_copy(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-// @return [Float]
+/* Updates the clock and returns the last delta at the same time.
+ *
+ * @return [Float]
+ */
 static mrb_value
 clock_restart(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, mmrb_clock_ptr(mrb, self)->Restart());
 }
 
-// @return [self]
+/* Updates the clock. This needs to be called each frame.
+ *
+ * @return [self]
+ */
 static mrb_value
 clock_update(mrb_state *mrb, mrb_value self)
 {
@@ -59,14 +65,19 @@ clock_update(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-// @return [Float]
+/*
+ * @return [Float] Returns the time since last frame (in ms)
+ */
 static mrb_value
 clock_delta(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, mmrb_clock_ptr(mrb, self)->GetDelta());
 }
 
-// @return [Integer]
+/* Returns the number of frames per second.
+ *
+ * @return [Integer]
+ */
 static mrb_value
 clock_fps(mrb_state *mrb, mrb_value self)
 {
@@ -76,7 +87,9 @@ clock_fps(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_clock_init(mrb_state *mrb, struct RClass *mod)
 {
-  // Utility class for tracking time.
+  /* Utility class for tracking time. Internally uses glfw to get high precision
+   * time.
+   */
   struct RClass *clock_class = mrb_define_class_under(mrb, mod, "Clock", mrb->object_class);
   MRB_SET_INSTANCE_TT(clock_class, MRB_TT_DATA);
 
