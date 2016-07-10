@@ -112,6 +112,7 @@ module Moon
     end
 
     alias :set_tileset :tileset=
+    private :set_tileset
     # @param [Spritesheet] tileset
     def tileset=(tileset)
       set_tileset tileset
@@ -119,6 +120,7 @@ module Moon
     end
 
     alias :set_layer_opacity :layer_opacity=
+    private :set_layer_opacity
     # @param [Array<Float>] layer_opacity
     def layer_opacity=(layer_opacity)
       set_layer_opacity layer_opacity
