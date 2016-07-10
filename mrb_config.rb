@@ -19,6 +19,7 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
 
   conf.gem core: 'mruby-eval'
   conf.gem core: 'mruby-bin-debugger'
+  conf.gem github: 'IceDragon200/mruby-patch-core'
   conf.gem github: 'iij/mruby-io'                # General IO stuff, File system blah de dah.
   conf.gem github: 'iij/mruby-dir'               # Directory access
   conf.gem github: 'iij/mruby-regexp-pcre'       # Regular expression engine :3
