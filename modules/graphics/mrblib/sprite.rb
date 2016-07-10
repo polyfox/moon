@@ -1,4 +1,7 @@
 module Moon
+  # Sprite represents an image on screen. It has a texture and a set of
+  # attributes. Multiple sprites can use the same texture to render different
+  # variations of the same texture.
   class Sprite
     extend TypedAttributes
     include Shadable
@@ -30,17 +33,24 @@ module Moon
     end
 
     alias :set_texture :texture=
+    private :set_texture
     def texture= texture
       set_texture texture
       generate_buffers
     end
 
     alias :set_clip_rect :clip_rect=
+    private :set_clip_rect
     def clip_rect= rect
       set_clip_rect rect
       generate_buffers
     end
 
+    # Render the sprite at given coordinates.
+    #
+    # @param [Integer] x
+    # @param [Integer] y
+    # @param [Integer] z
     def render(x, y, z)
       @rotation_matrix.clear
       @rotation_matrix.rotate!(@angle, [0, 0, 1])

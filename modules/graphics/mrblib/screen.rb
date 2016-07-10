@@ -164,6 +164,9 @@ module Moon
     end
 
     class << self
+      # Represents the currently active Screen.
+      # (we can technically create more than one window with GLFW and toggle
+      # between them)
       attr_accessor :current
     end
   end

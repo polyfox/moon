@@ -15,6 +15,8 @@ module Moon
     BLACK = Moon::Vector4.new(0, 0, 0, 1)
 
     attribute :shader,  Shader
+    # Number of tiles on the spritesheet.
+    # Dynamically calculated based on the texture and tile size.
     attr_reader :cell_count
     attribute :texture, Texture
     attr_reader :w, :h
@@ -22,8 +24,8 @@ module Moon
     private :texture=
 
     # @param [Texture] texture
-    # @param [Integer] tile_width
-    # @param [Integer] tile_height
+    # @param [Integer] tile_width width of a single tile
+    # @param [Integer] tile_height height of a single tile
     def initialize texture, tile_width, tile_height
       self.texture = texture
       @w = tile_width
@@ -42,10 +44,14 @@ module Moon
       generate_buffers
     end
 
+    # Render a single tile on screen at the given coordinates (and according to
+    # the options).
+    #
     # @param [Integer] x
     # @param [Integer] y
     # @param [Integer] z
-    # @param [Integer] index
+    # @param [Integer] index tile index, starting with 0 on the top left of the
+    #   sheet.
     # @param [Hash<Symbol, Object>] options
     # @option options [Float] angle
     # @option options [Vector2] origin
