@@ -115,6 +115,7 @@ mmrb_vector1_value(mrb_state *mrb, Moon::Vector1 vec)
   return set_vector1(mrb, new_vector1(mrb), vec);
 }
 
+// @param [Float] x
 static mrb_value
 vector1_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -125,6 +126,7 @@ vector1_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+// @return [self]
 static mrb_value
 vector1_initialize_copy(mrb_state *mrb, mrb_value self)
 {
@@ -171,102 +173,120 @@ vector1_x_setter(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_negate(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector1_value(mrb, -get_vector1_value(mrb, self));
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_identity(mrb_state *mrb, mrb_value self)
 {
   return mrb_obj_dup(mrb, self);
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_add(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator(+);
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_sub(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator(-);
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_mul(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator(*);
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_div(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator(/);
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_not(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector1_value(mrb, Moon::Vector1(~(Moon::Vector1i(*mmrb_vector1_ptr(mrb, self)))));
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_modulo(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(%);
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_shl(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(<<);
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_shr(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(>>);
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_and(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(&);
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_or(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(|);
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_xor(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(^);
 }
 
+// @return [Float]
 static mrb_value
 vector1_dot(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, glm::dot(get_vector1_value(mrb, self), vector1_from_mrb_args(mrb)));
 }
 
+// @return [Vector1]
 static mrb_value
 vector1_normalize(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector1_value(mrb, glm::normalize(get_vector1_value(mrb, self)));
 }
 
+// @return [Float]
 static mrb_value
 vector1_length(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, glm::length(get_vector1_value(mrb, self)));
 }
 
+// @param [Vector2] other
+// @return [Float]
 static mrb_value
 vector1_distance(mrb_state *mrb, mrb_value self)
 {
@@ -274,6 +294,9 @@ vector1_distance(mrb_state *mrb, mrb_value self)
   return mrb_float_value(mrb, glm::dot(diff, diff));
 }
 
+// @param [Vector1] other
+// @param [Float] delta
+// @return [Vector1]
 static mrb_value
 vector1_lerp(mrb_state *mrb, mrb_value self)
 {
@@ -289,18 +312,21 @@ vector1_set(mrb_state *mrb, mrb_value self)
   return set_vector1(mrb, self, vector1_from_mrb_args(mrb));
 }
 
+// @return [Integer]
 static mrb_value
 vector1_to_int(mrb_state *mrb, mrb_value self)
 {
   return mrb_fixnum_value((mrb_int)mmrb_vector1_ptr(mrb, self)->x);
 }
 
+// @return [Float]
 static mrb_value
 vector1_to_f(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, (mrb_float)mmrb_vector1_ptr(mrb, self)->x);
 }
 
+// @return [Array<Float>]
 static mrb_value
 vector1_to_a(mrb_state *mrb, mrb_value self)
 {
@@ -308,6 +334,7 @@ vector1_to_a(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 1, argv);
 }
 
+// @return [Array<Float>]
 static mrb_value
 vector1_s_extract(mrb_state *mrb, mrb_value self)
 {
@@ -316,6 +343,7 @@ vector1_s_extract(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 1, argv);
 }
 
+// @return [Array<Float>]
 static mrb_value
 vector1_s_cast(mrb_state *mrb, mrb_value klass)
 {
@@ -334,6 +362,8 @@ mmrb_vector1_init(mrb_state *mrb, struct RClass *mod)
   mrb_define_method(mrb, vector1_class, "coerce",          vector1_coerce,          MRB_ARGS_REQ(1));
   mrb_define_method(mrb, vector1_class, "==",              vector1_eq,              MRB_ARGS_REQ(1));
   /* attribute setters */
+  // @!attribute [rw] x
+  //   @return [Integer] x coordinate
   mrb_define_method(mrb, vector1_class, "x",               vector1_x_getter,        MRB_ARGS_NONE());
   mrb_define_method(mrb, vector1_class, "x=",              vector1_x_setter,        MRB_ARGS_REQ(1));
   mrb_define_method(mrb, vector1_class, "set",             vector1_set,             MRB_ARGS_ANY());

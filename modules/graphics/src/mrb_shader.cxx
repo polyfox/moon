@@ -34,6 +34,12 @@ shader_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/*
+ * Set as the currently active shader. We use this in render methods to activate
+ * the shader before rendering.
+ *
+ * @return [self]
+ */
 static mrb_value
 shader_use(mrb_state *mrb, mrb_value self)
 {
@@ -41,6 +47,13 @@ shader_use(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/*
+ * Pass uniform data into the shader.
+ *
+ * @param [String] cname Name of the uniform.
+ * @param [Float, Fixnum, Vector2, Vector3, Vector4, Matrix4] data
+ * @return [self]
+ */
 static mrb_value
 shader_set_uniform(mrb_state *mrb, mrb_value self)
 {

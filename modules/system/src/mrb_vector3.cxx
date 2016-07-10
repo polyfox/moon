@@ -145,18 +145,21 @@ vector3_set_z(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_negate(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector3_value(mrb, -get_vector3_value(mrb, self));
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_identity(mrb_state *mrb, mrb_value self)
 {
   return mrb_obj_dup(mrb, self);
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_normalize(mrb_state *mrb, mrb_value self)
 {
@@ -169,6 +172,7 @@ vector3_length(mrb_state *mrb, mrb_value self)
   return mrb_float_value(mrb, glm::length(get_vector3_value(mrb, self)));
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_add(mrb_state *mrb, mrb_value self)
 {
@@ -181,60 +185,70 @@ vector3_sub(mrb_state *mrb, mrb_value self)
   m_vector_operator(-);
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_mul(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator(*);
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_div(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator(/);
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_not(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector3_value(mrb, Moon::Vector3(~(glm::ivec3(*mmrb_vector3_ptr(mrb, self)))));
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_modulo(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(%);
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_shl(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(<<);
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_shr(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(>>);
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_and(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(&);
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_or(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(|);
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_xor(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(^);
 }
 
+// @return [Float]
 static mrb_value
 vector3_dot(mrb_state *mrb, mrb_value self)
 {
@@ -254,6 +268,7 @@ vector3_cross(mrb_state *mrb, mrb_value self)
   return dest_vec;
 }
 
+// @return [Float]
 static mrb_value
 vector3_distance(mrb_state *mrb, mrb_value self)
 {
@@ -261,6 +276,7 @@ vector3_distance(mrb_state *mrb, mrb_value self)
   return mrb_float_value(mrb, glm::dot(diff, diff));
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_rotate(mrb_state *mrb, mrb_value self)
 {
@@ -321,6 +337,7 @@ vector3_set(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+// @return [Array<Float>]
 static mrb_value
 vector3_to_a(mrb_state *mrb, mrb_value self)
 {
@@ -331,6 +348,7 @@ vector3_to_a(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 3, argv);
 }
 
+// @return [Array<Float>]
 static mrb_value
 vector3_s_extract(mrb_state *mrb, mrb_value klass)
 {

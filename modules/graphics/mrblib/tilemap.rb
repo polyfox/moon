@@ -1,4 +1,7 @@
 module Moon
+  # An optimized implementation for rendering a tilemap. The VBO is cached and
+  # we only execute one draw call per iteration to render the entire map 
+  # (basically no overhead).
   class Tilemap
     extend TypedAttributes
     include Shadable
