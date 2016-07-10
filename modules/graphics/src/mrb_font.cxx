@@ -107,6 +107,8 @@ MOON_C_API void
 mmrb_font_init(mrb_state *mrb, struct RClass* mod)
 {
   struct RClass *mod = mrb_define_module(mrb, "Moon");
+  // Class for loading and rendering font files
+  // Supported formats are .ttf and possibly .otf
   struct RClass *font_class = mrb_define_class_under(mrb, mod, "Font", mrb->object_class);
   MRB_SET_INSTANCE_TT(font_class, MRB_TT_DATA);
 

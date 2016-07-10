@@ -1,4 +1,5 @@
 module Moon
+  # Spritesheet is a specialized class for rendering cell based sprites.
   class Spritesheet
     extend TypedAttributes
     include Shadable

@@ -25,6 +25,7 @@ mmrb_texture_load_file(mrb_state *mrb, const char *filename)
   return mrb_obj_new(mrb, mmrb_get_texture_class(mrb), 1, &fn);
 }
 
+// @param [String] filename
 static mrb_value
 texture_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -50,12 +51,16 @@ texture_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+// @!attribute [r] w
+//   @return [Float] width of the texture
 static mrb_value
 texture_width(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, mmrb_texture_ptr(mrb, self)->GetWidth());
 }
 
+// @!attribute [r] h
+//   @return [Float] height of the texture
 static mrb_value
 texture_height(mrb_state *mrb, mrb_value self)
 {
@@ -78,6 +83,7 @@ texture_bind(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_texture_init(mrb_state *mrb, struct RClass* mod)
 {
+  // A storage class for pixel data on the GPU.
   struct RClass *texture_class = mrb_define_class_under(mrb, mod, "Texture", mrb->object_class);
   MRB_SET_INSTANCE_TT(texture_class, MRB_TT_DATA);
 

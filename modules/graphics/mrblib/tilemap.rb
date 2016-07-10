@@ -16,7 +16,6 @@ module Moon
     attribute :datasize, Moon::Vector3
     private :datasize=
 
-    # @return [Spritesheet]
     attribute :tileset, Spritesheet
 
     # @return [Array<Integer>]

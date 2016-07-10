@@ -174,7 +174,7 @@ matrix4_initialize(mrb_state *mrb, mrb_value self)
 
 /*
  * @overload initialize_copy(Matrix4 other)
- * @return [nil]
+ * @return [self]
  */
 static mrb_value
 matrix4_initialize_copy(mrb_state *mrb, mrb_value self)
