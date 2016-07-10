@@ -18,7 +18,7 @@ mmrb_get_texture_class(mrb_state *mrb)
 
 
 MOON_C_API const struct mrb_data_type texture_data_type;
-MOON_C_API void mmrb_texture_init(mrb_state *mrb, struct RClass* mod);
+MOON_C_API void mmrb_texture_init(mrb_state *mrb);
 MOON_C_API mrb_value mmrb_texture_load_file(mrb_state *mrb, const char *filename);
 
 static inline Moon::Texture*

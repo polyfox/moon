@@ -8,7 +8,7 @@
 #include "moon/shader.hxx"
 
 MOON_C_API const struct mrb_data_type shader_data_type;
-MOON_C_API void mmrb_shader_init(mrb_state *mrb, struct RClass* mod);
+MOON_C_API void mmrb_shader_init(mrb_state *mrb);
 
 static inline Moon::Shader*
 mmrb_shader_ptr(mrb_state *mrb, mrb_value self)
