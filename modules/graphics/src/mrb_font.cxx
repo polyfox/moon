@@ -28,7 +28,10 @@ font_free(mrb_state *mrb, void *p)
 MOON_C_API const struct mrb_data_type font_data_type = { "Moon::Font", font_free };
 
 /*
- * Font#initialize(filename, size)
+ * Calculates the string's width and height in pixel using the font.
+ * 
+ * @param [String] filename Path to the font file
+ * @param [Integer] font_size Desired font size 
  */
 static mrb_value
 font_initialize(mrb_state *mrb, mrb_value self)
@@ -67,7 +70,6 @@ font_size(mrb_state *mrb, mrb_value self)
 }
 
 /*
- * @method Font#calc_bounds
  * Calculates the string's width and height in pixel using the font.
  *
  * @param [String] str
@@ -104,6 +106,7 @@ font_bind(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_font_init(mrb_state *mrb, struct RClass* mod)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *font_class = mrb_define_class_under(mrb, mod, "Font", mrb->object_class);
   MRB_SET_INSTANCE_TT(font_class, MRB_TT_DATA);
 

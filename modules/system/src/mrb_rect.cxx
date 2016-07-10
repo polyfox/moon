@@ -212,6 +212,7 @@ rect_get_h(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_rect_init(mrb_state *mrb, struct RClass *mod)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *rect_class = mrb_define_class_under(mrb, mod, "Rect", mrb->object_class);
   MRB_SET_INSTANCE_TT(rect_class, MRB_TT_DATA);
 

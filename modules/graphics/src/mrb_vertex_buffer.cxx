@@ -166,6 +166,7 @@ vbo_add_quad_vertices(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_vbo_init(mrb_state *mrb, struct RClass* mod)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *vbo_class = mrb_define_class_under(mrb, mod, "VertexBuffer", mrb->object_class);
   MRB_SET_INSTANCE_TT(vbo_class, MRB_TT_DATA);
 

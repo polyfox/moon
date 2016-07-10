@@ -104,6 +104,7 @@ shader_s_is_legacy_set(mrb_state *mrb, mrb_value klass)
 MOON_C_API void
 mmrb_shader_init(mrb_state *mrb, struct RClass* mod)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *shader_class = mrb_define_class_under(mrb, mod, "Shader", mrb->object_class);
   MRB_SET_INSTANCE_TT(shader_class, MRB_TT_DATA);
 

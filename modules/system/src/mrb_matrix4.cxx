@@ -667,6 +667,7 @@ matrix4_s_ortho(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_matrix4_init(mrb_state *mrb, struct RClass* mod)
 {
+  // struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *matrix4_class = mrb_define_class_under(mrb, mod, "Matrix4", mrb->object_class);
   MRB_SET_INSTANCE_TT(matrix4_class, MRB_TT_DATA);
 

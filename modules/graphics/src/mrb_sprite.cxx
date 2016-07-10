@@ -66,6 +66,7 @@ sprite_generate_buffers(mrb_state *mrb, mrb_value self)
 MOON_C_API void
 mmrb_sprite_init(mrb_state *mrb, struct RClass* mod)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *sprite_class = mrb_define_class_under(mrb, mod, "Sprite", mrb->object_class);
   mrb_define_method(mrb, sprite_class, "generate_buffers", sprite_generate_buffers, MRB_ARGS_NONE());
 }

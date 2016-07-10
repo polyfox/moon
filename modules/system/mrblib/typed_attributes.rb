@@ -13,6 +13,9 @@ module Moon
     # @param [Symbol] name
     # @param [Array<Class>] klasses
     # @return [Symbol] attribute name
+    # @!macro [attach] attribute
+    #   @!attribute $1
+    #     @return [$2] Returns the value of attribute $1.
     def attribute(name, *klasses)
       attr_reader name
       varname = "@#{name}"
