@@ -25,7 +25,7 @@ MOON_C_API const struct mrb_data_type vbo_data_type = { "Moon::VertexBuffer", vb
 
 /* Creates a new buffer to store vertex and index data on the GPU.
  * @param [Integer] usage Intended usage mode that hints to OpenGL on how to
- * best store the data. 
+ * best store the data.
  *
  * @return [VertexBuffer]
  */
@@ -80,6 +80,14 @@ vbo_render(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/**
+ * Adds a vertex to the buffer
+ *
+ * @param [Vector2] pos
+ * @param [Vector2] texture_coord
+ * @param [Vector4] color
+ * @return [self]
+ */
 static mrb_value
 vbo_push_back(mrb_state *mrb, mrb_value self)
 {
@@ -95,6 +103,12 @@ vbo_push_back(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/**
+ * Pushes the list of indices into the buffer
+ *
+ * @param [Array<Integer>] indices
+ * @return [self]
+ */
 static mrb_value
 vbo_push_indices(mrb_state *mrb, mrb_value self)
 {
@@ -127,7 +141,7 @@ vbo_index_count(mrb_state *mrb, mrb_value self)
 }
 
 static void
-make_quad(Moon::Vertex vertices[4], Moon::IntRect quad_rect, Moon::FloatRect quad_texture_rect, Moon::Vector4 color)
+make_quad(Moon::Vertex vertices[4], Moon::IntRect& quad_rect, Moon::FloatRect& quad_texture_rect, Moon::Vector4& color)
 {
   GLfloat x0, x1, y0, y1;
   GLfloat tx0, tx1, ty0, ty1;
@@ -167,8 +181,13 @@ vbo_quad_m(mrb_state *mrb, mrb_value self, Moon::Vertex vertices[4])
   make_quad(vertices, quad_rect, quad_texture_rect, color);
 }
 
-/* Add a quad to the buffer, generating the indices for it.
- * @todo params
+/**
+ * Pushes a quad into the buffer, the buffer's indicies will be pushed as
+ * [0, 1, 3, 2, 3, 1] automagically.
+ *
+ * @param [Array<Integer>[4], Moon::Rect] rect the quad's actual rect
+ * @param [Array<Float>[4]] texture_rect a normalized rectangle for the texture coords, normally using [0, 0, 1, 1] to cover the entire texture
+ * @param [Array<Float>[4], Vector4] color the color of the quad, normally [1, 1, 1, 1], meaning pure white, the color will be multiplied into the quad's texture
  * @return [self]
  */
 static mrb_value
@@ -183,8 +202,12 @@ vbo_add_quad(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-/* Add a quad to the buffer, *WITHOUT* generating the indices for it.
- * @todo params
+/**
+ * Pushes a quad into the buffer, the indicies must be pushed manually, this is only for convience.
+ *
+ * @param [Array<Integer>[4], Moon::Rect] rect the quad's actual rect
+ * @param [Array<Float>[4]] texture_rect a normalized rectangle for the texture coords, normally using [0, 0, 1, 1] to cover the entire texture
+ * @param [Array<Float>[4], Vector4] color the color of the quad, normally [1, 1, 1, 1], meaning pure white, the color will be multiplied into the quad's texture
  * @return [self]
  */
 static mrb_value
