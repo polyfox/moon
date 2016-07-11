@@ -84,7 +84,7 @@ vbo_render(mrb_state *mrb, mrb_value self)
  * Adds a single vertex to the buffer
  *
  * @param [Vector2] pos
- * @param [Vector2] texture_coord
+ * @param [Vector2] tex_coord
  * @param [Vector4] color
  * @return [self]
  */
@@ -113,12 +113,12 @@ static mrb_value
 vbo_push_indices(mrb_state *mrb, mrb_value self)
 {
   mrb_int length;
-  mrb_value *values;
-  mrb_get_args(mrb, "a", &values, &length);
+  mrb_value *indices;
+  mrb_get_args(mrb, "a", &indices, &length);
   // hell no, am I gonna malloc an array for this just to push it at once.
   // its a bit ugly to be resizing it each time though...
   for (int i = 0; i < length; ++i) {
-    GLuint index = mrb_int(mrb, values[i]);
+    GLuint index = mrb_int(mrb, indices[i]);
     mmrb_vertex_buffer_ptr(mrb, self)->PushBackIndices(&index, 1);
   }
   return self;

@@ -24,7 +24,7 @@ module Moon
 
     # Set the texture as the currently active texture in slot 0.
     # @param [Texture] texture texture to bind
-    # @param [Integer] 0 (the id of the texture slot)
+    # @return [Integer] 0 (the id of the texture slot)
     private def bind_texture(texture)
       OpenGL.active_texture(OpenGL::TEXTURE0)
       texture.bind

@@ -63,9 +63,9 @@ static mrb_value
 shader_set_uniform(mrb_state *mrb, mrb_value self)
 {
   char *cname;
-  mrb_value obj;
+  mrb_value data;
   Moon::Shader *shader;
-  mrb_get_args(mrb, "zo", &cname, &obj);
+  mrb_get_args(mrb, "zo", &cname, &data);
   shader = mmrb_shader_ptr(mrb, self);
   std::string name(cname);
 
