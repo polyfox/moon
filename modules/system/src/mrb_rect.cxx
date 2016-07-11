@@ -111,10 +111,12 @@ mmrb_rect_value(mrb_state *mrb, Moon::IntRect rect)
   return result;
 }
 
-/* @param [Integer] x
+/*
+ * @param [Integer] x
  * @param [Integer] y
  * @param [Integer] w
  * @param [Integer] h
+ * @return [Rect]
  */
 static mrb_value
 rect_initialize(mrb_state *mrb, mrb_value self)
@@ -207,24 +209,12 @@ mmrb_rect_init(mrb_state *mrb)
 
   mrb_define_method(mrb, rect_class, "initialize",      rect_initialize,      MRB_ARGS_ARG(0,4));
   mrb_define_method(mrb, rect_class, "initialize_copy", rect_initialize_copy, MRB_ARGS_REQ(1));
-  /* @!attribute [rw] x
-   *   @return [Integer] x coordinate
-   */
   mrb_define_method(mrb, rect_class, "x=",              rect_set_x,           MRB_ARGS_REQ(1));
   mrb_define_method(mrb, rect_class, "x",               rect_get_x,           MRB_ARGS_NONE());
-  /* @!attribute [rw] y
-   *   @return [Integer] y coordinate
-   */
   mrb_define_method(mrb, rect_class, "y=",              rect_set_y,           MRB_ARGS_REQ(1));
   mrb_define_method(mrb, rect_class, "y",               rect_get_y,           MRB_ARGS_NONE());
-  /* @!attribute [rw] w
-   *   @return [Integer] rectangle width
-   */
   mrb_define_method(mrb, rect_class, "w=",              rect_set_w,           MRB_ARGS_REQ(1));
   mrb_define_method(mrb, rect_class, "w",               rect_get_w,           MRB_ARGS_NONE());
-  /* @!attribute [rw] h
-   *   @return [Integer] rectangle height
-   */
   mrb_define_method(mrb, rect_class, "h=",              rect_set_h,           MRB_ARGS_REQ(1));
   mrb_define_method(mrb, rect_class, "h",               rect_get_h,           MRB_ARGS_NONE());
 }

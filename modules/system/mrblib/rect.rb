@@ -1,5 +1,14 @@
 module Moon
   class Rect
+    # @!attribute [rw] x
+    #  @return [Integer] x coordinate
+    # @!attribute [rw] y
+    #  @return [Integer] y coordinate
+    # @!attribute [rw] w
+    #  @return [Integer] rectangle width
+    # @!attribute [rw] h
+    #  @return [Integer] rectangle height
+
     # Resets all the properties to 0
     #
     # @return [self]

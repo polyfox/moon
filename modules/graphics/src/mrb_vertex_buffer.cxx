@@ -23,6 +23,12 @@ vbo_free(mrb_state *mrb, void *p)
 
 MOON_C_API const struct mrb_data_type vbo_data_type = { "Moon::VertexBuffer", vbo_free };
 
+/* Creates a new buffer to store vertex and index data on the GPU.
+ * @param [Integer] usage Intended usage mode that hints to OpenGL on how to
+ * best store the data. 
+ *
+ * @return [VertexBuffer]
+ */
 static mrb_value
 vbo_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -38,6 +44,10 @@ vbo_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/* Clears the buffer.
+ *
+ * @return [self]
+ */
 static mrb_value
 vbo_clear(mrb_state *mrb, mrb_value self)
 {
@@ -45,6 +55,19 @@ vbo_clear(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/* Binds the VAO and renders the buffer.
+ * We can optionally specify an offset which "is added to each index before
+ * pulling from the vertex data". That makes it easy to just use the same IBO,
+ * but use it to render different meshes.
+ *
+ * One usecase for that is in the Spritesheet, we use a 1,3,2,4 IBO with a VBO
+ * for all the different tiles. Simply specifying the tile index as the offset
+ * will render the correct tile.
+ *
+ * @param [Integer] mode OpenGL mode to use for rendering.
+ * @param [Integer] offset optional offset into the vertex data
+ * @return [self]
+ */
 static mrb_value
 vbo_render(mrb_state *mrb, mrb_value self)
 {
@@ -87,12 +110,16 @@ vbo_push_indices(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/* @return [Integer] Returns the number of VBO vertices stored in the buffer.
+*/
 static mrb_value
 vbo_vertex_count(mrb_state *mrb, mrb_value self)
 {
   return mrb_fixnum_value(mmrb_vertex_buffer_ptr(mrb, self)->GetVertexCount());
 }
 
+/* @return [Integer] Returns the number of IBO indices stored in the buffer.
+*/
 static mrb_value
 vbo_index_count(mrb_state *mrb, mrb_value self)
 {
@@ -140,6 +167,10 @@ vbo_quad_m(mrb_state *mrb, mrb_value self, Moon::Vertex vertices[4])
   make_quad(vertices, quad_rect, quad_texture_rect, color);
 }
 
+/* Add a quad to the buffer, generating the indices for it.
+ * @todo params
+ * @return [self]
+ */
 static mrb_value
 vbo_add_quad(mrb_state *mrb, mrb_value self)
 {
@@ -152,6 +183,10 @@ vbo_add_quad(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/* Add a quad to the buffer, *WITHOUT* generating the indices for it.
+ * @todo params
+ * @return [self]
+ */
 static mrb_value
 vbo_add_quad_vertices(mrb_state *mrb, mrb_value self)
 {
