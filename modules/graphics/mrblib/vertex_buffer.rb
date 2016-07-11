@@ -2,6 +2,9 @@ module Moon
   # A ruby representation of an OpenGL VBO on the GPU. It will automatically
   # update the data as needed in one single upload to the GPU before the buffer
   # is being used. Note that it will automatically generate the acompanying IBO.
+  #
+  # This class is low-level and you shouldn't need to interact with it for most
+  # usecases; unless you're implementing your own rendering.
   class VertexBuffer
     # @!group Buffer types
     # Buffer will be dynamically updated.
