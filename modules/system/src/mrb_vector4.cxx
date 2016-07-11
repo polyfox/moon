@@ -252,6 +252,10 @@ vector4_xor(mrb_state *mrb, mrb_value self)
   m_vector_int_operator(^);
 }
 
+/* Returns the dot product of self and other, i.e., result = self * other.
+ * @param [Vector4] other
+ * @return [Float]
+ */
 static mrb_value
 vector4_dot(mrb_state *mrb, mrb_value self)
 {

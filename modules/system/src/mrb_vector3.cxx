@@ -265,6 +265,10 @@ vector3_dot(mrb_state *mrb, mrb_value self)
   return mrb_float_value(mrb, glm::dot(get_vector3_value(mrb, self), *other));
 }
 
+/* Returns the cross product of self and other.
+ * @param [Vector3] other
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_cross(mrb_state *mrb, mrb_value self)
 {
@@ -276,7 +280,10 @@ vector3_cross(mrb_state *mrb, mrb_value self)
   return dest_vec;
 }
 
-// @return [Float]
+/* Returns the distance betwwen self and other, i.e., length(p0 - p1). 
+ * @param [Vector3] other
+ * @return [Float]
+ */
 static mrb_value
 vector3_distance(mrb_state *mrb, mrb_value self)
 {
@@ -284,8 +291,11 @@ vector3_distance(mrb_state *mrb, mrb_value self)
   mrb_get_args(mrb, "d", &other, &vector3_data_type);
   return mrb_float_value(mrb, glm::distance(get_vector3_value(mrb, self), *other));
 }
-
-// @return [Vector3]
+/*
+ * @param [Vector3] other
+ * @param [Float] angle
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_rotate(mrb_state *mrb, mrb_value self)
 {
@@ -295,6 +305,10 @@ vector3_rotate(mrb_state *mrb, mrb_value self)
   return mmrb_vector3_value(mrb, glm::rotate(*mmrb_vector3_ptr(mrb, self), (float)angle, *other));
 }
 
+/* Rotate the vector around the x axis.
+ * @param [Float] angle
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_rotate_x(mrb_state *mrb, mrb_value self)
 {
@@ -303,6 +317,10 @@ vector3_rotate_x(mrb_state *mrb, mrb_value self)
   return mmrb_vector3_value(mrb, glm::rotateX(*mmrb_vector3_ptr(mrb, self), (float)angle));
 }
 
+/* Rotate the vector around the y axis.
+ * @param [Float] angle
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_rotate_y(mrb_state *mrb, mrb_value self)
 {
@@ -311,6 +329,10 @@ vector3_rotate_y(mrb_state *mrb, mrb_value self)
   return mmrb_vector3_value(mrb, glm::rotateY(*mmrb_vector3_ptr(mrb, self), (float)angle));
 }
 
+/* Rotate the vector around the z axis.
+ * @param [Float] angle
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_rotate_z(mrb_state *mrb, mrb_value self)
 {
@@ -319,6 +341,14 @@ vector3_rotate_z(mrb_state *mrb, mrb_value self)
   return mmrb_vector3_value(mrb, glm::rotateZ(*mmrb_vector3_ptr(mrb, self), (float)angle));
 }
 
+/* Linear interpolation of two quaternions.
+ *
+ * The interpolation is oriented.
+ *
+ * @param [Vector3] other quaternion
+ * @param [Float] delta Interpolation factor. The interpolation is defined in the range [0, 1]. 
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_lerp(mrb_state *mrb, mrb_value self)
 {
@@ -328,6 +358,16 @@ vector3_lerp(mrb_state *mrb, mrb_value self)
   return mmrb_vector3_value(mrb, glm::lerp(*mmrb_vector3_ptr(mrb, self), *other, (float)delta));
 }
 
+/* Spherical linear interpolation of two quaternions.
+ * 
+ * Returns the slurp interpolation between two quaternions.
+ * 
+ * The interpolation always take the short path and the rotation is performed at constant speed.
+ *
+ * @param [Vector3] other quaternion
+ * @param [Float] delta Interpolation factor. The interpolation is defined beyond the range [0, 1]. 
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_slerp(mrb_state *mrb, mrb_value self)
 {
