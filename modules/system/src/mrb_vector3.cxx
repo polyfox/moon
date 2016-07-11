@@ -280,8 +280,9 @@ vector3_cross(mrb_state *mrb, mrb_value self)
 static mrb_value
 vector3_distance(mrb_state *mrb, mrb_value self)
 {
-  Moon::Vector3 diff = get_vector3_value(mrb, self) - vector3_from_mrb_args(mrb);
-  return mrb_float_value(mrb, glm::dot(diff, diff));
+  Moon::Vector3 *other;
+  mrb_get_args(mrb, "d", &other, &vector3_data_type);
+  return mrb_float_value(mrb, glm::distance(get_vector3_value(mrb, self), *other));
 }
 
 // @return [Vector3]
