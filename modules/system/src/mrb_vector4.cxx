@@ -174,12 +174,18 @@ vector4_identity(mrb_state *mrb, mrb_value self)
   return mrb_obj_dup(mrb, self);
 }
 
+/* Returns a vector in the same direction, but with length of 1. 
+ * @return [Vector4]
+ */
 static mrb_value
 vector4_normalize(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector4_value(mrb, glm::normalize(get_vector4_value(mrb, self)));
 }
 
+/* Returns the length of x, i.e., sqrt(x * x).
+ * @return [Float]
+ */
 static mrb_value
 vector4_length(mrb_state *mrb, mrb_value self)
 {
