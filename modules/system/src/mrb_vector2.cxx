@@ -224,11 +224,16 @@ vector2_length(mrb_state *mrb, mrb_value self)
   return mrb_float_value(mrb, glm::length(get_vector2_value(mrb, self)));
 }
 
+/* Returns the distance betwwen self and other, i.e., length(p0 - p1). 
+ * @param [Vector2] other
+ * @return [Float]
+ */
 static mrb_value
 vector2_distance(mrb_state *mrb, mrb_value self)
 {
-  Moon::Vector2 diff = get_vector2_value(mrb, self) - vector2_from_mrb_args(mrb);
-  return mrb_float_value(mrb, glm::dot(diff, diff));
+  Moon::Vector2 *other;
+  mrb_get_args(mrb, "d", &other, &vector2_data_type);
+  return mrb_float_value(mrb, glm::distance(get_vector2_value(mrb, self), *other));
 }
 
 static mrb_value
