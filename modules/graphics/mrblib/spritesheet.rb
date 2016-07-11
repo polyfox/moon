@@ -4,13 +4,13 @@ module Moon
     extend TypedAttributes
     include Shadable
 
-    # default origin
+    # Default origin
     # @return [Moon::Vector2]
     ZERO_ORIGIN = Moon::Vector2.new(0, 0)
-    # default shader color
+    # Default shader color
     # @return [Moon::Vector4]
     WHITE = Moon::Vector4.new(1, 1, 1, 1)
-    # default shader tone
+    # Default shader tone
     # @return [Moon::Vector4]
     BLACK = Moon::Vector4.new(0, 0, 0, 1)
 
@@ -19,13 +19,13 @@ module Moon
     # Dynamically calculated based on the texture and tile size.
     attr_reader :cell_count
     attribute :texture, Texture
-    attr_reader :w, :h
-
     private :texture=
+    attr_reader :w, :h
 
     # @param [Texture] texture
     # @param [Integer] tile_width width of a single tile
     # @param [Integer] tile_height height of a single tile
+    # @return [Spritesheet]
     def initialize texture, tile_width, tile_height
       self.texture = texture
       @w = tile_width
