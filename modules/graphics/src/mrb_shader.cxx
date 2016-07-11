@@ -21,6 +21,11 @@ shader_free(mrb_state *mrb, void *ptr)
 
 MOON_C_API const struct mrb_data_type shader_data_type = { "Moon::Shader", shader_free };
 
+/* Initializes a new shader object, generating a vertex and fragment shader pair.
+ *
+ * @param [String] vertexShader contents of the vertex shader program
+ * @param [String] fragmentShader contents of the fragment shader program
+ */
 static mrb_value
 shader_initialize(mrb_state *mrb, mrb_value self)
 {
