@@ -159,13 +159,18 @@ vector3_identity(mrb_state *mrb, mrb_value self)
   return mrb_obj_dup(mrb, self);
 }
 
-// @return [Vector3]
+/* Returns a vector in the same direction, but with length of 1. 
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_normalize(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector3_value(mrb, glm::normalize(get_vector3_value(mrb, self)));
 }
 
+/* Returns the length of x, i.e., sqrt(x * x).
+ * @return [Float]
+*/
 static mrb_value
 vector3_length(mrb_state *mrb, mrb_value self)
 {
@@ -248,7 +253,10 @@ vector3_xor(mrb_state *mrb, mrb_value self)
   m_vector_int_operator(^);
 }
 
-// @return [Float]
+/* Returns the dot product of self and other, i.e., result = self * other.
+ * @param [Vector3] other
+ * @return [Float]
+ */
 static mrb_value
 vector3_dot(mrb_state *mrb, mrb_value self)
 {
