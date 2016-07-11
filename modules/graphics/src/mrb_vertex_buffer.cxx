@@ -81,7 +81,7 @@ vbo_render(mrb_state *mrb, mrb_value self)
 }
 
 /**
- * Adds a vertex to the buffer
+ * Adds a single vertex to the buffer
  *
  * @param [Vector2] pos
  * @param [Vector2] texture_coord
@@ -182,12 +182,12 @@ vbo_quad_m(mrb_state *mrb, mrb_value self, Moon::Vertex vertices[4])
 }
 
 /**
- * Pushes a quad into the buffer, the buffer's indicies will be pushed as
- * [0, 1, 3, 2, 3, 1] automagically.
+ * Pushes a quad into the buffer, the buffer's indices will be pushed as
+ * +[0, 1, 3, 2, 3, 1]+ automatically, to render correctly as a triangle strip.
  *
- * @param [Array<Integer>[4], Moon::Rect] rect the quad's actual rect
- * @param [Array<Float>[4]] texture_rect a normalized rectangle for the texture coords, normally using [0, 0, 1, 1] to cover the entire texture
- * @param [Array<Float>[4], Vector4] color the color of the quad, normally [1, 1, 1, 1], meaning pure white, the color will be multiplied into the quad's texture
+ * @param [Array<Integer>[4], Moon::Rect] rect the quad's dimensions
+ * @param [Array<Float>[4]] texture_rect a normalized rectangle for the texture coords, normally using +[0, 0, 1, 1]+ to cover the entire texture
+ * @param [Array<Float>[4], Vector4] color the color of the quad, normally +[1, 1, 1, 1]+, meaning pure white, the color will be multiplied into the quad's texture
  * @return [self]
  */
 static mrb_value
@@ -203,11 +203,11 @@ vbo_add_quad(mrb_state *mrb, mrb_value self)
 }
 
 /**
- * Pushes a quad into the buffer, the indicies must be pushed manually, this is only for convience.
+ * Pushes a quad into the buffer, but the indices must be pushed manually.
  *
- * @param [Array<Integer>[4], Moon::Rect] rect the quad's actual rect
- * @param [Array<Float>[4]] texture_rect a normalized rectangle for the texture coords, normally using [0, 0, 1, 1] to cover the entire texture
- * @param [Array<Float>[4], Vector4] color the color of the quad, normally [1, 1, 1, 1], meaning pure white, the color will be multiplied into the quad's texture
+ * @param [Array<Integer>[4], Moon::Rect] rect the quad's dimensions
+ * @param [Array<Float>[4]] texture_rect a normalized rectangle for the texture coords, normally using +[0, 0, 1, 1]+ to cover the entire texture
+ * @param [Array<Float>[4], Vector4] color the color of the quad, normally +[1, 1, 1, 1]+, meaning pure white, the color will be multiplied into the quad's texture
  * @return [self]
  */
 static mrb_value
