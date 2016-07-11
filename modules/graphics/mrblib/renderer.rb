@@ -10,7 +10,10 @@ module Moon
       @mvp_matrix = Matrix4.new
     end
 
-    def apply_transform(matrix4)
+    # Generate a model-view-projection matrix for the object we're about to
+    # render.
+    # @param [Matrix4] matrix4 the model matrix
+    private def apply_transform(matrix4)
       @mvp_matrix.clear
       @mvp_matrix.mul(@projection_matrix)
       @mvp_matrix.mul(@view_matrix)
@@ -18,7 +21,9 @@ module Moon
       @mvp_matrix
     end
 
-    def bind_texture(texture)
+    # Set the texture as the currently active texture in slot 0.
+    # @param [Texture] texture texture to bind
+    private def bind_texture(texture)
       OpenGL.active_texture(OpenGL::TEXTURE0)
       texture.bind
       0 # id
