@@ -35,8 +35,10 @@ context_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-// Evaluates a given string in the Context
-// @param [String] str
+/* Evaluates a given string in the Context
+ * @param [String] str
+ * @return [Object] v value returned from executing the string
+ */
 static mrb_value
 context_eval(mrb_state *mrb, mrb_value self)
 {

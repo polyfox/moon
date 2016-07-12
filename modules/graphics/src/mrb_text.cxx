@@ -14,8 +14,12 @@
 #include "moon/mrb/vertex_buffer.hxx"
 #include "moon/mrb/helpers.hxx"
 
-/**
- * Font#add_text(text, x, y)
+/* Add a new text string to the VBO at the specified coordinates.
+ * We use the coordinates to be able to generate alignment and layouts.
+ *
+ * @param [String] str the string we're adding
+ * @param [Integer] x x coordinate
+ * @param [Integer] y y coordinate
  */
 static mrb_value
 text_add_text(mrb_state *mrb, mrb_value self)

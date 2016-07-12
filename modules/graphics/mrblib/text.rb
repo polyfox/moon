@@ -10,7 +10,11 @@ module Moon
     extend TypedAttributes
     include Shadable
 
+    # Width of the text object (bounding box)
+    # @return [Integer]
     attr_reader :w
+    # Height of the text object (bounding box)
+    # @return [Integer]
     attr_reader :h
 
     attribute :align,         Symbol
