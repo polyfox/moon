@@ -6,6 +6,6 @@ if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
   brew link freetype
 fi
 
-gem update --system
-gem install bundler
-bundle install
+#gem update --system
+#gem install bundler
+#bundle install
