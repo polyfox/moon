@@ -115,7 +115,12 @@ mmrb_vector1_value(mrb_state *mrb, Moon::Vector1 vec)
   return set_vector1(mrb, new_vector1(mrb), vec);
 }
 
-// @param [Float] x
+/**
+ * Initializes the vector
+ *
+ * @param [Numeric] x
+ * @return [self]
+ */
 static mrb_value
 vector1_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -135,6 +140,13 @@ vector1_initialize_copy(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/**
+ * Rotates the order of the parameters for builtin methods
+ *
+ * @param [Object] other
+ * @return [Array<Object>[2]]
+ * @api private
+ */
 static mrb_value
 vector1_coerce(mrb_state *mrb, mrb_value self)
 {
@@ -144,7 +156,9 @@ vector1_coerce(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 2, argv);
 }
 
-/*
+/**
+ * Determines if self and other are equal.
+ *
  * @return [Boolean]
  */
 static mrb_value
@@ -158,12 +172,19 @@ vector1_eq(mrb_state *mrb, mrb_value self)
   return mrb_bool_value(false);
 }
 
+/**
+ * @return [Float]
+ */
 static mrb_value
 vector1_x_getter(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, mmrb_vector1_ptr(mrb, self)->x);
 }
 
+/**
+ * @param [Float] x
+ * @return [nil]
+ */
 static mrb_value
 vector1_x_setter(mrb_state *mrb, mrb_value self)
 {
@@ -173,119 +194,124 @@ vector1_x_setter(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
-// @return [Vector1]
+/**
+ * Returns the negated value of the vector
+ *
+ * @return [Vector1]
+ */
 static mrb_value
 vector1_negate(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector1_value(mrb, -get_vector1_value(mrb, self));
 }
 
-// @return [Vector1]
+/**
+ * Returns the identify of the vector
+ *
+ * @return [Vector1]
+ */
 static mrb_value
 vector1_identity(mrb_state *mrb, mrb_value self)
 {
-  return mrb_obj_dup(mrb, self);
+  return self;
 }
 
-// @return [Vector1]
 static mrb_value
 vector1_add(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator(+);
 }
 
-// @return [Vector1]
 static mrb_value
 vector1_sub(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator(-);
 }
 
-// @return [Vector1]
 static mrb_value
 vector1_mul(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator(*);
 }
 
-// @return [Vector1]
 static mrb_value
 vector1_div(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator(/);
 }
 
-// @return [Vector1]
+/**
+ * Returns the bitwise not result of self
+ *
+ * @return [Vector1]
+ */
 static mrb_value
 vector1_not(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector1_value(mrb, Moon::Vector1(~(Moon::Vector1i(*mmrb_vector1_ptr(mrb, self)))));
 }
 
-// @return [Vector1]
 static mrb_value
 vector1_modulo(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(%);
 }
 
-// @return [Vector1]
 static mrb_value
 vector1_shl(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(<<);
 }
 
-// @return [Vector1]
 static mrb_value
 vector1_shr(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(>>);
 }
 
-// @return [Vector1]
 static mrb_value
 vector1_and(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(&);
 }
 
-// @return [Vector1]
 static mrb_value
 vector1_or(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(|);
 }
 
-// @return [Vector1]
 static mrb_value
 vector1_xor(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(^);
 }
 
-// @return [Float]
 static mrb_value
 vector1_dot(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, glm::dot(get_vector1_value(mrb, self), vector1_from_mrb_args(mrb)));
 }
 
-// @return [Vector1]
+/* Returns a vector in the same direction, but with length of 1.
+ * @return [Vector1]
+ */
 static mrb_value
 vector1_normalize(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector1_value(mrb, glm::normalize(get_vector1_value(mrb, self)));
 }
 
-// @return [Float]
+/* Returns the length of self
+ * @return [Float]
+ */
 static mrb_value
 vector1_length(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, glm::length(get_vector1_value(mrb, self)));
 }
 
-/* Returns the distance betwwen self and other, i.e., length(p0 - p1). 
+/* Returns the distance betwwen self and other, i.e., length(p0 - p1).
  * @param [Vector1] other
  * @return [Float]
  */
@@ -297,9 +323,14 @@ vector1_distance(mrb_state *mrb, mrb_value self)
   return mrb_float_value(mrb, glm::distance(get_vector1_value(mrb, self), *other));
 }
 
-// @param [Vector1] other
-// @param [Float] delta
-// @return [Vector1]
+/* Linear interpolation of two quaternions.
+ *
+ * The interpolation is oriented.
+ *
+ * @param [Vector1] other quaternion
+ * @param [Float] delta Interpolation factor. The interpolation is defined in the range [0, 1].
+ * @return [Vector1]
+ */
 static mrb_value
 vector1_lerp(mrb_state *mrb, mrb_value self)
 {
@@ -315,21 +346,29 @@ vector1_set(mrb_state *mrb, mrb_value self)
   return set_vector1(mrb, self, vector1_from_mrb_args(mrb));
 }
 
-// @return [Integer]
+/* Converts the self to an Integer
+ * @return [Integer]
+ */
 static mrb_value
 vector1_to_int(mrb_state *mrb, mrb_value self)
 {
   return mrb_fixnum_value((mrb_int)mmrb_vector1_ptr(mrb, self)->x);
 }
 
-// @return [Float]
+/* Converts the self to a Float
+ * @return [Float]
+ */
 static mrb_value
 vector1_to_f(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, (mrb_float)mmrb_vector1_ptr(mrb, self)->x);
 }
 
-// @return [Array<Float>]
+/**
+ * Returns an Array with each vector component
+ *
+ * @return [Array<Float>]
+ */
 static mrb_value
 vector1_to_a(mrb_state *mrb, mrb_value self)
 {
@@ -337,7 +376,6 @@ vector1_to_a(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 1, argv);
 }
 
-// @return [Array<Float>]
 static mrb_value
 vector1_s_extract(mrb_state *mrb, mrb_value self)
 {
@@ -346,7 +384,6 @@ vector1_s_extract(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 1, argv);
 }
 
-// @return [Array<Float>]
 static mrb_value
 vector1_s_cast(mrb_state *mrb, mrb_value klass)
 {

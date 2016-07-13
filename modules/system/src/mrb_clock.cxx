@@ -35,7 +35,6 @@ clock_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-// @return [self]
 static mrb_value
 clock_initialize_copy(mrb_state *mrb, mrb_value self)
 {

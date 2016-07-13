@@ -16,6 +16,7 @@ module Moon
     attribute :clip_rect, Rect, nil
     attribute :texture, Texture
 
+    # @param [Moon::Texture] texture
     def initialize texture
       set_texture texture
       @opacity = 1.0
@@ -34,6 +35,7 @@ module Moon
 
     alias :set_texture :texture=
     private :set_texture
+    # @param [Moon::Texture] texture
     def texture= texture
       set_texture texture
       generate_buffers
@@ -41,6 +43,7 @@ module Moon
 
     alias :set_clip_rect :clip_rect=
     private :set_clip_rect
+    # @param [Moon::Rect] rect
     def clip_rect= rect
       set_clip_rect rect
       generate_buffers

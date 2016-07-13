@@ -9,11 +9,16 @@ module Moon
     end
 
     # @!attribute [r] shader
+
+    # Returns the active shader for self
     # @return [Shader]
     def shader
       @shader || self.class.default_shader
     end
 
+    # Attaches Shadable class methods to the target module or class
+    #
+    # @param [Module] mod
     def self.included(mod)
       mod.extend ClassMethods
     end

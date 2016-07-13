@@ -61,6 +61,15 @@ mmrb_vector4_value(mrb_state *mrb, Moon::Vector4 vec)
   return set_vector4(mrb, new_vector4(mrb), vec);
 }
 
+/**
+ * Initializes the vector4
+ * @overload initialize
+ * @overload initialize(x, y, z, w)
+ *   @param [Numeric] x
+ *   @param [Numeric] y
+ *   @param [Numeric] z
+ *   @param [Numeric] w
+ */
 static mrb_value
 vector4_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -82,6 +91,13 @@ vector4_initialize_copy(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/**
+ * Rotates the order of the parameters for builtin methods
+ *
+ * @param [Object] other
+ * @return [Array<Object>[2]]
+ * @api private
+ */
 static mrb_value
 vector4_coerce(mrb_state *mrb, mrb_value self)
 {
@@ -91,6 +107,12 @@ vector4_coerce(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 2, argv);
 }
 
+/**
+ * Compares self and other to determine if they are equal
+ *
+ * @param [Object] other
+ * @return [Boolean] true other and self are equal, false otherwise
+ */
 static mrb_value
 vector4_eq(mrb_state *mrb, mrb_value self)
 {
@@ -162,19 +184,29 @@ vector4_set_w(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/**
+ * Returns the negated value of the vector
+ *
+ * @return [Vector4]
+ */
 static mrb_value
 vector4_negate(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector4_value(mrb, -get_vector4_value(mrb, self));
 }
 
+/**
+ * Returns the identify of the vector
+ *
+ * @return [Vector4]
+ */
 static mrb_value
 vector4_identity(mrb_state *mrb, mrb_value self)
 {
   return mrb_obj_dup(mrb, self);
 }
 
-/* Returns a vector in the same direction, but with length of 1. 
+/* Returns a vector in the same direction, but with length of 1.
  * @return [Vector4]
  */
 static mrb_value
@@ -216,6 +248,11 @@ vector4_div(mrb_state *mrb, mrb_value self)
   m_vector_operator(/);
 }
 
+/**
+ * Returns the bitwise not result of self
+ *
+ * @return [Vector4]
+ */
 static mrb_value
 vector4_not(mrb_state *mrb, mrb_value self)
 {
@@ -258,17 +295,13 @@ vector4_xor(mrb_state *mrb, mrb_value self)
   m_vector_int_operator(^);
 }
 
-/* Returns the dot product of self and other, i.e., result = self * other.
- * @param [Vector4] other
- * @return [Float]
- */
 static mrb_value
 vector4_dot(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, glm::dot(get_vector4_value(mrb, self), vector4_from_mrb_args(mrb)));
 }
 
-/* Returns the distance betwwen self and other, i.e., length(p0 - p1). 
+/* Returns the distance betwwen self and other, i.e., length(p0 - p1).
  * @param [Vector4] other
  * @return [Float]
  */
@@ -286,6 +319,11 @@ vector4_set(mrb_state *mrb, mrb_value self)
   return set_vector4(mrb, self, vector4_from_mrb_args(mrb));
 }
 
+/**
+ * Returns an array with all the vector components
+ *
+ * @return [Array<Float>]
+ */
 static mrb_value
 vector4_to_a(mrb_state *mrb, mrb_value self)
 {

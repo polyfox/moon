@@ -69,36 +69,36 @@ shader_set_uniform(mrb_state *mrb, mrb_value self)
   shader = mmrb_shader_ptr(mrb, self);
   std::string name(cname);
 
-  switch (mrb_type(obj)) {
+  switch (mrb_type(data)) {
     case MRB_TT_FIXNUM: {
-      shader->SetUniform(name, static_cast<GLint>(mrb_int(mrb, obj)));
+      shader->SetUniform(name, static_cast<GLint>(mrb_int(mrb, data)));
     } break;
     case MRB_TT_FLOAT: {
-      shader->SetUniform(name, static_cast<GLfloat>(mrb_to_flo(mrb, obj)));
+      shader->SetUniform(name, static_cast<GLfloat>(mrb_to_flo(mrb, data)));
     } break;
     case MRB_TT_DATA: {
       void *ptr;
-      /*if ((ptr = mrb_data_check_get_ptr(mrb, obj, &vector1_data_type))) {
+      /*if ((ptr = mrb_data_check_get_ptr(mrb, data, &vector1_data_type))) {
         shader->SetUniform(name, *static_cast<Moon::Vector1*>(ptr));
 
-      } else */if ((ptr = mrb_data_check_get_ptr(mrb, obj, &vector2_data_type))) {
+      } else */if ((ptr = mrb_data_check_get_ptr(mrb, data, &vector2_data_type))) {
         shader->SetUniform(name, *static_cast<Moon::Vector2*>(ptr));
 
-      } else if ((ptr = mrb_data_check_get_ptr(mrb, obj, &vector3_data_type))) {
+      } else if ((ptr = mrb_data_check_get_ptr(mrb, data, &vector3_data_type))) {
         shader->SetUniform(name, *static_cast<Moon::Vector3*>(ptr));
 
-      } else if ((ptr = mrb_data_check_get_ptr(mrb, obj, &vector4_data_type))) {
+      } else if ((ptr = mrb_data_check_get_ptr(mrb, data, &vector4_data_type))) {
         shader->SetUniform(name, *static_cast<Moon::Vector4*>(ptr));
 
-      } else if ((ptr = mrb_data_check_get_ptr(mrb, obj, &matrix4_data_type))) {
+      } else if ((ptr = mrb_data_check_get_ptr(mrb, data, &matrix4_data_type))) {
         shader->SetUniform(name, *static_cast<Moon::Matrix4*>(ptr));
 
       } else {
-        mrb_raisef(mrb, E_TYPE_ERROR, "unexpected object %S (expected Vector4 or Matrix4)", mrb_obj_classname(mrb, obj));
+        mrb_raisef(mrb, E_TYPE_ERROR, "unexpected object %S (expected Vector4 or Matrix4)", mrb_obj_classname(mrb, data));
       }
     } break;
     default:
-      mrb_raisef(mrb, E_TYPE_ERROR, "unexpected object %S", mrb_obj_classname(mrb, obj));
+      mrb_raisef(mrb, E_TYPE_ERROR, "unexpected object %S", mrb_obj_classname(mrb, data));
       break;
   }
   return self;

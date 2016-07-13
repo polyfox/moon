@@ -69,6 +69,9 @@ module Moon
       GL2.glClearColor(*color_ary)
     end
 
+    # Marks texture given an id as active
+    #
+    # @param [Integer] id
     def self.active_texture(id)
       GL2.glActiveTexture(id)
     end

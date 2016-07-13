@@ -1,4 +1,7 @@
 module Moon
+  # Basic structure for representing a rectangle
+  # @example
+  #   rect = Moon::Rect.new(4, 16, 32, 32)
   class Rect
     # @!attribute [rw] x
     #  @return [Integer] x coordinate

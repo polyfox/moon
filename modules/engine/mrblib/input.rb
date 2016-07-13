@@ -146,10 +146,13 @@ module Moon
     MOD_ALT = GLFW::MOD_ALT
     MOD_SUPER = GLFW::MOD_SUPER
 
+    # @return [GLFW::Window]
     attr_reader :window
+    # @return [Moon::Input::Mouse]
     attr_reader :mouse
     #attr_reader :keyboard
 
+    # @param [GLFW::Window] window
     def initialize(window)
       @window = window
       init_mouse
@@ -212,18 +215,22 @@ module Moon
   class Input::Mouse
     attr_reader :window
 
+    # @param [GLFW::Window] window
     def initialize(window)
       @window = window
     end
 
+    # @return [Float] the x coordinate of the mouse
     def x
       @window.cursor_pos[0]
     end
 
+    # @return [Float] the y coordinate of the mouse
     def y
       @window.cursor_pos[1]
     end
 
+    # @return [Moon::Vector2] the coordinates of the mouse
     def position
       Vector2[@window.cursor_pos]
     end

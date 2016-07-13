@@ -31,6 +31,14 @@ module Moon
       0 # id
     end
 
+    # Binds shader and texture and renders the given vbo with transform
+    #
+    # @param [Moon::Shader] shader
+    # @param [Moon::VertexBuffer] vbo
+    # @param [Moon::Texture] texture
+    # @param [Moon::Matrix4] transform
+    # @param [Integer] mode opengl drawing mode eg. Moon::OpenGL::TRIANGLES
+    # @param [Integer] index only used by spritesheet
     def render(shader, vbo, texture, transform, mode, index = 0)
       shader.set_uniform 'mvp_matrix', apply_transform(transform)
       shader.set_uniform 'tex0', bind_texture(texture) unless texture.nil?

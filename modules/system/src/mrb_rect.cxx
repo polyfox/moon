@@ -130,6 +130,12 @@ rect_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/**
+ * Initializes the rect's parameters given another rect
+ *
+ * @param [Moon::Rect] other
+ * @return [self]
+ */
 static mrb_value
 rect_initialize_copy(mrb_state *mrb, mrb_value self)
 {

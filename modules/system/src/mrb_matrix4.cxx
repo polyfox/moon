@@ -141,13 +141,6 @@ matrix4_set(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-/*
- * @overload Matrix4#initialize()
- * @overload Matrix4#initialize(Numeric)
- * @overload Matrix4#initialize(Matrix4)
- * @overload Matrix4#initialize(Vector4, Vector4, Vector4, Vector4)
- * @overload Matrix4#initialize(n1, ..., n16)
- */
 static mrb_value
 matrix4_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -188,6 +181,7 @@ matrix4_initialize_copy(mrb_state *mrb, mrb_value self)
 
 /*
  * @return [Array<Object>]
+ * @api private
  */
 static mrb_value
 matrix4_coerce(mrb_state *mrb, mrb_value self)
@@ -264,10 +258,6 @@ matrix4_entry_get(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
-/*
- * @overload Matrix4#[num] = Vector4 value
- * @overload Matrix4#[num, num] = Numeric value
- */
 static mrb_value
 matrix4_entry_set(mrb_state *mrb, mrb_value self)
 {
@@ -290,10 +280,7 @@ matrix4_entry_set(mrb_state *mrb, mrb_value self)
       return mrb_nil_value();
     }
 
-    Moon::Vector4 *vec4;
-    vec4 = (Moon::Vector4*)mrb_data_get_ptr(mrb, rvec4, &vector4_data_type);
-
-    (*mat4)[x] = *vec4;
+    (*mat4)[x] = mmrb_to_vector4(mrb, rvec4);
   } else if (len == 3) {
     mrb_int x, y;
     mrb_float v;
@@ -319,7 +306,8 @@ matrix4_entry_set(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
-/*
+/* Returns the inverse of the matrix
+ *
  * @return [Matrix4]
  */
 static mrb_value
@@ -338,13 +326,14 @@ matrix4_op_negate(mrb_state *mrb, mrb_value self)
   return dest_mat4;
 }
 
-/*
+/* Returns self
+ *
  * @return [Matrix4]
  */
 static mrb_value
 matrix4_op_identity(mrb_state *mrb, mrb_value self)
 {
-  return mrb_obj_dup(mrb, self);
+  return self;
 }
 
 /*
@@ -416,6 +405,11 @@ matrix4_div(mrb_state *mrb, mrb_value self)
 //  math_op(%)
 //}
 
+/**
+ * Sets all the matrix components to 1.0f
+ *
+ * @return [self]
+ */
 static mrb_value
 matrix4_clear(mrb_state *mrb, mrb_value self)
 {
@@ -530,9 +524,6 @@ matrix4_rotate_bang(mrb_state *mrb, mrb_value self)
   return self;
 };
 
-/*
- * @return [Matrix4]
- */
 static Moon::Matrix4
 matrix4_scale_m(mrb_state *mrb, mrb_value self)
 {
@@ -560,9 +551,6 @@ matrix4_scale_m(mrb_state *mrb, mrb_value self)
   return target_mat4;
 }
 
-/*
- * @return [Matrix4]
- */
 static mrb_value
 matrix4_scale(mrb_state *mrb, mrb_value self)
 {
@@ -584,7 +572,7 @@ matrix4_scale_bang(mrb_state *mrb, mrb_value self)
   return self;
 };
 
-/*
+/* Converts the matrix to an Array of Floats
  * @return [Array<Numeric>]
  */
 static mrb_value
@@ -623,7 +611,7 @@ matrix4_to_a16(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 16, argv);
 }
 
-/*
+/* Converts the matrix to an Array of Vector4s
  * @return [Array<Vector4>]
  */
 static mrb_value
@@ -652,6 +640,17 @@ matrix4_s_cast(mrb_state *mrb, mrb_value self)
   return mrb_obj_new(mrb, mmrb_get_matrix4_class(mrb), len, vals);
 }
 
+/**
+ * Creates an Orthographic projection matrix
+ *
+ * @param [Float] a
+ * @param [Float] b
+ * @param [Float] c
+ * @param [Float] d
+ * @param [Float] e
+ * @param [Float] f
+ * @return [Moon::Matrix4] orthographic matrix
+ */
 static mrb_value
 matrix4_s_ortho(mrb_state *mrb, mrb_value self)
 {

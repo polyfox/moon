@@ -60,6 +60,14 @@ mmrb_vector3_value(mrb_state *mrb, Moon::Vector3 vec)
   return set_vector3(mrb, new_vector3(mrb), vec);
 }
 
+/**
+ * Initializes the vector
+ *
+ * @param [Numeric] x
+ * @param [Numeric] y
+ * @param [Numeric] z
+ * @return [self]
+ */
 static mrb_value
 vector3_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -80,6 +88,13 @@ vector3_initialize_copy(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/**
+ * Rotates the order of the parameters for builtin methods
+ *
+ * @param [Object] other
+ * @return [Array<Object>[2]]
+ * @api private
+ */
 static mrb_value
 vector3_coerce(mrb_state *mrb, mrb_value self)
 {
@@ -89,6 +104,12 @@ vector3_coerce(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 2, argv);
 }
 
+/**
+ * Compares self and other to determine if they are equal
+ *
+ * @param [Object] other
+ * @return [Boolean] true other and self are equal, false otherwise
+ */
 static mrb_value
 vector3_eq(mrb_state *mrb, mrb_value self)
 {
@@ -145,21 +166,29 @@ vector3_set_z(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
-// @return [Vector3]
+/**
+ * Returns the negated value of the vector
+ *
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_negate(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector3_value(mrb, -get_vector3_value(mrb, self));
 }
 
-// @return [Vector3]
+/**
+ * Returns the identify of the vector
+ *
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_identity(mrb_state *mrb, mrb_value self)
 {
   return mrb_obj_dup(mrb, self);
 }
 
-/* Returns a vector in the same direction, but with length of 1. 
+/* Returns a vector in the same direction, but with length of 1.
  * @return [Vector3]
  */
 static mrb_value
@@ -190,63 +219,59 @@ vector3_sub(mrb_state *mrb, mrb_value self)
   m_vector_operator(-);
 }
 
-// @return [Vector3]
 static mrb_value
 vector3_mul(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator(*);
 }
 
-// @return [Vector3]
 static mrb_value
 vector3_div(mrb_state *mrb, mrb_value self)
 {
   m_vector_operator(/);
 }
 
-// @return [Vector3]
+/**
+ * Returns the bitwise not result of self
+ *
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_not(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector3_value(mrb, Moon::Vector3(~(glm::ivec3(*mmrb_vector3_ptr(mrb, self)))));
 }
 
-// @return [Vector3]
 static mrb_value
 vector3_modulo(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(%);
 }
 
-// @return [Vector3]
 static mrb_value
 vector3_shl(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(<<);
 }
 
-// @return [Vector3]
 static mrb_value
 vector3_shr(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(>>);
 }
 
-// @return [Vector3]
 static mrb_value
 vector3_and(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(&);
 }
 
-// @return [Vector3]
 static mrb_value
 vector3_or(mrb_state *mrb, mrb_value self)
 {
   m_vector_int_operator(|);
 }
 
-// @return [Vector3]
 static mrb_value
 vector3_xor(mrb_state *mrb, mrb_value self)
 {
@@ -280,7 +305,7 @@ vector3_cross(mrb_state *mrb, mrb_value self)
   return dest_vec;
 }
 
-/* Returns the distance betwwen self and other, i.e., length(p0 - p1). 
+/* Returns the distance betwwen self and other, i.e., length(p0 - p1).
  * @param [Vector3] other
  * @return [Float]
  */
@@ -346,7 +371,7 @@ vector3_rotate_z(mrb_state *mrb, mrb_value self)
  * The interpolation is oriented.
  *
  * @param [Vector3] other quaternion
- * @param [Float] delta Interpolation factor. The interpolation is defined in the range [0, 1]. 
+ * @param [Float] delta Interpolation factor. The interpolation is defined in the range [0, 1].
  * @return [Vector3]
  */
 static mrb_value
@@ -359,13 +384,13 @@ vector3_lerp(mrb_state *mrb, mrb_value self)
 }
 
 /* Spherical linear interpolation of two quaternions.
- * 
+ *
  * Returns the slurp interpolation between two quaternions.
- * 
+ *
  * The interpolation always take the short path and the rotation is performed at constant speed.
  *
  * @param [Vector3] other quaternion
- * @param [Float] delta Interpolation factor. The interpolation is defined beyond the range [0, 1]. 
+ * @param [Float] delta Interpolation factor. The interpolation is defined beyond the range [0, 1].
  * @return [Vector3]
  */
 static mrb_value

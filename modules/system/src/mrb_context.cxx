@@ -52,6 +52,12 @@ context_eval(mrb_state *mrb, mrb_value self)
   return v;
 }
 
+/**
+ * Returns each defined symbol in the given context
+ *
+ * @yieldparam [Symbol] symbol
+ * @return [self]
+ */
 static mrb_value
 context_each_symbol(mrb_state *mrb, mrb_value self)
 {
