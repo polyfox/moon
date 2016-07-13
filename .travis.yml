@@ -56,5 +56,5 @@ cache:
   - vendor/bundle
 
 script:
-  - bundle exec rake --verbose build
+  - ./.travis/build.sh
   - ruby travis/check_libs.rb
