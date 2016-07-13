@@ -21,13 +21,15 @@ module Moon
     #
     # @param [Integer] w
     # @param [Integer] h
-    def initialize(w, h)
+    # @param [Boolean] fullscreen
+    def initialize(w, h, fullscreen = true)
       @scale = 1.0
       @logger = Moon::ContextLogger.new(STDERR, 'Screen')
+      @fullscreen = fullscreen
       create_window w, h
       initialize_renderer
       initialize_clear_color
-      initialize_screen_size
+      initialize_screen_size if !fullscreen?
       @vsync = true
     end
 
@@ -35,6 +37,7 @@ module Moon
     #
     # @param [Integer] w  width of the window
     # @param [Integer] h  height of the window
+    # @param [Boolean] fullscreen
     def create_window(w, h)
       @logger.debug "Creating Window: w=#{w} h=#{h}"
       GLFW.window_hint GLFW::RESIZABLE, GL2::GL_FALSE
@@ -44,9 +47,11 @@ module Moon
       GLFW.window_hint GLFW::OPENGL_PROFILE, GLFW::OPENGL_CORE_PROFILE # for 3.0 and on
       Moon::Shader.is_legacy = false
 
+      monitor = GLFW.primary_monitor if fullscreen?
+
       title = 'Moon Player'
       begin
-        @window = GLFW::Window.new w, h, title
+        @window = GLFW::Window.new w, h, title, monitor
         @logger.warn "3.3 Window Created"
       rescue GLFWError
         @logger.warn "Failed to obtain 3.3 context, falling back to 2.1"
@@ -55,7 +60,7 @@ module Moon
         GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 1
         Moon::Shader.is_legacy = true
 
-        @window = GLFW::Window.new w, h, title
+        @window = GLFW::Window.new w, h, title, monitor
         @logger.warn "2.1 Window Created"
       end
     end
@@ -97,6 +102,11 @@ module Moon
     # Should the screen close?
     def should_close?
       @window.should_close?
+    end
+
+    # Is the window currently fullscreen?
+    def fullscreen?
+      @fullscreen
     end
 
     # Swaps buffers, call this once per frame
