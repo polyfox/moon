@@ -29,7 +29,7 @@ get_music(mrb_state *mrb, mrb_value self)
 
 /* 
  * @param [String] filename path to the music file
- * @param [String] filetype type of the file
+ * @param [String] format type of the file
  * @return [Music]
  */
 static mrb_value
@@ -135,10 +135,10 @@ music_is_finished(mrb_state *mrb, mrb_value self)
 static mrb_value
 music_seek(mrb_state *mrb, mrb_value self)
 {
-  mrb_int offset;
+  mrb_int pos;
   Moon::Music *music = get_music(mrb, self);
-  mrb_get_args(mrb, "i", &offset);
-  return mrb_bool_value(ga_handle_seek(music->handle, offset));
+  mrb_get_args(mrb, "i", &pos);
+  return mrb_bool_value(ga_handle_seek(music->handle, pos));
 }
 
 /* Returns the current position in the file.

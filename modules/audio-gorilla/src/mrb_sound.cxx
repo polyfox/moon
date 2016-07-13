@@ -26,7 +26,7 @@ get_sound(mrb_state *mrb, mrb_value self)
 
 /* 
  * @param [String] filename path to the sound file
- * @param [String] filetype type of the file
+ * @param [String] format type of the file
  * @return [Sound]
  */
 static mrb_value
