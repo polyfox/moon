@@ -34,8 +34,3 @@ add_custom_target(moon-mruby ALL
   COMMAND rake ${RAKE_VERBOSE_FLAG} MRUBY_CONFIG="${CMAKE_SOURCE_DIR}/mrb_config.rb"
   WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/vendor/mruby"
 )
-
-add_custom_target(moon-docs ALL
-  COMMAND rake docs
-  DEPENDS moon-mruby
-)
