@@ -53,8 +53,8 @@ texture_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-/* @!attribute [r] w
- *   @return [Float] width of the texture
+/* 
+ * @return [Float] width of the texture
  */
 static mrb_value
 texture_width(mrb_state *mrb, mrb_value self)
@@ -62,8 +62,8 @@ texture_width(mrb_state *mrb, mrb_value self)
   return mrb_float_value(mrb, mmrb_texture_ptr(mrb, self)->GetWidth());
 }
 
-/* @!attribute [r] h
- *   @return [Float] height of the texture
+/* 
+ * @return [Float] height of the texture
  */
 static mrb_value
 texture_height(mrb_state *mrb, mrb_value self)
