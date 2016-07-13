@@ -25,7 +25,9 @@ mmrb_texture_load_file(mrb_state *mrb, const char *filename)
   return mrb_obj_new(mrb, mmrb_get_texture_class(mrb), 1, &fn);
 }
 
-// @param [String] filename
+/* @param [String] filename
+ * @return [Texture]
+ */
 static mrb_value
 texture_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -51,28 +53,39 @@ texture_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-// @!attribute [r] w
-//   @return [Float] width of the texture
+/* @!attribute [r] w
+ *   @return [Float] width of the texture
+ */
 static mrb_value
 texture_width(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, mmrb_texture_ptr(mrb, self)->GetWidth());
 }
 
-// @!attribute [r] h
-//   @return [Float] height of the texture
+/* @!attribute [r] h
+ *   @return [Float] height of the texture
+ */
 static mrb_value
 texture_height(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, mmrb_texture_ptr(mrb, self)->GetHeight());
 }
 
+/* Returns the internal ID that OpenGL uses to represent the texture.
+ *
+ * @return [Integer] intenal id of the texture
+ */
 static mrb_value
 texture_id(mrb_state *mrb, mrb_value self)
 {
   return mrb_fixnum_value(mmrb_texture_ptr(mrb, self)->GetID());
 }
 
+/* Activates the texture into OpenGL slot 0, to use it for rendering in the next
+ * few calls.
+ *
+ * @return [self]
+ */
 static mrb_value
 texture_bind(mrb_state *mrb, mrb_value self)
 {
