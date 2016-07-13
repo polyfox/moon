@@ -4,6 +4,8 @@
 #include "moon/gorilla/mrb/music.hxx"
 #include "moon/gorilla/mrb/sound.hxx"
 
+/* Call once per step/frame to update the internal Audio module.
+*/
 static mrb_value
 audio_update(mrb_state *mrb, mrb_value klass)
 {

@@ -24,6 +24,11 @@ get_sound(mrb_state *mrb, mrb_value self)
   return (ga_Sound*)mrb_data_get_ptr(mrb, self, &sound_data_type);
 }
 
+/* 
+ * @param [String] filename path to the sound file
+ * @param [String] filetype type of the file
+ * @return [Sound]
+ */
 static mrb_value
 sound_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -50,6 +55,13 @@ sound_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/* Plays the file.
+ *
+ * @param [Float] gain
+ * @param [Float] pitch
+ * @param [Float] pan
+ * @return [nil]
+ */
 static mrb_value
 sound_play(mrb_state *mrb, mrb_value self)
 {
@@ -72,6 +84,12 @@ MOON_C_API void
 mmrb_sound_init(mrb_state *mrb)
 {
   struct RClass* mod = mrb_define_module(mrb, "Moon");
+  /* Sounds are short audio files (usually used for sound effects) that are
+   * played back often. We fully read them into memory to avoid expensive disk
+   * I/O.
+   *
+   * Use {Music} if you want to play longer audio/music streams.
+   */
   struct RClass *sound_class = mrb_define_class_under(mrb, mod, "Sound", mrb->object_class);
   MRB_SET_INSTANCE_TT(sound_class, MRB_TT_DATA);
 

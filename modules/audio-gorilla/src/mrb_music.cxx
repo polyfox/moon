@@ -27,6 +27,11 @@ get_music(mrb_state *mrb, mrb_value self)
   return (Moon::Music*)mrb_data_get_ptr(mrb, self, &music_data_type);
 }
 
+/* 
+ * @param [String] filename path to the music file
+ * @param [String] filetype type of the file
+ * @return [Music]
+ */
 static mrb_value
 music_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -55,6 +60,13 @@ music_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/* Plays the file.
+ *
+ * @param [Float] gain
+ * @param [Float] pitch
+ * @param [Float] pan
+ * @return [nil]
+ */
 static mrb_value
 music_play(mrb_state *mrb, mrb_value self)
 {
@@ -71,6 +83,9 @@ music_play(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 };
 
+/* Stops the playback.
+ * @return [nil]
+ */
 static mrb_value
 music_stop(mrb_state *mrb, mrb_value self)
 {
@@ -79,6 +94,10 @@ music_stop(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 };
 
+/* Checks if the file is currently playing.
+ *
+ * @return [Boolean] Returns true if currently playing, else false.
+ */
 static mrb_value
 music_is_playing(mrb_state *mrb, mrb_value self)
 {
@@ -86,6 +105,10 @@ music_is_playing(mrb_state *mrb, mrb_value self)
   return mrb_bool_value(ga_handle_playing(music->handle));
 }
 
+/* Checks if the file is currently stopped.
+ *
+ * @return [Boolean] Returns true if currently stopped, else false.
+ */
 static mrb_value
 music_is_stopped(mrb_state *mrb, mrb_value self)
 {
@@ -93,6 +116,10 @@ music_is_stopped(mrb_state *mrb, mrb_value self)
   return mrb_bool_value(ga_handle_stopped(music->handle));
 }
 
+/* Checks if the playback is finished.
+ *
+ * @return [Boolean] Returns true if the playback is finished, else false.
+ */
 static mrb_value
 music_is_finished(mrb_state *mrb, mrb_value self)
 {
@@ -100,6 +127,11 @@ music_is_finished(mrb_state *mrb, mrb_value self)
   return mrb_bool_value(ga_handle_finished(music->handle));
 }
 
+/* Seeks to a certain time in the file.
+ *
+ * @param [Integer] pos Offset from the start of the file, in seconds.
+ * @return [Boolean] Returns true if the seek was successful, else false.
+ */
 static mrb_value
 music_seek(mrb_state *mrb, mrb_value self)
 {
@@ -109,6 +141,10 @@ music_seek(mrb_state *mrb, mrb_value self)
   return mrb_bool_value(ga_handle_seek(music->handle, offset));
 }
 
+/* Returns the current position in the file.
+ *
+ * @return [Integer] Current position in the file (in seconds).
+ */
 static mrb_value
 music_pos(mrb_state *mrb, mrb_value self)
 {
@@ -116,6 +152,10 @@ music_pos(mrb_state *mrb, mrb_value self)
   return mrb_fixnum_value(ga_handle_tell(music->handle, GA_TELL_PARAM_CURRENT));
 }
 
+/* Returns the total time length of the file.
+ *
+ * @return [Integer] Total length (in seconds).
+ */
 static mrb_value
 music_length(mrb_state *mrb, mrb_value self)
 {
@@ -123,6 +163,12 @@ music_length(mrb_state *mrb, mrb_value self)
   return mrb_fixnum_value(ga_handle_tell(music->handle, GA_TELL_PARAM_TOTAL));
 }
 
+/* Set a loop that starts at +trigger+ sample and jumps to +target+ sample.
+ *
+ * @param [Integer] trigger position (in samples) where to start the jump
+ * @param [Integer] target position (in samples) where to jump to
+ * @return [nil]
+ */
 static mrb_value
 music_loop(mrb_state *mrb, mrb_value self)
 {
@@ -134,6 +180,10 @@ music_loop(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
+/* Clear the loop.
+ *
+ * @return [Boolean] true
+ */
 static mrb_value
 music_clear_loop(mrb_state *mrb, mrb_value self)
 {
@@ -146,6 +196,10 @@ MOON_C_API void
 mmrb_music_init(mrb_state *mrb)
 {
   struct RClass* mod = mrb_define_module(mrb, "Moon");
+  /* Music used to playing audio streams (usually background music). The file is
+   * buffered from disk instead of streamed from memory, because songs can be
+   * rather large in file size.
+  */
   struct RClass *music_class = mrb_define_class_under(mrb, mod, "Music", mrb->object_class);
   MRB_SET_INSTANCE_TT(music_class, MRB_TT_DATA);
 
