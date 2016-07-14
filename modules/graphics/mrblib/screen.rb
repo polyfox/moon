@@ -14,7 +14,8 @@ module Moon
     attr_reader :clear_color
     # Underlying window implementation (in default case GLFW).
     attr_reader :window
-    attr_accessor :log
+    # @return [Moon::ContextLogger, ILogger] any logger like interface
+    attr_accessor :logger
 
     # Creates a new game window with the given width and height.
     #
@@ -22,7 +23,7 @@ module Moon
     # @param [Integer] h
     def initialize(w, h)
       @scale = 1.0
-      @log = STDERR
+      @logger = Moon::ContextLogger.new(STDERR, 'Screen')
       create_window w, h
       initialize_renderer
       initialize_clear_color
@@ -35,6 +36,7 @@ module Moon
     # @param [Integer] w  width of the window
     # @param [Integer] h  height of the window
     def create_window(w, h)
+      @logger.debug "Creating Window: w=#{w} h=#{h}"
       GLFW.window_hint GLFW::RESIZABLE, GL2::GL_FALSE
       GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 3
       GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 3
@@ -45,13 +47,16 @@ module Moon
       title = 'Moon Player'
       begin
         @window = GLFW::Window.new w, h, title
+        @logger.warn "3.3 Window Created"
       rescue GLFWError
+        @logger.warn "Failed to obtain 3.3 context, falling back to 2.1"
         GLFW.default_window_hints
         GLFW.window_hint GLFW::CONTEXT_VERSION_MAJOR, 2
         GLFW.window_hint GLFW::CONTEXT_VERSION_MINOR, 1
         Moon::Shader.is_legacy = true
 
         @window = GLFW::Window.new w, h, title
+        @logger.warn "2.1 Window Created"
       end
     end
 
@@ -77,9 +82,9 @@ module Moon
 
     # Prints all the available version strings to the @log
     def print_versions
-      @log.puts "OpenGL v" + gl_version
-      @log.puts "GLSL v" + glsl_version
-      @log.puts "GLFW v" + GLFW.version_string
+      @logger.info "OpenGL v" + gl_version
+      @logger.info "GLSL v" + glsl_version
+      @logger.info "GLFW v" + GLFW.version_string
     end
 
     # Make the screen the current context
@@ -99,10 +104,18 @@ module Moon
       @window.swap_buffers
     end
 
-    # Closes the underlying window
-    def close
-      @window.destroy if @window
+    # Closes the underlying window and cleans up
+    def shutdown
+      @logger.debug "Shutting Down"
+      if @window
+        @logger.debug "Closing Window"
+        @window.should_close = true
+        GLFW.wait_events
+        @window.destroy
+      end
       @window = nil
+      @logger.debug "Shutdown"
+      self
     end
 
     private def initialize_clear_color
@@ -135,6 +148,7 @@ module Moon
     # @param [Integer] w
     # @param [Integer] h
     def resize(w, h)
+      @logger.debug "Resizing Screen to w=#{w} h=#{h}"
       @window.window_size = [w, h]
       @w, @h = *@window.window_size
       @rect = Rect.new(0, 0, @w, @h)

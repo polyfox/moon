@@ -150,20 +150,33 @@ module Moon
     attr_reader :window
     # @return [Moon::Input::Mouse]
     attr_reader :mouse
+    # @return [Moon::ContextLogger, ILogger] any logger like interface
+    attr_accessor :logger
     #attr_reader :keyboard
 
     # @param [GLFW::Window] window
     def initialize(window)
+      @logger = Moon::ContextLogger.new STDERR, 'Input'
       @window = window
-      init_mouse
+      init
+    end
+
+    # Initializes handlers and callbacks
+    #
+    # @api private
+    def init
+      initialize_mouse
       register_callbacks
     end
 
-    private def init_mouse
+    private def initialize_mouse
+      @logger.debug 'Initializing Mouse Handler'
       @mouse = Mouse.new @window
+      @logger.debug 'Mouse Handler Initialized'
     end
 
     private def register_callbacks
+      @logger.debug 'Registering Callbacks'
       @window.set_key_callback do |_, key_id, scancode, action, mods|
         on_key KEY_MAP.fetch(key_id), scancode, STATE_MAP.fetch(action), mods unless key_id == -1
       end
@@ -179,6 +192,26 @@ module Moon
       @window.set_cursor_pos_callback do |_, x, y|
         on_mousemove x, y
       end
+      @logger.debug 'Callbacks Registered'
+    end
+
+    private def unregister_callbacks
+      @logger.debug 'Unregistering Callbacks'
+      @window.set_key_callback
+      @window.set_mouse_button_callback
+      @window.set_char_callback
+      @window.set_cursor_pos_callback
+      @logger.debug 'Callbacks Unregistered'
+    end
+
+    # Removes all handlers to the underlying window
+    #
+    # @api private
+    def shutdown
+      @logger.debug 'Shutting down'
+      unregister_callbacks
+      @mouse = nil
+      @logger.debug 'Shutdown'
     end
 
     # Called on every keypress.

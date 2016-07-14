@@ -9,11 +9,13 @@ module Moon
     # @!attribute step
     #   @return [Proc] per frame step function
     attr_accessor :step
-
+    # @return [Hash<Symbol, Object>]
     attr_accessor :config
-
-    attr_accessor :log
+    # @return [Moon::ContextLogger, ILogger] any logger like interface
+    attr_accessor :logger
+    # @return [Moon::Screen]
     attr_reader :screen
+    # @return [Moon::Input]
     attr_reader :input
 
     # Initializes the engine. The block should be a step function to be called
@@ -27,7 +29,7 @@ module Moon
       @input = nil
       @fps = Moon::Clock.new
       @step = block
-      @log = STDERR
+      @logger = Moon::ContextLogger.new(STDERR, 'Engine')
     end
 
     # @return [Float] Returns the time since the engine has started.
@@ -39,10 +41,12 @@ module Moon
     #
     # @raise {EngineQuit}
     def quit
+      @logger.debug 'Quitting Engine!'
       raise EngineQuit
     end
 
     private def setup_glfw
+      @logger.debug 'Initializing Screen'
       @screen = Screen.new(@config.fetch(:width), @config.fetch(:height))
       @screen.make_current
       # debugging
@@ -51,18 +55,21 @@ module Moon
     end
 
     private def create_input
+      @logger.debug 'Initializing Input'
       @input = Input.new @screen.window
-      @log.puts 'Input initialized'
+      @logger.debug 'Input initialized'
     end
 
     private def setup_glew
+      @logger.debug 'Initializing GLEW'
       # http://openglbook.com/blog/glgenvertexarrays-access-violationsegfault-with-glew/
       GLEW.experimental = true
       GLEW.init
-      @log.puts 'GLEW initialized'
+      @logger.debug 'GLEW initialized'
     end
 
     private def setup_default_shaders
+      @logger.debug 'Initializing default shaders'
       @shaders = {}
       sd = Moon::Shader::DEFAULTS
       shader_path = Moon::Shader.is_legacy ? '120' : '330'
@@ -79,28 +86,37 @@ module Moon
       Moon::Spritesheet.default_shader = @shaders[:quad]
       Moon::Tilemap.default_shader = @shaders[:quad]
       Moon::Text.default_shader = @shaders[:text]
+      @logger.debug 'Default Shaders Initialized'
+      self
     end
 
+    # Initializes all internal systems and prepares for main loop
+    #
     # @return [self]
     def setup
+      @logger.debug "Initializing"
       setup_glfw
       setup_glew
       @screen.setup
       create_input
       setup_default_shaders
+      @logger.debug "Initialized"
       self
     end
 
-    # Destroys the current screen and cleans up.
+    # Destroys the systems and cleans up
     def shutdown
-      @screen.close if @screen
+      @logger.debug "Shutting down"
+      @input.shutdown if @input
+      @screen.shutdown if @screen
+      @logger.debug "Shutdown"
       self
     end
 
     # Starts the main loop, terminate the loop using {#quit}
     def main
-      @log.puts "Audio Module: #{Audio::NAME}"
-      @log.puts 'Starting main loop'
+      @logger.info "Audio Module: #{Audio::NAME}"
+      @logger.debug 'Starting main loop'
       clear_bits = GL2::GL_COLOR_BUFFER_BIT | GL2::GL_DEPTH_BUFFER_BIT
       until @screen.should_close?
         GL2.glClear clear_bits
@@ -111,6 +127,7 @@ module Moon
         GLFW.poll_events
       end
     rescue EngineQuit
+      @logger.debug 'Got an EngineQuit request'
     end
 
     # Sets everything up, runs the main loop, and ensures we take care of
