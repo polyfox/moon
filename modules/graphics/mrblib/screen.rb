@@ -29,7 +29,7 @@ module Moon
       create_window w, h
       initialize_renderer
       initialize_clear_color
-      initialize_screen_size if !fullscreen?
+      initialize_screen_size #if !fullscreen?
       @vsync = true
     end
 
@@ -47,7 +47,12 @@ module Moon
       GLFW.window_hint GLFW::OPENGL_PROFILE, GLFW::OPENGL_CORE_PROFILE # for 3.0 and on
       Moon::Shader.is_legacy = false
 
-      monitor = GLFW.primary_monitor if fullscreen?
+      if fullscreen?
+        monitor = GLFW.primary_monitor
+        vid_mode = monitor.vid_mode
+        w = vid_mode.width
+        h = vid_mode.height
+      end
 
       title = 'Moon Player'
       begin
