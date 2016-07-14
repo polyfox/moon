@@ -100,7 +100,7 @@ module Moon
 
       # @!method disk_rand(angle)
       #   @return [Vector2]
-      # @!method cicular_ran(angle)
+      # @!method circular_rand(angle)
       #   @return [Vector2]
     end
   end
