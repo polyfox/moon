@@ -48,10 +48,12 @@ module Moon
       Moon::Shader.is_legacy = false
 
       if fullscreen?
+        @logger.debug "Fullscreen Window requested"
         monitor = GLFW.primary_monitor
         vid_mode = monitor.vid_mode
         w = vid_mode.width
         h = vid_mode.height
+        @logger.debug "New Window Size: w=#{w} h=#{h}"
       end
 
       title = 'Moon Player'
