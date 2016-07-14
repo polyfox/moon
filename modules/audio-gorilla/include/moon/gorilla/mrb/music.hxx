@@ -7,6 +7,6 @@
 #include "moon/api.h"
 
 MOON_C_API const struct mrb_data_type music_data_type;
-MOON_C_API void mmrb_music_init(mrb_state *mrb, struct RClass *mod);
+MOON_C_API void mmrb_music_init(mrb_state *mrb);
 
 #endif

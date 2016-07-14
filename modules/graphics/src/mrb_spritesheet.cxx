@@ -162,8 +162,9 @@ spritesheet_copy_quad_to(mrb_state *mrb, mrb_value self)
 }
 
 MOON_C_API void
-mmrb_spritesheet_init(mrb_state *mrb, struct RClass* mod)
+mmrb_spritesheet_init(mrb_state *mrb)
 {
+  struct RClass* mod = mrb_define_module(mrb, "Moon");
   struct RClass *ss_cls = mrb_define_class_under(mrb, mod, "Spritesheet", mrb->object_class);
 
   mrb_define_method(mrb, ss_cls, "generate_buffers", spritesheet_generate_buffers, MRB_ARGS_NONE());

@@ -1,13 +1,15 @@
 module Moon
+  # Input is used for event-based input processing. It supports a keyboard,
+  # mouse and gamepads.
   class Input
-    # [Hash<Integer, Symbol>] Maps key states to symbols
+    # [Hash<Integer, Symbol>] Maps glfw key states to symbols
     STATE_MAP = {
       GLFW::PRESS => :press,
       GLFW::RELEASE => :release,
       GLFW::REPEAT => :repeat,
     }
 
-    # [Hash<Integer, Symbol>] maps key codes to Symbols
+    # [Hash<Integer, Symbol>] Maps glfw key codes to Symbols
     KEY_MAP = {
       GLFW::KEY_SPACE => :space,
       GLFW::KEY_APOSTROPHE => :apostrophe,
@@ -144,10 +146,13 @@ module Moon
     MOD_ALT = GLFW::MOD_ALT
     MOD_SUPER = GLFW::MOD_SUPER
 
+    # @return [GLFW::Window]
     attr_reader :window
+    # @return [Moon::Input::Mouse]
     attr_reader :mouse
     #attr_reader :keyboard
 
+    # @param [GLFW::Window] window
     def initialize(window)
       @window = window
       init_mouse
@@ -176,15 +181,33 @@ module Moon
       end
     end
 
+    # Called on every keypress.
+    #
+    # @param [Symbol] key symbol id representation of the key
+    # @param [Integer] scancode platform specific key scan code
+    # @param [Symbol] action new state of the key (:press, :repeat, :release)
+    # @param [Integer] mods bits representing the modifier keys (match against
+    # with bitmasks)
     def on_key(key, scancode, action, mods)
     end
 
+    # Called on every (mouse) button press.
+    # @param [Symbol] button symbol id representation of the button
+    # @param [Symbol] action new state of the key (:press, :repeat, :release)
+    # @param [Integer] mods bits representing the modifier keys (match against
+    #   with bitmasks)
     def on_button(button, action, mods)
     end
 
+    # Called on keypress when the key is a printable character. Useful when
+    # reading for GUI/textbox inputs.
+    # @param [String] char Character representation of the key
     def on_type(char)
     end
 
+    # Called while the mouse is moving.
+    # @param [Integer] x new x coordinate
+    # @param [Integer] y new y coordinate
     def on_mousemove(x, y)
     end
   end
@@ -192,18 +215,22 @@ module Moon
   class Input::Mouse
     attr_reader :window
 
+    # @param [GLFW::Window] window
     def initialize(window)
       @window = window
     end
 
+    # @return [Float] the x coordinate of the mouse
     def x
       @window.cursor_pos[0]
     end
 
+    # @return [Float] the y coordinate of the mouse
     def y
       @window.cursor_pos[1]
     end
 
+    # @return [Moon::Vector2] the coordinates of the mouse
     def position
       Vector2[@window.cursor_pos]
     end

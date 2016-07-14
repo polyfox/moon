@@ -10,7 +10,7 @@
 #include "moon/mrb/helpers.hxx"
 
 MOON_C_API const struct mrb_data_type vector1_data_type;
-MOON_C_API void mmrb_vector1_init(mrb_state *mrb, struct RClass *mod);
+MOON_C_API void mmrb_vector1_init(mrb_state *mrb);
 MOON_C_API Moon::Vector1 mmrb_to_vector1(mrb_state *mrb, mrb_value obj);
 MOON_C_API mrb_value mmrb_vector1_value(mrb_state *mrb, Moon::Vector1 v1);
 

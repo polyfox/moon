@@ -1,69 +1,43 @@
 module Moon
+  # An optimized implementation for rendering a tilemap. The VBO is cached and
+  # we only execute one draw call per iteration to render the entire map 
+  # (basically no overhead).
   class Tilemap
     extend TypedAttributes
     include Shadable
 
-    # @!attribute [r] :w
-    #   @return [Float]
+    # @return [Float]
     attr_reader :w
 
-    # @!attribute [r] :h
-    #   @return [Float]
+    # @return [Float]
     attr_reader :h
 
-    # @!attribute :tilesize
-    #   @return [Vector2] Taken from the tileset #w and #h
+    # @return [Vector2] Taken from the tileset #w and #h
     attr_reader :tilesize
 
-    # @!attribute :datasize
-    #   @return [Vector3] Used for denoting the size of the data and data_zmap
+    # @return [Vector3] Used for denoting the size of the data and data_zmap
     attribute :datasize, Moon::Vector3
     private :datasize=
 
-    # @!attribute :tileset
-    #   @return [Spritesheet]
     attribute :tileset, Spritesheet
 
-    # @!attribute [r] :data
-    #   @return [Array<Integer>]
+    # @return [Array<Integer>]
     attribute :data, Array
     private :data=
 
-    # @!attribute :data_zmap
-    #   @return [Array<Float>]
+    # @return [Array<Float>]
     attribute :data_zmap, Array, nil
     private :data_zmap=
 
-    # @!attribute :layer_opacity
-    #   @return [Array<Float>]
+    # @return [Array<Float>]
     attribute :layer_opacity, Array, nil
 
-    # @!attribute :shader
-    #   @return [Shader]
     attribute :shader, Shader
-
-    # @!attribute :texture
-    #   @return [Texture]
     attribute :texture, Texture
-
-    # @!attribute :opacity
-    #   @return [Float]
     attribute :opacity, Float
-
-    # @!attribute :angle
-    #   @return [Numeric]
     attribute :angle, Numeric
-
-    # @!attribute :origin
-    #   @return [Vector2]
     attribute :origin,  Vector2
-
-    # @!attribute :color
-    #   @return [Vector4]
     attribute :color,  Vector4
-
-    # @!attribute :tone
-    #   @return [Vector4]
     attribute :tone,  Vector4
 
     # (see #set)
@@ -138,6 +112,7 @@ module Moon
     end
 
     alias :set_tileset :tileset=
+    private :set_tileset
     # @param [Spritesheet] tileset
     def tileset=(tileset)
       set_tileset tileset
@@ -145,6 +120,7 @@ module Moon
     end
 
     alias :set_layer_opacity :layer_opacity=
+    private :set_layer_opacity
     # @param [Array<Float>] layer_opacity
     def layer_opacity=(layer_opacity)
       set_layer_opacity layer_opacity
@@ -190,6 +166,11 @@ module Moon
       generate_buffers
     end
 
+    # Renders the tilemap on screen at the specified coordinates.
+    #
+    # @param [Integer] x
+    # @param [Integer] y
+    # @param [Integer] z
     def render(x, y, z)
       @rotation_matrix.clear
       @rotation_matrix.rotate!(@angle, [0, 0, 1])

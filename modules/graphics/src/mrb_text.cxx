@@ -14,8 +14,12 @@
 #include "moon/mrb/vertex_buffer.hxx"
 #include "moon/mrb/helpers.hxx"
 
-/**
- * @method Font#add_text(text, x, y)
+/* Add a new text string to the VBO at the specified coordinates.
+ * We use the coordinates to be able to generate alignment and layouts.
+ *
+ * @param [String] str the string we're adding
+ * @param [Integer] x x coordinate
+ * @param [Integer] y y coordinate
  */
 static mrb_value
 text_add_text(mrb_state *mrb, mrb_value self)
@@ -44,8 +48,9 @@ text_add_text(mrb_state *mrb, mrb_value self)
 }
 
 MOON_C_API void
-mmrb_text_init(mrb_state *mrb, struct RClass* mod)
+mmrb_text_init(mrb_state *mrb)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *text_cls = mrb_define_class_under(mrb, mod, "Text", mrb->object_class);
 
   mrb_define_method(mrb, text_cls, "add_text", text_add_text, MRB_ARGS_REQ(3));

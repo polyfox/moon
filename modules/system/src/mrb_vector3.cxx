@@ -60,6 +60,14 @@ mmrb_vector3_value(mrb_state *mrb, Moon::Vector3 vec)
   return set_vector3(mrb, new_vector3(mrb), vec);
 }
 
+/**
+ * Initializes the vector
+ *
+ * @param [Numeric] x
+ * @param [Numeric] y
+ * @param [Numeric] z
+ * @return [self]
+ */
 static mrb_value
 vector3_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -80,6 +88,13 @@ vector3_initialize_copy(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/**
+ * Rotates the order of the parameters for builtin methods
+ *
+ * @param [Object] other
+ * @return [Array<Object>[2]]
+ * @api private
+ */
 static mrb_value
 vector3_coerce(mrb_state *mrb, mrb_value self)
 {
@@ -89,6 +104,12 @@ vector3_coerce(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 2, argv);
 }
 
+/**
+ * Compares self and other to determine if they are equal
+ *
+ * @param [Object] other
+ * @return [Boolean] true other and self are equal, false otherwise
+ */
 static mrb_value
 vector3_eq(mrb_state *mrb, mrb_value self)
 {
@@ -145,30 +166,47 @@ vector3_set_z(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
+/**
+ * Returns the negated value of the vector
+ *
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_negate(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector3_value(mrb, -get_vector3_value(mrb, self));
 }
 
+/**
+ * Returns the identify of the vector
+ *
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_identity(mrb_state *mrb, mrb_value self)
 {
   return mrb_obj_dup(mrb, self);
 }
 
+/* Returns a vector in the same direction, but with length of 1.
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_normalize(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector3_value(mrb, glm::normalize(get_vector3_value(mrb, self)));
 }
 
+/* Returns the length of x, i.e., sqrt(x * x).
+ * @return [Float]
+*/
 static mrb_value
 vector3_length(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, glm::length(get_vector3_value(mrb, self)));
 }
 
+// @return [Vector3]
 static mrb_value
 vector3_add(mrb_state *mrb, mrb_value self)
 {
@@ -193,6 +231,11 @@ vector3_div(mrb_state *mrb, mrb_value self)
   m_vector_operator(/);
 }
 
+/**
+ * Returns the bitwise not result of self
+ *
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_not(mrb_state *mrb, mrb_value self)
 {
@@ -235,6 +278,10 @@ vector3_xor(mrb_state *mrb, mrb_value self)
   m_vector_int_operator(^);
 }
 
+/* Returns the dot product of self and other, i.e., result = self * other.
+ * @param [Vector3] other
+ * @return [Float]
+ */
 static mrb_value
 vector3_dot(mrb_state *mrb, mrb_value self)
 {
@@ -243,6 +290,10 @@ vector3_dot(mrb_state *mrb, mrb_value self)
   return mrb_float_value(mrb, glm::dot(get_vector3_value(mrb, self), *other));
 }
 
+/* Returns the cross product of self and other.
+ * @param [Vector3] other
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_cross(mrb_state *mrb, mrb_value self)
 {
@@ -254,13 +305,22 @@ vector3_cross(mrb_state *mrb, mrb_value self)
   return dest_vec;
 }
 
+/* Returns the distance betwwen self and other, i.e., length(p0 - p1).
+ * @param [Vector3] other
+ * @return [Float]
+ */
 static mrb_value
 vector3_distance(mrb_state *mrb, mrb_value self)
 {
-  Moon::Vector3 diff = get_vector3_value(mrb, self) - vector3_from_mrb_args(mrb);
-  return mrb_float_value(mrb, glm::dot(diff, diff));
+  Moon::Vector3 *other;
+  mrb_get_args(mrb, "d", &other, &vector3_data_type);
+  return mrb_float_value(mrb, glm::distance(get_vector3_value(mrb, self), *other));
 }
-
+/*
+ * @param [Vector3] other
+ * @param [Float] angle
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_rotate(mrb_state *mrb, mrb_value self)
 {
@@ -270,6 +330,10 @@ vector3_rotate(mrb_state *mrb, mrb_value self)
   return mmrb_vector3_value(mrb, glm::rotate(*mmrb_vector3_ptr(mrb, self), (float)angle, *other));
 }
 
+/* Rotate the vector around the x axis.
+ * @param [Float] angle
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_rotate_x(mrb_state *mrb, mrb_value self)
 {
@@ -278,6 +342,10 @@ vector3_rotate_x(mrb_state *mrb, mrb_value self)
   return mmrb_vector3_value(mrb, glm::rotateX(*mmrb_vector3_ptr(mrb, self), (float)angle));
 }
 
+/* Rotate the vector around the y axis.
+ * @param [Float] angle
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_rotate_y(mrb_state *mrb, mrb_value self)
 {
@@ -286,6 +354,10 @@ vector3_rotate_y(mrb_state *mrb, mrb_value self)
   return mmrb_vector3_value(mrb, glm::rotateY(*mmrb_vector3_ptr(mrb, self), (float)angle));
 }
 
+/* Rotate the vector around the z axis.
+ * @param [Float] angle
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_rotate_z(mrb_state *mrb, mrb_value self)
 {
@@ -294,6 +366,14 @@ vector3_rotate_z(mrb_state *mrb, mrb_value self)
   return mmrb_vector3_value(mrb, glm::rotateZ(*mmrb_vector3_ptr(mrb, self), (float)angle));
 }
 
+/* Linear interpolation of two quaternions.
+ *
+ * The interpolation is oriented.
+ *
+ * @param [Vector3] other quaternion
+ * @param [Float] delta Interpolation factor. The interpolation is defined in the range [0, 1].
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_lerp(mrb_state *mrb, mrb_value self)
 {
@@ -303,6 +383,16 @@ vector3_lerp(mrb_state *mrb, mrb_value self)
   return mmrb_vector3_value(mrb, glm::lerp(*mmrb_vector3_ptr(mrb, self), *other, (float)delta));
 }
 
+/* Spherical linear interpolation of two quaternions.
+ *
+ * Returns the slurp interpolation between two quaternions.
+ *
+ * The interpolation always take the short path and the rotation is performed at constant speed.
+ *
+ * @param [Vector3] other quaternion
+ * @param [Float] delta Interpolation factor. The interpolation is defined beyond the range [0, 1].
+ * @return [Vector3]
+ */
 static mrb_value
 vector3_slerp(mrb_state *mrb, mrb_value self)
 {
@@ -321,6 +411,7 @@ vector3_set(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+// @return [Array<Float>]
 static mrb_value
 vector3_to_a(mrb_state *mrb, mrb_value self)
 {
@@ -331,6 +422,7 @@ vector3_to_a(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 3, argv);
 }
 
+// @return [Array<Float>]
 static mrb_value
 vector3_s_extract(mrb_state *mrb, mrb_value klass)
 {
@@ -348,8 +440,9 @@ vector3_s_cast(mrb_state *mrb, mrb_value klass)
 }
 
 MOON_C_API void
-mmrb_vector3_init(mrb_state *mrb, struct RClass *mod)
+mmrb_vector3_init(mrb_state *mrb)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *vector3_class = mrb_define_class_under(mrb, mod, "Vector3", mrb->object_class);
   MRB_SET_INSTANCE_TT(vector3_class, MRB_TT_DATA);
 

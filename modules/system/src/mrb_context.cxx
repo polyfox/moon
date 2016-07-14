@@ -35,6 +35,10 @@ context_initialize(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/* Evaluates a given string inside the context.
+ * @param [String] str
+ * @return [Object] v value returned from executing the string
+ */
 static mrb_value
 context_eval(mrb_state *mrb, mrb_value self)
 {
@@ -48,6 +52,12 @@ context_eval(mrb_state *mrb, mrb_value self)
   return v;
 }
 
+/**
+ * Returns each defined symbol in the given context
+ *
+ * @yieldparam [Symbol] symbol
+ * @return [self]
+ */
 static mrb_value
 context_each_symbol(mrb_state *mrb, mrb_value self)
 {
@@ -61,8 +71,9 @@ context_each_symbol(mrb_state *mrb, mrb_value self)
 }
 
 MOON_C_API void
-mmrb_context_init(mrb_state *mrb, struct RClass *mod)
+mmrb_context_init(mrb_state *mrb)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *context_class = mrb_define_class_under(mrb, mod, "Context", mrb->object_class);
   MRB_SET_INSTANCE_TT(context_class, MRB_TT_DATA);
 

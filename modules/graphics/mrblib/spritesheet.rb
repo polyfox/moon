@@ -1,28 +1,31 @@
 module Moon
+  # Spritesheet is a specialized class for rendering cell based sprites.
   class Spritesheet
     extend TypedAttributes
     include Shadable
 
-    # default origin
+    # Default origin
     # @return [Moon::Vector2]
     ZERO_ORIGIN = Moon::Vector2.new(0, 0)
-    # default shader color
+    # Default shader color
     # @return [Moon::Vector4]
     WHITE = Moon::Vector4.new(1, 1, 1, 1)
-    # default shader tone
+    # Default shader tone
     # @return [Moon::Vector4]
     BLACK = Moon::Vector4.new(0, 0, 0, 1)
 
     attribute :shader,  Shader
+    # Number of tiles on the spritesheet.
+    # Dynamically calculated based on the texture and tile size.
     attr_reader :cell_count
     attribute :texture, Texture
+    private :texture=
     attr_reader :w, :h
 
-    private :texture=
-
     # @param [Texture] texture
-    # @param [Integer] tile_width
-    # @param [Integer] tile_height
+    # @param [Integer] tile_width width of a single tile
+    # @param [Integer] tile_height height of a single tile
+    # @return [Spritesheet]
     def initialize texture, tile_width, tile_height
       self.texture = texture
       @w = tile_width
@@ -41,10 +44,14 @@ module Moon
       generate_buffers
     end
 
+    # Render a single tile on screen at the given coordinates (and according to
+    # the options).
+    #
     # @param [Integer] x
     # @param [Integer] y
     # @param [Integer] z
-    # @param [Integer] index
+    # @param [Integer] index tile index, starting with 0 on the top left of the
+    #   sheet.
     # @param [Hash<Symbol, Object>] options
     # @option options [Float] angle
     # @option options [Vector2] origin

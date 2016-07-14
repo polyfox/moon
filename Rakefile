@@ -1,13 +1,24 @@
 require 'yard'
+require 'yard/mruby'
 require 'yard/rake/yardoc_task'
 require_relative 'lib/platform'
 
 load 'tasks/mruby.rake'
 load 'tasks/shaders.rake'
 
+module YARD::MRuby::Handlers::C::Source
+  class InitHandler < Base
+    MATCH3 = /mmrb_\w+_init\s*\(/mx
+    handles MATCH3
+  end
+end
+
+YARD::Parser::SourceParser.register_parser_type :header, YARD::MRuby::Parser::C::HeaderParser, 'hxx'
+YARD::Parser::SourceParser.register_parser_type :source, YARD::MRuby::Parser::C::SourceParser, 'cxx'
+
 YARD::Rake::YardocTask.new do |t|
-  t.files = ['docstub/**/*.rb',
-             'modules/**/*.rb']
+  t.files = %w{modules/system/mrblib/typed_attributes.rb
+  modules/**/src/**/mrb_*.cxx modules/**/mrblib/**/*.rb modules/**/include/**/mrb/**/*.hxx}
 end
 
 task :cmake_clean do

@@ -1,9 +1,20 @@
 module Moon
+  # Text is a renderable representation of a string coupled with a specific
+  # font. It has support for text aligning, variable line height, color and
+  # outlining.
+  #
+  # The implementation is optimized in that it will only result in one draw call
+  # per text object. This is because we use the Font class to generate a static
+  # VBO of the string. Modifying the text attributes will regenerate the VBO.
   class Text
     extend TypedAttributes
     include Shadable
 
+    # Width of the text object (bounding box)
+    # @return [Integer]
     attr_reader :w
+    # Height of the text object (bounding box)
+    # @return [Integer]
     attr_reader :h
 
     attribute :align,         Symbol
@@ -40,7 +51,8 @@ module Moon
       set(options)
     end
 
-    # Sets multiple properties at once, this will regenerate the buffers
+    # Sets multiple properties at once, this will regenerate the buffers just
+    # once after setting all the values.
     #
     # @param [Hash<Symbol, Object>] options
     # @option options [Font] :font
@@ -91,6 +103,7 @@ module Moon
     end
 
     alias :set_string :string=
+    private :set_string
     # Sets a new string for the text
     #
     # @param [String] string
@@ -100,6 +113,7 @@ module Moon
     end
 
     alias :set_font :font=
+    private :set_font
     # Sets a new font for the text
     #
     # @param [Font] font
@@ -109,6 +123,7 @@ module Moon
     end
 
     alias :set_color :color=
+    private :set_color
     # Sets a new color for the text
     #
     # @param [Vector4] color
@@ -118,6 +133,7 @@ module Moon
     end
 
     alias :set_outline_color :outline_color=
+    private :set_outline_color
     # Sets a new outline color for the text
     #
     # @param [Vector4] outline_color
@@ -127,6 +143,7 @@ module Moon
     end
 
     alias :set_outline :outline=
+    private :set_outline
     # Sets a new outline size for the text
     #
     # @param [Integer] outline
@@ -136,6 +153,7 @@ module Moon
     end
 
     alias :set_line_height :line_height=
+    private :set_line_height
     # Sets a new line_height size for the text
     #
     # @param [Float] line_height
@@ -145,6 +163,7 @@ module Moon
     end
 
     alias :set_align :align=
+    private :set_align
     # Sets a new align size for the text
     #
     # @param [Float] align
@@ -153,6 +172,8 @@ module Moon
       generate_buffers
     end
 
+    # Renders the text on screen at the specified coordinates.
+    #
     # @param [Integer] x
     # @param [Integer] y
     # @param [Integer] z

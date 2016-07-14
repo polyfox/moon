@@ -59,6 +59,13 @@ mmrb_vector2_value(mrb_state *mrb, Moon::Vector2 vec)
   return set_vector2(mrb, new_vector2(mrb), vec);
 }
 
+/**
+ * Initializes the vector
+ *
+ * @param [Numeric] x
+ * @param [Numeric] y
+ * @return [self]
+ */
 static mrb_value
 vector2_initialize(mrb_state *mrb, mrb_value self)
 {
@@ -78,6 +85,13 @@ vector2_initialize_copy(mrb_state *mrb, mrb_value self)
   return self;
 }
 
+/**
+ * Rotates the order of the parameters for builtin methods
+ *
+ * @param [Object] other
+ * @return [Array<Object>[2]]
+ * @api private
+ */
 static mrb_value
 vector2_coerce(mrb_state *mrb, mrb_value self)
 {
@@ -87,6 +101,12 @@ vector2_coerce(mrb_state *mrb, mrb_value self)
   return mrb_ary_new_from_values(mrb, 2, argv);
 }
 
+/**
+ * Compares self and other to determine if they are equal
+ *
+ * @param [Object] other
+ * @return [Boolean] true other and self are equal, false otherwise
+ */
 static mrb_value
 vector2_eq(mrb_state *mrb, mrb_value self)
 {
@@ -128,12 +148,22 @@ vector2_set_y(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
+/**
+ * Returns the negated value of the vector
+ *
+ * @return [Vector2]
+ */
 static mrb_value
 vector2_negate(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector2_value(mrb, -get_vector2_value(mrb, self));
 }
 
+/**
+ * Returns the identify of the vector
+ *
+ * @return [Vector2]
+ */
 static mrb_value
 vector2_identity(mrb_state *mrb, mrb_value self)
 {
@@ -164,6 +194,11 @@ vector2_div(mrb_state *mrb, mrb_value self)
   m_vector_operator(/);
 }
 
+/**
+ * Returns the bitwise not result of self
+ *
+ * @return [Vector2]
+ */
 static mrb_value
 vector2_not(mrb_state *mrb, mrb_value self)
 {
@@ -212,25 +247,40 @@ vector2_dot(mrb_state *mrb, mrb_value self)
   return mrb_float_value(mrb, glm::dot(get_vector2_value(mrb, self), vector2_from_mrb_args(mrb)));
 }
 
+/* Returns a vector in the same direction, but with length of 1.
+ * @return [Vector2]
+ */
 static mrb_value
 vector2_normalize(mrb_state *mrb, mrb_value self)
 {
   return mmrb_vector2_value(mrb, glm::normalize(get_vector2_value(mrb, self)));
 }
 
+/**
+ * @return [Float] length of the vector
+ */
 static mrb_value
 vector2_length(mrb_state *mrb, mrb_value self)
 {
   return mrb_float_value(mrb, glm::length(get_vector2_value(mrb, self)));
 }
 
+/* Returns the distance betwwen self and other, i.e., length(p0 - p1).
+ * @param [Vector2] other
+ * @return [Float]
+ */
 static mrb_value
 vector2_distance(mrb_state *mrb, mrb_value self)
 {
-  Moon::Vector2 diff = get_vector2_value(mrb, self) - vector2_from_mrb_args(mrb);
-  return mrb_float_value(mrb, glm::dot(diff, diff));
+  Moon::Vector2 *other;
+  mrb_get_args(mrb, "d", &other, &vector2_data_type);
+  return mrb_float_value(mrb, glm::distance(get_vector2_value(mrb, self), *other));
 }
 
+/*
+ * @param [Float] angle
+ * @return [Vector2] rotated vector
+ */
 static mrb_value
 vector2_rotate(mrb_state *mrb, mrb_value self)
 {
@@ -239,6 +289,14 @@ vector2_rotate(mrb_state *mrb, mrb_value self)
   return mmrb_vector2_value(mrb, glm::rotate(get_vector2_value(mrb, self), (float)angle));
 }
 
+/* Linear interpolation of two quaternions.
+ *
+ * The interpolation is oriented.
+ *
+ * @param [Vector2] other quaternion
+ * @param [Float] delta Interpolation factor. The interpolation is defined in the range [0, 1].
+ * @return [Vector2]
+ */
 static mrb_value
 vector2_lerp(mrb_state *mrb, mrb_value self)
 {
@@ -296,8 +354,9 @@ vector2_s_disk_rand(mrb_state *mrb, mrb_value klass)
 }
 
 MOON_C_API void
-mmrb_vector2_init(mrb_state *mrb, struct RClass *mod)
+mmrb_vector2_init(mrb_state *mrb)
 {
+  struct RClass *mod = mrb_define_module(mrb, "Moon");
   struct RClass *vector2_class = mrb_define_class_under(mrb, mod, "Vector2", mrb->object_class);
   MRB_SET_INSTANCE_TT(vector2_class, MRB_TT_DATA);
 
@@ -341,6 +400,6 @@ mmrb_vector2_init(mrb_state *mrb, struct RClass *mod)
   mrb_define_class_method(mrb, vector2_class, "[]",        vector2_s_cast,          MRB_ARGS_ANY());
   mrb_define_class_method(mrb, vector2_class, "extract",   vector2_s_extract,       MRB_ARGS_REQ(1));
   /* gen */
-  mrb_define_method(mrb, vector2_class, "circular_rand",   vector2_s_circular_rand, MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, vector2_class, "disk_rand",       vector2_s_disk_rand,     MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, vector2_class, "circular_rand",   vector2_s_circular_rand, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, vector2_class, "disk_rand",       vector2_s_disk_rand,     MRB_ARGS_REQ(1));
 }
