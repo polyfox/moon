@@ -1,19 +1,18 @@
 #include "moon/portaudio/audio.hxx"
 
-namespace Moon
+namespace Moon {
+void
+Audio::Initialize()
 {
-  void Audio::Initialize()
-  {
+}
 
-  }
+void
+Audio::Update()
+{
+}
 
-  void Audio::Update()
-  {
-
-  }
-
-  void Audio::Terminate()
-  {
-
-  }
+void
+Audio::Terminate()
+{
+}
 }

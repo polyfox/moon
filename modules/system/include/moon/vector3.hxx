@@ -4,7 +4,7 @@
 #include "moon/glm.h"
 
 namespace Moon {
-  typedef glm::vec3 Vector3;
+typedef glm::vec3 Vector3;
 }
 
 #endif

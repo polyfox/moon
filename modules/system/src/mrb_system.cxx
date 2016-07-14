@@ -1,20 +1,20 @@
-#include <stdbool.h>
-#include <mruby.h>
-#include <mruby/class.h>
-#include <mruby/data.h>
 #include "moon/mrb/clock.hxx"
 #include "moon/mrb/context.hxx"
-#include "moon/mrb/rect.hxx"
 #include "moon/mrb/matrix4.hxx"
+#include "moon/mrb/rect.hxx"
 #include "moon/mrb/vector1.hxx"
 #include "moon/mrb/vector2.hxx"
 #include "moon/mrb/vector3.hxx"
 #include "moon/mrb/vector4.hxx"
+#include <mruby.h>
+#include <mruby/class.h>
+#include <mruby/data.h>
+#include <stdbool.h>
 
 extern "C" void
 mrb_mruby_moon_system_gem_init(mrb_state* mrb)
 {
-  struct RClass *moon_module = mrb_define_module(mrb, "Moon");
+  struct RClass* moon_module = mrb_define_module(mrb, "Moon");
   mmrb_clock_init(mrb);
   mmrb_rect_init(mrb);
   mmrb_vector1_init(mrb);
