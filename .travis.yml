@@ -10,11 +10,17 @@ addons:
     - cmake-data
     - freeglut3-dev
     - freetype
+    - libasound2-dev
     - libdevil-dev
+    - libflac-dev
     - libgles2-mesa-dev
     - libglew-dev
     - libglu1-mesa-dev
+    - libogg-dev
     - libopenal-dev
+    - libpulse-dev
+    - libvorbis-dev
+    - libvorbisenc2
     - libx11-dev
     - libxi-dev
     - libxmu-dev
