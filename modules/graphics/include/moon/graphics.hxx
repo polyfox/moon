@@ -5,17 +5,17 @@
 #include "moon/vector4.hxx"
 
 namespace Moon {
-  struct Vertex {
-    Vector2 pos;
-    Vector2 tex_coord;
-    Vector4 color;
+struct Vertex
+{
+  Vector2 pos;
+  Vector2 tex_coord;
+  Vector4 color;
 
-    Vertex() {};
-    Vertex(Vector2 _pos, Vector2 _tex_coord, Vector4 _color) :
-      pos(_pos),
-      tex_coord(_tex_coord),
-      color(_color)
-    {};
-  };
+  Vertex(){};
+  Vertex(Vector2 _pos, Vector2 _tex_coord, Vector4 _color)
+    : pos(_pos)
+    , tex_coord(_tex_coord)
+    , color(_color){};
+};
 }
 #endif

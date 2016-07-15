@@ -4,7 +4,7 @@
 #include "moon/glm.h"
 
 namespace Moon {
-  typedef glm::mat4 Matrix4;
+typedef glm::mat4 Matrix4;
 }
 
 #endif

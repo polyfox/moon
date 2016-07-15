@@ -4,8 +4,8 @@
 #include "moon/glm.h"
 
 namespace Moon {
-  typedef glm::highp_vec1_t Vector1;
-  typedef glm::highp_ivec1_t Vector1i;
+typedef glm::highp_vec1_t Vector1;
+typedef glm::highp_ivec1_t Vector1i;
 }
 
 #endif

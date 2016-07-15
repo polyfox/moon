@@ -6,18 +6,20 @@
 #include <gorilla/gau.h>
 
 namespace Moon {
-  class Audio {
-  public:
-    static bool Initialize();
-    static void Update();
-    static void Terminate();
-    static ga_Mixer* GetMixer();
-    static ga_StreamManager* GetStreamMgr();
-  protected:
-    static gau_Manager* m_mgr;
-    static ga_Mixer* m_mixer;
-    static ga_StreamManager* m_streamMgr;
-  };
+class Audio
+{
+public:
+  static bool Initialize();
+  static void Update();
+  static void Terminate();
+  static ga_Mixer* GetMixer();
+  static ga_StreamManager* GetStreamMgr();
+
+protected:
+  static gau_Manager* m_mgr;
+  static ga_Mixer* m_mixer;
+  static ga_StreamManager* m_streamMgr;
+};
 };
 
 #endif
