@@ -14,19 +14,19 @@ namespace Moon
     m_channels = file.channels();
     m_sampleRate = file.samplerate();
 
-    currentFrame = 0;
+    m_currentFrame = 0;
 
     int totalSamples = file.frames() * m_channels * m_sampleRate;
-    source = new float[totalSamples];
+    m_source = new float[totalSamples];
 
-    totalFrames = file.readf(source, file.frames());
-    printf("total frames: %d\n", totalFrames);
+    m_totalFrames = file.readf(m_source, file.frames());
+    printf("total frames: %d\n", m_totalFrames);
     // TODO: shout if totalFrames didn't match file.frames()
   };
 
 
   Sound::~Sound() {
-    delete[] source;
+    delete[] m_source;
   }
 
   int Sound::channels() {
@@ -40,12 +40,12 @@ namespace Moon
   // returns how many frames we actually read
   int Sound::read(float* dst, int frames)
   {
-    if(currentFrame > totalFrames) { return 0; }
+    if (m_currentFrame > m_totalFrames) { return 0; }
     // handle buffer edges (don't point past edge)
-    int actual = (currentFrame + frames > totalFrames) ? totalFrames - currentFrame : frames;
-    memcpy(dst, &source[currentFrame * m_channels], sizeof(float) * actual * m_channels);
+    int actual = (m_currentFrame + frames > m_totalFrames) ? m_totalFrames - m_currentFrame : frames;
+    memcpy(dst, &m_source[m_currentFrame * m_channels], sizeof(float) * actual * m_channels);
 
-    currentFrame += actual;
+    m_currentFrame += actual;
     return actual;
   }
 }

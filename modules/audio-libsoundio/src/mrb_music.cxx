@@ -4,21 +4,48 @@
 #include <mruby/numeric.h>
 #include "moon/audio/libsoundio/mrb/music.hxx"
 #include "moon/audio/libsoundio/music.hxx"
+#include "moon/audio/libsoundio/handle.hxx"
 #include "moon/api.h"
 #include "moon/intern.h"
 #include "moon/mrb/helpers.hxx"
 
 static void
-music_free(mrb_state *mrb, void *p)
+music_free(mrb_state* mrb, void* p)
 {
-  Moon::Music *music = static_cast<Moon::Music*>(p);
-  if (music) {
-    delete(music);
+  mmrb_Music* handle = static_cast<mmrb_Music*>(p);
+  if (handle) {
+    Moon::Music* music = handle->music;
+    delete(handle);
+    if (music) {
+      delete(music);
+      handle->music = NULL;
+    }
   }
 }
 
 MOON_C_API const struct mrb_data_type music_data_type = { "Moon::Music", music_free };
 
+static inline mmrb_Music*
+mmrb_music_container_ptr(mrb_state* mrb, mrb_value self)
+{
+  return static_cast<mmrb_Music*>(mrb_data_get_ptr(mrb, self, &music_data_type));
+}
+
+static inline Moon::Handle*
+mmrb_music_handle_ptr(mrb_state* mrb, mrb_value self)
+{
+  return mmrb_music_container_ptr(mrb, self)->handle;
+}
+
+static inline Moon::Music*
+mmrb_music_ptr(mrb_state* mrb, mrb_value self)
+{
+  return mmrb_music_container_ptr(mrb, self)->music;
+}
+
+/**
+ * @param [String] filename
+ */
 static mrb_value
 music_initialize(mrb_state* mrb, mrb_value self)
 {
@@ -27,22 +54,27 @@ music_initialize(mrb_state* mrb, mrb_value self)
   moon_data_cleanup(mrb, self);
   if (exists(filename)) {
     Moon::Music* music = new Moon::Music(std::string(filename));
-    mrb_data_init(self, music, &music_data_type);
+    mmrb_Music* handle = new mmrb_Music(music);
+    mrb_data_init(self, handle, &music_data_type);
   } else {
-    mrb_raisef(mrb, E_SCRIPT_ERROR,
+    mrb_raisef(mrb, MOON_E_FILE_NOT_FOUND,
                "cannot load such file -- %S",
                mrb_str_new_cstr(mrb, filename));
   }
   return self;
 }
 
-
+/**
+ * @param [Float] gain
+ * @param [Float] pitch
+ * @param [Float] pan
+ */
 static mrb_value
 music_play(mrb_state* mrb, mrb_value self)
 {
   mrb_float gain = 1.0f;
   mrb_float pitch = 1.0f;
-  mrb_float pan = 1.0f;
+  mrb_float pan = 0.0f;
   mrb_get_args(mrb, "|fff", &gain, &pitch, &pan);
   // TODO
   return self;
@@ -73,15 +105,28 @@ music_length(mrb_state* mrb, mrb_value self)
   return mrb_fixnum_value(0);
 }
 
+/**
+ * @param [Integer] start_frame
+ * @param [Integer] end_frame
+ */
 static mrb_value
-music_loop(mrb_state* mrb, mrb_value self)
+music_set_loop(mrb_state* mrb, mrb_value self)
 {
+  mrb_int start_frame = 0;
+  mrb_int end_frame = 0;
+  mrb_get_args(mrb, "ii", &start_frame, &end_frame);
+  if (end_frame < start_frame) {
+    mrb_raisef(mrb, E_ARGUMENT_ERROR, "expected end_frame to be greater than start frame");
+  }
+  mmrb_music_ptr(mrb, self)->setLoop(start_frame, end_frame);
   return self;
 }
 
 static mrb_value
 music_clear_loop(mrb_state* mrb, mrb_value self)
 {
+  Moon::Music* music = mmrb_music_ptr(mrb, self);
+  music->clearLoop();
   return self;
 }
 
@@ -122,7 +167,7 @@ mmrb_music_init(mrb_state* mrb, struct RClass* mod)
   mrb_define_method(mrb, music_class, "seek",       music_seek,       MRB_ARGS_REQ(1));
   mrb_define_method(mrb, music_class, "pos",        music_pos,        MRB_ARGS_NONE());
   mrb_define_method(mrb, music_class, "length",     music_length,     MRB_ARGS_NONE());
-  mrb_define_method(mrb, music_class, "loop",       music_loop,       MRB_ARGS_OPT(2));
+  mrb_define_method(mrb, music_class, "set_loop",   music_set_loop,   MRB_ARGS_OPT(2));
   mrb_define_method(mrb, music_class, "clear_loop", music_clear_loop, MRB_ARGS_NONE());
 
   /* Query */

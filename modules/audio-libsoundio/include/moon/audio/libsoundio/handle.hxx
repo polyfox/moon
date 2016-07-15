@@ -20,7 +20,7 @@ namespace Moon {
       float pitch;
       float gain;
     private:
-      Moon::Source* source; // TODO:mrb_sound/music sources will need to be wrapped... if a source deallocates, the handle will be broken (shared_ptr)
+      Moon::Source* m_source; // TODO:mrb_sound/music sources will need to be wrapped... if a source deallocates, the handle will be broken (shared_ptr)
   };
 };
 

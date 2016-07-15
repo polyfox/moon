@@ -19,12 +19,12 @@ namespace Moon
       int channels();
       int sampleRate();
     private:
-      float* source; // [] ?
+      float* m_source; // [] ?
       int m_channels;
       int m_sampleRate;
 
-      std::uint32_t totalFrames;
-      std::uint32_t currentFrame;
+      std::uint32_t m_totalFrames;
+      std::uint32_t m_currentFrame;
   };
 };
 
