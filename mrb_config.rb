@@ -100,6 +100,8 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
     c.include_paths << File.expand_path('soil/include', vd)
     c.include_paths << File.expand_path('sil/include', vd)
     c.include_paths << File.expand_path('freetype-gl', vd)
+    c.include_paths << File.expand_path('libsoundio', vd)
+    c.include_paths << File.expand_path('libsndfile/include', bvd)
     # required audio includes
     c.include_paths << File.expand_path('gorilla-audio/include', vd)
     c.include_paths.uniq!
@@ -111,30 +113,46 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
     l.library_paths << File.expand_path('glfw/src', bvd)
     l.library_paths << File.expand_path('freetype-gl', bvd)
     l.library_paths << File.expand_path('gorilla-audio/build', bvd)
+    l.library_paths << File.expand_path('libsoundio', bvd)
+    l.library_paths << File.expand_path('libsndfile/lib', bvd)
     l.library_paths << File.expand_path('sil', bvd)
     l.library_paths << File.expand_path('soil', bvd)
     l.library_paths.uniq!
 
     l.libraries << 'glfw'
     l.libraries << 'freetype-gl'
-    l.libraries << 'gorilla'
     l.libraries << 'freetype'
     l.libraries << 'SOIL'
     l.libraries << 'SIL'
 
+    l.libraries << 'ogg'
+    l.libraries << 'vorbis'
+    l.libraries << 'vorbisenc'
+
     if platform.linux?
+      l.libraries << 'FLAC'
       l.libraries << 'GLEW'
       l.libraries << 'GL'
       l.libraries << 'openal'
+      l.libraries << 'asound'
+      # if you want to use jack, just enable it here
+      #l.libraries << 'jack'
+      l.libraries << 'pulse'
     elsif platform.windows?
       l.libraries << 'glew32'
       l.libraries << 'opengl32'
       l.libraries << 'OpenAL32'
     elsif platform.darwin?
+      l.libraries << 'flac'
       l.libraries << 'GLEW'
       l.flags_after_libraries << '-framework OpenGL'
+      # gorilla
       l.flags_after_libraries << '-framework OpenAL'
+      #
       l.flags_after_libraries << '-framework CoreFoundation'
+      # libsoundio
+      l.flags_after_libraries << '-framework CoreAudio'
+      l.flags_after_libraries << '-framework AudioUnit'
     end
 
     if platform.unix?

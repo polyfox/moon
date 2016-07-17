@@ -2,18 +2,25 @@ language: cpp
 sudo: false
 addons:
   apt:
-    sources:
+    sources: &sources
     - george-edison55-precise-backports
-    packages:
+    - ubuntu-toolchain-r-test
+    packages: &deps
     - cmake
     - cmake-data
     - freeglut3-dev
     - freetype
+    - libasound2-dev
     - libdevil-dev
+    - libflac-dev
     - libgles2-mesa-dev
     - libglew-dev
     - libglu1-mesa-dev
+    - libogg-dev
     - libopenal-dev
+    - libpulse-dev
+    - libvorbis-dev
+    - libvorbisenc2
     - libx11-dev
     - libxi-dev
     - libxmu-dev
@@ -23,15 +30,40 @@ matrix:
   include:
     - os: linux
       compiler: gcc
-      env: MOON_MRUBY_TOOLCHAIN=gcc
-
+      env:
+        - MOON_MRUBY_TOOLCHAIN=gcc
+        - COMPILER=g++-4.9
+      before_install:
+        - export CC="gcc-4.9"
+        - export CXX="g++-4.9"
+      addons:
+        apt:
+          sources:
+            - *sources
+          packages:
+            - *deps
+            - gcc-4.9
+            - g++-4.9
     - os: linux
       compiler: clang
       env:
       - MOON_MRUBY_TOOLCHAIN=clang
+      - COMPILER=clang++-3.7
       - LD_LIBRARY_PATH: "${TRAVIS_BUILD_DIR}/build/vendor/glfw/src"
+      before_install:
+      - export CC="clang-3.7"
+      - export CXX="clang++-3.7"
+      addons:
+        apt:
+          sources:
+            - *sources
+            - llvm-toolchain-precise-3.7
+          packages:
+            - *deps
+            - clang-3.7
 
     - os: osx
+      osx_image: xcode7.3
       compiler: clang
       env:
       - MOON_MRUBY_TOOLCHAIN=clang

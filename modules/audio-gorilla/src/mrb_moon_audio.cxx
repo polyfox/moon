@@ -1,8 +1,8 @@
 #include <mruby.h>
 #include <mruby/class.h>
-#include "moon/gorilla/audio.hxx"
-#include "moon/gorilla/mrb/music.hxx"
-#include "moon/gorilla/mrb/sound.hxx"
+#include "moon/audio/gorilla/audio.hxx"
+#include "moon/audio/gorilla/mrb/music.hxx"
+#include "moon/audio/gorilla/mrb/sound.hxx"
 
 /* Call once per step/frame to update the internal Audio module.
 */

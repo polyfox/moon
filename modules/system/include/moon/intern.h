@@ -6,14 +6,22 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/stat.h>
 
+#include <cstdint>
+#include <algorithm>
+
 // _WIN32 is set for both 32 and 64 bit
 #ifdef _WIN32
 #  define stat _stat
+#endif
+
+#ifndef M_PI
+	#define M_PI 3.1415926535f
 #endif
 
 static inline bool
@@ -22,5 +30,28 @@ exists(const std::string& name)
   struct stat buffer;
   return (stat(name.c_str(), &buffer) == 0);
 };
+
+static inline void*
+moon_memzerof(float* ptr, size_t len)
+{
+	for (size_t i = 0; i < len; ++i) {
+		ptr[i] = 0.0f;
+	}
+	return ptr;
+}
+
+static inline void*
+moon_mallocset(size_t len, int value)
+{
+	void* ptr = malloc(len);
+	memset(ptr, value, len);
+	return ptr;
+}
+
+static inline void*
+moon_malloczero(size_t len)
+{
+	return moon_mallocset(len, 0);
+}
 
 #endif

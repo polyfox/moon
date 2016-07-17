@@ -27,3 +27,6 @@
 [submodule "vendor/gorilla-audio"]
   path = vendor/gorilla-audio
   url = https://github.com/IceDragon200/gorilla-audio.git
+[submodule "vendor/libsoundio"]
+	path = vendor/libsoundio
+	url = https://github.com/andrewrk/libsoundio

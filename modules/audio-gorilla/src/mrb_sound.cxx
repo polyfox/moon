@@ -2,8 +2,8 @@
 #include <mruby/class.h>
 #include <mruby/data.h>
 #include <mruby/numeric.h>
-#include "moon/gorilla/mrb/sound.hxx"
-#include "moon/gorilla/audio.hxx"
+#include "moon/audio/gorilla/mrb/sound.hxx"
+#include "moon/audio/gorilla/audio.hxx"
 #include "moon/api.h"
 #include "moon/intern.h"
 
@@ -16,7 +16,7 @@ sound_free(mrb_state *mrb, void *p)
   }
 }
 
-MOON_C_API const struct mrb_data_type sound_data_type = { "Sound", sound_free };
+MOON_C_API const struct mrb_data_type sound_data_type = { "Moon::Sound", sound_free };
 
 static inline ga_Sound*
 get_sound(mrb_state *mrb, mrb_value self)
