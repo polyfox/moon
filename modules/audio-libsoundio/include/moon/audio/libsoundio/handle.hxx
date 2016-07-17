@@ -7,6 +7,7 @@
 #include "moon/audio/libsoundio/source.hxx"
 #include "moon/audio/libsoundio/music.hxx"
 #include "moon/audio/libsoundio/sound.hxx"
+#include "moon/audio/libsoundio/loop.hxx"
 
 namespace Moon {
   class Handle {
