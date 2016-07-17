@@ -19,10 +19,6 @@ sound_free(mrb_state* mrb, void *p)
 
 MOON_C_API const struct mrb_data_type sound_data_type = { "Moon::Sound", sound_free };
 
-/**
- * @param [String] filename
- * @return [self]
- */
 static mrb_value
 sound_initialize(mrb_state* mrb, mrb_value self)
 {
@@ -34,11 +30,6 @@ sound_initialize(mrb_state* mrb, mrb_value self)
 	return self;
 }
 
-/**
- * @param [Float] gain the velocity or gain of the sound (default 1.0)
- * @param [Float] pitch the sound's pitch (default 1.0)
- * @param [Float] pan the pan (default 0.0 (centered))
- */
 static mrb_value
 sound_play(mrb_state* mrb, mrb_value self)
 {

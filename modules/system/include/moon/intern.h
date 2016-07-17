@@ -1,8 +1,6 @@
 #ifndef MOON_INTERN_H
 #define MOON_INTERN_H
 
-#include <assert.h>
-
 #include <string>
 #include <cstring>
 

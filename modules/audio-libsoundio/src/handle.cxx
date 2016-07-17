@@ -6,7 +6,7 @@ namespace Moon
 {
   Handle::Handle(Moon::Source* source) // this can take mixer as arg in the future if we have more than 1
   {
-    this->m_source = source;
+    this->source = source;
     this->pan = 0.0f;
     this->pitch = 1.0f;
     this->gain = 1.0f;
@@ -17,20 +17,20 @@ namespace Moon
   }
 
 
-  void Handle::mix(struct SoundIoChannelArea* areas, const struct SoundIoChannelLayout& layout, const float sampleRate, const unsigned int frames) {
+  void Handle::mix(struct SoundIoChannelArea *areas, const struct SoundIoChannelLayout &layout, const float sampleRate, unsigned int frames) {
     float pan = this->pan;
     pan = (pan + 1.0f) / 2.0f;
     pan = glm::clamp(pan, 0.0f, 1.0f);
 
     // resample and pitch
-    float sampleScale = m_source->sampleRate() / sampleRate * pitch;
+    float sampleScale = source->sampleRate() / sampleRate * pitch;
 
     // TODO: compare source.channels() with layout.channel_count
-    int channels = m_source->channels();
-    int totalSamples = frames * channels * m_source->sampleRate();
+    int channels = source->channels();
+    int totalSamples = frames * channels * source->sampleRate();
     float* chunk = new float[totalSamples];
 
-    int actual = m_source->read(chunk, frames);
+    int actual = source->read(chunk, frames);
     //printf("Read n frames: %d\n", actual);
 
     // TODO: mixer should complain if we don't have stereo
