@@ -15,6 +15,7 @@ namespace Moon
       virtual ~Sound();
 
       int read(float* dst, int frames);
+      std::uint32_t seek(std::uint32_t pos);
 
       int channels();
       int sampleRate();

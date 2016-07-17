@@ -48,4 +48,10 @@ namespace Moon
     currentFrame += actual;
     return actual;
   }
+
+  // seeks to a given offset (in frames) from the start of the file
+  std::uint32_t Sound::seek(std::uint32_t pos) {
+    currentFrame = pos;
+    return currentFrame;
+  }
 }

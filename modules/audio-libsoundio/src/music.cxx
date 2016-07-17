@@ -28,4 +28,9 @@ namespace Moon
   {
     return file.readf(dst, frames);
   }
+
+  // seeks to a given offset (in frames) from the start of the file
+  std::uint32_t Music::seek(std::uint32_t pos) {
+    return file.seek(pos, SEEK_SET);
+  }
 }
