@@ -63,6 +63,7 @@ matrix:
             - clang-3.7
 
     - os: osx
+      osx_image: xcode7.3
       compiler: clang
       env:
       - MOON_MRUBY_TOOLCHAIN=clang
