@@ -22,6 +22,21 @@ namespace Moon {
     glBindTexture(GL_TEXTURE_2D, 0);
   };
 
+  Texture::Texture(int width, int height)
+  {
+    float border_color[4] = { 0.0, 0.0, 0.0, 0.0 };
+    // Generate empty (RGB) texture
+    glGenTextures(1, &m_gl_texture_id);
+    glBindTexture(GL_TEXTURE_2D, m_gl_texture_id);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border_color);
+    glBindTexture(GL_TEXTURE_2D, 0);
+  };
+
   Texture::~Texture() {
     //Delete texture
     if (m_gl_texture_id != 0) {
@@ -43,5 +58,10 @@ namespace Moon {
 
   void Texture::Bind() {
     glBindTexture(GL_TEXTURE_2D, m_gl_texture_id);
+  };
+
+  void Texture::Attach() {
+    // Attach it to currently bound framebuffer object
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_gl_texture_id, 0);
   };
 }
