@@ -12,8 +12,10 @@ namespace Moon {
   class Texture {
   public:
     Texture(std::string filename);
+    Texture(int width, int height);
     ~Texture();
     void Bind();
+    void Attach();
     GLint GetWidth();
     GLint GetHeight();
     GLuint GetID();

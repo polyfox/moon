@@ -120,6 +120,7 @@ module Moon
 
     private def initialize_clear_color
       @clear_color = Vector4.new 0, 0, 0, 0
+      @clear_bits = GL2::GL_COLOR_BUFFER_BIT | GL2::GL_DEPTH_BUFFER_BIT
       self.clear_color = @clear_color
     end
 
@@ -129,6 +130,22 @@ module Moon
 
     private def initialize_renderer
       Moon::Renderer.instance = Moon::Renderer.new
+      @framebuffer = Moon::Framebuffer.new
+    end
+
+    # magically wraps the render calls in a two pass render (first render to
+    # framebuffer, then render the FBO to screen with a shader). Allows us to do
+    # post-processing effects (screen toning, warping, etc).
+    def render(&block)
+      # first pass (clear is called inside main)
+      @framebuffer.bind(&block)
+      # second pass
+      clear
+      @framebuffer.render # render the fbo
+    end
+
+    def clear
+      GL2.glClear @clear_bits
     end
 
     # @param [Vector4] color

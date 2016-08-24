@@ -117,11 +117,12 @@ module Moon
     def main
       @logger.info "Audio Module: #{Audio::NAME}"
       @logger.debug 'Starting main loop'
-      clear_bits = GL2::GL_COLOR_BUFFER_BIT | GL2::GL_DEPTH_BUFFER_BIT
       until @screen.should_close?
-        GL2.glClear clear_bits
         Audio.update
-        @step.call self, @fps.restart
+        @screen.render do
+          @screen.clear
+          @step.call self, @fps.restart
+        end
         @screen.title = sprintf "FPS: %d", @fps.fps
         @screen.swap
         GLFW.poll_events
