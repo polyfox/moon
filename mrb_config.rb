@@ -115,7 +115,12 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
     l.library_paths << File.expand_path('soil', bvd)
     l.library_paths.uniq!
 
-    l.libraries << 'glfw'
+    unless Platform.darwin?
+      l.libraries << 'glfw' 
+    else
+      l.libraries << 'glfw3' 
+    end
+
     l.libraries << 'freetype-gl'
     l.libraries << 'gorilla'
     l.libraries << 'freetype'
@@ -135,6 +140,10 @@ MRuby::Build.new 'host', File.expand_path("build", rootdir) do |conf|
       l.flags_after_libraries << '-framework OpenGL'
       l.flags_after_libraries << '-framework OpenAL'
       l.flags_after_libraries << '-framework CoreFoundation'
+      l.flags_after_libraries << '-framework IOKit'
+      l.flags_after_libraries << '-framework CoreVideo'
+      l.flags_after_libraries << '-framework Carbon'
+      l.flags_after_libraries << '-framework Cocoa'
     end
 
     if platform.unix?
